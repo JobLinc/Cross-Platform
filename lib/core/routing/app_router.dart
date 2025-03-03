@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
-import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
-import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
-import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 
