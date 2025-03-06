@@ -6,7 +6,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
-import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
+import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/password_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -99,26 +100,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomRoundedTextFormField(
-                          controller: _emailController,
-                          hintText: "Email or Phone",
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            return null;
-                          }),
-                      const SizedBox(height: 15),
-                      CustomRoundedTextFormField(
-                          hintText: "Password",
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            return null;
-                          },
-                          controller: _passwordController),
+                      EmailTextFormField(emailController: _emailController),
+                     const SizedBox(height: 15),
+                     PasswordTextFormField(passwordController: _passwordController),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

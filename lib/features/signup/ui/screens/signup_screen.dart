@@ -6,7 +6,11 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
-import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
+import 'package:joblinc/features/signup/ui/widgets/continue_sign_button.dart';
+import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/firstname_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/lastname_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/password_text_field.dart';
 
 class SignupScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -78,7 +82,7 @@ class SignupScreen extends StatelessWidget {
                     width: 0.9.sw,
                     foregroundColor: Colors.black,
                     borderColor: Colors.blueAccent,
-                    text: "Sign up with google",
+                    text: "Continue with google",
                     backgroundColor: Colors.transparent,
                     icon: FontAwesomeIcons.g,
                     onPressed: () {
@@ -95,63 +99,16 @@ class SignupScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomRoundedTextFormField(
-                        controller: _firstNameController,
-                        hintText: "First Name",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your first name';
-                          }
-                          return null;
-                        }),
+                    FirstnameTextFormField(firstNameController: _firstNameController),
                     const SizedBox(height: 15),
-                    CustomRoundedTextFormField(
-                        controller: _lastNameController,
-                        hintText: "Last Name",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your last name';
-                          }
-                          return null;
-                        }),
+                    LastnameTextFormField(lastNameController: _lastNameController),
                     const SizedBox(height: 15),
-                    CustomRoundedTextFormField(
-                        controller: _emailController,
-                        hintText: "Email",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        }),
+                    EmailTextFormField(emailController: _emailController),
                     const SizedBox(height: 15),
-                    CustomRoundedTextFormField(
-                        hintText: "Password",
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                        controller: _passwordController),
+                    PasswordTextFormField(passwordController: _passwordController),
                     const SizedBox(height: 10),
                     const SizedBox(height: 20),
-                    SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: customRoundedButton(
-                            text: "Continue",
-                            backgroundColor: ColorsManager.crimsonRed,
-                            borderColor: Colors.transparent,
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.homeScreen);
-                              }
-                            },
-                            foregroundColor: Colors.white)),
+                    ContinueSignButton(formKey: _formKey),
                   ],
                 ),
               ),
@@ -162,3 +119,9 @@ class SignupScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
