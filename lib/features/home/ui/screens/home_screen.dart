@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/core/routing/app_router.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/home/data/models/post_model.dart';
+import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,13 +29,18 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.message, color: Colors.black),
             onPressed: () {
-              Navigator.pushNamed(context, Routes.chatScreen);
+              Navigator.pushNamed(context, Routes.chatListScreen);  
             },
           ),
     
         ],
       ),
-      body: Center(child: const Text('Home Screen'),),bottomNavigationBar: BottomNavigationBar(
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (BuildContext context, int index) {
+          return Post(data: mockData);
+        },
+      ),bottomNavigationBar: BottomNavigationBar(
 
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
