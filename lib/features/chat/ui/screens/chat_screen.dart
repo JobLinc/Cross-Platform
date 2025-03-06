@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/features/chat/widgets/chat_message.dart';
-import 'package:joblinc/features/chat/widgets/chat_receiver.dart';
-import 'package:joblinc/features/chat/widgets/new_message.dart';
-import 'package:joblinc/features/chat/widgets/chat_date_now.dart';
-import 'package:joblinc/features/chat/widgets/chat_more_actions.dart';
-import 'package:joblinc/features/chat/widgets/star_button.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_message.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_receiver.dart';
+import 'package:joblinc/features/chat/ui/widgets/new_message.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_date_now.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_more_actions.dart';
+import 'package:joblinc/features/chat/ui/widgets/star_button.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});

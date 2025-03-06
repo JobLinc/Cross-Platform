@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/features/chat/widgets/chat_bubble.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_bubble.dart';
 import 'package:intl/intl.dart';
 
 class ChatMessage extends StatelessWidget {
