@@ -2,10 +2,131 @@ import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_divider_text.dart';
+import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
+        designSize: Size(412, 924),
+        minTextAdapt: true,
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: SizedBox()),
+                    Container(
+                      height: 100.h,
+                      alignment: Alignment.center,
+                      child: Image(
+                        width: 0.55.sw,
+                        fit: BoxFit.fitWidth,
+                        image:
+                            AssetImage('assets/images/JobLinc_logo_light.png'),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Text(
+                          "Join a trusted community of 1B professionals",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 19.sp, // Responsive text size
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    customRoundedButton(
+                        foregroundColor: Colors.black,
+                        text: "Sign in with email ",
+                        backgroundColor: Colors.transparent,
+                        icon: Icons.email,
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, Routes.loginScreen);
+                        }),
+                    SizedBox(height: 20.h),
+                    customRoundedButton(
+                        foregroundColor: Colors.blue[800]!,
+                        borderColor: Colors.blueAccent,
+                        text: "Continue with google",
+                        backgroundColor: Colors.transparent,
+                        icon: FontAwesomeIcons.g,
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, Routes.homeScreen);
+                        }),
+                    customDividerWithText(child: Text("OR")),
+                    customRoundedButton(
+                        borderColor: ColorsManager.crimsonRed,
+                        foregroundColor: ColorsManager.crimsonRed,
+                        text: "Agree & Join",
+                        backgroundColor: Colors.transparent,
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, Routes.signUpScreen);
+                        }),
+                    Container(
+                      width: 0.85.sw,
+                      margin: EdgeInsets.symmetric(vertical: 20.sp),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 12.sp),
+                          children: [
+                            TextSpan(
+                                text:
+                                    'By clicking Agree & Join or Continue, you agree to the Joblinc '),
+                            TextSpan(
+                              text: 'User Agreement',
+                              style: TextStyle(
+                                  color: ColorsManager.crimsonRed,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: ', '),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: TextStyle(
+                                  color: ColorsManager.crimsonRed,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: ', and '),
+                            TextSpan(
+                              text: 'Cookie Policy',
+                              style: TextStyle(
+                                  color: ColorsManager.crimsonRed,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: '.'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              backgroundColor: Colors.white,
+            ),
+          );
+        });
+  }
+}
+
+
+
   // Widget build(BuildContext context) {
   //   return SafeArea(
   //     child: Scaffold(
@@ -45,79 +166,3 @@ class OnboardingScreen extends StatelessWidget {
   //     ),
   //   );
   // }
-  Widget build(BuildContext context) {
-    return ScreenUtilInit
-    (
-      designSize: Size(412,924),
-      minTextAdapt: true,
-      builder:(context, child) {
-        return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        
-     
-        body:Center(
-          child: Column(
-             mainAxisAlignment: MainAxisAlignment.center,
-             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(child: Image(image: AssetImage('images/JobLinc.jpg'),)),
-               Text(
-                      "Join a trusted community of 1B professionals",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16.sp, // Responsive text size
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
-              SizedBox(height:  MediaQuery.of(context).size.height/3),
-          
-            generalbutton(text_and_iconColor: Colors.black,context: context,text: "Continue with google", widgetcolor: Colors.transparent, icon: FontAwesomeIcons.g,onTap:(){ Navigator.pushNamed(context, Routes.loginScreen);}),
-            SizedBox(height: MediaQuery.of(context).size.height/50),
-            generalbutton(text_and_iconColor: Colors.black,context: context,text: "Sign in with email ", widgetcolor: Colors.transparent, icon: Icons.email,onTap: (){Navigator.pushNamed(context, Routes.loginScreen);}),
-            SizedBox(height: MediaQuery.of(context).size.height/50),
-            generalbutton(text_and_iconColor: Colors.black,context: context,text: "Sign-up", widgetcolor: Colors.transparent, icon: Icons.person_add,onTap:(){Navigator.pushNamed(context, Routes.signUpScreen);})
-            
-          ],
-          
-          ),
-        ),
-
-        backgroundColor: Colors.white,
-      ),
-    );
-      }
-    );
-  }
-}
-Widget generalbutton({required String text,required Color widgetcolor,required IconData icon,required GestureTapCallback onTap ,required BuildContext context,required Color text_and_iconColor})
-{
-  return GestureDetector
-  (
-    onTap:onTap,
-    child: Container
-    (
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-      decoration:   BoxDecoration(
-          borderRadius: BorderRadius.circular(40),
-          border: Border.all(color: Colors.black, width: 1.5),
-          color: widgetcolor
-        ),
-        width: 0.8.sw,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: text_and_iconColor), // Icon
-          SizedBox(width:  MediaQuery.of(context).size.width/20), // Space between icon and text
-         Text(
-            text,
-            style: TextStyle(color: text_and_iconColor, fontSize: 18.sp),
-            textAlign: TextAlign.center,
-         ),
-        ],
-      ),
-    ),
-    
-  );
-}

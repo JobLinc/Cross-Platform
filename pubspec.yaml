@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.0
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.4
   flutter_screenutil: ^5.9.3
   font_awesome_flutter: ^10.6.0
 
@@ -21,5 +23,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - images/JobLinc.jpg
-    - images/JobLincBlack.jpg
+    - assets/images/
+    
