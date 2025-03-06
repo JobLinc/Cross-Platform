@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
@@ -28,6 +29,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
+      case Routes.chatListScreen:
+        return MaterialPageRoute(builder: (context) => ChatListScreen());
       default:
         return null;
     }
