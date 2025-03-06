@@ -1,10 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:joblinc/core/routing/app_router.dart';
+import 'package:joblinc/core/routing/routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: const Text('Home Screen')));
+    return Scaffold( appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search, color: Colors.grey),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 10),
+            ),
+          ),
+        ),        actions: [
+          IconButton(
+            icon: Icon(Icons.message, color: Colors.black),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.chatScreen);
+            },
+          ),
+    
+        ],
+      ),
+      body: Center(child: const Text('Home Screen'),),bottomNavigationBar: BottomNavigationBar(
+
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: "My Network"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_box), label: "Post"),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: "Notifications"),
+          BottomNavigationBarItem(icon: Icon(Icons.work), label: "Jobs"),
+        ],
+      ),);
   }
 }

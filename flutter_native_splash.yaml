@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#FAFAFA"
+  image: assets/images/JobLinc_logo_light.png
+  image_android: assets/images/JobLinc_logo_light.png
+
+
+  color_ios: "#FAFAFA"
+  image_ios: assets/images/logo_light_android.png
+
+
+  android_12:
+    image: assets/images/logo_light_android.png
+    color: "#FAFAFA"
+    icon_background_color: "#FAFAFA"
+
