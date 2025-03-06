@@ -1,6 +1,7 @@
 class PostModel {
   PostModel({
     required this.postID,
+    required this.username,
     required this.userID,
     required this.profilePictureURL,
     required this.text,
@@ -12,6 +13,7 @@ class PostModel {
 
   final String postID;
   final String userID;
+  final String username;
   final String profilePictureURL;
   final String text;
   int commentCount;
