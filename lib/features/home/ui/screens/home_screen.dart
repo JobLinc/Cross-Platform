@@ -29,11 +29,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.message, color: Colors.black),
             onPressed: () {
-<<<<<<< HEAD
-              Navigator.pushNamed(context, Routes.chatListScreen);
-=======
               Navigator.pushNamed(context, Routes.chatListScreen);  
->>>>>>> main
             },
           ),
     
