@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/features/chat/ui/widgets/chat_bubble.dart';
-import 'package:intl/intl.dart';
 
 class ChatMessage extends StatelessWidget {
   const ChatMessage({super.key});

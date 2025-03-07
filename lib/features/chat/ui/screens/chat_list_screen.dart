@@ -36,7 +36,11 @@ AppBar ChatListAppBar(BuildContext context) {
       // Ensures proper spacing from status bar
       child: Padding(
         padding: EdgeInsets.symmetric(
+<<<<<<< HEAD
             horizontal: 10.w, vertical: 5.h), // Adds spacing
+=======
+            horizontal: 10.w), // Adds spacing
+>>>>>>> main
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -53,7 +57,10 @@ AppBar ChatListAppBar(BuildContext context) {
                 MoreOptionsButton(),
               ],
             ),
+<<<<<<< HEAD
             SizedBox(height: 4.h),
+=======
+>>>>>>> main
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -668,5 +675,9 @@ List<Chat> mockChats = [
     
     //SafeArea(
   //       child: Scaffold(body: Center(child: Text("Chat List Screen"))));
+<<<<<<< HEAD
   // }
 
+=======
+  // }
+>>>>>>> main

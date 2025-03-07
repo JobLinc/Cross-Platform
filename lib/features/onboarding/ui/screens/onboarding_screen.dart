@@ -5,19 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/features/onboarding/ui/widgets/agreement_text.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: Size(412, 924),
-        minTextAdapt: true,
-        builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
+    return 
+          Scaffold(
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -78,91 +74,13 @@ class OnboardingScreen extends StatelessWidget {
                           Navigator.pushReplacementNamed(
                               context, Routes.signUpScreen);
                         }),
-                    Container(
-                      width: 0.85.sw,
-                      margin: EdgeInsets.symmetric(vertical: 20.sp),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 12.sp),
-                          children: [
-                            TextSpan(
-                                text:
-                                    'By clicking Agree & Join or Continue, you agree to the Joblinc '),
-                            TextSpan(
-                              text: 'User Agreement',
-                              style: TextStyle(
-                                  color: ColorsManager.crimsonRed,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: ', '),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: TextStyle(
-                                  color: ColorsManager.crimsonRed,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: ', and '),
-                            TextSpan(
-                              text: 'Cookie Policy',
-                              style: TextStyle(
-                                  color: ColorsManager.crimsonRed,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: '.'),
-                          ],
-                        ),
-                      ),
-                    ),
+                    AgreementText(),
                   ],
                 ),
               ),
               backgroundColor: Colors.white,
-            ),
+            
           );
-        });
+      
   }
 }
-
-
-
-  // Widget build(BuildContext context) {
-  //   return SafeArea(
-  //     child: Scaffold(
-  //       body: Center(
-  //           child: Column(
-  //         children: [
-  //           const Text('Onboarding Screen'),
-
-  //           // Navigations for testing screens while working on the app (will be removed later)
-  //           ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pushNamed(context, Routes.loginScreen);
-  //               },
-  //               child: const Text('Login')),
-  //           ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pushNamed(context, Routes.signUpScreen);
-  //               },
-  //               child: const Text('Signup')),
-  //           ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pushNamed(context, Routes.homeScreen);
-  //               },
-  //               child: const Text('Home')),
-  //           ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pushNamed(context, Routes.profileScreen);
-  //               },
-  //               child: const Text('Profile')),
-  //           ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pushNamed(context, Routes.chatScreen);
-  //               },
-  //               child: const Text('Chat')),
-  //         ],
-  //       )),
-  //     ),
-  //   );
-  // }
