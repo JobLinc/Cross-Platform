@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import "../../data/models/post_model.dart";
 
 class Post extends StatelessWidget {
@@ -9,30 +10,46 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8),
       child: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              PostHeader(
-                imageURL: data.profilePictureURL,
-                username: data.username,
-              ),
-              PostBody(text: data.text,),
-              //TODO implement attachements
-              //PostAttachments(attachmentURL: ""),
-              Divider(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              PostActionBar(),
-            ],
-          ),
+          child: PostContent(data: data),
         ),
       ),
+    );
+  }
+}
+
+class PostContent extends StatelessWidget {
+  const PostContent({
+    super.key,
+    required this.data,
+  });
+
+  final PostModel data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PostHeader(
+          imageURL: data.profilePictureURL,
+          username: data.username,
+        ),
+        PostBody(
+          text: data.text,
+        ),
+        //TODO implement attachements
+        //PostAttachments(attachmentURL: ""),
+        Divider(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+        PostActionBar(),
+      ],
     );
   }
 }
@@ -52,23 +69,38 @@ class PostHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        //TODO fix image
-        //ProfileImage(imageURL: ""),
+        ProfileImage(imageURL: imageURL),
         UserInfo(
           username: username,
         ),
         Spacer(),
-        TextButton(
-          onPressed: () => {UnimplementedError()},
-          child: Row(
-            children: [
-              Text("+", textScaler: TextScaler.linear(1.1)),
-              Text(" Follow"),
-            ],
+        Padding(
+          padding: const EdgeInsets.only(right: 5.0),
+          child: GestureDetector(
+            onTap: () => {UnimplementedError()},
+            child: RichText(
+              text: TextSpan(
+                  style: TextStyle(color: ColorsManager.darkBurgundy),
+                  children: [TextSpan(text: "+ Follow")]),
+            ),
           ),
-        ),
+        )
       ],
     );
+  }
+}
+
+class UserInfo extends StatelessWidget {
+  const UserInfo({
+    super.key,
+    required this.username,
+  });
+  final String username;
+
+  @override
+  Widget build(BuildContext context) {
+    //TODO this needs to expand to include the extra info under the username
+    return Text(username);
   }
 }
 
@@ -101,7 +133,12 @@ class _PostBodyState extends State<PostBody> {
                   _expandText = true;
                 });
               },
-              child: Text("more"),
+              child: Text(
+                "more",
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold),
+              ),
             ))
     ]);
   }
@@ -112,43 +149,32 @@ class PostActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        //TODO Implement Buttons
-        IconButton(
-          onPressed: () => {UnimplementedError()},
-          icon: Icon(Icons.thumb_up_outlined),
-        ),
-        IconButton(
-          onPressed: () => {UnimplementedError()},
-          icon: Icon(Icons.comment),
-        ),
-        IconButton(
-          onPressed: () => {UnimplementedError()},
-          icon: Icon(Icons.loop),
-        ),
-        IconButton(
-          onPressed: () => {UnimplementedError()},
-          icon: Icon(Icons.send),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          //TODO Implement Buttons
+          IconButton(
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.thumb_up),
+          ),
+          IconButton(
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.comment),
+          ),
+          IconButton(
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.loop),
+          ),
+          IconButton(
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.send),
+          ),
+        ],
+      ),
     );
-  }
-}
-
-class UserInfo extends StatelessWidget {
-  const UserInfo({
-    super.key,
-    required this.username,
-  });
-  final String username;
-
-  @override
-  Widget build(BuildContext context) {
-    //TODO this needs to expand to include the extra info under the username
-    return Text(username);
   }
 }
 
@@ -179,6 +205,11 @@ class ProfileImage extends StatelessWidget {
     //   placeholder: kTransparentImage,
     //   image: imageURL,
     // );
-    return Image.network(imageURL);
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: CircleAvatar(
+        backgroundImage: NetworkImage(imageURL),
+      ),
+    );
   }
 }
