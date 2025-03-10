@@ -31,7 +31,6 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedTime = DateFormat('h:mm a').format(time);
-    final theme = Theme.of(context);
 
     return Stack(
       children: [

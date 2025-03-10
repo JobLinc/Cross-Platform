@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/core/routing/app_router.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/home/data/models/post_model.dart';
@@ -33,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.message, color: Colors.black),
             onPressed: () {
-              Navigator.pushNamed(context, Routes.chatScreen);
+              Navigator.pushNamed(context, Routes.chatListScreen);  
             },
           ),
         ],
