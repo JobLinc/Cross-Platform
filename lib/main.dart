@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/app_router.dart';
 import 'package:joblinc/core/routing/routes.dart';
 
@@ -14,10 +15,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.onBoardingScreen,
-      onGenerateRoute: appRouter.generateRoute,
-    );
+    return ScreenUtilInit(
+        designSize: Size(412, 924),
+        minTextAdapt: true,
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            initialRoute: Routes.onBoardingScreen,
+            onGenerateRoute: appRouter.generateRoute,
+          );
+        },);
   }
 }
