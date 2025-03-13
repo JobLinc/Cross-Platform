@@ -28,14 +28,13 @@ ThemeData lightTheme = ThemeData(
   focusColor: ColorsManager.darkBurgundy,
   iconTheme: IconThemeData(color: Colors.grey.shade700),
   dividerColor: Colors.grey,
-  
 );
 
 ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   primary: ColorsManager.warmWhite,
   onPrimary: ColorsManager.charcoalBlack,
-  secondary: ColorsManager.softRosewood,
+  secondary: ColorsManager.darkBurgundy,
   onSecondary: ColorsManager.charcoalBlack,
   error: Colors.black,
   onError: Colors.red,

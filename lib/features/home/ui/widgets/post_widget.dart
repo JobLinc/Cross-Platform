@@ -81,7 +81,7 @@ class PostHeader extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                   style: TextStyle(color: ColorsManager.darkBurgundy),
-                  children: [TextSpan(text: "+ Follow")]),
+                  children: [TextSpan(text: "+ Linc")]),
             ),
           ),
         )
