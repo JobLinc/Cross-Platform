@@ -41,25 +41,28 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
             BottomNavigationBarItem(icon: Icon(Icons.work), label: "Jobs"),
           ],
           onTap: (value) {
+            if (value == _selectedIndex) return;
             setState(() {
               _selectedIndex = value;
             });
+            //TODO: Replace PlaceHolders with screens when they are done and uncomment
+            //! Make sure your the scaffold in these screens uses the universal_bottom_bar in core
             switch (value) {
               case 0:
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
-              case 1:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Placeholder()));
-              case 2:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Placeholder()));
-              case 3:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Placeholder()));
-              case 4:
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Placeholder()));
+              // case 1:
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => Placeholder()));
+              // case 2:
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => Placeholder()));
+              // case 3:
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => Placeholder()));
+              // case 4:
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => Placeholder()));
               default:
                 throw UnimplementedError();
             }
