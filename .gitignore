@@ -49,5 +49,6 @@ app.*.map.json
 linux/flutter/generated_*
 windows/flutter/generated_*
 macos/Flutter/Generated*
+pubspec.lock
 
 devtools_options.yaml
