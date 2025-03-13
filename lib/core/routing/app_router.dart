@@ -9,6 +9,7 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
+import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 
@@ -28,7 +29,11 @@ class AppRouter {
           ),
         );
       case Routes.signUpScreen:
-        return MaterialPageRoute(builder: (context) => SignupScreen());
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<RegisterCubit>(),
+                  child: SignupScreen(),
+                ));
       case Routes.homeScreen:
         return MaterialPageRoute(builder: (context) => HomeScreen());
       case Routes.profileScreen:

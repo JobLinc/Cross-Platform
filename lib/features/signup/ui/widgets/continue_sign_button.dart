@@ -7,8 +7,9 @@ class ContinueSignButton extends StatelessWidget {
   const ContinueSignButton({
     super.key,
     required GlobalKey<FormState> formKey,
+    required this.onPressed,
   }) : _formKey = formKey;
-
+  final Function() onPressed;
   final GlobalKey<FormState> _formKey;
 
   @override
@@ -21,12 +22,7 @@ class ContinueSignButton extends StatelessWidget {
             backgroundColor: ColorsManager.crimsonRed,
             borderColor: Colors.transparent,
             padding: EdgeInsets.only(left: 20, right: 20),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                Navigator.pushReplacementNamed(
-                    context, Routes.homeScreen);
-              }
-            },
+            onPressed:onPressed,
             foregroundColor: Colors.white),);
   }
 }

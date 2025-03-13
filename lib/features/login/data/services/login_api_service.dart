@@ -8,6 +8,8 @@ class LoginApiService {
 
   Future<LoginResponse> login(String username, String password) async {
     try {
+      print(username);
+      print(password);
       final response = await _dio.post(
         '/auth/login',
         data: {

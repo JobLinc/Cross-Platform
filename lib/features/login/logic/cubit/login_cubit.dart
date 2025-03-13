@@ -7,11 +7,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._loginRepo) : super(LoginInitial());
 
-  Future<void> login(String username, String password) async {
+  Future<void> login(String email, String password) async {
     emit(LoginLoading());
 
     try {
-      await _loginRepo.login(username, password);
+      await _loginRepo.login(email, password);
       emit(LoginSuccess());
     } catch (e) {
       emit(LoginFailure(e.toString()));

@@ -152,12 +152,12 @@ class LoginScreen extends StatelessWidget {
                                   padding: EdgeInsets.only(left: 20, right: 20),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      //final username = _emailController.text;
-                                      //final password = _passwordController.text;
+                                      final email = _emailController.text;
+                                      final password = _passwordController.text;
 
                                       context
                                           .read<LoginCubit>()
-                                          .login("johndoe", "password");
+                                          .login(email, password);
                                     }
                                   },
                                   foregroundColor: Colors.white)),

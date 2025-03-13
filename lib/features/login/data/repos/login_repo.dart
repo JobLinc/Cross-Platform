@@ -6,8 +6,8 @@ class LoginRepo {
 
   LoginRepo(this._loginApiService);
 
-  Future<void> login(String username, String password) async {
-    final response = await _loginApiService.login(username, password);
+  Future<void> login(String email, String password) async {
+    final response = await _loginApiService.login(email, password);
  
     await SecureStorage.saveTokens(
       accessToken: response.accessToken,
