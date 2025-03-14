@@ -4,9 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomSearchBar extends StatelessWidget {
   
   final String text;
+  //bool? isSearching=false;
+  //List<dynamic>? allItems;
+  //List<dynamic>? searchedItems;
+  final Function onPress;
+  final Function onTextChange;
+  final TextEditingController controller;
+
   
-  const CustomSearchBar({
+  CustomSearchBar({
     required this.text,
+    //this.isSearching,
+    //this.allItems,
+    //this.searchedItems,
+    required this.onPress,
+    required this.onTextChange,
+    required this.controller,
     super.key
   });
 
@@ -21,6 +34,9 @@ class CustomSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: TextField(
+          controller: controller,
+          onTap: (){ onPress();} ,
+          onChanged: (searched){onTextChange(searched);},
           decoration: InputDecoration(
             hintText: text,
             prefixIcon: Icon(Icons.search, size: 20.sp, color: Colors.black87),
