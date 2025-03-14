@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/home/data/models/post_model.dart';
@@ -33,7 +34,14 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.message, color: Colors.black),
             onPressed: () {
               Navigator.pushNamed(context, Routes.chatListScreen);  
-              Navigator.pushNamed(context, Routes.chatListScreen);  
+              //Navigator.pushNamed(context, Routes.chatListScreen);  Sameh : who put this here :(
+            },
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.crown, color: Colors.black),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.premiumScreen);  
+              //Navigator.pushNamed(context, Routes.chatListScreen);  Sameh : who put this here :(
             },
           ),
         ],

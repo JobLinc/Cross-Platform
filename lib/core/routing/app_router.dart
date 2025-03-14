@@ -12,6 +12,7 @@ import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
+import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -44,6 +45,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
       case Routes.chatListScreen:
         return MaterialPageRoute(builder: (context) => ChatListScreen());
+      case Routes.premiumScreen:
+        return MaterialPageRoute(builder: (context) => PremiumScreen());
       default:
         return null;
     }
