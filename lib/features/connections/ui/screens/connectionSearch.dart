@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
+import 'package:joblinc/features/connections/ui/widgets/connectionsList.dart';
+import 'package:joblinc/features/connections/ui/widgets/filterButtons.dart';
+
+class Connectionsearch extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    //final List<Map<String, String>> connections = BlocProvider.of<TrialCubit>(context).connections;
+    final List<Map<String, String>> connections = GetConnections();
+    return ScreenUtilInit(
+      designSize: Size(412, 924),
+      minTextAdapt: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Colors.grey,
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back), // Custom back icon
+                  onPressed: () {
+                    // Custom function when back button is pressed
+                    //BlocProvider.of<TrialCubit>(context).Backclicked();
+                  },
+                ),
+                Expanded(
+                  child: TextField(
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      border: OutlineInputBorder(), // Optional: Adds a border
+                      filled: true,
+                      fillColor: Colors.lightBlue[50],
+                    ),
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width / 50),
+              ],
+            ),
+            body: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  child: SingleChildScrollFilter(),
+                ),
+                Divider(
+                  color: Colors.grey[300], // Line color
+                  thickness: 1, // Line thickness
+                  height: 0, // No extra spacing
+                ),
+                Expanded(child: connections_List_View(connections)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
