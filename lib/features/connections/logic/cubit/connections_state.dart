@@ -4,3 +4,7 @@ part of 'connections_cubit.dart';
 sealed class ConnectionsState {}
 
 final class ConnectionsInitial extends ConnectionsState {}
+
+final class SearchState extends ConnectionsState {}
+
+final class SortState extends ConnectionsState {}
