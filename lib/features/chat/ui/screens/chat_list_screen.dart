@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/ui/widgets/chat_card.dart';
 import 'package:joblinc/features/chat/ui/widgets/chat_list_more_options_button.dart';
 
-class ChatListScreen extends StatelessWidget {
+class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
 
   @override
+  State<ChatListScreen> createState() => _ChatListScreenState();
+}
+
+class _ChatListScreenState extends State<ChatListScreen> {
+  late List<Chat> searchedChats;
+  bool? isSearching= false;
+  final searchTextController=TextEditingController();
+  @override
+
+  void initState() {
+    super.initState();
+    searchedChats = List.from(mockChats);
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -19,16 +34,18 @@ class ChatListScreen extends StatelessWidget {
           children: [
             SizedBox(height: 10.h),
             Expanded(
-              child: ChatList(),
+              child: ChatList(
+                key: ValueKey(searchedChats.length),
+                chats:isSearching! ? searchedChats : mockChats,
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
 
-AppBar ChatListAppBar(BuildContext context) {
+  AppBar ChatListAppBar(BuildContext context) {
   return AppBar(
     backgroundColor: const Color.fromARGB(255, 255, 0, 0),
     elevation: 0,
@@ -49,10 +66,16 @@ AppBar ChatListAppBar(BuildContext context) {
                   icon:
                       Icon(Icons.arrow_back, size: 24.sp, color: Colors.white),
                 ),
-                CustomSearchBar(text: "search messages"),
+                CustomSearchBar(
+                  text: "search messages",
+                  onPress:startSearch,
+                   onTextChange:addSearchedToSearchedList,
+                   controller: searchTextController
+                   ),
                 MoreOptionsButton(),
               ],
             ),
+            if(searchTextController.text.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -78,6 +101,50 @@ AppBar ChatListAppBar(BuildContext context) {
     ),
   );
 }
+
+  void addSearchedToSearchedList(String searched){
+    //print("Search text: $searched"); 
+
+    setState((){
+      if (searched.isEmpty) {
+        searchedChats = List.from(mockChats); 
+      } else {
+        searchedChats=mockChats.where((chat)=>chat.userName.toLowerCase().contains(searched.toLowerCase())).toList();    
+      }
+    });
+    print("Filtered chats: ${searchedChats.map((chat) => chat.userName).toList()}"); 
+
+  }
+  void startSearch() {
+    //ModalRoute.of(context)!.addLocalHistoryEntry(LocalHistoryEntry(onRemove: stopSearching));
+    if (isSearching == false){
+      setState(() {
+        isSearching = true;
+      });
+    }
+  }
+
+  void stopSearching() {
+    clearSearch();
+
+    setState(() {
+      isSearching = false;
+      searchedChats = List.from(mockChats);
+    });
+  }
+
+  void clearSearch() {
+    setState(() {
+      searchTextController.clear();
+    });
+  }
+
+
+}
+
+
+
+
 
 
 

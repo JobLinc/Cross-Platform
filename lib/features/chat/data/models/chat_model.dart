@@ -1,9 +1,3 @@
-
-
-
-
-
-
 //===============================Last Message Model(DTO)=========================//
 
 import 'package:intl/intl.dart';

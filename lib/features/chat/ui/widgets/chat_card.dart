@@ -109,14 +109,19 @@ class ChatCard extends StatelessWidget {
 }
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key});
+  final List<Chat> chats;
+  const ChatList({super.key, required this.chats});
+
 
   @override
-  State<ChatList> createState() => _ChatListState();
+  State<ChatList> createState() => _ChatListState(chats:this.chats);
 }
 
 class _ChatListState extends State<ChatList> {
+  final List<Chat> chats;
   List<Chat> sortedChats = [];
+
+  _ChatListState({ required this.chats});
 
   @override
   void initState() {
@@ -126,13 +131,13 @@ class _ChatListState extends State<ChatList> {
 
   void sortChats() {
     setState(() {
-      sortedChats = List.from(mockChats); // Copy the list
+      sortedChats = List.from(chats); // Copy the list
       sortedChats.sort(
           (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
     });
-    for (var convo in sortedChats) {
-      print("${convo.userName} - ${convo.lastMessage.time}");
-    }
+    // for (var convo in sortedChats) {
+    //   print("${convo.userName} - ${convo.lastMessage.time}");
+    // }
   }
 
   @override
