@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
+import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
@@ -40,4 +43,13 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
+
+  getIt.registerLazySingleton<ChatApiService>(
+    () =>ChatApiService(getIt<Dio>()) ,);
+  
+  //getIt.registerLazySingleton<ChatRepo>(
+    //() => ChatRepo(getIt<ChatApiService>()) ,);
+  
+  getIt.registerFactory<ChatCubit>(
+    () =>ChatCubit(getIt<ChatRepo>()) ,);
 }
