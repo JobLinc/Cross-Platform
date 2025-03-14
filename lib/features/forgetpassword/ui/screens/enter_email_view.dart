@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/enter_code_view.dart';
 
@@ -62,10 +64,9 @@ class EnterEmailView extends StatelessWidget {
                   borderColor: Colors.transparent,
                   padding: EdgeInsets.only(left: 20, right: 20),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const EnterCodeView()),
-                    );
+                    context
+                        .read<ForgetPasswordCubit>()
+                        .sendResetCode(_emailController.text);
                   },
                   foregroundColor: Colors.white,
                 ),

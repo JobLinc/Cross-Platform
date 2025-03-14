@@ -133,7 +133,6 @@ class SignupScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         const SizedBox(height: 20),
                         ContinueSignButton(
-                          formKey: _formKey,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<RegisterCubit>().register(

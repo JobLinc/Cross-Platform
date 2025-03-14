@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/change_password_view.dart';
 
 class EnterCodeView extends StatelessWidget {
@@ -78,10 +80,9 @@ class EnterCodeView extends StatelessWidget {
                   borderColor: Colors.transparent,
                   padding: EdgeInsets.only(left: 20, right: 20),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ChangePasswordView()),
-                    );
+                    context
+                        .read<ForgetPasswordCubit>()
+                        .verifyResetCode(_codeController.text);
                   },
                   foregroundColor: Colors.white,
                 ),
