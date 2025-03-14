@@ -13,7 +13,7 @@ class LastnameTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomRoundedTextFormField(
         controller: _lastNameController,
-        hintText: "Last Name",
+        labelText: "Last Name",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your last name';

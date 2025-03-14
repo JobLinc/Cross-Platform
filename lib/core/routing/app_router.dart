@@ -6,7 +6,7 @@ import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
-import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
+import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';

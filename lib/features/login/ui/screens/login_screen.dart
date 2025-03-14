@@ -12,7 +12,6 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/logic/cubit/login_state.dart';
 import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
 import 'package:joblinc/features/signup/ui/widgets/password_text_field.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
 class LoginScreen extends StatelessWidget {
   bool isLoading = false;
@@ -154,7 +153,7 @@ class LoginScreen extends StatelessWidget {
                                     if (_formKey.currentState!.validate()) {
                                       final email = _emailController.text;
                                       final password = _passwordController.text;
-
+                                      
                                       context
                                           .read<LoginCubit>()
                                           .login(email, password);
