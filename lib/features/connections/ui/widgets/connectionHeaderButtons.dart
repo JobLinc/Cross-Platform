@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/widgets/sortSheet.dart';
 
-Widget connection_Buttons(
-  List<Map<String, String>> connections,
-  BuildContext context,
-) {
-  return Container(
+class connection_Buttons extends StatelessWidget {
+   List<Map<String, String>> connections;
+  connection_Buttons({super.key, required this.connections});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
     color: Colors.white,
     child: Row(
       children: [
@@ -23,17 +27,18 @@ Widget connection_Buttons(
             //     Routes.connectionListSearch,
             //     // arguments: connections,
             //   );
-            //BlocProvider.of<TrialCubit>(context).Searchclicked();
+            BlocProvider.of<ConnectionsCubit>(context).Searchclicked();
           },
           icon: Icon(Icons.search),
         ),
         IconButton(
             onPressed: () {
               showModalBottomSheet(
-                  context: context, builder: (context) => /*SortBottomSheet()*/Container());
+                  context: context, builder: (context) => SortBottomSheet());
             },
             icon: Icon(Icons.sort)),
       ],
     ),
   );
+  }
 }

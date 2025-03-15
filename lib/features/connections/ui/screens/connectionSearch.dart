@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/widgets/connectionsList.dart';
 import 'package:joblinc/features/connections/ui/widgets/filterButtons.dart';
 
 class Connectionsearch extends StatelessWidget {
+  const Connectionsearch({super.key});
+
   @override
   Widget build(BuildContext context) {
+    print("Building ConnectionList");
     //final List<Map<String, String>> connections = BlocProvider.of<TrialCubit>(context).connections;
     final List<Map<String, String>> connections = GetConnections();
     return ScreenUtilInit(
@@ -24,7 +28,7 @@ class Connectionsearch extends StatelessWidget {
                   icon: Icon(Icons.arrow_back), // Custom back icon
                   onPressed: () {
                     // Custom function when back button is pressed
-                    //BlocProvider.of<TrialCubit>(context).Backclicked();
+                    BlocProvider.of<ConnectionsCubit>(context).Backclicked();
                   },
                 ),
                 Expanded(
@@ -53,7 +57,10 @@ class Connectionsearch extends StatelessWidget {
                   thickness: 1, // Line thickness
                   height: 0, // No extra spacing
                 ),
-                Expanded(child: connections_List_View(connections)),
+                Expanded(
+                    child: connections_List_View(
+                  connections: connections,
+                )),
               ],
             ),
           ),
