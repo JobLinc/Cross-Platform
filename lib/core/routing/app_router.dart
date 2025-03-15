@@ -5,6 +5,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
@@ -45,6 +47,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
       case Routes.chatListScreen:
         return MaterialPageRoute(builder: (context) => ChatListScreen());
+      case Routes.jobListScreen:
+        return MaterialPageRoute(builder: (context) => JobListScreen());
+      case Routes.jobSearchScreen:
+        return MaterialPageRoute(builder: (context) => JobSearchScreen());
       case Routes.premiumScreen:
         return MaterialPageRoute(builder: (context) => PremiumScreen());
       default:
@@ -52,3 +58,4 @@ class AppRouter {
     }
   }
 }
+

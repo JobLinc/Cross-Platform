@@ -12,7 +12,11 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {press;},
+      onTap: () {
+        if (press != null){
+        press!();
+        }
+      },
       child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           child: Card(
@@ -80,6 +84,7 @@ class JobList extends StatelessWidget{
   Widget build(BuildContext context) {
    
     return ListView.builder(
+        key: ValueKey(jobs.length),
         itemCount: jobs.length,
         itemBuilder: (context, index) => JobCard(
               itemIndex: index,
@@ -93,6 +98,7 @@ class JobList extends StatelessWidget{
 }
 
 void showJobDetails(BuildContext context) {
+  Future.delayed(Duration(milliseconds: 100), () {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, 
@@ -103,11 +109,15 @@ void showJobDetails(BuildContext context) {
         minChildSize: 0.5,
         maxChildSize: 1.0,
         builder: (context,scrollController){
-          return JobDetailScreen(scrollController:scrollController);
+          return Material(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            child: JobDetailScreen(scrollController: scrollController)
+            );
         }
       );
     }
   );
+});
 }
 
 

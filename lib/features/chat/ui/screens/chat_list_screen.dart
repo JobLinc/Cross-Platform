@@ -16,13 +16,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
   late List<Chat> searchedChats;
   bool? isSearching= false;
   final searchTextController=TextEditingController();
-  @override
 
+  @override
   void initState() {
     super.initState();
     searchedChats = List.from(mockChats);
   }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -69,9 +69,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 CustomSearchBar(
                   text: "search messages",
                   onPress:startSearch,
-                   onTextChange:addSearchedToSearchedList,
-                   controller: searchTextController
-                   ),
+                  onTextChange:addSearchedToSearchedList,
+                  controller: searchTextController
+                  ),
                 MoreOptionsButton(),
               ],
             ),
@@ -112,7 +112,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         searchedChats=mockChats.where((chat)=>chat.userName.toLowerCase().contains(searched.toLowerCase())).toList();    
       }
     });
-    print("Filtered chats: ${searchedChats.map((chat) => chat.userName).toList()}"); 
+    //print("Filtered chats: ${searchedChats.map((chat) => chat.userName).toList()}"); 
 
   }
   void startSearch() {
@@ -138,13 +138,4 @@ class _ChatListScreenState extends State<ChatListScreen> {
       searchTextController.clear();
     });
   }
-
-
 }
-
-
-
-
-
-
-
