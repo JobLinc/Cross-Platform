@@ -12,6 +12,7 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
   bool recentlyAddedSelected = true;
   bool firstNameSelected = false;
   bool lastNameSelected = false;
+  bool connectedOnappear = true;
   void Searchclicked() {
     print("🚀 ConnectionsCubit switched to with state: $state");
     emit(SearchState());
@@ -36,6 +37,31 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       firstNameSelected = false;
       recentlyAddedSelected = false;
     }
-    emit(SortState());
+    emit(ChooseSort());
+  }
+
+  List<Map<String, String>> SortingData() {
+    List<Map<String, String>> data = connections;
+    if (firstNameSelected == false && lastNameSelected == false) {
+      connectedOnappear = true;
+      data.sort((a, b) {
+        DateTime dateA = DateTime.parse(a["connected_on"]!);
+        DateTime dateB = DateTime.parse(b["connected_on"]!);
+        return dateB.compareTo(dateA);
+      });
+    } else {
+      if (firstNameSelected == true) {
+        data.sort((a, b) => a['firstname']!.compareTo(b['firstname']!));
+        connectedOnappear = false;
+      } else if (lastNameSelected == true) {
+        data.sort((a, b) => a['lastname']!.compareTo(b['lastname']!));
+        connectedOnappear = false;
+      }
+    }
+    return data;
+  }
+
+  void showmodalclosed() {
+    emit(SortData());
   }
 }

@@ -7,4 +7,6 @@ final class ConnectionsInitial extends ConnectionsState {}
 
 final class SearchState extends ConnectionsState {}
 
-final class SortState extends ConnectionsState {}
+final class ChooseSort extends ConnectionsState {}
+
+final class SortData extends ConnectionsState {}

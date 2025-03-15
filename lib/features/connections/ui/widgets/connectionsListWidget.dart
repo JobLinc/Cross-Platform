@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
 class connections_List_View extends StatelessWidget {
   List<Map<String, String>> connections;
@@ -24,7 +27,7 @@ class connections_List_View extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   //todo:go to the profile of the user
-                  print("go to ${connection['name']} profile");
+                  print("go to ${connection['firstname']} profile");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,8 +39,8 @@ class connections_List_View extends StatelessWidget {
                             Alignment.topLeft, // Forces it to the top-left
                         child: CircleAvatar(
                           radius: 25,
-                          child: Text(
-                              connection['name']![0]), // First letter as avatar
+                          child: Text(connection['firstname']![
+                              0]), // First letter as avatar
                         ),
                       ),
                     ),
@@ -48,7 +51,7 @@ class connections_List_View extends StatelessWidget {
 
                         children: [
                           Text(
-                            connection['name']!,
+                            "${connection['firstname']!} ${connection['lastname']!}",
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
@@ -59,24 +62,27 @@ class connections_List_View extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            "Connected on ${connection['Last_Connected']!}",
-                            style: TextStyle(
-                                fontSize: 18.sp, color: Colors.grey[600]),
-                          ),
+                          BlocProvider.of<ConnectionsCubit>(context)
+                                  .connectedOnappear
+                              ? Text(
+                                  "Connected on ${connection['connected_on']!}",
+                                  style: TextStyle(
+                                      fontSize: 18.sp, color: Colors.grey[600]),
+                                )
+                              : SizedBox.shrink(),
                         ],
                       ),
                     ),
                     IconButton(
                         onPressed: () {
-                          //todo : go to chat
-                          print("hello ${connection['name']} chat");
+                          Navigator.pushNamed(context, Routes.chatScreen);
+                          print("hello ${connection['firstname']} chat");
                         },
                         icon: Icon(Icons.send)),
                     IconButton(
                         onPressed: () {
                           //todo : the
-                          print("hello ${connection['name']} more");
+                          print("hello ${connection['firstname']} more");
                         },
                         icon: Icon(Icons.more_horiz)),
                   ],

@@ -9,13 +9,13 @@ class ConnectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConnectionsCubit, ConnectionsState>(
-        builder: (context, state) {
-      if (state is SearchState) {
-        return Connectionsearch();
-      } else {
-        return ConnectionList();
-      }
-    });
+    return BlocSelector<ConnectionsCubit, ConnectionsState, bool>(
+      selector: (state) {
+        return state is SearchState; // Only cares about this condition
+      },
+      builder: (context, isSearch) {
+        return isSearch ? Connectionsearch() : ConnectionList();
+      },
+    );
   }
 }

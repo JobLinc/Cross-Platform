@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
-import 'package:joblinc/features/connections/ui/widgets/connectionsList.dart';
+import 'package:joblinc/features/connections/ui/widgets/connectionsListWidget.dart';
 import 'package:joblinc/features/connections/ui/widgets/filterButtons.dart';
 
 class Connectionsearch extends StatelessWidget {

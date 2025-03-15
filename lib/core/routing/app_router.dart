@@ -4,6 +4,8 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
@@ -43,7 +45,12 @@ class AppRouter {
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
       case Routes.chatListScreen:
-        return MaterialPageRoute(builder: (context) => ChatListScreen());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: context.read<ConnectionsCubit>(),
+            child: ConnectionPage(),
+          ),
+        );
       default:
         return null;
     }
