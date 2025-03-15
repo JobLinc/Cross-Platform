@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
-import "../../data/models/post_model.dart";
+import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
   //this will need to be changed to support live updates to likes/comments/reposts
@@ -96,7 +96,7 @@ class PostHeader extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                   style: TextStyle(color: ColorsManager.darkBurgundy),
-                  children: [TextSpan(text: "+ Linc")]),
+                  children: [TextSpan(text: '+ Linc')]),
             ),
           ),
         )
@@ -152,7 +152,7 @@ class _PostBodyState extends State<PostBody> {
 
   @override
   Widget build(BuildContext context) {
-    //? might improve the UI for the "more" used at the end of the paragraph
+    //? might improve the UI for the 'more' used at the end of the paragraph
     return Wrap(children: [
       Text(
         widget.text,
@@ -169,7 +169,7 @@ class _PostBodyState extends State<PostBody> {
                 });
               },
               child: Text(
-                "more",
+                'more',
                 style: TextStyle(
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.bold),
@@ -198,16 +198,20 @@ class PostNumerics extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(likesCount.toString()),
+          Icon(
+            Icons.thumb_up,
+            size: 15,
+          ),
+          Text(' ${likesCount.toString()}'),
           Spacer(),
           (commentCount == 0)
               ? SizedBox()
               : Text(
-                  "$commentCount comment${(commentCount == 1) ? ("") : ("s")}"),
-          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(" • "),
+                  '$commentCount comment${(commentCount == 1) ? ('') : ('s')}'),
+          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
           (repostCount == 0)
               ? SizedBox()
-              : Text("$repostCount repost${(repostCount == 1) ? ("") : ("s")}"),
+              : Text('$repostCount repost${(repostCount == 1) ? ('') : ('s')}'),
         ],
       ),
     );

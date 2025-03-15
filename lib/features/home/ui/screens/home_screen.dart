@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           child: Center(
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Search",
+                hintText: 'Search',
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
                 border: InputBorder.none,
               ),
