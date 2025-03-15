@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
-import '../widgets/square_avatar.dart';
 import '../../data/company.dart';
 
 void main() {

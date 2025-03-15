@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../screens/create_company.dart';
 
 class CompanyMoreButton extends StatelessWidget {
   const CompanyMoreButton({super.key});
@@ -8,7 +9,7 @@ class CompanyMoreButton extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return const MoreActions(); // Add const
+        return const MoreActions();
       },
     );
   }
@@ -19,36 +20,45 @@ class CompanyMoreButton extends StatelessWidget {
       onPressed: () {
         _showMoreActions(context);
       },
-      child: const Icon(Icons.more_horiz_outlined, color: Colors.black), // Add const
+      child: const Icon(Icons.more_horiz_outlined,
+          color: Colors.black), // Add const
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(
           side: BorderSide(
-            color: Colors.black, // Border color
-            width: 0.5, // Border width
+            color: Colors.black,
+            width: 0.5,
           ),
-        ), 
-        padding: const EdgeInsets.all(5), 
+        ),
+        padding: const EdgeInsets.all(5),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        fixedSize: Size(10.w, 10.h), 
-
+        fixedSize: Size(10.w, 10.h),
       ),
     );
   }
 }
 
-
 class MoreActions extends StatelessWidget {
   const MoreActions({super.key});
 
+  void _CreateCompanyPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateCompanyPage(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(  
+    return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top:10, bottom: 2, left:5),
-          child: Row( 
-            children:[
+          padding: EdgeInsets.only(top: 10, bottom: 2, left: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               IconButton(
                 icon: Icon(Icons.ios_share),
                 onPressed: () {},
@@ -60,14 +70,14 @@ class MoreActions extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ]
+            ],
           ),
         ),
-
         Padding(
-          padding: EdgeInsets.only(top:2, bottom: 2, left:5),
-          child: Row( 
-            children:[
+          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {},
@@ -79,14 +89,14 @@ class MoreActions extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ]
+            ],
           ),
         ),
-
         Padding(
-          padding: EdgeInsets.only(top:2, bottom: 2, left:5),
-          child: Row( 
-            children:[
+          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               IconButton(
                 icon: Icon(Icons.flag_rounded),
                 onPressed: () {},
@@ -98,26 +108,31 @@ class MoreActions extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ]
+            ],
           ),
         ),
-
         Padding(
-          padding: EdgeInsets.only(top:2, bottom: 2, left:5),
-          child: Row( 
-            children:[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {},
-              ),
-              Text(
-                'Create a LinkedIn Page',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
+          child: InkWell(
+            onTap: () {
+              _CreateCompanyPage(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {},
                 ),
-              ),
-            ]
+                Text(
+                  'Create a LinkedIn Page',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

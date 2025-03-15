@@ -58,7 +58,7 @@ class CompanyData extends StatelessWidget {
                     ),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment
-                          .center, // Vertically center the dot
+                          .center, 
                       spacing: 10.0,
                       runSpacing: 4.0,
                       children: [
@@ -73,7 +73,7 @@ class CompanyData extends StatelessWidget {
 
                         Icon(
                           Icons.circle,
-                          size: 6.sp, // Adjust the size of the dot
+                          size: 6.sp, 
                           color: Colors.grey.shade600,
                         ),
 
@@ -101,7 +101,7 @@ class CompanyData extends StatelessWidget {
                               color: Colors.grey.shade600,
                             ),
                           ),
-                        // Dot separator
+                        
                         Icon(
                           Icons.circle,
                           size: 6.sp,
@@ -112,7 +112,7 @@ class CompanyData extends StatelessWidget {
                             .organizationSize
                             .displayName
                             .split(
-                                ' ')) // TODO: Add the real number of followers
+                                ' ')) 
                           Text(
                             part,
                             style: TextStyle(
@@ -139,7 +139,6 @@ class CompanyData extends StatelessWidget {
                       websiteUrl: company.website!,
                       width: 150.w,
                       fontSize: 13.sp,
-                      borderRadius: 20,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8),
