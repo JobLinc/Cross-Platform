@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
@@ -46,7 +47,11 @@ class AppRouter {
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
       case Routes.chatListScreen:
-        return MaterialPageRoute(builder: (context) => ChatListScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+          create: (context)=>getIt<ChatListCubit>(),
+          child:ChatListScreen(),
+          ));
       case Routes.jobListScreen:
         return MaterialPageRoute(builder: (context) => JobListScreen());
       case Routes.jobSearchScreen:
