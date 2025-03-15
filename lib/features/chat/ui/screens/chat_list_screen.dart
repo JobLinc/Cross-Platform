@@ -50,10 +50,10 @@ AppBar ChatListAppBar(BuildContext context) {
                       Icon(Icons.arrow_back, size: 24.sp, color: Colors.white),
                 ),
                 CustomSearchBar(
-                  text: "Microsoft", //Company Name goes here
-                  onPress: () {},
-                  onTextChange: (searched) {},
-                  controller: TextEditingController(),
+                  text: "search messages", 
+                  onPress: (){},
+                  onTextChange: (){},
+                  controller: TextEditingController()
                 ),
                 MoreOptionsButton(),
               ],

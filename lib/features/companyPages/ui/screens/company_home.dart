@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
+import '../../../../core/widgets/custom_search_bar.dart';
+import '../widgets/square_avatar.dart';
+import '../../data/company.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,12 +13,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 690), 
+      designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          home: CompanyPageHome(),
+          home: CompanyPageHome(
+            company: mockCompanies[6]
+          ),
         );
       },
     );
@@ -22,12 +28,14 @@ class MyApp extends StatelessWidget {
 }
 
 class CompanyPageHome extends StatelessWidget {
-  const CompanyPageHome({super.key});
+  final Company company;
+  const CompanyPageHome({required this.company, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFFAFAFA),
         title: Row(
           children: [
             IconButton(
@@ -36,15 +44,9 @@ class CompanyPageHome extends StatelessWidget {
               },
               icon: const Icon(Icons.arrow_back),
             ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                'Microsoft', // Company Name goes here
-                overflow: TextOverflow.ellipsis, // Add ellipsis if the text is too long
-              ),
-            ),
             CustomSearchBar(
-              text: 'Microsoft', // Company Name goes here
+              // TODO: Needs to be gray and to have a better height
+              text: company.name, // Company Name goes here
               onPress: () {},
               onTextChange: (searched) {},
               controller: TextEditingController(),
@@ -52,51 +54,9 @@ class CompanyPageHome extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CustomSearchBar extends StatelessWidget {
-  final String text;
-  final Function onPress;
-  final Function onTextChange;
-  final TextEditingController controller;
-
-  CustomSearchBar({
-    required this.text,
-    required this.onPress,
-    required this.onTextChange,
-    required this.controller,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        height: 40.h,
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: TextField(
-          controller: controller,
-          onTap: () => onPress(),
-          onChanged: (searched) => onTextChange(searched),
-          decoration: InputDecoration(
-            hintText: text,
-            prefixIcon: Icon(Icons.search, size: 20.sp, color: Colors.black87),
-            filled: true,
-            fillColor: Colors.white70,
-            contentPadding: EdgeInsets.symmetric(vertical: 10.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          style: TextStyle(fontSize: 14.sp),
-        ),
+      body: 
+      CompanyData(
+        company: company
       ),
     );
   }

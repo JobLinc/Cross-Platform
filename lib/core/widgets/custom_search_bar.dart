@@ -41,7 +41,7 @@ class CustomSearchBar extends StatelessWidget {
             hintText: text,
             prefixIcon: Icon(Icons.search, size: 20.sp, color: Colors.black87),
             filled: true,
-            fillColor: Colors.white70,
+            fillColor: Colors.white,
             contentPadding: EdgeInsets.symmetric(vertical: 10.h),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
