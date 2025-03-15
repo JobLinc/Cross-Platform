@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 
 class JobCard extends StatelessWidget {
   final Job job;
   final Function? press;
-  const JobCard({super.key, required this.job, this.press});
+  const JobCard({super.key, required this.job, this.press, required int itemIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +72,44 @@ class JobCard extends StatelessWidget {
 }
 
 class JobList extends StatelessWidget{
-  
   final List<Job> jobs;
+
   const JobList({super.key, required this.jobs});
 
   @override
   Widget build(BuildContext context) {
    
-    throw UnimplementedError();
+    return ListView.builder(
+        itemCount: jobs.length,
+        itemBuilder: (context, index) => JobCard(
+              itemIndex: index,
+              job: jobs[index],
+              press: () {
+                showJobDetails(context);
+                //print("Tapped on: ${sortedChats[index].userName}");
+              },
+            ));
   } 
 }
+
+void showJobDetails(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, 
+    backgroundColor: Colors.transparent,
+    builder: (context){
+      return DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 1.0,
+        builder: (context,scrollController){
+          return JobDetailScreen(scrollController:scrollController);
+        }
+      );
+    }
+  );
+}
+
+
+
+

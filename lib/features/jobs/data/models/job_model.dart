@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
-
 import 'package:flutter/material.dart';
 
 // class Company{}
@@ -68,34 +66,7 @@ class Job {
 
 
 // Mock data
-List<Job> mockJobs = [
-  Job(
-    title: "Software Engineer",
-    industry: "Technology",
-    company: Company(name: "TechCorp", size: "500+ employees"),
-    description: "Develop and maintain software solutions.",
-    workplace: "Hybrid",
-    type: "Full-time",
-    experienceLevel: "Mid-Level",
-    salaryRange: SalaryRange(min: 60000, max: 90000),
-    location: Location(city: "San Francisco", country: "USA"),
-    keywords: ["Flutter", "Dart", "Backend"],
-    createdAt: DateTime.now(),
-  ),
-  Job(
-    title: "Marketing Specialist",
-    industry: "Marketing",
-    company: Company(name: "AdWorks", size: "200 employees"),
-    description: "Create and implement marketing campaigns.",
-    workplace: "Remote",
-    type: "Contract",
-    experienceLevel: "Entry-Level",
-    salaryRange: SalaryRange(min: 40000, max: 60000),
-    location: Location(city: "New York", country: "USA"),
-    keywords: ["SEO", "Content Marketing", "Social Media"],
-    createdAt: DateTime.now(),
-  ),
-];
+//List<Job> mockJobs = 
 
 // Sample Company class
 class Company {
@@ -162,3 +133,85 @@ class Location {
     };
   }
 }
+
+
+List<Job> mockJobs= [
+  Job(
+    title: "Software Engineer",
+    industry: "Technology",
+    company: Company(name: "TechCorp", size: "500+ employees"),
+    description: "Develop and maintain software solutions.",
+    workplace: "Hybrid",
+    type: "Full-time",
+    experienceLevel: "Mid-Level",
+    salaryRange: SalaryRange(min: 60000, max: 90000),
+    location: Location(city: "San Francisco", country: "USA"),
+    keywords: ["Flutter", "Dart", "Backend"],
+    createdAt: DateTime.now(),
+  ),
+  Job(
+    title: "Marketing Specialist",
+    industry: "Marketing",
+    company: Company(name: "AdWorks", size: "200 employees"),
+    description: "Create and implement marketing campaigns.",
+    workplace: "Remote",
+    type: "Contract",
+    experienceLevel: "Entry-Level",
+    salaryRange: SalaryRange(min: 40000, max: 60000),
+    location: Location(city: "New York", country: "USA"),
+    keywords: ["SEO", "Content Marketing", "Social Media"],
+    createdAt: DateTime.now(),
+  ),
+  Job(
+    title: "Software Engineer",
+    industry: "Technology",
+    company: Company(name: "TechCorp", size: "500+ employees"),
+    description: "Develop and maintain software solutions.",
+    workplace: "Hybrid",
+    type: "Full-time",
+    experienceLevel: "Mid-Level",
+    salaryRange: SalaryRange(min: 60000, max: 90000),
+    location: Location(city: "San Francisco", country: "USA"),
+    keywords: ["Flutter", "Dart", "Backend"],
+    createdAt: DateTime.now(),
+  ),
+  Job(
+    title: "Marketing Specialist",
+    industry: "Marketing",
+    company: Company(name: "AdWorks", size: "200 employees"),
+    description: "Create and implement marketing campaigns.",
+    workplace: "Remote",
+    type: "Contract",
+    experienceLevel: "Entry-Level",
+    salaryRange: SalaryRange(min: 40000, max: 60000),
+    location: Location(city: "New York", country: "USA"),
+    keywords: ["SEO", "Content Marketing", "Social Media"],
+    createdAt: DateTime.now(),
+  ),
+  Job(
+    title: "Software Engineer",
+    industry: "Technology",
+    company: Company(name: "TechCorp", size: "500+ employees"),
+    description: "Develop and maintain software solutions.",
+    workplace: "Hybrid",
+    type: "Full-time",
+    experienceLevel: "Mid-Level",
+    salaryRange: SalaryRange(min: 60000, max: 90000),
+    location: Location(city: "San Francisco", country: "USA"),
+    keywords: ["Flutter", "Dart", "Backend"],
+    createdAt: DateTime.now(),
+  ),
+  Job(
+    title: "Marketing Specialist",
+    industry: "Marketing",
+    company: Company(name: "AdWorks", size: "200 employees"),
+    description: "Create and implement marketing campaigns.",
+    workplace: "Remote",
+    type: "Contract",
+    experienceLevel: "Entry-Level",
+    salaryRange: SalaryRange(min: 40000, max: 60000),
+    location: Location(city: "New York", country: "USA"),
+    keywords: ["SEO", "Content Marketing", "Social Media"],
+    createdAt: DateTime.now(),
+  ),
+];
