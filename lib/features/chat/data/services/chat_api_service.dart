@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
-import '../models/chat_model.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
+
+bool apiEndPointFunctional=false;
 
 class ChatApiService {
   final Dio _dio;
@@ -8,11 +10,18 @@ class ChatApiService {
 
   Future<List<dynamic>> getAllChats() async {
     try {
-      final response = await _dio.get(
-        '/conversation/history',
-      );
+      final response;
+      if (apiEndPointFunctional){
+         response = await _dio.get(
+          '/chat/get',
+        );
+        return response.data;
+      }
+      else {
+        return mockChats;
+      }
       //print(response.data);
-      return response.data;
+      
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
