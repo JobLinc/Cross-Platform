@@ -36,8 +36,8 @@ ColorScheme lightColorScheme = ColorScheme(
   onPrimary: ColorsManager.charcoalBlack,
   secondary: ColorsManager.darkBurgundy,
   onSecondary: ColorsManager.charcoalBlack,
-  error: Colors.black,
-  onError: Colors.red,
+  error: Colors.red,
+  onError: Colors.yellow,
   surface: Colors.brown.shade50,
   onSurface: ColorsManager.charcoalBlack,
 );
