@@ -11,7 +11,6 @@ class connection_Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       child: Row(
         children: [
           SizedBox(width: MediaQuery.of(context).size.width / 12),

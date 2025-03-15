@@ -10,13 +10,11 @@ class ConnectionList extends StatelessWidget {
   @override
   List<Map<String, String>> connections = GetConnections();
   Widget build(BuildContext context) {
-    print("Building ConnectionList");
     return ScreenUtilInit(
       designSize: Size(412, 924),
       minTextAdapt: true,
       builder: (context, child) {
         return Scaffold(
-          backgroundColor: Colors.grey,
           appBar: AppBar(
             title: Text("Connection", style: TextStyle(fontSize: 20.sp)),
             centerTitle: true,

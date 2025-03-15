@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 
 class InvitationsList extends StatelessWidget {
   final List<Map<String, dynamic>> invitations = [
@@ -43,7 +44,7 @@ class InvitationsList extends StatelessWidget {
         return Column(
           children: [
             Container(
-              color: Colors.white, // White background
+              color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
                 onTap: () {
                   // TODO: Navigate to the user's profile
@@ -93,18 +94,43 @@ class InvitationsList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        print("Declined ${invitation['name']}");
-                      },
-                      icon: Icon(Icons.close, size: 30.sp, color: Colors.red),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Icon(Icons.close,
+                          size: 22.sp, color: Colors.black), // Add const
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color: Colors.black,
+                            width: 0.5,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(5),
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        fixedSize: Size(10.w, 10.h),
+                      ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        print("Accepted ${invitation['name']}");
-                      },
-                      icon: Icon(Icons.check_circle,
-                          size: 35.sp, color: Colors.green),
+                    Padding(
+                      padding: EdgeInsets.only(right: 8.w),
+                      child: ElevatedButton(
+                          onPressed: () {},
+                          child: Icon(Icons.check_outlined,
+                              size: 22.sp,
+                              color:
+                                  ColorsManager.softDarkBurgundy), // Add const
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(
+                              side: BorderSide(
+                                color: ColorsManager.softDarkBurgundy,
+                                width: 0.5,
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(5),
+                            backgroundColor: Colors.white,
+                            foregroundColor: ColorsManager.softDarkBurgundy,
+                            fixedSize: Size(10.w, 10.h),
+                          )),
                     ),
                   ],
                 ),

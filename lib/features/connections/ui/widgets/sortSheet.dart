@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
 class SortBottomSheet extends StatelessWidget {
@@ -59,7 +60,7 @@ class SortBottomSheet extends StatelessWidget {
           SizedBox(height: 20.h),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorsManager.crimsonRed,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               minimumSize: Size(double.infinity, 50.h),
@@ -82,7 +83,7 @@ Widget buildSortButton(
     required bool isSelected}) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
-      backgroundColor: isSelected ? Colors.green : Colors.grey[300],
+      backgroundColor: isSelected ? Color(0xff004c33) : Colors.grey[300],
       foregroundColor: isSelected ? Colors.white : Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     ),

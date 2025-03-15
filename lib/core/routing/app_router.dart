@@ -45,11 +45,11 @@ class AppRouter {
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
       case Routes.chatListScreen:
-        return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-                  create: (context) => getIt<ConnectionsCubit>(),
-                  child: ConnectionPage(),
-                ));
+        // return MaterialPageRoute(
+        //     builder: (context) => BlocProvider(
+        //           create: (context) => getIt<ConnectionsCubit>(),
+        //           child: ConnectionPage(),
+        //         ));
         return MaterialPageRoute(builder: (context) => ChatListScreen());
       default:
         return null;

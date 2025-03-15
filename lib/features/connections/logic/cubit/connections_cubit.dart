@@ -5,26 +5,20 @@ import 'package:meta/meta.dart';
 part 'connections_state.dart';
 
 class ConnectionsCubit extends Cubit<ConnectionsState> {
-  ConnectionsCubit() : super(ConnectionsInitial()) {
-    print("🚀 ConnectionsCubit initialized with state: $state");
-  }
+  ConnectionsCubit() : super(ConnectionsInitial()) {}
   List<Map<String, String>> connections = GetConnections();
   bool recentlyAddedSelected = true;
   bool firstNameSelected = false;
   bool lastNameSelected = false;
   bool connectedOnappear = true;
   void Searchclicked() {
-    print("🚀 ConnectionsCubit switched to with state: $state");
     if (state != SearchState()) {
-      // ✅ Prevents emitting the same state twice
       emit(SearchState());
     }
   }
 
   void Backclicked() {
-    print("🚀 ConnectionsCubit switched to with state: $state");
     if (state != ConnectionsInitial()) {
-      // ✅ Prevents emitting the same state twice
       emit(ConnectionsInitial());
     }
   }

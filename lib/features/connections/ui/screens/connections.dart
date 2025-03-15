@@ -12,7 +12,6 @@ class ConnectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("hello after initializing");
     return BlocBuilder<ConnectionsCubit, ConnectionsState>(
         builder: (context, state) {
       if (state is SearchState) {

@@ -11,7 +11,7 @@ class InvitationPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Invitations',
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,

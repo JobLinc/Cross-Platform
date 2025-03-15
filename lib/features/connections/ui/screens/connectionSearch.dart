@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/widgets/connectionsListWidget.dart';
@@ -11,7 +12,6 @@ class Connectionsearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building ConnectionList");
     //final List<Map<String, String>> connections = BlocProvider.of<TrialCubit>(context).connections;
     final List<Map<String, String>> connections = GetConnections();
     return ScreenUtilInit(
@@ -27,17 +27,7 @@ class Connectionsearch extends StatelessWidget {
                 BlocProvider.of<ConnectionsCubit>(context).Backclicked();
               },
             ),
-            title: Expanded(
-              child: TextField(
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  border: OutlineInputBorder(), // Optional: Adds a border
-                  filled: true,
-                  fillColor: Colors.lightBlue[50],
-                ),
-              ),
-            ),
+            title: CustomSearchBar(text: 'Search'),
           ),
           body: Column(
             children: [
