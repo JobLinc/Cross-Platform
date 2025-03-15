@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/theming/font_weight_helper.dart';
 import "../../data/models/post_model.dart";
 
 class Post extends StatelessWidget {
@@ -39,13 +40,21 @@ class PostContent extends StatelessWidget {
         PostHeader(
           imageURL: data.profilePictureURL,
           username: data.username,
+          affiliation: data.affiliation,
         ),
         PostBody(
           text: data.text,
         ),
-        //TODO implement attachements
-        //PostAttachments(attachmentURL: ""),
+        data.attachmentURLs.isNotEmpty
+            ? PostAttachments(attachmentURLs: data.attachmentURLs)
+            : SizedBox(),
+        PostNumerics(
+          likesCount: data.likesCount,
+          commentCount: data.commentCount,
+          repostCount: data.repostCount,
+        ),
         Divider(
+          height: 0,
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
         PostActionBar(),
@@ -59,9 +68,11 @@ class PostHeader extends StatelessWidget {
     super.key,
     required this.imageURL,
     required this.username,
+    required this.affiliation,
   });
   final String imageURL;
   final String username;
+  final String affiliation;
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +81,12 @@ class PostHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ProfileImage(imageURL: imageURL),
-        UserInfo(
-          username: username,
+        Expanded(
+          flex: 9,
+          child: UserInfo(
+            username: username,
+            affiliation: affiliation,
+          ),
         ),
         Spacer(),
         Padding(
@@ -94,13 +109,33 @@ class UserInfo extends StatelessWidget {
   const UserInfo({
     super.key,
     required this.username,
+    required this.affiliation,
   });
+
   final String username;
+  final String affiliation;
 
   @override
   Widget build(BuildContext context) {
-    //TODO this needs to expand to include the extra info under the username
-    return Text(username);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          username,
+          style: TextStyle(
+            fontWeight: FontWeightHelper.extraBold,
+          ),
+        ),
+        Text(
+          affiliation,
+          style: TextStyle(
+            overflow: TextOverflow.ellipsis,
+            fontWeight: FontWeightHelper.extraLight,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -117,7 +152,7 @@ class _PostBodyState extends State<PostBody> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO improve the UI for the "more" used at the end of the paragraph
+    //? might improve the UI for the "more" used at the end of the paragraph
     return Wrap(children: [
       Text(
         widget.text,
@@ -125,9 +160,9 @@ class _PostBodyState extends State<PostBody> {
         overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
         softWrap: true,
       ),
-      (_expandText)
-          ? (Container())
-          : (GestureDetector(
+      _expandText
+          ? SizedBox()
+          : GestureDetector(
               onTap: () {
                 setState(() {
                   _expandText = true;
@@ -139,8 +174,43 @@ class _PostBodyState extends State<PostBody> {
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.bold),
               ),
-            ))
+            )
     ]);
+  }
+}
+
+class PostNumerics extends StatelessWidget {
+  const PostNumerics({
+    super.key,
+    required this.likesCount,
+    required this.commentCount,
+    required this.repostCount,
+  });
+
+  final int likesCount;
+  final int commentCount;
+  final int repostCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(likesCount.toString()),
+          Spacer(),
+          (commentCount == 0)
+              ? SizedBox()
+              : Text(
+                  "$commentCount comment${(commentCount == 1) ? ("") : ("s")}"),
+          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(" • "),
+          (repostCount == 0)
+              ? SizedBox()
+              : Text("$repostCount repost${(repostCount == 1) ? ("") : ("s")}"),
+        ],
+      ),
+    );
   }
 }
 
@@ -179,9 +249,9 @@ class PostActionBar extends StatelessWidget {
 }
 
 class PostAttachments extends StatelessWidget {
-  final String attachmentURL;
+  final List<String> attachmentURLs;
 
-  const PostAttachments({super.key, required this.attachmentURL});
+  const PostAttachments({super.key, required this.attachmentURLs});
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +260,7 @@ class PostAttachments extends StatelessWidget {
     //   placeholder: kTransparentImage,
     //   image: attachmentURL,spaceAround
     // );
-    return Image.network(attachmentURL, width: 20, height: 20);
+    return Image.network(attachmentURLs[0]);
   }
 }
 
@@ -201,10 +271,6 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO this needs revising
-    // return FadeInImage.memoryNetwork(
-    //   placeholder: kTransparentImage,
-    //   image: imageURL,
-    // );
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: CircleAvatar(
