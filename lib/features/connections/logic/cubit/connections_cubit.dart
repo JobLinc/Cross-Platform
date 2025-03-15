@@ -15,12 +15,18 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
   bool connectedOnappear = true;
   void Searchclicked() {
     print("🚀 ConnectionsCubit switched to with state: $state");
-    emit(SearchState());
+    if (state != SearchState()) {
+      // ✅ Prevents emitting the same state twice
+      emit(SearchState());
+    }
   }
 
   void Backclicked() {
     print("🚀 ConnectionsCubit switched to with state: $state");
-    emit(ConnectionsInitial());
+    if (state != ConnectionsInitial()) {
+      // ✅ Prevents emitting the same state twice
+      emit(ConnectionsInitial());
+    }
   }
 
   void buttonPressed(String name) {

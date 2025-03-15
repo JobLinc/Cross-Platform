@@ -18,51 +18,48 @@ class Connectionsearch extends StatelessWidget {
       designSize: Size(412, 924),
       minTextAdapt: true,
       builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            backgroundColor: Colors.grey,
-            appBar: AppBar(
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back), // Custom back icon
-                  onPressed: () {
-                    // Custom function when back button is pressed
-                    BlocProvider.of<ConnectionsCubit>(context).Backclicked();
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      hintText: "Search",
-                      border: OutlineInputBorder(), // Optional: Adds a border
-                      filled: true,
-                      fillColor: Colors.lightBlue[50],
-                    ),
+        return Scaffold(
+          backgroundColor: Colors.grey,
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                icon: Icon(Icons.arrow_back), // Custom back icon
+                onPressed: () {
+                  // Custom function when back button is pressed
+                  BlocProvider.of<ConnectionsCubit>(context).Backclicked();
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    hintText: "Search",
+                    border: OutlineInputBorder(), // Optional: Adds a border
+                    filled: true,
+                    fillColor: Colors.lightBlue[50],
                   ),
                 ),
-                SizedBox(width: MediaQuery.of(context).size.width / 50),
-              ],
-            ),
-            body: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.white,
-                  child: SingleChildScrollFilter(),
-                ),
-                Divider(
-                  color: Colors.grey[300], // Line color
-                  thickness: 1, // Line thickness
-                  height: 0, // No extra spacing
-                ),
-                Expanded(
-                    child: connections_List_View(
-                  connections: connections,
-                )),
-              ],
-            ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width / 50),
+            ],
+          ),
+          body: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                child: SingleChildScrollFilter(),
+              ),
+              Divider(
+                color: Colors.grey[300], // Line color
+                thickness: 1, // Line thickness
+                height: 0, // No extra spacing
+              ),
+              Expanded(
+                  child: connections_List_View(
+                connections: connections,
+              )),
+            ],
           ),
         );
       },

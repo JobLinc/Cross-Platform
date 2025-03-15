@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
@@ -40,4 +41,5 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
+  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit());
 }

@@ -41,8 +41,10 @@ class connection_Buttons extends StatelessWidget {
                               false &&
                           BlocProvider.of<ConnectionsCubit>(context)
                                   .lastNameSelected ==
-                              false && BlocProvider.of<ConnectionsCubit>(context)
-                            .recentlyAddedSelected == false) {
+                              false &&
+                          BlocProvider.of<ConnectionsCubit>(context)
+                                  .recentlyAddedSelected ==
+                              false) {
                         BlocProvider.of<ConnectionsCubit>(context)
                             .recentlyAddedSelected = true;
                       }

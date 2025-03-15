@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,7 +38,7 @@ class connections_List_View extends StatelessWidget {
                         alignment:
                             Alignment.topLeft, // Forces it to the top-left
                         child: CircleAvatar(
-                          radius: 25,
+                          radius: 25.r,
                           child: Text(connection['firstname']![
                               0]), // First letter as avatar
                         ),
@@ -76,15 +76,14 @@ class connections_List_View extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.chatScreen);
-                          print("hello ${connection['firstname']} chat");
                         },
-                        icon: Icon(Icons.send)),
+                        icon: Icon(Icons.send, size: 20.sp)),
                     IconButton(
                         onPressed: () {
                           //todo : the
                           print("hello ${connection['firstname']} more");
                         },
-                        icon: Icon(Icons.more_horiz)),
+                        icon: Icon(Icons.more_horiz, size: 20.sp)),
                   ],
                 ),
               ),
