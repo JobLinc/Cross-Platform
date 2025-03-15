@@ -18,29 +18,43 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Center(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                border: InputBorder.none,
+          child: Semantics(
+            container: true,
+            label: 'home_topBar_container',
+            child: Center(
+              child: Semantics(
+                label: 'home_topBar_search',
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                ),
               ),
             ),
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.message, color: Colors.black),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.chatListScreen);
-            },
+          Semantics(
+            label: 'home_topBar_chatButton',
+            child: IconButton(
+              icon: Icon(Icons.message, color: Colors.black),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.chatListScreen);
+              },
+            ),
           ),
         ],
       ),
       body: Center(
-        child: ListView.builder(
-            itemCount: 30,
-            itemBuilder: (context, index) => Post(data: mockData)),
+        child: Semantics(
+          container: true,
+          label: 'home_screen_postList',
+          child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: (context, index) => Post(data: mockData)),
+        ),
       ),
       bottomNavigationBar: UniversalBottomBar(),
     );

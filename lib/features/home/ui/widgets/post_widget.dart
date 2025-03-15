@@ -10,13 +10,17 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Container(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: PostContent(data: data),
+    return Semantics(
+      container: true,
+      label: 'post_main_container',
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Container(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: PostContent(data: data),
+          ),
         ),
       ),
     );
@@ -40,7 +44,7 @@ class PostContent extends StatelessWidget {
         PostHeader(
           imageURL: data.profilePictureURL,
           username: data.username,
-          affiliation: data.affiliation,
+          headline: data.headline,
         ),
         PostBody(
           text: data.text,
@@ -63,44 +67,72 @@ class PostContent extends StatelessWidget {
   }
 }
 
+//
 class PostHeader extends StatelessWidget {
   const PostHeader({
     super.key,
     required this.imageURL,
     required this.username,
-    required this.affiliation,
+    required this.headline,
   });
   final String imageURL;
   final String username;
-  final String affiliation;
+  final String headline;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ProfileImage(imageURL: imageURL),
-        Expanded(
-          flex: 9,
-          child: UserInfo(
-            username: username,
-            affiliation: affiliation,
-          ),
-        ),
-        Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(right: 5.0),
-          child: GestureDetector(
-            onTap: () => {UnimplementedError()},
-            child: RichText(
-              text: TextSpan(
-                  style: TextStyle(color: ColorsManager.darkBurgundy),
-                  children: [TextSpan(text: '+ Linc')]),
+    return Semantics(
+      container: true,
+      label: 'post_header_container',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ProfileImage(imageURL: imageURL),
+          Expanded(
+            flex: 9,
+            child: UserInfo(
+              username: username,
+              headline: headline,
             ),
           ),
-        )
-      ],
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 5.0),
+            child: GestureDetector(
+              onTap: () => {UnimplementedError()},
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(color: ColorsManager.darkBurgundy),
+                    children: [
+                      TextSpan(
+                          text: '+ Linc',
+                          semanticsLabel: 'post_header_lincButton')
+                    ]),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileImage extends StatelessWidget {
+  const ProfileImage({super.key, required this.imageURL});
+  final String imageURL;
+
+  @override
+  Widget build(BuildContext context) {
+    //TODO this needs revising
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: Semantics(
+        label: 'post_header_avatar',
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(imageURL),
+        ),
+      ),
     );
   }
 }
@@ -109,35 +141,42 @@ class UserInfo extends StatelessWidget {
   const UserInfo({
     super.key,
     required this.username,
-    required this.affiliation,
+    required this.headline,
   });
 
   final String username;
-  final String affiliation;
+  final String headline;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          username,
-          style: TextStyle(
-            fontWeight: FontWeightHelper.extraBold,
+    return Semantics(
+      container: true,
+      label: 'post_header_userInfoContainer',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            username,
+            semanticsLabel: 'post_header_username',
+            style: TextStyle(
+              fontWeight: FontWeightHelper.extraBold,
+            ),
           ),
-        ),
-        Text(
-          affiliation,
-          style: TextStyle(
-            overflow: TextOverflow.ellipsis,
-            fontWeight: FontWeightHelper.extraLight,
+          Text(
+            headline,
+            semanticsLabel: 'post_header_headline',
+            style: TextStyle(
+              overflow: TextOverflow.ellipsis,
+              fontWeight: FontWeightHelper.extraLight,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
+//endregion
 
 class PostBody extends StatefulWidget {
   const PostBody({super.key, required this.text});
@@ -153,29 +192,35 @@ class _PostBodyState extends State<PostBody> {
   @override
   Widget build(BuildContext context) {
     //? might improve the UI for the 'more' used at the end of the paragraph
-    return Wrap(children: [
-      Text(
-        widget.text,
-        maxLines: (_expandText) ? (null) : (3),
-        overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
-        softWrap: true,
-      ),
-      _expandText
-          ? SizedBox()
-          : GestureDetector(
-              onTap: () {
-                setState(() {
-                  _expandText = true;
-                });
-              },
-              child: Text(
-                'more',
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold),
-              ),
-            )
-    ]);
+    return Semantics(
+      container: true,
+      label: 'post_body_container',
+      child: Wrap(children: [
+        Text(
+          widget.text,
+          maxLines: (_expandText) ? (null) : (3),
+          overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
+          softWrap: true,
+          semanticsLabel: 'post_body_text',
+        ),
+        _expandText
+            ? SizedBox()
+            : GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _expandText = true;
+                  });
+                },
+                child: Text(
+                  'more',
+                  semanticsLabel: 'post_body_showMoreButton',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+      ]),
+    );
   }
 }
 
@@ -195,24 +240,36 @@ class PostNumerics extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.thumb_up,
-            size: 15,
-          ),
-          Text(' ${likesCount.toString()}'),
-          Spacer(),
-          (commentCount == 0)
-              ? SizedBox()
-              : Text(
-                  '$commentCount comment${(commentCount == 1) ? ('') : ('s')}'),
-          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
-          (repostCount == 0)
-              ? SizedBox()
-              : Text('$repostCount repost${(repostCount == 1) ? ('') : ('s')}'),
-        ],
+      child: Semantics(
+        container: true,
+        label: 'post_numerics_container',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.thumb_up,
+              size: 15,
+            ),
+            Text(
+              ' ${likesCount.toString()}',
+              semanticsLabel: 'post_numerics_likeCount',
+            ),
+            Spacer(),
+            (commentCount == 0)
+                ? SizedBox()
+                : Text(
+                    '$commentCount comment${(commentCount == 1) ? ('') : ('s')}',
+                    semanticsLabel: 'post_numerics_commentCount',
+                  ),
+            (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
+            (repostCount == 0)
+                ? SizedBox()
+                : Text(
+                    '$repostCount repost${(repostCount == 1) ? ('') : ('s')}',
+                    semanticsLabel: 'post_numerics_repostCount',
+                  ),
+          ],
+        ),
       ),
     );
   }
@@ -230,21 +287,33 @@ class PostActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //TODO Implement Buttons
-          IconButton(
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.thumb_up),
+          Semantics(
+            label: 'post_actionBar_like',
+            child: IconButton(
+              onPressed: () => {UnimplementedError()},
+              icon: Icon(Icons.thumb_up),
+            ),
           ),
-          IconButton(
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.comment),
+          Semantics(
+            label: 'post_actionBar_comment',
+            child: IconButton(
+              onPressed: () => {UnimplementedError()},
+              icon: Icon(Icons.comment),
+            ),
           ),
-          IconButton(
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.loop),
+          Semantics(
+            label: 'post_actionBar_repost',
+            child: IconButton(
+              onPressed: () => {UnimplementedError()},
+              icon: Icon(Icons.loop),
+            ),
           ),
-          IconButton(
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.send),
+          Semantics(
+            label: 'post_actionBar_share',
+            child: IconButton(
+              onPressed: () => {UnimplementedError()},
+              icon: Icon(Icons.send),
+            ),
           ),
         ],
       ),
@@ -264,22 +333,9 @@ class PostAttachments extends StatelessWidget {
     //   placeholder: kTransparentImage,
     //   image: attachmentURL,spaceAround
     // );
-    return Image.network(attachmentURLs[0]);
-  }
-}
-
-class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.imageURL});
-  final String imageURL;
-
-  @override
-  Widget build(BuildContext context) {
-    //TODO this needs revising
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: CircleAvatar(
-        backgroundImage: NetworkImage(imageURL),
-      ),
+    return Image.network(
+      attachmentURLs[0],
+      semanticLabel: 'post_body_attachments',
     );
   }
 }
