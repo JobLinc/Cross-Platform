@@ -34,22 +34,23 @@ class connection_Buttons extends StatelessWidget {
           IconButton(
               onPressed: () {
                 showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      if (BlocProvider.of<ConnectionsCubit>(context)
-                                  .firstNameSelected ==
-                              false &&
-                          BlocProvider.of<ConnectionsCubit>(context)
-                                  .lastNameSelected ==
-                              false &&
-                          BlocProvider.of<ConnectionsCubit>(context)
-                                  .recentlyAddedSelected ==
-                              false) {
-                        BlocProvider.of<ConnectionsCubit>(context)
-                            .recentlyAddedSelected = true;
-                      }
-                      return SortBottomSheet();
-                    }).then((_) {
+                  context: context,
+                  builder: (bcontext) {
+                    final cubit = BlocProvider.of<ConnectionsCubit>(
+                        context); // Get cubit outside
+
+                    if (!cubit.firstNameSelected &&
+                        !cubit.lastNameSelected &&
+                        !cubit.recentlyAddedSelected) {
+                      cubit.recentlyAddedSelected = true;
+                    }
+
+                    return BlocProvider.value(
+                      value: cubit, // Pass the existing cubit
+                      child: SortBottomSheet(),
+                    );
+                  },
+                ).then((_) {
                   // Notify cubit that modal is closed
                   BlocProvider.of<ConnectionsCubit>(context).showmodalclosed();
                 });

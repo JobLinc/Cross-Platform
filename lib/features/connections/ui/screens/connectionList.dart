@@ -20,14 +20,6 @@ class ConnectionList extends StatelessWidget {
           appBar: AppBar(
             title: Text("Connection", style: TextStyle(fontSize: 20.sp)),
             centerTitle: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back), // Custom back icon
-              onPressed: () {
-                // Custom function when back button is pressed
-                Navigator.pop(context);
-                print("Back button pressed!"); // Example action
-              },
-            ),
           ),
           body: BlocSelector<ConnectionsCubit, ConnectionsState, SortData>(
             selector: (state) {

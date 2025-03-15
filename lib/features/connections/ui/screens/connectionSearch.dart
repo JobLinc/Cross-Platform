@@ -21,27 +21,23 @@ class Connectionsearch extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.grey,
           appBar: AppBar(
-            actions: [
-              IconButton(
-                icon: Icon(Icons.arrow_back), // Custom back icon
-                onPressed: () {
-                  // Custom function when back button is pressed
-                  BlocProvider.of<ConnectionsCubit>(context).Backclicked();
-                },
-              ),
-              Expanded(
-                child: TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(), // Optional: Adds a border
-                    filled: true,
-                    fillColor: Colors.lightBlue[50],
-                  ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back), // Default back arrow
+              onPressed: () {
+                BlocProvider.of<ConnectionsCubit>(context).Backclicked();
+              },
+            ),
+            title: Expanded(
+              child: TextField(
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  border: OutlineInputBorder(), // Optional: Adds a border
+                  filled: true,
+                  fillColor: Colors.lightBlue[50],
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width / 50),
-            ],
+            ),
           ),
           body: Column(
             children: [

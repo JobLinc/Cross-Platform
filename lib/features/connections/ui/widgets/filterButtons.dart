@@ -29,7 +29,8 @@ class SingleChildScrollFilter extends StatelessWidget {
                 MediaQuery.of(context).size.height / 30,
               ), // Match container height
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
                   400,
