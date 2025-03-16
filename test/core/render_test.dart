@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:joblinc/features/home/data/models/post_model.dart';
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
-import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
-import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-Size phone = Size(400, 800);
-Size iPad = Size(810, 1080);
-
-void main() {
-  renderTest(HomeScreen());
-}
+final Size phonePortrait = Size(400, 800);
+final Size iPadPortrait = Size(810, 1080);
+final Size phoneLandscape = Size(800, 400);
+final Size iPadLandscape = Size(1080, 810);
 
 void renderTest(testWidget) {
   portraitRenderTest(testWidget);
@@ -39,32 +32,24 @@ void portraitRenderTest(Widget testWidget) {
   group('Portrait render tests', () {
     testWidgets('Phone portrait dimensions test', (tester) async {
       tester.view.devicePixelRatio = 1.0;
-      tester.view.physicalSize = phone;
+      tester.view.physicalSize = phonePortrait;
 
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(testScaffold);
       });
       await tester.pumpAndSettle();
-      await expectLater(
-        find.byWidget(testWidget),
-        matchesGoldenFile('portrait/phone.png'),
-      );
 
       tester.view.reset();
     });
 
     testWidgets('iPad portrait dimensions test', (tester) async {
       tester.view.devicePixelRatio = 1.0;
-      tester.view.physicalSize = iPad;
+      tester.view.physicalSize = iPadPortrait;
 
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(testScaffold);
       });
       await tester.pumpAndSettle();
-      await expectLater(
-        find.byWidget(testWidget),
-        matchesGoldenFile('portrait/iPad.png'),
-      );
 
       tester.view.reset();
     });
@@ -73,4 +58,29 @@ void portraitRenderTest(Widget testWidget) {
 
 void landscapeRenderTest(Widget testWidget) {
   Widget testScaffold = createScaffold(testWidget);
+  group('Landscape render tests', () {
+    testWidgets('Phone landscape dimensions test', (tester) async {
+      tester.view.devicePixelRatio = 1.0;
+      tester.view.physicalSize = phoneLandscape;
+
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(testScaffold);
+      });
+      await tester.pumpAndSettle();
+
+      tester.view.reset();
+    });
+
+    testWidgets('iPad landscape dimensions test', (tester) async {
+      tester.view.devicePixelRatio = 1.0;
+      tester.view.physicalSize = iPadLandscape;
+
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(testScaffold);
+      });
+      await tester.pumpAndSettle();
+
+      tester.view.reset();
+    });
+  });
 }

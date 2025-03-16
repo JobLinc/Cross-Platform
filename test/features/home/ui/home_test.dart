@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:joblinc/features/home/data/models/post_model.dart';
-import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
+import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-
-Widget testWidget = MaterialApp(
-  home: Scaffold(
-    body: ListView(
-      children: [
-        Post(data: mockData),
-      ],
-    ),
-  ),
-);
+import '../../../core/render_test.dart';
 
 void main() {
   group('Post test start:', () {
-    testWidgets('Load and Render test', (tester) async {
-      await mockNetworkImagesFor(() async {
-        return tester.pumpWidget(testWidget);
-      });
-      await tester.pumpAndSettle();
-    });
+    renderTest(HomeScreen());
 
     testWidgets('button test', (tester) async {
+      Widget testWidget = createScaffold(HomeScreen());
       await mockNetworkImagesFor(() async {
         return tester.pumpWidget(testWidget);
       });
