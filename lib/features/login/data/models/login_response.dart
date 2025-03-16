@@ -9,8 +9,8 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      accessToken: json['user']['accessToken'],
-      refreshToken: json['user']['refreshToken'],
+      accessToken: json['accessToken'],
+      refreshToken: json['refreshToken'],
     );
   }
 }

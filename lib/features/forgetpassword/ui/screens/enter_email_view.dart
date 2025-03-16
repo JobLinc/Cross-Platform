@@ -5,7 +5,6 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
-import 'package:joblinc/features/forgetpassword/ui/screens/enter_code_view.dart';
 
 class EnterEmailView extends StatelessWidget {
   const EnterEmailView({super.key});

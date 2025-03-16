@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
-import 'package:joblinc/features/forgetpassword/ui/screens/change_password_view.dart';
 
 class EnterCodeView extends StatelessWidget {
   const EnterCodeView({super.key});
