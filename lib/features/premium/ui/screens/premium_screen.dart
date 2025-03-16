@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:joblinc/features/premium/payment_constants.dart';
 import 'package:joblinc/features/premium/ui/screens/plan_selection_screen.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     backgroundColor: Colors.red[400],
                     foregroundColor: Colors.white,
                   ),
-                  child: Text('Try now for SAR0'),
+                  child: Text('Try now for 0 USD'),
                 ),
               ],
             ),
@@ -43,11 +44,17 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
 
-  void showPlanScreen(BuildContext context){
+  void showPlanScreen(BuildContext context) async {
+  await setup();
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (context)=>PlanSelectionScreen(),
     );
+  }
+
+  Future<void> setup() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    Stripe.publishableKey=stripePublishKey;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:joblinc/features/premium/data/services/stripe_service.dart';
+import 'package:joblinc/features/premium/payment_constants.dart';
 
 class PlanSelectionScreen extends StatelessWidget {
   @override
@@ -27,17 +29,19 @@ class PlanSelectionScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 SizedBox(height: 10.h),
-                buildPlanOption("USD 14.99/month", "1 month free, then SAR 14.99 per month"),
+                buildPlanOption("USD 14.99/month", "1 month free, then USD 14.99 per month"),
                 SizedBox(height: 10.h),
-                buildPlanOption("USD 10.00/month", "Billed annually at SAR 119.99 (Save 33%)"),   
+                buildPlanOption("USD 10.00/month", "Billed annually at USD 119.99 (Save 33%)"),   
                 Spacer(),
                 ElevatedButton(
-                onPressed: () => {},
+                onPressed: () {
+                  StripeService.instance.makePayment();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[400],
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Try 1 month for USD0'),
+                child: Text('Try 1 month for 0 USD'),
               ),
             ],
           ),
