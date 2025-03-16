@@ -1,4 +1,3 @@
-import 'package:joblinc/features/login/data/models/login_response.dart';
 
 abstract class LoginState {}
 
