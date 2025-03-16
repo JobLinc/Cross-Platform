@@ -12,24 +12,21 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/logic/cubit/login_state.dart';
 import 'package:joblinc/features/signup/ui/widgets/email_text_field.dart';
 import 'package:joblinc/features/signup/ui/widgets/password_text_field.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
 class LoginScreen extends StatelessWidget {
-  bool isLoading = false;
-
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  LoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginLoading) {
-          isLoading = true;
         } else if (state is LoginSuccess) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("login success")));
-          isLoading = false;
           Navigator.pushReplacementNamed(context, Routes.homeScreen);
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -38,7 +35,6 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(color: Colors.red),
             ),
           ));
-          isLoading = false;
         }
       },
       builder: (context, state) {
@@ -56,7 +52,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           body: LoadingIndicatorOverlay(
-            inAsyncCall: isLoading,
+            inAsyncCall: state is LoginLoading,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 40.sp, horizontal: 24.sp),
               child: SingleChildScrollView(
@@ -74,10 +70,12 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     RichText(
+                      key: Key("joinJobLinc"),
                       text: TextSpan(
                         children: [
                           TextSpan(text: "or "),
                           TextSpan(
+                            semanticsLabel: "joinJobLinc",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.pushReplacementNamed(
@@ -120,12 +118,16 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          EmailTextFormField(emailController: _emailController),
+                          EmailTextFormField(
+                              key: Key("login_email_textfield"),
+                              emailController: _emailController),
                           const SizedBox(height: 15),
                           PasswordTextFormField(
+                              key: Key("login_password_textfield"),
                               passwordController: _passwordController),
                           const SizedBox(height: 10),
                           GestureDetector(
+                            key: Key("login_forgotpassword_textButton"),
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.forgotPasswordScreen);
@@ -133,6 +135,7 @@ class LoginScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
+                                key: Key("login_forgotpassword_text"),
                                 "Forgot Password?",
                                 style: TextStyle(
                                   fontSize: 14,
@@ -146,6 +149,7 @@ class LoginScreen extends StatelessWidget {
                               width: double.infinity,
                               height: 50,
                               child: customRoundedButton(
+                                  key: Key("login_continue_button"),
                                   text: "Continue",
                                   backgroundColor: ColorsManager.crimsonRed,
                                   borderColor: Colors.transparent,
