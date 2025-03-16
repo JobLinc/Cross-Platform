@@ -15,7 +15,6 @@ void renderTest(testWidget) {
 
 Widget createScaffold(Widget testWidget) {
   return ScreenUtilInit(
-    designSize: Size(412, 924),
     minTextAdapt: true,
     builder: (context, child) {
       return MaterialApp(

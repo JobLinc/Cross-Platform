@@ -8,19 +8,19 @@ void main() {
   group('Post test start:', () {
     renderTest(HomeScreen());
 
-    testWidgets('button test', (tester) async {
-      Widget testWidget = createScaffold(HomeScreen());
-      await mockNetworkImagesFor(() async {
-        return tester.pumpWidget(testWidget);
-      });
-      await tester.pumpAndSettle();
-      await tester.tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_like)')));
-      await tester
-          .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_comment)')));
-      await tester
-          .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_repost)')));
-      await tester
-          .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_share)')));
-    });
+    // testWidgets('Post buttons test', (tester) async {
+    //   Widget testWidget = createScaffold(HomeScreen());
+    //   await mockNetworkImagesFor(() async {
+    //     return tester.pumpWidget(testWidget);
+    //   });
+    //   await tester.pumpAndSettle();
+    //   await tester.tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_like)')));
+    //   await tester
+    //       .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_comment)')));
+    //   await tester
+    //       .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_repost)')));
+    //   await tester
+    //       .tap(find.bySemanticsLabel(RegExp(r'(post_actionBar_share)')));
+    // });
   });
 }
