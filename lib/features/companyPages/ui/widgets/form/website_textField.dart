@@ -11,10 +11,13 @@ class CompanyWebsiteTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomRectangularTextFormField(
-        controller: _websiteController,
-        hintText: "Begin with http://, https:// or www.",
-        labelText: "Website",
-      );
+    return Semantics(
+      identifier: "createcompany_website_textfield",
+      child: CustomRectangularTextFormField(
+          controller: _websiteController,
+          hintText: "Begin with http://, https:// or www.",
+          labelText: "Website",
+        ),
+    );
   }
 }

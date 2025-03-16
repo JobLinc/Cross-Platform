@@ -11,18 +11,22 @@ class CompanyNameTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomRectangularTextFormField(
-        controller: _nameController,
-        hintText: "Add your organization's name",
-        labelText: "Name*",
-        maxLength: 100,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a name.';
-          } else if (value.length > 100) {
-            return 'Your company name is too long.';
+    return Semantics(
+      identifier: "createcompany_companyname_textfield",
+      child: CustomRectangularTextFormField(
+          controller: _nameController,
+          hintText: "Add your organization's name",
+          labelText: "Name*",
+          maxLength: 100,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a name.';
+            } else if (value.length > 100) {
+              return 'Your company name is too long.';
+            }
+            return null;
           }
-          return null;
-        });
+          ),
+    );
   }
 }

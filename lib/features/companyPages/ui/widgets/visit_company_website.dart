@@ -15,55 +15,58 @@ Widget VisitCompanyWebsite({
   EdgeInsets? padding,
   required String websiteUrl,
 }) {
-  return GestureDetector(
-    onTap: () async {
-      try {
-        final Uri uri = Uri.parse(websiteUrl);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri);
-        } else {
-          throw 'Could not launch $websiteUrl';
+  return Semantics(
+    identifier:"company_visitwebsite_button",
+    child: GestureDetector(
+      onTap: () async {
+        try {
+          final Uri uri = Uri.parse(websiteUrl);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          } else {
+            throw 'Could not launch $websiteUrl';
+          }
+        } on Exception catch (e) { // TODO: Edit the exception to act appropriately
+          Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
         }
-      } on Exception catch (e) { // TODO: Edit the exception to act appropriately
-        Fluttertoast.showToast(
-          msg: e.toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      }
-    },
-    child: Container(
-      alignment: Alignment.center,
-      padding: padding ??
-          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius ?? 40),
-        border: Border.all(color: borderColor ?? Colors.black, width: 1.5),
-        color: backgroundColor,
-      ),
-      width: width ?? 200.w,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          icon == null
-              ? SizedBox()
-              : Icon(icon, color: foregroundColor), 
-          icon == null
-              ? SizedBox()
-              : SizedBox(width: 10.sp), 
-          Text(
-            text,
-            style: TextStyle(
-              color: foregroundColor,
-              fontSize: fontSize ?? 16.sp,
+      },
+      child: Container(
+        alignment: Alignment.center,
+        padding: padding ??
+            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius ?? 40),
+          border: Border.all(color: borderColor ?? Colors.black, width: 1.5),
+          color: backgroundColor,
+        ),
+        width: width ?? 200.w,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            icon == null
+                ? SizedBox()
+                : Icon(icon, color: foregroundColor), 
+            icon == null
+                ? SizedBox()
+                : SizedBox(width: 10.sp), 
+            Text(
+              text,
+              style: TextStyle(
+                color: foregroundColor,
+                fontSize: fontSize ?? 16.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

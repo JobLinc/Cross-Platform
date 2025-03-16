@@ -20,19 +20,22 @@ class OrganizationTypeDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomEnumDropdown<OrganizationType>(
-      labelText: "Organization type*",
-      value: value,
-      items: OrganizationType.values,
-      onChanged: onChanged,
-      hintText: "Select Type",
-      validator: (value) {
-          if (value == null) {
-            return 'Please select an organization type.';
-          } 
-          return null;
-        },
-      displayNameMapper: (item) => item.displayName,
+    return Semantics(
+      identifier: "createcomapny_organizationtype_dropdown",
+      child: CustomEnumDropdown<OrganizationType>(
+        labelText: "Organization type*",
+        value: value,
+        items: OrganizationType.values,
+        onChanged: onChanged,
+        hintText: "Select Type",
+        validator: (value) {
+            if (value == null) {
+              return 'Please select an organization type.';
+            } 
+            return null;
+          },
+        displayNameMapper: (item) => item.displayName,
+      ),
     );
   }
 }

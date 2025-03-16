@@ -20,19 +20,22 @@ class IndustryDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomEnumDropdown<Industry>(
-      labelText: "Industry*",
-      value: value,
-      items: Industry.values,
-      onChanged: onChanged,
-      hintText: "ex: Information Services",
-      validator: (value) {
+    return Semantics(
+      identifier: "createcompany_industry_dropdownbox",
+      child: CustomEnumDropdown<Industry>(
+        labelText: "Industry*",
+        value: value,
+        items: Industry.values,
+        onChanged: onChanged,
+        hintText: "ex: Information Services",
+        validator: (value) {
           if (value == null) {
             return 'Please select an industry.';
-          } 
+          }
           return null;
         },
-      displayNameMapper: (item) => item.displayName,
+        displayNameMapper: (item) => item.displayName,
+      ),
     );
   }
 }

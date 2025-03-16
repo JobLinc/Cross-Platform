@@ -20,19 +20,22 @@ class OrganizationSizeDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomEnumDropdown<OrganizationSize>(
-      labelText: "Organization size*",
-      value: value,
-      items: OrganizationSize.values,
-      onChanged: onChanged,
-      hintText: "Select size",
-      validator: (value) {
-          if (value == null) {
-            return 'Please select an organization size.';
-          } 
-          return null;
-        },
-      displayNameMapper: (item) => item.displayName,
+    return Semantics(
+      identifier: "createcompany_organizationsize_dropdown",
+      child: CustomEnumDropdown<OrganizationSize>(
+        labelText: "Organization size*",
+        value: value,
+        items: OrganizationSize.values,
+        onChanged: onChanged,
+        hintText: "Select size",
+        validator: (value) {
+            if (value == null) {
+              return 'Please select an organization size.';
+            } 
+            return null;
+          },
+        displayNameMapper: (item) => item.displayName,
+      ),
     );
   }
 }

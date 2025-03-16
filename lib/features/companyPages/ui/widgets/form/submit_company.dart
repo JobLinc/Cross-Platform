@@ -14,14 +14,17 @@ class SubmitCompany extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Text(
-        "Create",
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontWeight: FontWeight.bold,
-          fontSize: 16, // modify responsiveness
+    return Semantics(
+      identifier: "createcompany_submit_label",
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          "Create",
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontWeight: FontWeight.bold,
+            fontSize: 16, // modify responsiveness
+          ),
         ),
       ),
     );
