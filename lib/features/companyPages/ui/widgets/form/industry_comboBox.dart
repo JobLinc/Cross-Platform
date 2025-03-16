@@ -32,10 +32,11 @@ class IndustryDropdown extends StatelessWidget {
       validator: (value) {
           if (value == null) {
             return 'Please select an industry.';
-          } 
+          }
           return null;
         },
-      displayNameMapper: (item) => item.displayName,
+        displayNameMapper: (item) => item.displayName,
+      ),
     );
   }
 }
