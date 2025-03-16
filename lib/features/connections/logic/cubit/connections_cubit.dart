@@ -1,12 +1,14 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
-import 'package:meta/meta.dart';
+import 'package:joblinc/features/connections/data/pendingconnectionsdemomodel.dart';
 
 part 'connections_state.dart';
 
 class ConnectionsCubit extends Cubit<ConnectionsState> {
-  ConnectionsCubit() : super(ConnectionsInitial()) {}
-  List<Map<String, String>> connections = GetConnections();
+  ConnectionsCubit() : super(ConnectionsInitial());
+  List<Map<String, String>> connections = Connections.connections;
+  List<Map<String, String>> pendingconnections = Invitations.pendingConnections;
   bool recentlyAddedSelected = true;
   bool firstNameSelected = false;
   bool lastNameSelected = false;
@@ -61,7 +63,21 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     return data;
   }
 
-  void showmodalclosed() {
-    emit(SortData());
+  void ResponsePending(String id, String state) {
+    if (state == "Accepted") {
+      DateTime today = DateTime.now();
+      String formattedDate = DateFormat('yyyy-MM-dd').format(today);
+      Map<String, String> pending =
+          pendingconnections.firstWhere((connection) => connection["id"] == id);
+      connections.add({
+        "id": "${pending["id"]}",
+        "firstname": "${pending["firstname"]}",
+        "lastname": "${pending["lastname"]}",
+        "title": "${pending["title"]}",
+        "connected_on": formattedDate
+      });
+    }
+    pendingconnections.removeWhere((connection) => connection["id"] == id);
+    emit(InvitationResponse());
   }
 }

@@ -19,7 +19,6 @@ class connections_List_View extends StatelessWidget {
         final connection = connections[index];
 
         return Column(
-          // Wrap GestureDetector inside Column
           children: [
             Container(
               color: Colors.white,

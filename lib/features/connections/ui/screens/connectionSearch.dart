@@ -12,8 +12,6 @@ class Connectionsearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final List<Map<String, String>> connections = BlocProvider.of<TrialCubit>(context).connections;
-    final List<Map<String, String>> connections = GetConnections();
     return ScreenUtilInit(
       designSize: Size(412, 924),
       minTextAdapt: true,
@@ -22,6 +20,7 @@ class Connectionsearch extends StatelessWidget {
           backgroundColor: Colors.grey,
           appBar: AppBar(
             leading: IconButton(
+              key: Key('BackIconSearch'),
               icon: Icon(Icons.arrow_back), // Default back arrow
               onPressed: () {
                 BlocProvider.of<ConnectionsCubit>(context).Backclicked();
@@ -43,7 +42,8 @@ class Connectionsearch extends StatelessWidget {
               ),
               Expanded(
                   child: connections_List_View(
-                connections: connections,
+                connections:
+                    BlocProvider.of<ConnectionsCubit>(context).connections,
               )),
             ],
           ),

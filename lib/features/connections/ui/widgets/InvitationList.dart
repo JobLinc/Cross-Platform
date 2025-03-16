@@ -1,38 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
 class InvitationsList extends StatelessWidget {
-  final List<Map<String, dynamic>> invitations = [
-    {
-      "name": "Ahmed Walaa",
-      "title": "Mechatronics Engineer",
-      "mutualConnections": 30,
-      "timeAgo": "1 week ago",
-      "avatar": Icons.person,
-    },
-    {
-      "name": "Mazen Ahmed",
-      "title": "Communication and Computing",
-      "mutualConnections": 58,
-      "timeAgo": "1 week ago",
-      "avatar": Icons.work,
-    },
-    {
-      "name": "Paula Isaac",
-      "title": "Sophomore - Electrical Engineer",
-      "mutualConnections": 78,
-      "timeAgo": "1 week ago",
-      "avatar": Icons.school,
-    },
-    {
-      "name": "Sara Ahmed",
-      "title": "Engineering Student",
-      "mutualConnections": 56,
-      "timeAgo": "1 month ago",
-      "avatar": Icons.account_circle,
-    },
-  ];
+  final List<Map<String, String>> invitations;
+  const InvitationsList({
+    Key? key,
+    required this.invitations,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +27,7 @@ class InvitationsList extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   // TODO: Navigate to the user's profile
-                  print("Go to ${invitation['name']}'s profile");
+                  print("Go to ${invitation['firstname']}'s profile");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +39,8 @@ class InvitationsList extends StatelessWidget {
                             Alignment.topLeft, // Align avatar to top-left
                         child: CircleAvatar(
                           radius: 25.r, // Bigger avatar
-                          child: Text(invitation['name']![0]), // First letter
+                          child:
+                              Text(invitation['firstname']![0]), // First letter
                         ),
                       ),
                     ),
@@ -70,7 +50,7 @@ class InvitationsList extends StatelessWidget {
                             CrossAxisAlignment.start, // Align text left
                         children: [
                           Text(
-                            invitation['name']!,
+                            invitation['firstname']!,
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
@@ -87,7 +67,7 @@ class InvitationsList extends StatelessWidget {
                                 fontSize: 16.sp, color: Colors.grey[500]),
                           ),
                           Text(
-                            invitation['timeAgo'],
+                            invitation['timeAgo']!,
                             style: TextStyle(
                                 fontSize: 14.sp, color: Colors.grey[500]),
                           ),
@@ -95,9 +75,10 @@ class InvitationsList extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
-                      child: Icon(Icons.close,
-                          size: 22.sp, color: Colors.black), // Add const
+                      onPressed: () {
+                        BlocProvider.of<ConnectionsCubit>(context)
+                            .ResponsePending(invitation["id"]!, "Denied");
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(
                           side: BorderSide(
@@ -110,27 +91,32 @@ class InvitationsList extends StatelessWidget {
                         foregroundColor: Colors.black,
                         fixedSize: Size(10.w, 10.h),
                       ),
+                      child: Icon(Icons.close,
+                          size: 22.sp, color: Colors.black), // Add const
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: 8.w),
                       child: ElevatedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.check_outlined,
-                              size: 22.sp,
-                              color:
-                                  ColorsManager.softDarkBurgundy), // Add const
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(
-                              side: BorderSide(
-                                color: ColorsManager.softDarkBurgundy,
-                                width: 0.5,
-                              ),
+                        onPressed: () {
+                          BlocProvider.of<ConnectionsCubit>(context)
+                              .ResponsePending(invitation["id"]!, "Accepted");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(
+                            side: BorderSide(
+                              color: ColorsManager.softDarkBurgundy,
+                              width: 0.5,
                             ),
-                            padding: const EdgeInsets.all(5),
-                            backgroundColor: Colors.white,
-                            foregroundColor: ColorsManager.softDarkBurgundy,
-                            fixedSize: Size(10.w, 10.h),
-                          )),
+                          ),
+                          padding: const EdgeInsets.all(5),
+                          backgroundColor: Colors.white,
+                          foregroundColor: ColorsManager.softDarkBurgundy,
+                          fixedSize: Size(10.w, 10.h),
+                        ),
+                        child: Icon(Icons.check_outlined,
+                            size: 22.sp,
+                            color: ColorsManager.softDarkBurgundy), // Add const
+                      ),
                     ),
                   ],
                 ),

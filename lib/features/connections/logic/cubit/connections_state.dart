@@ -1,12 +1,11 @@
 part of 'connections_cubit.dart';
 
-@immutable
-sealed class ConnectionsState {}
+abstract class ConnectionsState {}
 
 final class ConnectionsInitial extends ConnectionsState {}
 
 final class SearchState extends ConnectionsState {}
 
-final class ChooseSort extends ConnectionsInitial {}
+final class ChooseSort extends ConnectionsState {}
 
-final class SortData extends ConnectionsInitial {}
+final class InvitationResponse extends ConnectionsState {}

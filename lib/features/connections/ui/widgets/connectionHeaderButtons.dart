@@ -49,10 +49,7 @@ class connection_Buttons extends StatelessWidget {
                       child: SortBottomSheet(),
                     );
                   },
-                ).then((_) {
-                  // Notify cubit that modal is closed
-                  BlocProvider.of<ConnectionsCubit>(context).showmodalclosed();
-                });
+                );
               },
               icon: Icon(Icons.sort)),
         ],
