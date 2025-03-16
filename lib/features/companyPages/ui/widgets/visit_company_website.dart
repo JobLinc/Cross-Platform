@@ -16,6 +16,7 @@ Widget VisitCompanyWebsite({
   required String websiteUrl,
 }) {
   return GestureDetector(
+    key: Key("company_visitwebsite_button"),
     onTap: () async {
       try {
         final Uri uri = Uri.parse(websiteUrl);
@@ -24,7 +25,8 @@ Widget VisitCompanyWebsite({
         } else {
           throw 'Could not launch $websiteUrl';
         }
-      } on Exception catch (e) { // TODO: Edit the exception to act appropriately
+      } on Exception catch (e) {
+        // TODO: Edit the exception to act appropriately
         Fluttertoast.showToast(
           msg: e.toString(),
           toastLength: Toast.LENGTH_SHORT,
@@ -38,8 +40,7 @@ Widget VisitCompanyWebsite({
     },
     child: Container(
       alignment: Alignment.center,
-      padding: padding ??
-          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      padding: padding ?? EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 40),
         border: Border.all(color: borderColor ?? Colors.black, width: 1.5),
@@ -49,12 +50,8 @@ Widget VisitCompanyWebsite({
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          icon == null
-              ? SizedBox()
-              : Icon(icon, color: foregroundColor), 
-          icon == null
-              ? SizedBox()
-              : SizedBox(width: 10.sp), 
+          icon == null ? SizedBox() : Icon(icon, color: foregroundColor),
+          icon == null ? SizedBox() : SizedBox(width: 10.sp),
           Text(
             text,
             style: TextStyle(

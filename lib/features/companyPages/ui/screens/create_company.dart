@@ -18,9 +18,16 @@ class CreateCompanyPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _jobLincUrlController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
-  late Industry selectedIndustry;
-  late OrganizationSize orgSize;
-  late OrganizationType orgType;
+  late Industry _selectedIndustry;
+  late OrganizationSize _orgSize;
+  late OrganizationType _orgType;
+
+  void clearFormData(IndustryDropdown industry,
+      OrganizationSizeDropdown orgSize, OrganizationTypeDropdown orgType) {
+    _nameController.clear();
+    _jobLincUrlController.clear();
+    _websiteController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +62,9 @@ class CreateCompanyPage extends StatelessWidget {
                         Company companyToAdd = Company(
                             name: _nameController.text,
                             profileUrl: _jobLincUrlController.text,
-                            industry: selectedIndustry,
-                            organizationSize: orgSize,
-                            organizationType: orgType);
+                            industry: _selectedIndustry,
+                            organizationSize: _orgSize,
+                            organizationType: _orgType);
                         mockCompanies.add(companyToAdd);
                         print(mockCompanies);
                       }
@@ -104,6 +111,7 @@ class CreateCompanyPage extends StatelessWidget {
               padding: EdgeInsets.all(16.w),
               child: Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -129,7 +137,7 @@ class CreateCompanyPage extends StatelessWidget {
                     IndustryDropdown(
                         value: null,
                         onChanged: (value) {
-                          selectedIndustry = value!;
+                          _selectedIndustry = value!;
                         }),
 
                     SizedBox(height: 20.h),
@@ -137,7 +145,7 @@ class CreateCompanyPage extends StatelessWidget {
                     OrganizationSizeDropdown(
                         value: null,
                         onChanged: (value) {
-                          orgSize = value!;
+                          _orgSize = value!;
                         }),
 
                     SizedBox(height: 5.h),
@@ -145,7 +153,7 @@ class CreateCompanyPage extends StatelessWidget {
                     OrganizationTypeDropdown(
                         value: null,
                         onChanged: (value) {
-                          orgType = value!;
+                         _orgType = value!;
                         }),
 
                     SizedBox(height: 10.h),

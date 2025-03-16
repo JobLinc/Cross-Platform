@@ -18,9 +18,12 @@ class IndustryDropdown extends StatelessWidget {
     this.validator,
   });
 
+
   @override
   Widget build(BuildContext context) {
-    return CustomEnumDropdown<Industry>(
+    return 
+    CustomEnumDropdown<Industry>(
+      key: Key("createcompany_industry_dropdown"),
       labelText: "Industry*",
       value: value,
       items: Industry.values,
