@@ -57,7 +57,7 @@ class ChatCard extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    "${chat?.lastSender == 'You' ? 'You' : chat?.userName}: ${chat?.lastMessage.text ?? 'No messages'}",
+                    "${chat?.lastSender == 'You' ? 'You' : chat?.userName}: ${chat?.lastMessage!.text ?? 'No messages'}",
                     style: TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -68,7 +68,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount > 0)
+                if (chat!.unreadCount! > 0)
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class ChatCard extends StatelessWidget {
                 SizedBox(
                   width: 60.w,
                   child: Text(
-                    chat?.lastMessage != null ? chat!.lastMessage.time! : '',
+                    chat?.lastMessage != null ? chat!.lastMessage!.time! : '',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -129,11 +129,12 @@ class _ChatListState extends State<ChatList> {
     sortChats();
   }
 
+
   void sortChats() {
     setState(() {
       sortedChats = List.from(chats); // Copy the list
       sortedChats.sort(
-          (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
+          (a, b) => b.lastMessage!.timestamp!.compareTo(a.lastMessage!.timestamp!));
     });
     // for (var convo in sortedChats) {
     //   print("${convo.userName} - ${convo.lastMessage.time}");

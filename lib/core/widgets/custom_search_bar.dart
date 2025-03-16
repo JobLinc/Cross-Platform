@@ -34,6 +34,7 @@ class CustomSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: TextField(
+          cursorColor: Colors.red[400],
           controller: controller,
           onTap: (){ onPress();} ,
           onChanged: (searched){onTextChange(searched);},
