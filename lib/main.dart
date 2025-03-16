@@ -5,11 +5,10 @@ import 'package:joblinc/core/routing/app_router.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 
-void main() async{
-    WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await setupGetIt();
-    await ScreenUtil.ensureScreenSize();
-
+  await ScreenUtil.ensureScreenSize();
 
   runApp(MainApp(
     appRouter: AppRouter(),
