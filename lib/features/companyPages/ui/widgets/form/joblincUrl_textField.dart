@@ -21,7 +21,7 @@ class CompanyjobLincUrlTextFormField extends StatelessWidget {
             return 'Please enter the desired JobLinc address.';
           } else if (!RegExp(r'^[a-z0-9-]+$').hasMatch(value)) {
             return 'Your URL can only use hyphen, numeric and lowercase alphabets';
-          } else if (value.length > TextField.noMaxLength) {
+          } else if (value.length > 100) {
             return 'Your URL is too long';
           }
           return null;

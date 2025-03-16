@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           home: CompanyPageHome(
-            company: mockCompanies[3],
+            company: mockCompanies[5],
           ),
         );
       },

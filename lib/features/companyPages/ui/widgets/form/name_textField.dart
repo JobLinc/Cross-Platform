@@ -19,7 +19,7 @@ class CompanyNameTextFormField extends StatelessWidget {
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter a name.';
-          } else if (value.length > TextField.noMaxLength) {
+          } else if (value.length > 100) {
             return 'Your company name is too long.';
           }
           return null;
