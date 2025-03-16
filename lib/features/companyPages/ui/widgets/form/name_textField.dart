@@ -12,6 +12,7 @@ class CompanyNameTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRectangularTextFormField(
+        key: Key("createcompany_companyname_textfield"),
         controller: _nameController,
         hintText: "Add your organization's name",
         labelText: "Name*",

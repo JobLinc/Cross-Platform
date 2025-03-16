@@ -36,7 +36,6 @@ class IndustryDropdown extends StatelessWidget {
           return null;
         },
         displayNameMapper: (item) => item.displayName,
-      ),
-    );
+      );
   }
 }

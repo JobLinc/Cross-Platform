@@ -11,8 +11,8 @@ class CompanyWebsiteTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      child: CustomRectangularTextFormField(
-          key: Key("createcompany_website_textfield")
+      return CustomRectangularTextFormField(
+          key: Key("createcompany_website_textfield"),
           controller: _websiteController,
           hintText: "Begin with http://, https:// or www.",
           labelText: "Website",
