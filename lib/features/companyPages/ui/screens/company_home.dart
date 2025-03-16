@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../../data/company.dart';
+import '../widgets/scrollable_tabs.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           home: CompanyPageHome(
-            company: mockCompanies[6]
+            company: mockCompanies[3],
           ),
         );
       },
@@ -26,15 +27,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CompanyPageHome extends StatelessWidget {
+class CompanyPageHome extends StatefulWidget {
   final Company company;
   const CompanyPageHome({required this.company, super.key});
 
   @override
+  _CompanyPageHomeState createState() => _CompanyPageHomeState();
+}
+
+class _CompanyPageHomeState extends State<CompanyPageHome> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
-        backgroundColor: Color(0xFFFAFAFA),
+        backgroundColor: const Color(0xFFFAFAFA),
         title: Row(
           children: [
             IconButton(
@@ -43,19 +64,37 @@ class CompanyPageHome extends StatelessWidget {
               },
               icon: const Icon(Icons.arrow_back),
             ),
-            CustomSearchBar(
-              // TODO: Needs to be gray and to have a better height
-              text: company.name, // Company Name goes here
-              onPress: () {},
-              onTextChange: (searched) {},
-              controller: TextEditingController(),
+            Expanded(
+              child: CustomSearchBar(
+                text: widget.company.name,
+                onPress: () {},
+                onTextChange: (searched) {},
+                controller: TextEditingController(),
+              ),
             ),
           ],
         ),
       ),
-      body: 
-      CompanyData(
-        company: company
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CompanyData(company: widget.company), // Company details
+          ScrollableTabs(tabController: _tabController), // Scrollable Tabs **AFTER** CompanyData
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                Center(child: Text("Home")),
+                Center(child: Text("About")),
+                Image(image: NetworkImage(
+                  "https://cdn.prod.website-files.com/6548f623e03389ab980fec2a/6752d7396fec014ddeb7d400_672a0de7927a7ff2a130709e_65eb1da89da0e332894adecd_Frame%2525201000006945.webp"
+                )),
+                Center(child: Text("Jobs")),
+                Center(child: Text("People")),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

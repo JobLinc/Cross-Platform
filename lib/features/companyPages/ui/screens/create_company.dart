@@ -5,7 +5,6 @@ import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.
 import 'package:joblinc/features/companyPages/ui/widgets/form/organizationType_comboBox.dart';
 import '../../../../core/widgets/hyperlink.dart';
 import '../widgets/square_avatar.dart';
-import '../../data/company.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/jobLincUrl_textField.dart';
 import '../widgets/form/website_textField.dart';
@@ -21,6 +20,7 @@ class CreateCompanyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xFFFAFAFA),
           centerTitle: true, // Center the title

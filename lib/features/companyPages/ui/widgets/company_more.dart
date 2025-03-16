@@ -30,9 +30,9 @@ class CompanyMoreButton extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(5),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFFAFAFA),
         foregroundColor: Colors.black,
-        fixedSize: Size(10.w, 10.h),
+        fixedSize: Size(40.w, 40.h),
       ),
     );
   }

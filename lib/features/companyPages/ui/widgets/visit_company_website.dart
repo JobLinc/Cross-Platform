@@ -45,7 +45,7 @@ Widget VisitCompanyWebsite({
         border: Border.all(color: borderColor ?? Colors.black, width: 1.5),
         color: backgroundColor,
       ),
-      width: width ?? 200,
+      width: width ?? 200.w,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
