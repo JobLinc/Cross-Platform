@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Semantics(
           container: true,
-          label: 'home_screen_postList',
+          label: 'home_body_postList',
           child: ListView.builder(
               itemCount: 30,
               itemBuilder: (context, index) => Post(data: mockData)),
