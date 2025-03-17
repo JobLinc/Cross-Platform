@@ -8,7 +8,4 @@ final class CreateCompanyLoading extends CreateCompanyState {}
 
 final class CreateCompanySuccess extends CreateCompanyState {}
 
-final class CreateCompanyFailure extends CreateCompanyState {
-  final String error;
-  CreateCompanyFailure(this.error);
-}
+final class CreateCompanyFailure extends CreateCompanyState {}

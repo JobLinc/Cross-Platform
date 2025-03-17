@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/edit_button.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.dart';
@@ -11,10 +12,14 @@ import '../widgets/form/jobLincUrl_textField.dart';
 import '../widgets/form/website_textField.dart';
 import '../widgets/form/organizationSize_comboBox.dart';
 import '../widgets/form/submit_company.dart';
+import '../widgets/form/terms_and_conditions.dart';
+import '../../logic/cubit/create_company_cubit.dart';
 
+// ignore: must_be_immutable
 class CreateCompanyPage extends StatelessWidget {
   CreateCompanyPage({super.key});
   final _formKey = GlobalKey<FormState>();
+  final _termsAndConditionsKey = GlobalKey<TermsAndConditionsCheckBoxState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _jobLincUrlController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
@@ -22,23 +27,29 @@ class CreateCompanyPage extends StatelessWidget {
   late OrganizationSize _orgSize;
   late OrganizationType _orgType;
 
-  void clearFormData(IndustryDropdown industry,
-      OrganizationSizeDropdown orgSize, OrganizationTypeDropdown orgType) {
-    _nameController.clear();
-    _jobLincUrlController.clear();
-    _websiteController.clear();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<CreateCompanyCubit, CreateCompanyState>(
+      listener: (context, state) {
+        if (state is CreateCompanySuccess) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Company created successfully!')),
+          );
+        } else if (state is CreateCompanyFailure) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to create company. Please try again.')),
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xFFFAFAFA),
           centerTitle: true, // Center the title
           leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Colors.grey.shade600), // Custom back icon
+            icon: Icon(Icons.arrow_back, color: Colors.grey.shade600),
             onPressed: () {
               Navigator.pop(context); // Navigate back
             },
@@ -56,146 +67,133 @@ class CreateCompanyPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 170),
                 child: SubmitCompany(
-                    formKey: _formKey,
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        Company companyToAdd = Company(
-                            name: _nameController.text,
-                            profileUrl: _jobLincUrlController.text,
-                            industry: _selectedIndustry,
-                            organizationSize: _orgSize,
-                            organizationType: _orgType);
-                        mockCompanies.add(companyToAdd);
-                        print(mockCompanies);
-                      }
-                    }),
+                  formKey: _formKey,
+                  onTap: () {
+                    // Validate the form and the checkbox
+                    if (_formKey.currentState!.validate() &&
+                        _termsAndConditionsKey.currentState!.validate() == null) {
+                      // Form is valid, proceed with submission using the Cubit
+                      context.read<CreateCompanyCubit>().CreateCompany(
+                        nameController: _nameController,
+                        jobLincUrlController: _jobLincUrlController,
+                        selectedIndustry: _selectedIndustry,
+                        orgSize: _orgSize,
+                        orgType: _orgType,
+                        websiteController: _websiteController,
+                      );
+                    } else {
+                      // If the checkbox is not checked, trigger its validation
+                      _termsAndConditionsKey.currentState!.validate();
+                    }
+                  },
+                ),
               ),
             ],
           ),
         ),
         body: SingleChildScrollView(
-          child: Column(children: [
-            Stack(
-              children: [
-                Image(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
-                  width: double.infinity,
-                  height: 90.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 50.h, left: 17.w),
-                  child: SquareAvatar(
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Image(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
+                    width: double.infinity,
+                    height: 90.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 50.h, left: 17.w),
+                    child: SquareAvatar(
                       imageUrl:
                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
-                      size: 80),
-                ),
-                Row(
-                  children: [
-                    Padding(
+                      size: 80,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
                         padding: EdgeInsets.only(top: 85.h, left: 60.h),
-                        child: EditButton()),
-                    Padding(
+                        child: EditButton(),
+                      ),
+                      Padding(
                         padding: EdgeInsets.only(top: 90.h, left: 75.h),
                         child: Text(
                           "* Indicates required",
                           style: TextStyle(
-                              color: Colors.grey.shade700, fontSize: 16.sp),
-                        )),
-                  ],
-                )
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CompanyNameTextFormField(nameController: _nameController),
-                    SizedBox(height: 10.h), // Add spacing between fields
-                    // Add more form fields here as needed
-                    CompanyjobLincUrlTextFormField(
-                        jobLincUrlController: _jobLincUrlController),
-
-                    Padding(
+                            color: Colors.grey.shade700,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CompanyNameTextFormField(nameController: _nameController),
+                      SizedBox(height: 10.h), // Add spacing between fields
+                      CompanyjobLincUrlTextFormField(
+                          jobLincUrlController: _jobLincUrlController),
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.h),
                         child: Hyperlink(
-                            text: "Learn more about the Page Public URL",
-                            color: Colors.grey.shade700,
-                            size: 16,
-                            url:
-                                "https://www.linkedin.com/help/linkedin/answer/a564298/?lang=en")),
-
-                    CompanyWebsiteTextFormField(
-                        websiteController: _websiteController),
-                    SizedBox(height: 20.h),
-
-                    IndustryDropdown(
+                          text: "Learn more about the Page Public URL",
+                          color: Colors.grey.shade700,
+                          size: 16,
+                          url:
+                              "https://www.linkedin.com/help/linkedin/answer/a564298/?lang=en",
+                        ),
+                      ),
+                      CompanyWebsiteTextFormField(
+                          websiteController: _websiteController),
+                      SizedBox(height: 20.h),
+                      IndustryDropdown(
                         value: null,
                         onChanged: (value) {
                           _selectedIndustry = value!;
-                        }),
-
-                    SizedBox(height: 20.h),
-
-                    OrganizationSizeDropdown(
+                        },
+                      ),
+                      SizedBox(height: 20.h),
+                      OrganizationSizeDropdown(
                         value: null,
                         onChanged: (value) {
                           _orgSize = value!;
-                        }),
-
-                    SizedBox(height: 5.h),
-
-                    OrganizationTypeDropdown(
+                        },
+                      ),
+                      SizedBox(height: 5.h),
+                      OrganizationTypeDropdown(
                         value: null,
                         onChanged: (value) {
-                         _orgType = value!;
-                        }),
-
-                    SizedBox(height: 10.h),
-
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          value: false,
-                          onChanged: (value) {
-                            if (value == false) {
-                              value = true;
-                            } else {
-                              value = false;
-                            }
-                          },
-                        ),
-                        Expanded(
-                          child: Text(
-                            "I verify that I am an authorized representative of this organization and I have the right to act on its behalf in the creation and management of this page. The organization and I agree to the additional terms for Pages.",
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                            ),
-                            softWrap: true,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: 10.h),
-
-                    Hyperlink(
+                          _orgType = value!;
+                        },
+                      ),
+                      SizedBox(height: 10.h),
+                      TermsAndConditionsCheckBox(key: _termsAndConditionsKey),
+                      SizedBox(height: 10.h),
+                      Hyperlink(
                         text: "Read the LinkedIn Pages Terms",
                         color: Colors.grey.shade700,
                         url:
                             "https://www.linkedin.com/legal/l/linkedin-pages-terms",
-                        size: 16),
-                  ],
+                        size: 16,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ]),
-        ));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

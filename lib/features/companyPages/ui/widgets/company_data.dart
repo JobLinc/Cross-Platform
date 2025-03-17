@@ -5,7 +5,7 @@ import 'package:joblinc/features/companyPages/ui/widgets/follow_button.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/visit_company_website.dart';
 import '../widgets/square_avatar.dart';
 import '../../data/company.dart';
-import 'scrollable_bar.dart';
+
 
 class CompanyData extends StatelessWidget {
   final Company company;
@@ -23,7 +23,7 @@ class CompanyData extends StatelessWidget {
             children: [
               Image.network(
                 company.coverUrl ??
-                    'https://via.placeholder.com/800x200', // Default image if null
+                    "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png", // Default image if null
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 40.h,
@@ -37,7 +37,7 @@ class CompanyData extends StatelessWidget {
                 left: 17.w,
                 child: SquareAvatar(
                   imageUrl: company.logoUrl ??
-                      'https://via.placeholder.com/100', // Default logo if null
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU', // Default logo if null
                   size: 60,
                 ),
               ),

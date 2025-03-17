@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import '../screens/create_company.dart';
 
 class CompanyMoreButton extends StatelessWidget {
@@ -115,7 +117,15 @@ class MoreActions extends StatelessWidget {
           padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
           child: InkWell(
             onTap: () {
-              _CreateCompanyPage(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => CreateCompanyCubit(),
+                    child: CreateCompanyPage(),
+                  ),
+                ),
+              );
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
