@@ -12,6 +12,7 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key:Key("jobs_openJob_card${job.id}"),
       onTap: () {
         if (press != null){
         press!();
@@ -98,13 +99,13 @@ class JobList extends StatelessWidget{
 }
 
 void showJobDetails(BuildContext context,Job jobDetails) {
-  Future.delayed(Duration(milliseconds: 100), () {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, 
     backgroundColor: Colors.transparent,
     builder: (context){
       return DraggableScrollableSheet(
+        key: Key("jobDetails_Screen_draggableScrollableSheet"),
         initialChildSize: 0.9,
         minChildSize: 0.5,
         maxChildSize: 1.0,
@@ -117,7 +118,6 @@ void showJobDetails(BuildContext context,Job jobDetails) {
       );
     }
   );
-});
 }
 
 

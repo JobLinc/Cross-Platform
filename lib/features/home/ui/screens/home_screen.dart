@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List<HomeScreenInput> mainScreens=[
       HomeScreenInput(
+        searchKeyName: "",
         searchText: "search",
         searchOnPress: emptyFunction,
         searchOnTextChange: emptyFunction,
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body:HomeScreenBody()
       ),
         HomeScreenInput(
+        searchKeyName: "",
         searchText: "search",
         searchOnPress: emptyFunction,
         searchOnTextChange: emptyFunction,
@@ -42,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body:HomeScreenBody()
       ),
         HomeScreenInput(
+        searchKeyName: "",
         searchText: "search",
         searchOnPress: emptyFunction,
         searchOnTextChange: emptyFunction,
@@ -49,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body:HomeScreenBody()
       ),
         HomeScreenInput(
+        searchKeyName: "",
         searchText: "search",
         searchOnPress: emptyFunction,
         searchOnTextChange: emptyFunction,
@@ -56,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body:HomeScreenBody()
       ),
         HomeScreenInput(
+        searchKeyName: "jobList_search_textField",
         searchText: "search jobs",
         searchOnPress:()=>goToJobSearch(context),
         searchOnTextChange: emptyFunction,
@@ -75,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Center(
             child:CustomSearchBar(
+                      keyName:mainScreens[_selectedIndex].searchKeyName, 
                       text: mainScreens[_selectedIndex].searchText,
                       onPress: mainScreens[_selectedIndex].searchOnPress,
                       onTextChange:  mainScreens[_selectedIndex].searchOnTextChange,
@@ -169,6 +175,7 @@ class HomeScreenBody extends StatelessWidget {
 
 
 class HomeScreenInput{
+  late String searchKeyName;
   late String searchText;
   late VoidCallback searchOnPress;
   late Function searchOnTextChange;
@@ -176,6 +183,7 @@ class HomeScreenInput{
   late Widget body;
 
     HomeScreenInput({
+      required this.searchKeyName,
       required this.searchText,
       required this.searchOnPress,
       required this.searchOnTextChange,

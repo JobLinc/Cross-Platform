@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // class Location{}
 
 class Job {
+  int? id;
   String? title;
   String? industry;
   Company? company;
@@ -18,6 +19,7 @@ class Job {
   DateTime? createdAt;
 
   Job({
+      this.id,
       this.title,
       this.industry,
       this.company,
@@ -33,6 +35,7 @@ class Job {
 
   factory Job.fromJson(Map<String, dynamic> json) {
     return Job(
+      id:json["id"],
       title: json['title'],
       industry: json['industry'],
       company: json['company'] != null ? Company.fromJson(json['company']) : null,
@@ -49,6 +52,7 @@ class Job {
 
   Map<String, dynamic> toJson() {
     return {
+      'id':id,
       'title': title,
       'industry': industry,
       'company': company?.toJson(),
@@ -132,6 +136,7 @@ class Location {
 
 List<Job> mockJobs= [
   Job(
+    id:1,
     title: "Software Engineer",
     industry: "Technology",
     company: Company(name: "TechCorp", size: "500+ employees"),
@@ -145,6 +150,7 @@ List<Job> mockJobs= [
     createdAt: DateTime.now(),
   ),
   Job(
+    id:2,
     title: "Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdWorks", size: "200 employees"),
@@ -158,6 +164,7 @@ List<Job> mockJobs= [
     createdAt: DateTime.now(),
   ),
   Job(
+    id:3,
     title: "Software Engineer",
     industry: "Technology",
     company: Company(name: "TechCorp", size: "500+ employees"),
@@ -171,6 +178,7 @@ List<Job> mockJobs= [
     createdAt: DateTime.now(),
   ),
   Job(
+    id:4,
     title: "Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdWorks", size: "200 employees"),
@@ -184,6 +192,7 @@ List<Job> mockJobs= [
     createdAt: DateTime.now(),
   ),
   Job(
+    id:5,
     title: "Software Engineer",
     industry: "Technology",
     company: Company(name: "TechCorp", size: "500+ employees"),
@@ -197,6 +206,7 @@ List<Job> mockJobs= [
     createdAt: DateTime.now(),
   ),
   Job(
+    id:6,
     title: "Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdWorks", size: "200 employees"),
