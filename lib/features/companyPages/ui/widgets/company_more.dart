@@ -43,7 +43,6 @@ class CompanyMoreButton extends StatelessWidget {
 class MoreActions extends StatelessWidget {
   const MoreActions({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart' ;
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../../data/company.dart';
 import '../widgets/scrollable_tabs.dart';
+import '../widgets/company_card.dart';
 
 void main() {
   runApp(MyApp());
 }
+
+class Routes {
+  static const String CompanyPageHome = '/companyPageHome';
+}
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -18,9 +25,13 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          home: CompanyPageHome(
-            company: mockCompanies[3],
-          ),
+          home: CompanyList(),
+          routes: {
+            Routes.CompanyPageHome: (context) {
+              final Company company = ModalRoute.of(context)!.settings.arguments as Company;
+              return CompanyPageHome(company: company);
+            },
+          },
         );
       },
     );
@@ -35,7 +46,8 @@ class CompanyPageHome extends StatefulWidget {
   _CompanyPageHomeState createState() => _CompanyPageHomeState();
 }
 
-class _CompanyPageHomeState extends State<CompanyPageHome> with SingleTickerProviderStateMixin {
+class _CompanyPageHomeState extends State<CompanyPageHome>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -79,16 +91,18 @@ class _CompanyPageHomeState extends State<CompanyPageHome> with SingleTickerProv
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CompanyData(company: widget.company), // Company details
-          ScrollableTabs(tabController: _tabController), // Scrollable Tabs **AFTER** CompanyData
+          ScrollableTabs(
+              tabController:
+                  _tabController), // Scrollable Tabs **AFTER** CompanyData
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: const [
                 Center(child: Text("Home")),
                 Center(child: Text("About")),
-                Image(image: NetworkImage(
-                  "https://cdn.prod.website-files.com/6548f623e03389ab980fec2a/6752d7396fec014ddeb7d400_672a0de7927a7ff2a130709e_65eb1da89da0e332894adecd_Frame%2525201000006945.webp"
-                )),
+                Image(
+                    image: NetworkImage(
+                        "https://cdn.prod.website-files.com/6548f623e03389ab980fec2a/6752d7396fec014ddeb7d400_672a0de7927a7ff2a130709e_65eb1da89da0e332894adecd_Frame%2525201000006945.webp")),
                 Center(child: Text("Jobs")),
                 Center(child: Text("People")),
               ],
