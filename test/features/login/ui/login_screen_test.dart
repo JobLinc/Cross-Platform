@@ -194,6 +194,8 @@ void main() {
       //await tester.tap(find.text('Forgot Password?'));
       await tester.pumpAndSettle();
 
+      // Debug print to check if the screen is rendered
+
       // Assert
       expect(find.text("Forgot Password"), findsOneWidget);
     });

@@ -48,6 +48,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
               setState(() {
                 _selectedIndex = value;
               });
+              //TODO: Replace these routes with the actual screens routes when they are done and uncomment
               switch (value) {
                 case 0:
                   Navigator.pushReplacement(context,

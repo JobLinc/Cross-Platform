@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/login/logic/cubit/login_state.dart';
@@ -10,6 +11,7 @@ class MockLoginRepo extends Mock implements LoginRepo {}
 void main() {
   late LoginCubit loginCubit;
   late MockLoginRepo mockLoginRepo;
+  WidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     mockLoginRepo = MockLoginRepo();
