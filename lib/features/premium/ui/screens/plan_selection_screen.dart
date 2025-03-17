@@ -4,7 +4,14 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:joblinc/features/premium/data/services/stripe_service.dart';
 import 'package:joblinc/features/premium/payment_constants.dart';
 
-class PlanSelectionScreen extends StatelessWidget {
+class PlanSelectionScreen extends StatefulWidget {
+  @override
+  State<PlanSelectionScreen> createState() => _PlanSelectionScreenState();
+}
+
+class _PlanSelectionScreenState extends State<PlanSelectionScreen> {
+  double? selectedPlan = 14.99;
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -29,19 +36,19 @@ class PlanSelectionScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                 ),
                 SizedBox(height: 10.h),
-                buildPlanOption("USD 14.99/month", "1 month free, then USD 14.99 per month"),
+                buildPlanOption(14.99,"USD 14.99/month", "Billed monthly USD 14.99 per month"),
                 SizedBox(height: 10.h),
-                buildPlanOption("USD 10.00/month", "Billed annually at USD 119.99 (Save 33%)"),   
+                buildPlanOption(119.99,"USD 10.00/month", "Billed annually at USD 119.99 (Save 33%)"),   
                 Spacer(),
                 ElevatedButton(
                 onPressed: () {
-                  StripeService.instance.makePayment();
+                  StripeService.instance.makePayment(selectedPlan!);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[400],
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Try 1 month for 0 USD'),
+                child: Text(selectedPlan == 14.99 ? 'Try 1 month for 14.99 USD':'Try 1 year for 119.99 USD'),
               ),
             ],
           ),
@@ -50,16 +57,18 @@ class PlanSelectionScreen extends StatelessWidget {
     );
   }   
 
-
-
-  Widget buildPlanOption(String title, String subtitle){
+  Widget buildPlanOption(double value,String title, String subtitle){
     return ListTile(
       title: Text(title),
       subtitle: Text(subtitle),
-      leading: Radio(
-        value: title,
-        groupValue: title,
-        onChanged: (_) {},
+      leading: Radio<double>(
+        value: value,
+        groupValue: selectedPlan,
+        onChanged: (double? newPlan) {
+          setState(() {
+            selectedPlan=newPlan;
+          });
+        },
         fillColor: WidgetStateProperty.resolveWith((states){
           if (states.contains(WidgetState.selected)){
             return Colors.red[700];
@@ -69,7 +78,6 @@ class PlanSelectionScreen extends StatelessWidget {
       ),
     );
   }
-
 }
 
 

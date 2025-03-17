@@ -6,9 +6,9 @@ class StripeService {
   StripeService._();
   static final StripeService instance =StripeService._();
 
-  Future<void> makePayment() async{
+  Future<void> makePayment(double amount) async{
     try{
-      String? paymentIntentClientSecret= await createPaymentIntent(10,"usd");
+      String? paymentIntentClientSecret= await createPaymentIntent(amount,"usd");
       if(paymentIntentClientSecret == null) {return;}
 
       await Stripe.instance.initPaymentSheet(
@@ -23,11 +23,11 @@ class StripeService {
     }
   }
 
-  Future<String?> createPaymentIntent(int amount,String currency) async{
+  Future<String?> createPaymentIntent(double amount,String currency) async{
     try{
       final Dio dio=Dio();
       Map<String,dynamic> data ={
-        "amount":amount*100,
+        "amount":(amount*100).toInt(),
         "currency": currency
       };
 

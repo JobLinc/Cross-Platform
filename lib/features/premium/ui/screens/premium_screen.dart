@@ -33,7 +33,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     backgroundColor: Colors.red[400],
                     foregroundColor: Colors.white,
                   ),
-                  child: Text('Try now for 0 USD'),
+                  child: Text('Try now for 14.99 USD'),
                 ),
               ],
             ),
