@@ -15,7 +15,6 @@ class StripeService {
         paymentSheetParameters: SetupPaymentSheetParameters(
         paymentIntentClientSecret:paymentIntentClientSecret,
         merchantDisplayName: "JobLinc"
-        pay
       ));
       await processPayment();
     }
