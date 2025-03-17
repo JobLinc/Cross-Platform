@@ -7,7 +7,8 @@ class RegisterApiService {
 
   RegisterApiService(this._dio);
 
-  Future<RegisterResponse> register(RegisterRequestModel registerRequestModel) async {
+  Future<RegisterResponse> register(
+      RegisterRequestModel registerRequestModel) async {
     try {
       final response = await _dio.post(
         '/auth/register',
@@ -23,7 +24,7 @@ class RegisterApiService {
   String _handleDioError(DioException e) {
     if (e.response != null) {
       if (e.response?.statusCode == 400) {
-        return 'Invalid data';
+        return e.response?.statusMessage?.toString() ?? 'Invalid data';
       } else if (e.response?.statusCode == 409) {
         return 'User already exists';
       } else {

@@ -12,7 +12,7 @@ class PasswordTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRoundedTextFormField(
-        hintText: "Password",
+        labelText: "Password",
         obscureText: true,
         validator: (value) {
           if (value == null || value.isEmpty) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
+
 class FirstnameTextFormField extends StatelessWidget {
   const FirstnameTextFormField({
     super.key,
@@ -12,7 +13,7 @@ class FirstnameTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomRoundedTextFormField(
         controller: _firstNameController,
-        hintText: "First Name",
+        labelText: "First Name",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your first name';
