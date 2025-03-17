@@ -43,14 +43,6 @@ class CompanyMoreButton extends StatelessWidget {
 class MoreActions extends StatelessWidget {
   const MoreActions({super.key});
 
-  void _CreateCompanyPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CreateCompanyPage(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
