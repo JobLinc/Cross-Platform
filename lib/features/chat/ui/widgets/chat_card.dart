@@ -13,6 +13,7 @@ class ChatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key:Key("chatList_openChat_card${chat!.id}"),
       onTap: press,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),

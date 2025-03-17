@@ -106,11 +106,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         size: 24.sp, color: Colors.white),
                   ),
                   CustomSearchBar(
+                      keyName: "chatList_search_textField",
                       text: "search messages",
                       onPress: (){}/*startSearch*/,
                       onTextChange: searchChats /*addSearchedToSearchedList*/,
                       controller: searchTextController),
                   IconButton(
+                    key: Key("chatList_filter_iconButton"),
                     onPressed: () {
                       filter = !filter;
                       filterUnreadChats(filter);
