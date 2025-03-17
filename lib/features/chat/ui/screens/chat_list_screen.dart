@@ -87,7 +87,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   AppBar chatListAppBar(BuildContext context) {
     bool filter = false;
     return AppBar(
-      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+      backgroundColor: const Color.fromARGB(255, 255, 68, 68),
       elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: SafeArea(

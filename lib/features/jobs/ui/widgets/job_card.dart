@@ -57,7 +57,7 @@ class JobCard extends StatelessWidget {
                           width: 4.w,
                         ),
                         Text(
-                          "180 school alumni work here",
+                          "${job.company!.size}",
                           style:
                               TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
                         )
@@ -90,14 +90,14 @@ class JobList extends StatelessWidget{
               itemIndex: index,
               job: jobs[index],
               press: () {
-                showJobDetails(context);
+                showJobDetails(context,jobs[index]);
                 //print("Tapped on: ${sortedChats[index].userName}");
               },
             ));
   } 
 }
 
-void showJobDetails(BuildContext context) {
+void showJobDetails(BuildContext context,Job jobDetails) {
   Future.delayed(Duration(milliseconds: 100), () {
   showModalBottomSheet(
     context: context,
@@ -111,7 +111,7 @@ void showJobDetails(BuildContext context) {
         builder: (context,scrollController){
           return Material(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            child: JobDetailScreen(scrollController: scrollController)
+            child: JobDetailScreen(scrollController: scrollController,jobDetails: jobDetails,)
             );
         }
       );

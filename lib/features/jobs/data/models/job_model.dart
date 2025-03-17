@@ -65,10 +65,6 @@ class Job {
 }
 
 
-// Mock data
-//List<Job> mockJobs = 
-
-// Sample Company class
 class Company {
   String? name;
   String? size;
@@ -90,7 +86,6 @@ class Company {
   }
 }
 
-// Sample SalaryRange class
 class SalaryRange {
   double? min;
   double? max;
@@ -112,7 +107,7 @@ class SalaryRange {
   }
 }
 
-// Sample Location class
+
 class Location {
   String? city;
   String? country;

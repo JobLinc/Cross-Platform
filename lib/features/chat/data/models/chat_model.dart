@@ -9,13 +9,12 @@ class LastMessage {
   String? time;
   final String? messageType;
 
-  LastMessage(
-      {required this.senderID,
+  LastMessage({
+      required this.senderID,
       required this.text,
       required this.timestamp,
-      required this.messageType}) {
-    time = formatDynamicTime(timestamp!);
-  }
+      required this.messageType
+      }) {time = formatDynamicTime(timestamp!);}
 
   factory LastMessage.fromJson(Map<String, dynamic> json) {
     return LastMessage(
