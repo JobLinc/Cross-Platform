@@ -15,7 +15,7 @@ class UniversalBottomBar extends StatefulWidget {
 }
 
 class _UniversalBottomBarState extends State<UniversalBottomBar> {
-  int _selectedIndex = 0;
+  static int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,24 +48,74 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
               setState(() {
                 _selectedIndex = value;
               });
-              //TODO: Replace PlaceHolders with screens when they are done and uncomment
-              //! Make sure your the scaffold in these screens uses the universal_bottom_bar in core
               switch (value) {
                 case 0:
-                  Navigator.push(context,
+                  Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
-                // case 1:
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => Placeholder()));
-                // case 2:
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => Placeholder()));
-                // case 3:
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => Placeholder()));
-                // case 4:
-                //   Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => Placeholder()));
+                case 1:
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text("My Network"),
+                        ),
+                        body: Center(
+                          child: Text("My Network"),
+                        ),
+                        bottomNavigationBar: UniversalBottomBar(),
+                      ),
+                    ),
+                  );
+                  break;
+                case 2:
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text("Post"),
+                        ),
+                        body: Center(
+                          child: Text("Post"),
+                        ),
+                        bottomNavigationBar: UniversalBottomBar(),
+                      ),
+                    ),
+                  );
+                  break;
+                case 3:
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text("Notifications"),
+                        ),
+                        body: Center(
+                          child: Text("Notifications"),
+                        ),
+                        bottomNavigationBar: UniversalBottomBar(),
+                      ),
+                    ),
+                  );
+                  break;
+                case 4:
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text("Jobs"),
+                        ),
+                        body: Center(
+                          child: Text("Jobs"),
+                        ),
+                        bottomNavigationBar: UniversalBottomBar(),
+                      ),
+                    ),
+                  );
+                  break;
                 default:
                   throw UnimplementedError();
               }
