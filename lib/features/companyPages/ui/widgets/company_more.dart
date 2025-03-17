@@ -34,7 +34,7 @@ class CompanyMoreButton extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         backgroundColor: Color(0xFFFAFAFA),
         foregroundColor: Colors.black,
-        fixedSize: Size(40.w, 40.h),
+        fixedSize: Size(50.w, 50.h),
       ),
     );
   }

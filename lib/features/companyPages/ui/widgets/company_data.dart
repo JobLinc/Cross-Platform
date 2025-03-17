@@ -18,7 +18,7 @@ class CompanyData extends StatelessWidget {
       children: [
         // Stack containing only the Cover Image and Logo
         Container(
-          height: 60.h,
+          height: 90.h,
           child: Stack(
             children: [
               Image.network(
@@ -26,7 +26,7 @@ class CompanyData extends StatelessWidget {
                     "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png", // Default image if null
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: 40.h,
+                height: 60.h,
                 errorBuilder: (context, error, stackTrace) => Container(
                   height: 40.h,
                   color: Colors.grey[300], // Fallback color
@@ -38,7 +38,7 @@ class CompanyData extends StatelessWidget {
                 child: SquareAvatar(
                   imageUrl: company.logoUrl ??
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU', // Default logo if null
-                  size: 60,
+                  size: 60.h,
                 ),
               ),
             ],
@@ -47,7 +47,7 @@ class CompanyData extends StatelessWidget {
 
         // Column containing the rest of the UI elements
         Padding(
-          padding: EdgeInsets.only(top: 10.h),
+          padding: EdgeInsets.only(top: 2.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -65,7 +65,7 @@ class CompanyData extends StatelessWidget {
                     ),
                     if (company.isVerified)
                       Padding(
-                        padding: const EdgeInsets.only(left: 5),
+                        padding: EdgeInsets.only(left: 5.w),
                         child: Icon(Icons.verified_user_outlined),
                       ),
                   ],
@@ -77,8 +77,8 @@ class CompanyData extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 10.0,
-                  runSpacing: 4.0,
+                  spacing: 10.0.w,
+                  runSpacing: 4.0.h,
                   children: [
                     Text(
                       company.industry.displayName,
@@ -109,7 +109,7 @@ class CompanyData extends StatelessWidget {
 
               // Action Buttons (Visit Website, Follow, More)
               Padding(
-                padding: EdgeInsets.only(top: 12.h, left: 16.w),
+                padding: EdgeInsets.only(top: 12.h, left: 15.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -121,19 +121,22 @@ class CompanyData extends StatelessWidget {
                         foregroundColor: Colors.white,
                         icon: Icons.open_in_new,
                         websiteUrl: company.website!,
-                        width: 150.w,
+                        width: 160.w,
                         fontSize: 13.sp,
                       ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 10.w),
                     FollowButton(
                       text: "+ Follow",
                       backgroundColor: Colors.white,
                       foregroundColor: Color(0xFFD72638),
                       borderColor: Color(0xFFD72638),
-                      width: 130.w,
+                      width: 150.w,
                       fontSize: 13.sp,
                     ),
-                    CompanyMoreButton(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CompanyMoreButton(),
+                    ),
                   ],
                 ),
               ),

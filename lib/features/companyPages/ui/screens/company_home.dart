@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/core/routing/routes.dart' ;
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../../data/company.dart';
 import '../widgets/scrollable_tabs.dart';
-import '../widgets/company_card.dart';
+import 'company_card.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
-class Routes {
-  static const String CompanyPageHome = '/companyPageHome';
-}
+// class Routes {
+//   static const String CompanyPageHome = '/companyPageHome';
+// }
 
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          home: CompanyList(),
-          routes: {
-            Routes.CompanyPageHome: (context) {
-              final Company company = ModalRoute.of(context)!.settings.arguments as Company;
-              return CompanyPageHome(company: company);
-            },
-          },
-        );
-      },
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ScreenUtilInit(
+//       designSize: const Size(360, 690),
+//       minTextAdapt: true,
+//       splitScreenMode: true,
+//       builder: (context, child) {
+//         return MaterialApp(
+//           home: CompanyList(),
+//           routes: {
+//             Routes.CompanyPageHome: (context) {
+//               final Company company = ModalRoute.of(context)!.settings.arguments as Company;
+//               return CompanyPageHome(company: company);
+//             },
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class CompanyPageHome extends StatefulWidget {
   final Company company;
@@ -68,14 +67,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
         backgroundColor: const Color(0xFFFAFAFA),
-        title: Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back),
-            ),
+        title: 
             Expanded(
               child: CustomSearchBar(
                 text: widget.company.name,
@@ -84,8 +76,6 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
                 controller: TextEditingController(),
               ),
             ),
-          ],
-        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

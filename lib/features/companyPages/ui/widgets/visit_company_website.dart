@@ -40,10 +40,10 @@ Widget VisitCompanyWebsite({
     },
     child: Container(
       alignment: Alignment.center,
-      padding: padding ?? EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      padding: padding ?? EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 40),
-        border: Border.all(color: borderColor ?? Colors.black, width: 1.5),
+        border: Border.all(color: borderColor ?? Colors.black, width: 1.5.w),
         color: backgroundColor,
       ),
       width: width ?? 200.w,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/companyPages/data/company.dart';
-import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
-import 'square_avatar.dart';
+import 'package:joblinc/core/routing/routes.dart';
+import '../widgets/square_avatar.dart';
 
 class CompanyCard extends StatelessWidget {
   final int? itemIndex;
@@ -23,9 +23,8 @@ class CompanyCard extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
             child: Row(
-              mainAxisSize: MainAxisSize.max, 
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, 
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SquareAvatar(
                   imageUrl: company.logoUrl ??
@@ -77,14 +76,14 @@ class CompanyCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Spacer(), 
+                Spacer(),
                 Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.grey),
               ],
             ),
           ),
           Divider(
             color: Colors.grey[400],
-            thickness: 1, 
+            thickness: 1,
           ),
         ],
       ),
@@ -122,12 +121,6 @@ class _CompanyListState extends State<CompanyList> {
           backgroundColor: const Color(0xFFFAFAFA),
           title: Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.arrow_back),
-              ),
               Expanded(
                 child: CustomSearchBar(
                   text: "Search for a company...",
@@ -147,7 +140,7 @@ class _CompanyListState extends State<CompanyList> {
                   press: () {
                     Navigator.pushNamed(
                       context,
-                      Routes.CompanyPageHome,
+                      Routes.companyPageHome,
                       arguments:
                           companiesList[index], // Pass the Company object
                     );

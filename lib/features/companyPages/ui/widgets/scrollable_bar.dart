@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theming/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScrollableTabs extends StatefulWidget {
   final Function(int) onTabSelected;
@@ -41,21 +42,21 @@ class _ScrollableTabsState extends State<ScrollableTabs> {
                 border: Border(
                   bottom: BorderSide(
                     color: widget.selectedIndex == index
-                        ? ColorsManager.crimsonRed 
+                        ? ColorsManager.crimsonRed
                         : Colors.transparent,
-                    width: 2,
+                    width: 2.w,
                   ),
                 ),
               ),
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: widget.selectedIndex == index
                       ? FontWeight.bold
                       : FontWeight.normal,
                   color: widget.selectedIndex == index
-                      ? ColorsManager.crimsonRed 
+                      ? ColorsManager.crimsonRed
                       : Colors.black,
                 ),
               ),
