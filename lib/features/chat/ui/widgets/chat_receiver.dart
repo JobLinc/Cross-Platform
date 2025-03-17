@@ -29,7 +29,7 @@ class ChatReceiver extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(_imageUrl),
+                  backgroundImage: NetworkImage(_imageUrl!),
                   radius: 40,
                 ),
               ),
@@ -41,10 +41,10 @@ class ChatReceiver extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 18)
                     ),
-                  if (_isVerified) Icon(Icons.verified_user_outlined),
+                  if (_isVerified!) Icon(Icons.verified_user_outlined),
                 ],
               ),
-          Text(_description),
+          Text(_description!),
         ],
       ),
     );

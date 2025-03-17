@@ -4,7 +4,6 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
-import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
@@ -13,15 +12,13 @@ import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
-import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
-import 'package:joblinc/features/companyPages/data/company.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
+    //this arguments to be passed in any screen like this ( arguments as ClassName )
+    // final arguments = settings.arguments;
 
-    final arguments = settings.arguments;
-    
     switch (settings.name) {
       case Routes.onBoardingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
@@ -53,25 +50,6 @@ class AppRouter {
         );
       case Routes.chatListScreen:
         return MaterialPageRoute(builder: (context) => ChatListScreen());
-
-      case Routes.companyListScreen:
-        return MaterialPageRoute(builder: (context) => CompanyList());
-
-      case Routes.companyPageHome:
-        if (arguments is Company) {
-          return MaterialPageRoute(
-            builder: (context) => CompanyPageHome(company: arguments),
-          );
-        } else {
-          return MaterialPageRoute(
-            builder: (context) => Scaffold(
-              body: Center(
-                child: Text("Invalid arguments for CompanyPageHome"),
-              ),
-            ),
-          );
-        }
-
       default:
         return null;
     }
