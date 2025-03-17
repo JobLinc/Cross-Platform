@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
+
 class EmailTextFormField extends StatelessWidget {
   const EmailTextFormField({
     super.key,
@@ -12,7 +13,7 @@ class EmailTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomRoundedTextFormField(
         controller: _emailController,
-        hintText: "Email",
+        labelText: "Email",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your email';

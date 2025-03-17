@@ -5,6 +5,7 @@ import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
@@ -45,6 +46,9 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
+
+  getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit());
+
 
   getIt.registerLazySingleton<ChatApiService>(
     () =>ChatApiService(getIt<Dio>()) ,);
