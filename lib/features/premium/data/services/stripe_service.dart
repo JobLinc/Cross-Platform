@@ -15,11 +15,12 @@ class StripeService {
         paymentSheetParameters: SetupPaymentSheetParameters(
         paymentIntentClientSecret:paymentIntentClientSecret,
         merchantDisplayName: "JobLinc"
+        pay
       ));
       await processPayment();
     }
     catch(e){
-      print(e);
+      //print(e);
     }
   }
 
@@ -42,13 +43,13 @@ class StripeService {
         )
       );
       if (response.data != null){
-        print (response.data);
+        //print (response.data);
         return response.data["client_secret"];
       }
       return null;
     }
     catch(e){
-      print(e);
+      //print(e);
     }
     return null;
   } 
@@ -59,7 +60,7 @@ class StripeService {
       await Stripe.instance.confirmPaymentSheetPayment();
     }
     catch(e){
-      print(e);
+      //print(e);
     }
   }
 }

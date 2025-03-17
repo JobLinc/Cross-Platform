@@ -28,6 +28,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ),
                 SizedBox(height: 20.h),
                 ElevatedButton(
+                  key: Key("premium_try_elevatedButton"),
                   onPressed: ()=> showPlanScreen(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[400],
