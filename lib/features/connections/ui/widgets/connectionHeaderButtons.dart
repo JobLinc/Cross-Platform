@@ -20,6 +20,7 @@ class connection_Buttons extends StatelessWidget {
           ),
           Expanded(child: SizedBox(width: 1.sw)),
           IconButton(
+            key: Key("Search button"),
             onPressed: () {
               // Navigator.pushNamed(
               //     context,
@@ -31,6 +32,7 @@ class connection_Buttons extends StatelessWidget {
             icon: Icon(Icons.search),
           ),
           IconButton(
+              key: Key("Sorting button"),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -46,7 +48,9 @@ class connection_Buttons extends StatelessWidget {
 
                     return BlocProvider.value(
                       value: cubit, // Pass the existing cubit
-                      child: SortBottomSheet(),
+                      child: SortBottomSheet(
+                        key: Key("bottom sorting sheet "),
+                      ),
                     );
                   },
                 );

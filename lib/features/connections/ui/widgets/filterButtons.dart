@@ -9,10 +9,12 @@ class SingleChildScrollFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      key: Key("filter buttons "),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           IconButton(
+            key: Key("All filters button"),
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -22,6 +24,7 @@ class SingleChildScrollFilter extends StatelessWidget {
             icon: Icon(Icons.sort),
           ),
           ElevatedButton(
+            key: Key("people filter button"),
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               minimumSize: Size(
@@ -29,7 +32,7 @@ class SingleChildScrollFilter extends StatelessWidget {
                 MediaQuery.of(context).size.height / 30,
               ), // Match container height
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              backgroundColor: Color(0xff004c33) ,
+              backgroundColor: Color(0xff004c33),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
@@ -60,12 +63,12 @@ class SingleChildScrollFilter extends StatelessWidget {
             ),
           ),
           Container(
-            
             height: MediaQuery.of(context).size.height / 30, // Reference height
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ElevatedButton(
+                  key: Key("1st filter button"),
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -91,6 +94,7 @@ class SingleChildScrollFilter extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
+                  key: Key("2nd filter button"),
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -113,6 +117,7 @@ class SingleChildScrollFilter extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
+                  key: Key("3rd+ filter button"),
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -142,6 +147,7 @@ class SingleChildScrollFilter extends StatelessWidget {
           ),
           VerticalDivider(),
           ElevatedButton(
+            key: Key("Locations filter button"),
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               minimumSize: Size(
@@ -173,6 +179,7 @@ class SingleChildScrollFilter extends StatelessWidget {
           ),
           VerticalDivider(),
           ElevatedButton(
+            key: Key("Current Company filter button"),
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               minimumSize: Size(

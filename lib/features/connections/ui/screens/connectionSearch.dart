@@ -26,14 +26,15 @@ class Connectionsearch extends StatelessWidget {
                 BlocProvider.of<ConnectionsCubit>(context).Backclicked();
               },
             ),
-            title: CustomSearchBar(text: 'Search'),
+            title: CustomSearchBar(key: Key("Search bar "), text: 'Search'),
           ),
           body: Column(
+            key: Key("search Page body"),
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
-                child: SingleChildScrollFilter(),
+                child: SingleChildScrollFilter(key: Key("Search bage filters"),),
               ),
               Divider(
                 color: Colors.grey[300], // Line color
@@ -41,7 +42,7 @@ class Connectionsearch extends StatelessWidget {
                 height: 0, // No extra spacing
               ),
               Expanded(
-                  child: connections_List_View(
+                  child: connections_List_View(key: Key("Search page connections List"),
                 connections:
                     BlocProvider.of<ConnectionsCubit>(context).connections,
               )),

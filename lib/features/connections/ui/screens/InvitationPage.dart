@@ -15,6 +15,7 @@ class InvitationPage extends StatelessWidget {
         title: Text('Invitations',
             style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
         leading: IconButton(
+          key: Key("Invitations Page back icon"),
           icon: Icon(
             Icons.arrow_back,
             size: 20.sp,
@@ -26,7 +27,7 @@ class InvitationPage extends StatelessWidget {
       ),
       body: BlocBuilder<ConnectionsCubit, ConnectionsState>(
         builder: (context, state) {
-          return InvitationsList(
+          return InvitationsList(key: Key("the Invitation List and buttons"),
             invitations:
                 BlocProvider.of<ConnectionsCubit>(context).pendingconnections,
           );

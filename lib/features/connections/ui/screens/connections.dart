@@ -15,9 +15,15 @@ class ConnectionPage extends StatelessWidget {
     return BlocBuilder<ConnectionsCubit, ConnectionsState>(
         builder: (context, state) {
       if (state is SearchState) {
-        return Connectionsearch();
+        return Connectionsearch(
+          key: Key("the search page"),
+        );
       }
-      return ConnectionList();
+      return ConnectionList(key: Key("the connection page"));
+
+      // return InvitationPage(
+      //   key: Key("the invitations page"),
+      // );
     });
   }
 }

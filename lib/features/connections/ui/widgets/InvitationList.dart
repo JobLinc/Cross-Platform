@@ -25,6 +25,7 @@ class InvitationsList extends StatelessWidget {
             Container(
               color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
+                key: Key("Invitations page Tile"),
                 onTap: () {
                   // TODO: Navigate to the user's profile
                   print("Go to ${invitation['firstname']}'s profile");
@@ -75,6 +76,7 @@ class InvitationsList extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
+                      key: Key("Decline Invitation button"),
                       onPressed: () {
                         BlocProvider.of<ConnectionsCubit>(context)
                             .ResponsePending(invitation["id"]!, "Denied");
@@ -97,6 +99,7 @@ class InvitationsList extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(right: 8.w),
                       child: ElevatedButton(
+                        key: Key("Accept Invitation button"),
                         onPressed: () {
                           BlocProvider.of<ConnectionsCubit>(context)
                               .ResponsePending(invitation["id"]!, "Accepted");

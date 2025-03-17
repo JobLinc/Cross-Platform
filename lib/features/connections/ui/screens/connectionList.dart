@@ -24,8 +24,10 @@ class ConnectionList extends StatelessWidget {
                 listener: (context, state) {},
                 builder: (context, state) {
                   return Column(
+                    key: Key("ConnectionListbody"),
                     children: [
                       connection_Buttons(
+                        key: Key("number of connections and searchand sort buttons"),
                           connections:
                               BlocProvider.of<ConnectionsCubit>(context)
                                   .SortingData()),
@@ -36,6 +38,7 @@ class ConnectionList extends StatelessWidget {
                       ),
                       Expanded(
                           child: connections_List_View(
+                            key: Key("the List of connections"),
                               connections:
                                   BlocProvider.of<ConnectionsCubit>(context)
                                       .SortingData())),

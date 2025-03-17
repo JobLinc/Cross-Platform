@@ -23,6 +23,7 @@ class connections_List_View extends StatelessWidget {
             Container(
               color: Colors.white,
               child: GestureDetector(
+                key: Key("Connections List Tile"),
                 onTap: () {
                   //todo:go to the profile of the user
                   print("go to ${connection['firstname']} profile");
@@ -72,11 +73,13 @@ class connections_List_View extends StatelessWidget {
                       ),
                     ),
                     IconButton(
+                        key: Key("Go to chat button"),
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.chatScreen);
                         },
                         icon: Icon(Icons.send, size: 20.sp)),
                     IconButton(
+                        key: Key("more actions button"),
                         onPressed: () {
                           //todo : the
                           print("hello ${connection['firstname']} more");

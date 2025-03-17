@@ -40,16 +40,19 @@ class SortBottomSheet extends StatelessWidget {
               runSpacing: 10.h,
               children: [
                 buildSortButton(
+                    key: Key("Recently added sorting button"),
                     context: context,
                     label: "Recently added",
                     isSelected: BlocProvider.of<ConnectionsCubit>(context)
                         .recentlyAddedSelected),
                 buildSortButton(
+                    key: Key("First Name sorting button"),
                     context: context,
                     label: "First name",
                     isSelected: BlocProvider.of<ConnectionsCubit>(context)
                         .firstNameSelected),
                 buildSortButton(
+                    key: Key("Last Name sorting button"),
                     context: context,
                     label: "Last name",
                     isSelected: BlocProvider.of<ConnectionsCubit>(context)
@@ -59,6 +62,7 @@ class SortBottomSheet extends StatelessWidget {
           }),
           SizedBox(height: 20.h),
           ElevatedButton(
+            key: Key("Show sorting results"),
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorsManager.crimsonRed,
               shape: RoundedRectangleBorder(
@@ -80,8 +84,10 @@ class SortBottomSheet extends StatelessWidget {
 Widget buildSortButton(
     {required BuildContext context,
     required String label,
-    required bool isSelected}) {
+    required bool isSelected,
+    Key? key}) {
   return ElevatedButton(
+    key: key,
     style: ElevatedButton.styleFrom(
       backgroundColor: isSelected ? Color(0xff004c33) : Colors.grey[300],
       foregroundColor: isSelected ? Colors.white : Colors.black,
