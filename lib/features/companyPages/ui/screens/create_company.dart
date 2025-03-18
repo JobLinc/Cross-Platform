@@ -32,12 +32,10 @@ class CreateCompanyPage extends StatelessWidget {
     return BlocListener<CreateCompanyCubit, CreateCompanyState>(
       listener: (context, state) {
         if (state is CreateCompanySuccess) {
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Company created successfully!')),
           );
         } else if (state is CreateCompanyFailure) {
-          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Failed to create company. Please try again. ')),
@@ -189,7 +187,7 @@ class CreateCompanyPage extends StatelessWidget {
                       ),
                       SizedBox(height: 10.h),
                       TermsAndConditionsCheckBox(
-                        key: Key('termsAndConditionsCheckBox'),
+                        key: _termsAndConditionsKey,
                       ),
                       SizedBox(height: 10.h),
                       Hyperlink(

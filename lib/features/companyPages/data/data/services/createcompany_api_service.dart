@@ -11,6 +11,9 @@ class CreateCompanyApiService {
       String phone, String industry, String overview) async {
     try {
       final accessToken = await SecureStorage.getAccessToken();
+      print('Access Token: $accessToken'); 
+      print(
+          'Request Payload: {name: $name, email: $email, phone: $phone, industry: $industry, overview: $overview}');
       final response = await _dio.post(
         '/companies',
         options: Options(
@@ -29,6 +32,7 @@ class CreateCompanyApiService {
       print(response.data);
       return CreateCompanyResponse.fromJson(response.data);
     } on DioException catch (e) {
+      print('API Error: ${e.message}');
       throw Exception(_handleDioError(e));
     }
   }

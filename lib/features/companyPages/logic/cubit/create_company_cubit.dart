@@ -16,7 +16,7 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
       required Industry selectedIndustry,
       required OrganizationSize orgSize,
       required OrganizationType orgType,
-      websiteController}) async {
+      required TextEditingController websiteController}) async {
     emit(CreateCompanyLoading());
 
     try {
@@ -33,17 +33,16 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
 
       await _createCompanyRepo.createCompany(
           companyToAdd.name,
-          companyToAdd.website!,
-          companyToAdd.profileUrl!,
-          companyToAdd.industry.toString(),
+          "a123@gmail.com",
+          "123456789",
+          companyToAdd.industry.displayName,
           "overview");
       mockCompanies.add(companyToAdd);
 
       emit(CreateCompanySuccess());
       // ignore: unused_catch_clause
-    } on Exception catch (e) {
-      print(e);
-      emit(CreateCompanyFailure());
+    } catch (e) {
+      emit(CreateCompanyFailure(e.toString()));
     }
   }
 }

@@ -34,15 +34,16 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
         backgroundColor: const Color(0xFFFAFAFA),
-        title: 
-            Expanded(
-              child: CustomSearchBar(
+        title: Row(
+          children: [
+              CustomSearchBar(
                 text: widget.company.name,
                 onPress: () {},
                 onTextChange: (searched) {},
                 controller: TextEditingController(),
-              ),
             ),
+          ],
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,8 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
           CompanyData(company: widget.company), // Company details
           ScrollableTabs(
               tabController:
-                  _tabController), // Scrollable Tabs **AFTER** CompanyData
+                  _tabController
+                ), 
           Expanded(
             child: TabBarView(
               controller: _tabController,
