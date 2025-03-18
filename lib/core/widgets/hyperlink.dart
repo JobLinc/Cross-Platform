@@ -9,12 +9,12 @@ class Hyperlink extends StatelessWidget {
   final double size;
 
   const Hyperlink({
-    Key? key,
+    super.key,
     required this.text,
     required this.color,
     required this.url,
     required this.size,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

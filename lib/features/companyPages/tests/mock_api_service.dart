@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:mocktail/mocktail.dart';
 
 class CompanyApiService {
