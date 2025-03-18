@@ -12,7 +12,6 @@ class CompanyjobLincUrlTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRectangularTextFormField(
-      key: Key("createcompany_joblincurl_textfield"),
       controller: _jobLincUrlController,
       hintText: "Add your unique JobLinc address",
       labelText: "joblinc.com/company/*",

@@ -15,7 +15,6 @@ class SubmitCompany extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        key: Key("createcompany_submit_label"),
         onTap: onTap,
         child: Text(
           "Create",

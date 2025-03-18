@@ -69,10 +69,8 @@ class CreateCompanyPage extends StatelessWidget {
                 child: SubmitCompany(
                   formKey: _formKey,
                   onTap: () {
-                    // Validate the form and the checkbox
                     if (_formKey.currentState!.validate() &&
                         _termsAndConditionsKey.currentState!.validate() == null) {
-                      // Form is valid, proceed with submission using the Cubit
                       context.read<CreateCompanyCubit>().createCompany(
                         nameController: _nameController,
                         jobLincUrlController: _jobLincUrlController,
@@ -82,7 +80,6 @@ class CreateCompanyPage extends StatelessWidget {
                         websiteController: _websiteController,
                       );
                     } else {
-                      // If the checkbox is not checked, trigger its validation
                       _termsAndConditionsKey.currentState!.validate();
                     }
                   },
@@ -139,13 +136,19 @@ class CreateCompanyPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CompanyNameTextFormField(nameController: _nameController),
-                      SizedBox(height: 10.h), // Add spacing between fields
+                      CompanyNameTextFormField(
+                        nameController: _nameController,
+                        key: Key('createcompany_name_textfield'),
+                      ),
+                      SizedBox(height: 10.h), 
                       CompanyjobLincUrlTextFormField(
-                          jobLincUrlController: _jobLincUrlController),
+                        key: Key('createcompany_jobLincUrl_textfield'),
+                        jobLincUrlController: _jobLincUrlController,
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.h),
                         child: Hyperlink(
+                          key: Key('createcompany_publicPageUrl_hyperlink'),
                           text: "Learn more about the Page Public URL",
                           color: Colors.grey.shade700,
                           size: 16,
@@ -154,9 +157,12 @@ class CreateCompanyPage extends StatelessWidget {
                         ),
                       ),
                       CompanyWebsiteTextFormField(
-                          websiteController: _websiteController),
+                        key: Key('createcompany_website_textfield'),
+                        websiteController: _websiteController,
+                      ),
                       SizedBox(height: 20.h),
                       IndustryDropdown(
+                        key: Key('createcompany_industry_dropdown'),
                         value: null,
                         onChanged: (value) {
                           _selectedIndustry = value!;
@@ -164,6 +170,7 @@ class CreateCompanyPage extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
                       OrganizationSizeDropdown(
+                        key: Key('createcompany_orgSize_dropdown'),
                         value: null,
                         onChanged: (value) {
                           _orgSize = value!;
@@ -171,15 +178,19 @@ class CreateCompanyPage extends StatelessWidget {
                       ),
                       SizedBox(height: 5.h),
                       OrganizationTypeDropdown(
+                        key: Key('createcompany_orgType_dropdown'),
                         value: null,
                         onChanged: (value) {
                           _orgType = value!;
                         },
                       ),
                       SizedBox(height: 10.h),
-                      TermsAndConditionsCheckBox(key: _termsAndConditionsKey),
+                      TermsAndConditionsCheckBox(
+                        key: Key('termsAndConditionsCheckBox'),
+                      ),
                       SizedBox(height: 10.h),
                       Hyperlink(
+                        key: Key('createcompany_termsAndConditions_hyperlink'),
                         text: "Read the LinkedIn Pages Terms",
                         color: Colors.grey.shade700,
                         url:

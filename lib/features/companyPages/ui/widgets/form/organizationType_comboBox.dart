@@ -22,7 +22,6 @@ class OrganizationTypeDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       child: CustomEnumDropdown<OrganizationType>(
-        key: Key("createcomapny_organizationtype_dropdown"),
         labelText: "Organization type*",
         value: value,
         items: OrganizationType.values,

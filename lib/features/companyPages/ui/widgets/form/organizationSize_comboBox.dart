@@ -21,7 +21,6 @@ class OrganizationSizeDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomEnumDropdown<OrganizationSize>(
-      key: Key("createcompany_organizationsize_dropdown"),
       labelText: "Organization size*",
       value: value,
       items: OrganizationSize.values,

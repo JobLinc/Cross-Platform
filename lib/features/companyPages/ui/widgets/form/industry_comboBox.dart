@@ -23,7 +23,6 @@ class IndustryDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return 
     CustomEnumDropdown<Industry>(
-      key: Key("createcompany_industry_dropdown"),
       labelText: "Industry*",
       value: value,
       items: Industry.values,

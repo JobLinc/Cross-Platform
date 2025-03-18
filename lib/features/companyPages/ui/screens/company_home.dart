@@ -4,37 +4,6 @@ import '../../../../core/widgets/custom_search_bar.dart';
 import '../../data/data/company.dart';
 import '../widgets/scrollable_tabs.dart';
 
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class Routes {
-//   static const String CompanyPageHome = '/companyPageHome';
-// }
-
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return ScreenUtilInit(
-//       designSize: const Size(360, 690),
-//       minTextAdapt: true,
-//       splitScreenMode: true,
-//       builder: (context, child) {
-//         return MaterialApp(
-//           home: CompanyList(),
-//           routes: {
-//             Routes.CompanyPageHome: (context) {
-//               final Company company = ModalRoute.of(context)!.settings.arguments as Company;
-//               return CompanyPageHome(company: company);
-//             },
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
-
 class CompanyPageHome extends StatefulWidget {
   final Company company;
   const CompanyPageHome({required this.company, super.key});
