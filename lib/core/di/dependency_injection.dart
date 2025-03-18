@@ -17,7 +17,7 @@ final getIt = GetIt.instance;
 Future<void> setupGetIt() async {
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:3000/api',
+      baseUrl: 'https://joblinc.me/api/',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {

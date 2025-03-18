@@ -8,10 +8,5 @@ class CreateCompanyRepo {
 
   Future<void> createCompany(String name, String email, String phone, String industry, String overview) async {
     final response = await _createCompanyApiService.createCompany(name, email, phone, industry, overview);
- 
-    await SecureStorage.saveTokens(
-      accessToken: response.accessToken,
-      refreshToken: response.refreshToken,
-    );
   }
 }
