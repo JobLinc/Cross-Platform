@@ -33,8 +33,8 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
 
       await _createCompanyRepo.createCompany(
           companyToAdd.name,
-          "01003028787",
-          "ahmedmohsenn158@gmail.com",
+          companyToAdd.website!,
+          companyToAdd.profileUrl!,
           companyToAdd.industry.toString(),
           "overview");
       mockCompanies.add(companyToAdd);
@@ -42,6 +42,7 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
       emit(CreateCompanySuccess());
       // ignore: unused_catch_clause
     } on Exception catch (e) {
+      print(e);
       emit(CreateCompanyFailure());
     }
   }
