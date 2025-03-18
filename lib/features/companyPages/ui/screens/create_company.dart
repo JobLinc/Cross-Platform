@@ -39,7 +39,8 @@ class CreateCompanyPage extends StatelessWidget {
         } else if (state is CreateCompanyFailure) {
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to create company. Please try again.')),
+            SnackBar(
+                content: Text('Failed to create company. Please try again. ')),
           );
         }
       },
@@ -70,15 +71,17 @@ class CreateCompanyPage extends StatelessWidget {
                   formKey: _formKey,
                   onTap: () {
                     if (_formKey.currentState!.validate() &&
-                        _termsAndConditionsKey.currentState!.validate() == null) {
+                        _termsAndConditionsKey.currentState!.validate() ==
+                            null) {
+                      // Form is valid, proceed with submission using the Cubit
                       context.read<CreateCompanyCubit>().createCompany(
-                        nameController: _nameController,
-                        jobLincUrlController: _jobLincUrlController,
-                        selectedIndustry: _selectedIndustry,
-                        orgSize: _orgSize,
-                        orgType: _orgType,
-                        websiteController: _websiteController,
-                      );
+                            nameController: _nameController,
+                            jobLincUrlController: _jobLincUrlController,
+                            selectedIndustry: _selectedIndustry,
+                            orgSize: _orgSize,
+                            orgType: _orgType,
+                            websiteController: _websiteController,
+                          );
                     } else {
                       _termsAndConditionsKey.currentState!.validate();
                     }
