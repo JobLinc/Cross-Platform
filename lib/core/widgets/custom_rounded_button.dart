@@ -12,8 +12,10 @@ Widget customRoundedButton({
   double? fontSize,
   double? borderRadius,
   EdgeInsets? padding,
+  Key? key,
 }) {
   return GestureDetector(
+    key: key,
     onTap: onPressed,
     child: Container(
       alignment: Alignment.center,
@@ -32,11 +34,14 @@ Widget customRoundedButton({
           icon == null
               ? SizedBox()
               : SizedBox(width: 20.sp), // Space between icon and text
-          Text(
-            text,
-            style:
-                TextStyle(color: foregroundColor, fontSize: fontSize ?? 18.sp),
-            textAlign: TextAlign.center,
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(
+                  color: foregroundColor, fontSize: fontSize ?? 18.sp),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

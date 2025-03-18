@@ -9,8 +9,8 @@ class RegisterResponse {
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
     return RegisterResponse(
-      accessToken: json['data']['accessToken'],
-      refreshToken: json['data']['refreshToken'],
+      accessToken: json['accessToken'],
+      refreshToken: json['refreshToken'],
     );
   }
 }

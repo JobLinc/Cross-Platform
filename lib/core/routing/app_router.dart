@@ -4,11 +4,14 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
-import 'package:joblinc/features/login/ui/screens/forgetpassword_screen.dart';
+import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -43,7 +46,12 @@ class AppRouter {
       case Routes.chatScreen:
         return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
-        return MaterialPageRoute(builder: (context) => ForgetpasswordScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ForgetPasswordCubit>(),
+            child: ForgetpasswordScreen(),
+          ),
+        );
       case Routes.chatListScreen:
         // return MaterialPageRoute(
         //     builder: (context) => BlocProvider(

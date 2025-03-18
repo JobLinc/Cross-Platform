@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/home/data/models/post_model.dart';
+import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,12 +18,19 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Center(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search",
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                border: InputBorder.none,
+          child: Semantics(
+            container: true,
+            label: 'home_topBar_container',
+            child: Center(
+              child: Semantics(
+                label: 'home_topBar_search',
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                ),
               ),
             ),
           ),
@@ -32,62 +39,22 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.message, color: Colors.black),
             onPressed: () {
-              Navigator.pushNamed(context, Routes.chatListScreen);
+              Navigator.pushNamed(context, Routes.chatListScreen);  
+              Navigator.pushNamed(context, Routes.chatListScreen);  
             },
           ),
         ],
       ),
       body: Center(
-        child: ListView(
-          children: [
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-            Post(data: mockData),
-          ],
+        child: Semantics(
+          container: true,
+          label: 'home_body_postList',
+          child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: (context, index) => Post(data: mockData)),
         ),
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Divider(
-            thickness: 1,
-            height: 0,
-          ),
-          BottomNavigationBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: ColorsManager.darkBurgundy,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.people), label: "My Network"),
-              BottomNavigationBarItem(icon: Icon(Icons.add_box), label: "Post"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: "Notifications"),
-              BottomNavigationBarItem(icon: Icon(Icons.work), label: "Jobs"),
-            ],
-          ),
-        ],
-      ),
+      bottomNavigationBar: UniversalBottomBar(),
     );
   }
 }
