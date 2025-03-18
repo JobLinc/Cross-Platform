@@ -4,7 +4,7 @@ import 'package:joblinc/features/companyPages/ui/widgets/company_more.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/follow_button.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/visit_company_website.dart';
 import '../widgets/square_avatar.dart';
-import '../../data/company.dart';
+import '../../data/data/company.dart';
 
 
 class CompanyData extends StatelessWidget {

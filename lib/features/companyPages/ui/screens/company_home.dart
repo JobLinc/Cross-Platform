@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
-import '../../data/company.dart';
+import '../../data/data/company.dart';
 import '../widgets/scrollable_tabs.dart';
-import 'company_card.dart';
 
 // void main() {
 //   runApp(MyApp());

@@ -5,7 +5,7 @@ import 'package:joblinc/features/companyPages/ui/widgets/edit_button.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/organizationType_comboBox.dart';
 import '../../../../core/widgets/hyperlink.dart';
-import '../../data/company.dart';
+import '../../data/data/company.dart';
 import '../widgets/square_avatar.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/jobLincUrl_textField.dart';
@@ -73,7 +73,7 @@ class CreateCompanyPage extends StatelessWidget {
                     if (_formKey.currentState!.validate() &&
                         _termsAndConditionsKey.currentState!.validate() == null) {
                       // Form is valid, proceed with submission using the Cubit
-                      context.read<CreateCompanyCubit>().CreateCompany(
+                      context.read<CreateCompanyCubit>().createCompany(
                         nameController: _nameController,
                         jobLincUrlController: _jobLincUrlController,
                         selectedIndustry: _selectedIndustry,

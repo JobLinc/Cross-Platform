@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/company.dart';
+import '../../../data/data/company.dart';
 import 'custom_combobox.dart';
 
 class OrganizationSizeDropdown extends StatelessWidget {

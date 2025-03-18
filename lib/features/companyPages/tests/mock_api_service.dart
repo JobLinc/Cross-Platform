@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:joblinc/features/companyPages/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:mocktail/mocktail.dart';
-import '../data/company.dart';
 
 class CompanyApiService {
   final String baseUrl;

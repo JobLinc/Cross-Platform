@@ -15,7 +15,7 @@ import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
-import 'package:joblinc/features/companyPages/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {

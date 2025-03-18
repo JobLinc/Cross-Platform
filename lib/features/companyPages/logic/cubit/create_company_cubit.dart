@@ -1,13 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:joblinc/features/companyPages/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:flutter/material.dart';
+import '../../data/data/repos/createcompany_repo.dart';
 
 part 'create_company_state.dart';
 
 class CreateCompanyCubit extends Cubit<CreateCompanyState> {
-  CreateCompanyCubit() : super(CreateCompanyInitial());
+  final CreateCompanyRepo _createCompanyRepo;
 
-  CreateCompany(
+  CreateCompanyCubit(this._createCompanyRepo) : super(CreateCompanyInitial());
+
+  Future<void> createCompany(
       {required TextEditingController nameController,
       required TextEditingController jobLincUrlController,
       required Industry selectedIndustry,
@@ -27,11 +30,17 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
             ? "https://www.linkedin.com"
             : websiteController.text,
       );
+
+      await _createCompanyRepo.createCompany(
+          companyToAdd.name,
+          "01003028787",
+          "ahmedmohsenn158@gmail.com",
+          companyToAdd.industry.toString(),
+          "overview");
       mockCompanies.add(companyToAdd);
-      print(mockCompanies);
 
       emit(CreateCompanySuccess());
-    // ignore: unused_catch_clause
+      // ignore: unused_catch_clause
     } on Exception catch (e) {
       emit(CreateCompanyFailure());
     }
