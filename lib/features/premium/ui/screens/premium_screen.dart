@@ -5,6 +5,8 @@ import 'package:joblinc/features/premium/payment_constants.dart';
 import 'package:joblinc/features/premium/ui/screens/plan_selection_screen.dart';
 
 class PremiumScreen extends StatefulWidget {
+  const PremiumScreen({super.key});
+
   @override
   State<PremiumScreen> createState() => _PremiumScreenState();
 }
@@ -55,7 +57,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> setup() async{
-    WidgetsFlutterBinding.ensureInitialized();
+    //WidgetsFlutterBinding.ensureInitialized();
     Stripe.publishableKey=stripePublishKey;
   }
 }

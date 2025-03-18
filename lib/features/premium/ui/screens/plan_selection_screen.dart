@@ -5,6 +5,8 @@ import 'package:joblinc/features/premium/data/services/stripe_service.dart';
 import 'package:joblinc/features/premium/payment_constants.dart';
 
 class PlanSelectionScreen extends StatefulWidget {
+  const PlanSelectionScreen({super.key});
+  
   @override
   State<PlanSelectionScreen> createState() => _PlanSelectionScreenState();
 }
