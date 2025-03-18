@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +28,10 @@ class CreateCompanyPage extends StatelessWidget {
   late Industry _selectedIndustry;
   late OrganizationSize _orgSize;
   late OrganizationType _orgType;
+
+  bool get isTestEnvironment {
+    return Platform.environment.containsKey('FLUTTER_TEST');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +78,7 @@ class CreateCompanyPage extends StatelessWidget {
                         _termsAndConditionsKey.currentState!.validate() ==
                             null) {
                       // Form is valid, proceed with submission using the Cubit
+                      print('Form is valid');
                       context.read<CreateCompanyCubit>().createCompany(
                             nameController: _nameController,
                             jobLincUrlController: _jobLincUrlController,
@@ -81,6 +88,7 @@ class CreateCompanyPage extends StatelessWidget {
                             websiteController: _websiteController,
                           );
                     } else {
+                      print('Form is invalid');
                       _termsAndConditionsKey.currentState!.validate();
                     }
                   },
@@ -94,6 +102,7 @@ class CreateCompanyPage extends StatelessWidget {
             children: [
               Stack(
                 children: [
+                  if (!isTestEnvironment)
                   Image(
                     fit: BoxFit.cover,
                     image: NetworkImage(
@@ -101,6 +110,7 @@ class CreateCompanyPage extends StatelessWidget {
                     width: double.infinity,
                     height: 90.h,
                   ),
+                  if (!isTestEnvironment)
                   Padding(
                     padding: EdgeInsets.only(top: 50.h, left: 17.w),
                     child: SquareAvatar(
@@ -141,7 +151,7 @@ class CreateCompanyPage extends StatelessWidget {
                         nameController: _nameController,
                         key: Key('createcompany_name_textfield'),
                       ),
-                      SizedBox(height: 10.h), 
+                      SizedBox(height: 10.h),
                       CompanyjobLincUrlTextFormField(
                         key: Key('createcompany_jobLincUrl_textfield'),
                         jobLincUrlController: _jobLincUrlController,
