@@ -27,7 +27,7 @@ class CreateCompanyRequestBody {
       "name": name,
       "email": email,
       "phone": phone,
-      "industry": "test",
+      "industry": industry,
       "overview": overview,
       "website": website,
       "logo": "logo.png",

@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
@@ -43,4 +46,13 @@ Future<void> setupGetIt() async {
       () => RegisterCubit(getIt<RegisterRepo>()));
 
   getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit());
+
+  getIt.registerLazySingleton<CreateCompanyApiService>(
+      () => CreateCompanyApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<CreateCompanyRepo>(
+      () => CreateCompanyRepo(getIt<CreateCompanyApiService>()));
+
+  getIt.registerFactory<CreateCompanyCubit>(
+      () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
 }

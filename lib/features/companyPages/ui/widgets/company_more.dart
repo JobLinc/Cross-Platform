@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
 import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
 import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
@@ -114,13 +115,7 @@ class MoreActions extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (context) => CreateCompanyCubit(
-                      CreateCompanyRepo(
-                        CreateCompanyApiService(
-                          Dio,
-                        ),
-                      ),
-                    ),
+                    create: (context) => getIt<CreateCompanyCubit>(),
                     child: CreateCompanyPage(),
                   ),
                 ),
