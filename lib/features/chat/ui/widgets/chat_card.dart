@@ -13,6 +13,7 @@ class ChatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key:Key("chatList_openChat_card${chat!.id}"),
       onTap: press,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
@@ -57,7 +58,7 @@ class ChatCard extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    "${chat?.lastSender == 'You' ? 'You' : chat?.userName}: ${chat?.lastMessage.text ?? 'No messages'}",
+                    "${chat?.lastSender == 'You' ? 'You' : chat?.userName}: ${chat?.lastMessage!.text ?? 'No messages'}",
                     style: TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -68,7 +69,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount > 0)
+                if (chat!.unreadCount! > 0)
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -94,7 +95,7 @@ class ChatCard extends StatelessWidget {
                 SizedBox(
                   width: 60.w,
                   child: Text(
-                    chat?.lastMessage != null ? chat!.lastMessage.time! : '',
+                    chat?.lastMessage != null ? chat!.lastMessage!.time! : '',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -109,14 +110,19 @@ class ChatCard extends StatelessWidget {
 }
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key});
+  final List<Chat> chats;
+  const ChatList({super.key, required this.chats});
+
 
   @override
-  State<ChatList> createState() => _ChatListState();
+  State<ChatList> createState() => _ChatListState(chats:this.chats);
 }
 
 class _ChatListState extends State<ChatList> {
+  final List<Chat> chats;
   List<Chat> sortedChats = [];
+
+  _ChatListState({ required this.chats});
 
   @override
   void initState() {
@@ -124,15 +130,16 @@ class _ChatListState extends State<ChatList> {
     sortChats();
   }
 
+
   void sortChats() {
     setState(() {
-      sortedChats = List.from(mockChats); // Copy the list
+      sortedChats = List.from(chats); // Copy the list
       sortedChats.sort(
-          (a, b) => b.lastMessage.timestamp.compareTo(a.lastMessage.timestamp));
+          (a, b) => b.lastMessage!.timestamp!.compareTo(a.lastMessage!.timestamp!));
     });
-    for (var convo in sortedChats) {
-      print("${convo.userName} - ${convo.lastMessage.time}");
-    }
+    // for (var convo in sortedChats) {
+    //   print("${convo.userName} - ${convo.lastMessage.time}");
+    // }
   }
 
   @override
