@@ -123,6 +123,7 @@ class _CompanyListState extends State<CompanyList> {
             children: [
               Expanded(
                 child: CustomSearchBar(
+                  keyName: "company_searchbar_textfield",
                   text: "Search for a company...",
                   onPress: () {},
                   onTextChange: (searched) {},
