@@ -22,19 +22,17 @@ class HomeScreen extends StatelessWidget {
             container: true,
             label: 'home_topBar_container',
             child: Center(
-                child: Semantics(
-                  label: 'home_topBar_search',
-                  child: TextField(
-                     onTap: () {
-                      Navigator.pushNamed(context, Routes.companyListScreen);
-                    },
-                    decoration: InputDecoration(
-                        hintText: 'Search',
-                        prefixIcon: Icon(Icons.search, color: Colors.grey),
-                        border: InputBorder.none),
+              child: Semantics(
+                label: 'home_topBar_search',
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: InputBorder.none,
                   ),
                 ),
               ),
+            ),
           ),
         ),
         actions: [
