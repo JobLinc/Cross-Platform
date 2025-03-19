@@ -76,7 +76,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   );
                   break;
                 case 2:
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AddPostScreen()),
                   );
