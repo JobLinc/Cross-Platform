@@ -133,7 +133,7 @@ class _ChatListState extends State<ChatList> {
 
   void sortChats() {
     setState(() {
-      sortedChats = List.from(chats); // Copy the list
+      sortedChats = List.from(chats); 
       sortedChats.sort(
           (a, b) => b.lastMessage!.timestamp!.compareTo(a.lastMessage!.timestamp!));
     });

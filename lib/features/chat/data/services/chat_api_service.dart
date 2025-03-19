@@ -27,6 +27,22 @@ class ChatApiService {
     }
   }
 
+
+
+//   Future<List<dynamic>> getAllChats() async {
+//   try {
+//     if (apiEndPointFunctional) {
+//       final response = await _dio.get('/chat/get');
+//       return response.data;
+//     } else {
+//       return mockChats.map((chat) => chat.toJson()).toList();
+//     }
+//   } on DioException catch (e) {
+//     throw Exception(_handleDioError(e));
+//   }
+// }
+
+
   String _handleDioError(DioException e) {
     if (e.response != null) {
       if (e.response?.statusCode == 401) {

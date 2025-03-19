@@ -134,16 +134,3 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
   }
 
 }
-
-  
-  
-  
-  
-
- 
-
-  
-
-
-
-

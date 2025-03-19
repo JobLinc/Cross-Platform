@@ -20,12 +20,13 @@ class _JobListScreenState extends State<JobListScreen> {
   void initState() {
     super.initState();
     searchedJobs = List.from(mockJobs);
+    
   }
 
   Widget build(BuildContext context) {
     return Column(
           children: [
-            SizedBox(height: 10.h),
+            SizedBox(height: 10),
             Expanded(
               child: JobList(
                 key: ValueKey(searchedJobs.length),

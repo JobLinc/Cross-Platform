@@ -150,21 +150,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-  // void addSearchedToSearchedList(String searched) {
-  //   //print("Search text: $searched");
 
-  //   setState(() {
-  //     if (searched.isEmpty) {
-  //       searchedChats = List.from(mockChats);
-  //     } else {
-  //       searchedChats = mockChats
-  //           .where((chat) =>
-  //               chat.userName.toLowerCase().contains(searched.toLowerCase()))
-  //           .toList();
-  //     }
-  //   });
-  //   //print("Filtered chats: ${searchedChats.map((chat) => chat.userName).toList()}");
-  // }
 
   void searchChats(String query) {
     setState(() {
@@ -212,6 +198,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       });
     }
   }
+}
 
   // void stopSearching() {
   //   clearSearch();
@@ -227,4 +214,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
   //     searchTextController.clear();
   //   });
   // }
-}
+
+    // void addSearchedToSearchedList(String searched) {
+  //   //print("Search text: $searched");
+
+  //   setState(() {
+  //     if (searched.isEmpty) {
+  //       searchedChats = List.from(mockChats);
+  //     } else {
+  //       searchedChats = mockChats
+  //           .where((chat) =>
+  //               chat.userName.toLowerCase().contains(searched.toLowerCase()))
+  //           .toList();
+  //     }
+  //   });
+  //   //print("Filtered chats: ${searchedChats.map((chat) => chat.userName).toList()}");
+  // }
+

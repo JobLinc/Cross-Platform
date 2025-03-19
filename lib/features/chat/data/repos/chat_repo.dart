@@ -7,6 +7,13 @@ class ChatRepo {
 
   ChatRepo(this._chatApiService);
 
+  // Future<List<Chat>> getAllChats() async {
+  // final List<dynamic> chats = await _chatApiService.getAllChats();
+  // return chats.map((chat) => Chat.fromJson(chat)).toList();
+  // }
+
+
+
   Future<List<Chat>> getAllChats() async {
     final List<dynamic> chats = (await _chatApiService.getAllChats()) ;
     
