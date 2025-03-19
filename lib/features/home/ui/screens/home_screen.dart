@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/home/data/models/post_model.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  TextEditingController searchController= TextEditingController();
+  @override
   Widget build(BuildContext context) {
+
+
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -24,13 +38,15 @@ class HomeScreen extends StatelessWidget {
             child: Center(
               child: Semantics(
                 label: 'home_topBar_search',
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    border: InputBorder.none,
-                  ),
-                ),
+                child: CustomSearchBar(
+                    keyName: 'home_topBar_search',
+                    text: 'Search',
+                    onPress: () {
+                                            Navigator.pushNamed(context, Routes.companyListScreen);
+
+                    },
+                    onTextChange: () {},
+                    controller: searchController),
               ),
             ),
           ),
@@ -44,6 +60,13 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, Routes.chatListScreen);
               },
             ),
+                      
+          ),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.crown, color: Colors.black),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.premiumScreen);
+            },
           ),
         ],
       ),
@@ -60,3 +83,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+

@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
+import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/data/repos/post_repo.dart';
 import 'package:joblinc/features/home/data/services/post_api_service.dart';
@@ -55,4 +61,23 @@ Future<void> setupGetIt() async {
       .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
 
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
+
+  getIt.registerLazySingleton<CreateCompanyApiService>(
+      () => CreateCompanyApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<CreateCompanyRepo>(
+      () => CreateCompanyRepo(getIt<CreateCompanyApiService>()));
+
+  getIt.registerFactory<CreateCompanyCubit>(
+      () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
+
+  getIt.registerLazySingleton<ChatApiService>(
+    () =>ChatApiService(getIt<Dio>()) ,);
+  
+  getIt.registerLazySingleton<ChatRepo>(
+    () => ChatRepo(getIt<ChatApiService>()));
+  
+  getIt.registerFactory<ChatListCubit>(
+    () =>ChatListCubit( getIt<ChatRepo>()) ,);
 }
+

@@ -17,6 +17,9 @@ class RegisterRequestModel {
       'lastname': lastname,
       'email': email,
       'password': password,
+      'country': 'Nigeria',
+      'city': 'city',
+      'phoneNumber': 'phoneNo',
     };
   }
 }

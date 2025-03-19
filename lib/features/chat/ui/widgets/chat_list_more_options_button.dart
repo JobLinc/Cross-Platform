@@ -7,6 +7,7 @@ class MoreOptionsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
         builder: (context) => IconButton(
+            key:Key("chatList_options_iconButton") ,
             onPressed: () => showMoreOptions(context),
             icon: Icon(
               Icons.more_vert,

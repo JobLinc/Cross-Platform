@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 
 class UniversalBottomBar extends StatefulWidget {
   static final UniversalBottomBar _bar = UniversalBottomBar._constructor();
@@ -49,18 +51,21 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                 _selectedIndex = value;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-              switch (value) {
+         switch (value) {
                 case 0:
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                  MaterialPageRoute(builder:(context)=>HomeScreen()));
+                      // MaterialPageRoute(builder:(context)=> Scaffold(
+                      //   appBar: universalAppBar(context, _selectedIndex),
+                      //   body: HomeScreen(),
+                      //   bottomNavigationBar: UniversalBottomBar(),
+                      // )));
                 case 1:
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("My Network"),
-                        ),
+                        appBar: universalAppBar(context, _selectedIndex),
                         body: Center(
                           child: Text("My Network"),
                         ),
@@ -74,12 +79,10 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("Post"),
-                        ),
-                        body: Center(
-                          child: Text("Post"),
-                        ),
+                        appBar: universalAppBar(context, _selectedIndex),
+                        body:Center(
+                          child: Text("My Posts"),
+                        ), 
                         bottomNavigationBar: UniversalBottomBar(),
                       ),
                     ),
@@ -90,9 +93,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("Notifications"),
-                        ),
+                        appBar: universalAppBar(context, _selectedIndex),
                         body: Center(
                           child: Text("Notifications"),
                         ),
@@ -106,12 +107,8 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("Jobs"),
-                        ),
-                        body: Center(
-                          child: Text("Jobs"),
-                        ),
+                        appBar: universalAppBar(context, _selectedIndex),
+                        body: JobListScreen(),
                         bottomNavigationBar: UniversalBottomBar(),
                       ),
                     ),
