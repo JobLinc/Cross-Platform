@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/home/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 
 class PostApiService {
   final Dio _dio;

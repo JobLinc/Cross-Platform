@@ -1,5 +1,5 @@
-import 'package:joblinc/features/home/data/models/post_model.dart';
-import 'package:joblinc/features/home/data/services/post_api_service.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 
 class PostRepo {
   final PostApiService _postApiService;

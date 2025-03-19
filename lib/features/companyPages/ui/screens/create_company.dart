@@ -103,22 +103,22 @@ class CreateCompanyPage extends StatelessWidget {
               Stack(
                 children: [
                   if (!isTestEnvironment)
-                  Image(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
-                    width: double.infinity,
-                    height: 90.h,
-                  ),
-                  if (!isTestEnvironment)
-                  Padding(
-                    padding: EdgeInsets.only(top: 50.h, left: 17.w),
-                    child: SquareAvatar(
-                      imageUrl:
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
-                      size: 80,
+                    Image(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
+                      width: double.infinity,
+                      height: 90.h,
                     ),
-                  ),
+                  if (!isTestEnvironment)
+                    Padding(
+                      padding: EdgeInsets.only(top: 50.h, left: 17.w),
+                      child: SquareAvatar(
+                        imageUrl:
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
+                        size: 80,
+                      ),
+                    ),
                   Row(
                     children: [
                       Padding(

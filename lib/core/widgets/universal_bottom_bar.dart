@@ -3,6 +3,7 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
+import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 
 class UniversalBottomBar extends StatefulWidget {
   static final UniversalBottomBar _bar = UniversalBottomBar._constructor();
@@ -51,15 +52,15 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                 _selectedIndex = value;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-         switch (value) {
+              switch (value) {
                 case 0:
                   Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder:(context)=>HomeScreen()));
-                      // MaterialPageRoute(builder:(context)=> Scaffold(
-                      //   appBar: universalAppBar(context, _selectedIndex),
-                      //   body: HomeScreen(),
-                      //   bottomNavigationBar: UniversalBottomBar(),
-                      // )));
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                // MaterialPageRoute(builder:(context)=> Scaffold(
+                //   appBar: universalAppBar(context, _selectedIndex),
+                //   body: HomeScreen(),
+                //   bottomNavigationBar: UniversalBottomBar(),
+                // )));
                 case 1:
                   Navigator.pushReplacement(
                     context,
@@ -77,15 +78,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                 case 2:
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar: universalAppBar(context, _selectedIndex),
-                        body:Center(
-                          child: Text("My Posts"),
-                        ), 
-                        bottomNavigationBar: UniversalBottomBar(),
-                      ),
-                    ),
+                    MaterialPageRoute(builder: (context) => AddPostScreen()),
                   );
                   break;
                 case 3:
