@@ -20,7 +20,7 @@ class Connectionsearch extends StatelessWidget {
           backgroundColor: Colors.grey,
           appBar: AppBar(
             leading: IconButton(
-              key: Key('BackIconSearch'),
+              key: Key('connectionsearch_back_button'),
               icon: Icon(Icons.arrow_back), // Default back arrow
               onPressed: () {
                 BlocProvider.of<ConnectionsCubit>(context).Backclicked();

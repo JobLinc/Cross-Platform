@@ -77,7 +77,7 @@ class InvitationsList extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      key: Key("Decline Invitation button"),
+                      key: Key("invitationslist_delete_button"),
                       onPressed: () {
                         BlocProvider.of<InvitationsCubit>(context)
                             .handleInvitation(invitation, "Denied");
@@ -100,7 +100,7 @@ class InvitationsList extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(right: 8.w),
                       child: ElevatedButton(
-                        key: Key("Accept Invitation button"),
+                        key: Key("invitationslist_accept_button"),
                         onPressed: () {
                           BlocProvider.of<InvitationsCubit>(context)
                               .handleInvitation(invitation, "Accepted");

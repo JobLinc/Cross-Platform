@@ -14,7 +14,7 @@ class SingleChildScrollFilter extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: Key("All filters button"),
+            key: Key("connection_getallfilters_button"),
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -63,7 +63,7 @@ class SingleChildScrollFilter extends StatelessWidget {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height / 30, // Reference height
+            height: MediaQuery.of(context).size.height / 30, 
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

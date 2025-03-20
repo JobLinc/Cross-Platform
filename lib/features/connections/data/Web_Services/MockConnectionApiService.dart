@@ -5,7 +5,7 @@ import 'package:joblinc/features/connections/data/models/pendingconnectionsdemom
 class MockConnectionApiService {
   final Dio dio = Dio();
 
-  // Fetch all connections
+
   Future<Response> getConnections() async {
     await Future.delayed(const Duration(seconds: 1));
 
@@ -28,7 +28,7 @@ class MockConnectionApiService {
     );
   }
 
-  // Add a new connection
+
   Future<Response> addConnection(UserConnection connection) async {
     await Future.delayed(const Duration(seconds: 0));
 
@@ -45,7 +45,7 @@ class MockConnectionApiService {
     );
   }
 
-  // Remove a connection
+
   Future<Response> removeConnection(String userId) async {
     await Future.delayed(const Duration(seconds: 0));
 

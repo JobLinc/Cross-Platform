@@ -23,6 +23,10 @@ class ConnectionList extends StatelessWidget {
       builder: (context, child) {
         return Scaffold(
             appBar: AppBar(
+              leading: IconButton(
+                key: Key("connections_back_button"),
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.arrow_back)),
               title: Text("Connection", style: TextStyle(fontSize: 20.sp)),
               centerTitle: true,
             ),
@@ -34,9 +38,8 @@ class ConnectionList extends StatelessWidget {
                     children: [
                       connection_Buttons(
                           key: Key(
-                              "number of connections and searchand sort buttons"),
-                          connections:
-                              connections),
+                              "number of connections and search and sort buttons"),
+                          connections: connections),
                       Divider(
                         color: Colors.grey[300], // Line color
                         thickness: 1, // Line thickness
@@ -45,8 +48,7 @@ class ConnectionList extends StatelessWidget {
                       Expanded(
                           child: connections_List_View(
                               key: Key("the List of connections"),
-                              connections:
-                                  connections)),
+                              connections: connections)),
                     ],
                   );
                 }));

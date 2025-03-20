@@ -21,7 +21,7 @@ class connection_Buttons extends StatelessWidget {
           ),
           Expanded(child: SizedBox(width: 1.sw)),
           IconButton(
-            key: Key("Search button"),
+            key: Key("connection_search_button"),
             onPressed: () {
               // Navigator.pushNamed(
               //     context,

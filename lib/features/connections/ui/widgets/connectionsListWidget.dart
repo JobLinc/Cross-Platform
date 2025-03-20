@@ -24,7 +24,7 @@ class connections_List_View extends StatelessWidget {
             Container(
               color: Colors.white,
               child: GestureDetector(
-                key: Key("Connections List Tile"),
+                key: Key("connection_profile_button"),
                 onTap: () {
                   //todo:go to the profile of the user
                   print("go to ${connection.firstname} profile");
@@ -36,11 +36,11 @@ class connections_List_View extends StatelessWidget {
                       padding: EdgeInsets.all(10),
                       child: Align(
                         alignment:
-                            Alignment.topLeft, // Forces it to the top-left
+                            Alignment.topLeft, 
                         child: CircleAvatar(
                           radius: 25.r,
                           child: Text(connection.firstname[
-                              0]), // First letter as avatar
+                              0]), 
                         ),
                       ),
                     ),
@@ -74,13 +74,13 @@ class connections_List_View extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                        key: Key("Go to chat button"),
+                        key: Key("connection_chat_button"),
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.chatScreen);
                         },
                         icon: Icon(Icons.send, size: 20.sp)),
                     IconButton(
-                        key: Key("more actions button"),
+                        key: Key("connection_more_button"),
                         onPressed: () {
                           //todo : the
                           print("hello ${connection.firstname} more");
