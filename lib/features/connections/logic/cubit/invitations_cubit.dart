@@ -34,7 +34,7 @@ class InvitationsCubit extends Cubit<InvitationsState> {
   void handleInvitation(UserConnection connection, String status) async {
     if (status == "Accepted") {
       final addResponse = await apiService.addConnection(connection);
-      if (addResponse.statusCode != 200) {
+      if (addResponse.statusCode != 201) {
         emit(InvitationsError("Failed to accept pending invitation"));
         return;
       }
