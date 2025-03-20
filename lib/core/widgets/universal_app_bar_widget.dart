@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 
-AppBar universalAppBar(BuildContext context, int selectedIndex){
+AppBar universalAppBar({required BuildContext context, required int selectedIndex,Function searchBarFunction=emptyFunction}){
 
     List<UniversalAppBarInput> mainScreens=[
       UniversalAppBarInput(
@@ -37,7 +37,7 @@ AppBar universalAppBar(BuildContext context, int selectedIndex){
         UniversalAppBarInput(
         searchKeyName: "jobList_search_textField",
         searchText: "search jobs",
-        searchOnPress:()=>goToJobSearch(context),
+        searchOnPress:()=>searchBarFunction(),
         searchOnTextChange: emptyFunction,
         searchTextController: SearchController(),
       ),
@@ -56,12 +56,18 @@ AppBar universalAppBar(BuildContext context, int selectedIndex){
             child: Center(
               child: Semantics(
                 label: 'home_topBar_search',
-                child:CustomSearchBar(
-                      keyName:mainScreens[selectedIndex].searchKeyName, 
-                      text: mainScreens[selectedIndex].searchText,
-                      onPress: mainScreens[selectedIndex].searchOnPress,
-                      onTextChange:  mainScreens[selectedIndex].searchOnTextChange,
-                      controller: mainScreens[selectedIndex].searchTextController),
+                child:Row(
+                  children: [
+                    Expanded(
+                      child: CustomSearchBar(
+                            keyName:mainScreens[selectedIndex].searchKeyName, 
+                            text: mainScreens[selectedIndex].searchText,
+                            onPress: mainScreens[selectedIndex].searchOnPress,
+                            onTextChange:  mainScreens[selectedIndex].searchOnTextChange,
+                            controller: mainScreens[selectedIndex].searchTextController),
+                    ),
+                  ],
+                ),
                   ),
                 ),
               ),
@@ -84,9 +90,10 @@ AppBar universalAppBar(BuildContext context, int selectedIndex){
 
 }
 void emptyFunction(){}
-void goToJobSearch(BuildContext context){
-  Navigator.pushNamed(context,Routes.jobSearchScreen);
-  }
+// void goToJobSearch(BuildContext context){
+//   //Navigator.pushNamed(context,Routes.jobSearchScreen);
+//   Navigator.of(context).pushNamed(Routes.jobSearchScreen);
+//   }
 
 
 class UniversalAppBarInput{

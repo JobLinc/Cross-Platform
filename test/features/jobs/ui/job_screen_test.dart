@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
@@ -11,66 +12,88 @@ import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
 
 void main() {
-  testWidgets('Clicking search field opens JobSearchScreen', (WidgetTester tester) async {
-    await tester.pumpWidget(ScreenUtilInit(
+//   void goToJobSearch(BuildContext context){
+//   //Navigator.pushNamed(context,Routes.jobSearchScreen);
+//  Navigator.of(context, rootNavigator: true).pushNamed(Routes.jobSearchScreen);
+//   }
+  Future<void> pumpJobListScreen(WidgetTester tester) async {
+    await tester.pumpWidget(
+      ScreenUtilInit(
         designSize: Size(412, 924),
         minTextAdapt: true,
         builder: (context, child) {
           return MaterialApp(
             routes: {
-              // '/homeScreen': (context) =>
-              //     const Scaffold(body: Text('Home Screen')),
+              '/homeScreen': (context) =>
+                  const Scaffold(body: Text('Home Screen')),
+              Routes.jobListScreen: (context) => Scaffold(
+                    appBar: universalAppBar(context: context, selectedIndex: 4,searchBarFunction: (){Navigator.pushNamed(context,Routes.jobSearchScreen);}),
+                    body: JobListScreen(),
+                    bottomNavigationBar: UniversalBottomBar(),
+                  ),
               Routes.jobSearchScreen: (context) => JobSearchScreen(),
-              Routes.jobListScreen:(context)=>JobListScreen(),
             },
-           home: Scaffold(
-            appBar: universalAppBar(context,4),
-            body:JobListScreen(),
-            bottomNavigationBar: UniversalBottomBar(),
-           ),
+            initialRoute: Routes.jobListScreen,
+
           );
         },
       ),
     );
-
-    // Find the search field and tap it
-    final searchField = find.byKey(Key("jobList_search_textField"));
-    await tester.tap(searchField);
     await tester.pumpAndSettle();
+  }
 
-    // Verify JobSearchScreen is pushed
-    expect(find.byType(JobSearchScreen), findsOneWidget);
+  debugPrint("✅ Widget tree pumped!");
+  group('JobListScreen Widget Tests', () {
+    testWidgets('Job List screen opens succesfully',
+        (WidgetTester tester) async {
+      await pumpJobListScreen(tester);
+      expect(find.byType(JobListScreen), findsOneWidget);
+      expect (find.byKey(Key("jobList_search_textField")),findsOneWidget);
+      expect(find.byType(JobCard),findsWidgets);
+    });
   });
 
-  testWidgets('Clicking a job card opens JobDetailScreen with correct job details', (WidgetTester tester) async {
-    final testJob = Job(
-      id: 1,
-      title: "Software Engineer",
-      industry: "Technology",
-      company: Company(name: "TechCorp", size: "500+ employees"),
-      description: "Develop and maintain software solutions.",
-      workplace: "Hybrid",
-      type: "Full-time",
-      experienceLevel: "Mid-Level",
-      salaryRange: SalaryRange(min: 60000, max: 90000),
-      location: Location(city: "San Francisco", country: "USA"),
-      keywords: ["Flutter", "Dart", "Backend"],
-      createdAt: DateTime.now(),
-    );
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(body: JobList(jobs: [testJob])),
-    ));
 
-    // Find and tap the job card
-    final jobCard = find.byKey(Key("jobs_openJob_card${testJob.id}"));
-    await tester.tap(jobCard);
-    await tester.pumpAndSettle();
+  testWidgets('Tapping search bar navigates to JobSearchScreen',
+      (WidgetTester tester) async {
 
-    // Verify JobDetailScreen is shown
-    expect(find.byType(JobDetailScreen), findsOneWidget);
-    expect(find.text("Software Engineer"), findsOneWidget);
-    expect(find.text("TechCorp"), findsOneWidget);
-    expect(find.text("San Francisco, USA"), findsOneWidget);
+    await pumpJobListScreen(tester);
+    expect(find.byType(JobListScreen), findsOneWidget);
+    expect(find.byType(JobSearchScreen),findsNothing); 
+
+    final searchBar = find.byKey(Key('jobList_search_textField'));
+    expect(searchBar, findsOneWidget);
+
+    await tester.tap(searchBar);
+    await tester.pumpAndSettle(); // Wait for the navigation to complete
+
+    expect(find.byType(JobSearchScreen), findsOneWidget);
+    expect(find.byType(JobListScreen), findsNothing);
+
+    expect(find.byKey(Key("jobSearch_searchByTitle_textField")),findsOneWidget);
+    expect(find.byKey(Key("jobSearch_searchByLocation_textField")),findsOneWidget);
+  });
+
+
+  testWidgets('Tapping a job card opens JobdetailsScreen',(WidgetTester tester) async{
+
+    await pumpJobListScreen(tester);
+
+    for (var job in mockJobs) {
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(Key("jobs_openJob_card${job.id}")));
+      await tester.pumpAndSettle();
+      final jobCard =find.byKey(Key("jobs_openJob_card${job.id}"));
+      await tester.tap(jobCard);
+      await tester.pumpAndSettle();
+      expect(find.byType(DraggableScrollableSheet),findsOneWidget);
+      expect(find.byType(JobDetailScreen),findsOneWidget);
+      expect(find.text(job.title!),findsAny);
+      expect(find.text(job.company!.name!),findsAny);
+      await tester.drag(find.byType(DraggableScrollableSheet), Offset(0, 500));
+      await tester.pumpAndSettle();
+      expect(find.byType(DraggableScrollableSheet), findsNothing);
+    }
   });
 }
