@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
 class connections_List_View extends StatelessWidget {
-  List<Map<String, String>> connections;
+  List<UserConnection> connections;
   connections_List_View({
     Key? key,
     required this.connections,
@@ -26,7 +27,7 @@ class connections_List_View extends StatelessWidget {
                 key: Key("Connections List Tile"),
                 onTap: () {
                   //todo:go to the profile of the user
-                  print("go to ${connection['firstname']} profile");
+                  print("go to ${connection.firstname} profile");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +39,7 @@ class connections_List_View extends StatelessWidget {
                             Alignment.topLeft, // Forces it to the top-left
                         child: CircleAvatar(
                           radius: 25.r,
-                          child: Text(connection['firstname']![
+                          child: Text(connection.firstname[
                               0]), // First letter as avatar
                         ),
                       ),
@@ -50,25 +51,25 @@ class connections_List_View extends StatelessWidget {
 
                         children: [
                           Text(
-                            "${connection['firstname']!} ${connection['lastname']!}",
+                            "${connection.firstname} ${connection.lastname}",
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            connection['title']!,
+                            connection.headline,
                             style: TextStyle(
                                 fontSize: 18.sp, color: Colors.grey[600]),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          BlocProvider.of<ConnectionsCubit>(context)
-                                  .connectedOnappear
-                              ? Text(
-                                  "Connected on ${connection['connected_on']!}",
-                                  style: TextStyle(
-                                      fontSize: 18.sp, color: Colors.grey[600]),
-                                )
-                              : SizedBox.shrink(),
+                          // BlocProvider.of<ConnectionsCubit>(context)
+                          //         .connectedOnappear
+                          //     ? Text(
+                          //         "Connected on ${connection['connected_on']!}",
+                          //         style: TextStyle(
+                          //             fontSize: 18.sp, color: Colors.grey[600]),
+                          //       )
+                          //     : SizedBox.shrink(),
                         ],
                       ),
                     ),
@@ -82,7 +83,7 @@ class connections_List_View extends StatelessWidget {
                         key: Key("more actions button"),
                         onPressed: () {
                           //todo : the
-                          print("hello ${connection['firstname']} more");
+                          print("hello ${connection.firstname} more");
                         },
                         icon: Icon(Icons.more_horiz, size: 20.sp)),
                   ],

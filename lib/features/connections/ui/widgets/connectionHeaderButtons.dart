@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/widgets/sortSheet.dart';
 
 class connection_Buttons extends StatelessWidget {
-  List<Map<String, String>> connections;
+  List<UserConnection> connections;
   connection_Buttons({super.key, required this.connections});
 
   @override
@@ -31,31 +32,31 @@ class connection_Buttons extends StatelessWidget {
             },
             icon: Icon(Icons.search),
           ),
-          IconButton(
-              key: Key("Sorting button"),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (bcontext) {
-                    final cubit = BlocProvider.of<ConnectionsCubit>(
-                        context); // Get cubit outside
+        //   IconButton(
+        //       key: Key("Sorting button"),
+        //       onPressed: () {
+        //         showModalBottomSheet(
+        //           context: context,
+        //           builder: (bcontext) {
+        //             final cubit = BlocProvider.of<ConnectionsCubit>(
+        //                 context); // Get cubit outside
 
-                    if (!cubit.firstNameSelected &&
-                        !cubit.lastNameSelected &&
-                        !cubit.recentlyAddedSelected) {
-                      cubit.recentlyAddedSelected = true;
-                    }
+        //             if (!cubit.firstNameSelected &&
+        //                 !cubit.lastNameSelected &&
+        //                 !cubit.recentlyAddedSelected) {
+        //               cubit.recentlyAddedSelected = true;
+        //             }
 
-                    return BlocProvider.value(
-                      value: cubit, // Pass the existing cubit
-                      child: SortBottomSheet(
-                        key: Key("bottom sorting sheet "),
-                      ),
-                    );
-                  },
-                );
-              },
-              icon: Icon(Icons.sort)),
+        //             return BlocProvider.value(
+        //               value: cubit, // Pass the existing cubit
+        //               child: SortBottomSheet(
+        //                 key: Key("bottom sorting sheet "),
+        //               ),
+        //             );
+        //           },
+        //         );
+        //       },
+        //       icon: Icon(Icons.sort)),
         ],
       ),
     );

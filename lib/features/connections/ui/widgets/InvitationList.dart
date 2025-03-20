@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 class InvitationsList extends StatelessWidget {
-  final List<Map<String, String>> invitations;
+  final List<UserConnection> invitations;
   const InvitationsList({
     Key? key,
     required this.invitations,
@@ -28,7 +30,7 @@ class InvitationsList extends StatelessWidget {
                 key: Key("Invitations page Tile"),
                 onTap: () {
                   // TODO: Navigate to the user's profile
-                  print("Go to ${invitation['firstname']}'s profile");
+                  print("Go to ${invitation.firstname}'s profile");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,8 +42,7 @@ class InvitationsList extends StatelessWidget {
                             Alignment.topLeft, // Align avatar to top-left
                         child: CircleAvatar(
                           radius: 25.r, // Bigger avatar
-                          child:
-                              Text(invitation['firstname']![0]), // First letter
+                          child: Text(invitation.firstname[0]), // First letter
                         ),
                       ),
                     ),
@@ -51,35 +52,35 @@ class InvitationsList extends StatelessWidget {
                             CrossAxisAlignment.start, // Align text left
                         children: [
                           Text(
-                            invitation['firstname']!,
+                            invitation.firstname,
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            invitation['title']!,
+                            invitation.headline,
                             style: TextStyle(
                                 fontSize: 18.sp, color: Colors.grey[600]),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            "${invitation['mutualConnections']} mutual connections",
+                            "${invitation.mutualConnections} mutual connections",
                             style: TextStyle(
                                 fontSize: 16.sp, color: Colors.grey[500]),
                           ),
-                          Text(
-                            invitation['timeAgo']!,
-                            style: TextStyle(
-                                fontSize: 14.sp, color: Colors.grey[500]),
-                          ),
+                          // Text(
+                          //   invitation.,
+                          //   style: TextStyle(
+                          //       fontSize: 14.sp, color: Colors.grey[500]),
+                          // ),
                         ],
                       ),
                     ),
                     ElevatedButton(
                       key: Key("Decline Invitation button"),
                       onPressed: () {
-                        BlocProvider.of<ConnectionsCubit>(context)
-                            .ResponsePending(invitation["id"]!, "Denied");
+                        BlocProvider.of<InvitationsCubit>(context)
+                            .handleInvitation(invitation, "Denied");
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(
@@ -101,8 +102,8 @@ class InvitationsList extends StatelessWidget {
                       child: ElevatedButton(
                         key: Key("Accept Invitation button"),
                         onPressed: () {
-                          BlocProvider.of<ConnectionsCubit>(context)
-                              .ResponsePending(invitation["id"]!, "Accepted");
+                          BlocProvider.of<InvitationsCubit>(context)
+                              .handleInvitation(invitation, "Accepted");
                         },
                         style: ElevatedButton.styleFrom(
                           shape: CircleBorder(

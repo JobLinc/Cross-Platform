@@ -53,13 +53,13 @@ class AppRouter {
           ),
         );
       case Routes.chatListScreen:
-        // return MaterialPageRoute(
-        //     builder: (context) => BlocProvider(
-        //           create: (context) => getIt<ConnectionsCubit>(),
-        //           child: ConnectionPage(
-        //             key: Key("connections home screen"),
-        //           ),
-        //         ));
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => getIt<ConnectionsCubit>(),
+                  child: ConnectionPage(
+                    key: Key("connections home screen"),
+                  ),
+                ));
         return MaterialPageRoute(builder: (context) => ChatListScreen());
       default:
         return null;

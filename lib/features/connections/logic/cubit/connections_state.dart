@@ -6,6 +6,15 @@ final class ConnectionsInitial extends ConnectionsState {}
 
 final class SearchState extends ConnectionsState {}
 
-final class ChooseSort extends ConnectionsState {}
+// final class ChooseSort extends ConnectionsState {}
 
-final class InvitationResponse extends ConnectionsState {}
+
+
+final class ConnectionsLoaded extends ConnectionsState {
+  List<UserConnection> Connections;
+  ConnectionsLoaded(this.Connections);
+}
+class ConnectionsError extends ConnectionsState {
+  String error;
+  ConnectionsError(this.error);
+}

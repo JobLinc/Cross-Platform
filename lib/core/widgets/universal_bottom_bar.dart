@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
+import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 
 class UniversalBottomBar extends StatefulWidget {
@@ -57,16 +62,12 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("My Network"),
-                        ),
-                        body: Center(
-                          child: Text("My Network"),
-                        ),
-                        bottomNavigationBar: UniversalBottomBar(),
-                      ),
-                    ),
+                        builder: (context) => BlocProvider(
+                              create: (context) => getIt<InvitationsCubit>(),
+                              child: InvitationPage(
+                                key: Key("connections home screen"),
+                              ),
+                            )),
                   );
                   break;
                 case 2:

@@ -1,18 +1,43 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:joblinc/features/connections/data/connectiondemoModel.dart';
-import 'package:joblinc/features/connections/data/pendingconnectionsdemomodel.dart';
+import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
+import 'package:joblinc/features/connections/data/models/pendingconnectionsdemomodel.dart';
 
 part 'connections_state.dart';
 
 class ConnectionsCubit extends Cubit<ConnectionsState> {
-  ConnectionsCubit() : super(ConnectionsInitial());
-  List<Map<String, String>> connections = Connections.connections;
-  List<Map<String, String>> pendingconnections = Invitations.pendingConnections;
+  //final UserConnectionsRepository connectionsRepository;
+  final MockConnectionApiService apiService;
+
+  ConnectionsCubit(this.apiService) : super(ConnectionsInitial());
+  late List<UserConnection> connections;
   bool recentlyAddedSelected = true;
   bool firstNameSelected = false;
   bool lastNameSelected = false;
   bool connectedOnappear = true;
+  Future<void> fetchConnections() async {
+    emit(ConnectionsInitial());
+
+    try {
+      final response = await apiService.getConnections();
+
+      if (response.statusCode == 200) {
+        final fetchedconnections = (response.data as List)
+            .map(
+                (item) => UserConnection.fromJson(item as Map<String, dynamic>))
+            .toList();
+        connections = fetchedconnections;
+        emit(ConnectionsLoaded(fetchedconnections));
+      } else {
+        emit(ConnectionsError("Failed to load connections"));
+      }
+    } catch (error) {
+      emit(ConnectionsError("An error occurred: $error"));
+    }
+  }
+
   void Searchclicked() {
     if (state != SearchState()) {
       emit(SearchState());
@@ -39,45 +64,26 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       firstNameSelected = false;
       recentlyAddedSelected = false;
     }
-    emit(ChooseSort());
   }
 
-  List<Map<String, String>> SortingData() {
-    List<Map<String, String>> data = connections;
+  List<UserConnection> SortingData() {
+    List<UserConnection> data = connections;
     if (firstNameSelected == false && lastNameSelected == false) {
-      connectedOnappear = true;
-      data.sort((a, b) {
-        DateTime dateA = DateTime.parse(a["connected_on"]!);
-        DateTime dateB = DateTime.parse(b["connected_on"]!);
-        return dateB.compareTo(dateA);
-      });
+      // connectedOnappear = true;
+      // data.sort((a, b) {
+      //   DateTime dateA = DateTime.parse(a.connectionStatus"connected_on"!);
+      //   DateTime dateB = DateTime.parse(b["connected_on"]!);
+      //   return dateB.compareTo(dateA);
+      // });
     } else {
       if (firstNameSelected == true) {
-        data.sort((a, b) => a['firstname']!.compareTo(b['firstname']!));
+        data.sort((a, b) => a.firstname!.compareTo(b.firstname!));
         connectedOnappear = false;
       } else if (lastNameSelected == true) {
-        data.sort((a, b) => a['lastname']!.compareTo(b['lastname']!));
+        data.sort((a, b) => a.lastname!.compareTo(b.lastname!));
         connectedOnappear = false;
       }
     }
     return data;
-  }
-
-  void ResponsePending(String id, String state) {
-    if (state == "Accepted") {
-      DateTime today = DateTime.now();
-      String formattedDate = DateFormat('yyyy-MM-dd').format(today);
-      Map<String, String> pending =
-          pendingconnections.firstWhere((connection) => connection["id"] == id);
-      connections.add({
-        "id": "${pending["id"]}",
-        "firstname": "${pending["firstname"]}",
-        "lastname": "${pending["lastname"]}",
-        "title": "${pending["title"]}",
-        "connected_on": formattedDate
-      });
-    }
-    pendingconnections.removeWhere((connection) => connection["id"] == id);
-    emit(InvitationResponse());
   }
 }
