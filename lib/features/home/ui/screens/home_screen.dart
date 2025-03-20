@@ -38,22 +38,29 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Center(
               child: Semantics(
                 label: 'home_topBar_search',
-                child:CustomSearchBar(
-                      keyName:'home_topBar_search', 
-                      text: 'search',
-                      onPress: (){},
-                      onTextChange:  (){},
-                      controller: searchController),
-                  ),
-                ),
+                child: CustomSearchBar(
+                    keyName: 'home_topBar_search',
+                    text: 'Search',
+                    onPress: () {
+                                            Navigator.pushNamed(context, Routes.companyListScreen);
+
+                    },
+                    onTextChange: () {},
+                    controller: searchController),
               ),
             ),
-          actions: [
-          IconButton(
-            icon: Icon(Icons.message, color: Colors.black),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.chatListScreen);   
-            },
+          ),
+        ),
+        actions: [
+          Semantics(
+            label: 'home_topBar_chatButton',
+            child: IconButton(
+              icon: Icon(Icons.message, color: Colors.black),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.chatListScreen);
+              },
+            ),
+                      
           ),
           IconButton(
             icon: Icon(FontAwesomeIcons.crown, color: Colors.black),

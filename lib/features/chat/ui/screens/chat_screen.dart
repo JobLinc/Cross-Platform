@@ -13,7 +13,7 @@ class ChatScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return const MoreActions(); // Display the ChatAttach widget
+        return const MoreActions(); 
       },
     );
   }

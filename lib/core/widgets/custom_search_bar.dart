@@ -7,7 +7,7 @@ class CustomSearchBar extends StatelessWidget {
   //bool? isSearching=false;
   //List<dynamic>? allItems;
   //List<dynamic>? searchedItems;
-  final VoidCallback onPress;
+  final Function onPress;
   final Function onTextChange;
   final TextEditingController controller;
 

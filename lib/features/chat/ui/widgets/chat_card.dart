@@ -151,7 +151,6 @@ class _ChatListState extends State<ChatList> {
               chat: sortedChats[index],
               press: () {
                 Navigator.pushNamed(context, Routes.chatScreen);
-                //print("Tapped on: ${sortedChats[index].userName}");
               },
             ));
   }

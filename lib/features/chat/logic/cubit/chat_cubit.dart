@@ -1,6 +1,8 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
-import 'package:joblinc/features/chat/data/models/chat_model.dart';
-import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
+// ignore: depend_on_referenced_packages
+import 'package:meta/meta.dart';
+
 //import 'package:meta/meta.dart';
 
 part 'chat_state.dart';

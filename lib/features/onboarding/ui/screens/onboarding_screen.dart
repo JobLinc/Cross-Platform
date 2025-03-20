@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/features/login/data/services/securestorage_service.dart';
 import 'package:joblinc/features/onboarding/ui/widgets/agreement_text.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -57,7 +58,9 @@ class OnboardingScreen extends StatelessWidget {
                 text: "Continue with google",
                 backgroundColor: Colors.transparent,
                 icon: FontAwesomeIcons.g,
-                onPressed: () {
+                onPressed: () async {
+                  Future accessToken = SecureStorage.getAccessToken();
+                  print(accessToken);
                   Navigator.pushReplacementNamed(context, Routes.homeScreen);
                 }),
             customDividerWithText(child: Text("OR")),

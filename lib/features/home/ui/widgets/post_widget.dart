@@ -53,7 +53,7 @@ class PostContent extends StatelessWidget {
             ? PostAttachments(attachmentURLs: data.attachmentURLs)
             : SizedBox(),
         PostNumerics(
-          likesCount: data.likesCount,
+          likesCount: data.likeCount,
           commentCount: data.commentCount,
           repostCount: data.repostCount,
         ),
