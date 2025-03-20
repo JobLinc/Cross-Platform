@@ -21,13 +21,18 @@ class InvitationsCubit extends Cubit<InvitationsState> {
             .map(
                 (item) => UserConnection.fromJson(item as Map<String, dynamic>))
             .toList();
-
-        emit(InvitationsLoaded(fetchedconnections));
+        if (!isClosed) {
+          emit(InvitationsLoaded(fetchedconnections));
+        }
       } else {
-        emit(InvitationsError("Failed to load connections"));
+        if (!isClosed) {
+          emit(InvitationsError("Failed to load connections"));
+        }
       }
     } catch (error) {
-      emit(InvitationsError("An error occurred: $error"));
+      if (!isClosed) {
+        emit(InvitationsError("An error occurred: $error"));
+      }
     }
   }
 

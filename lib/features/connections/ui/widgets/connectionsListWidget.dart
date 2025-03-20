@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/widgets/remove_connection_widget.dart';
 
 class connections_List_View extends StatelessWidget {
   List<UserConnection> connections;
@@ -35,12 +36,10 @@ class connections_List_View extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Align(
-                        alignment:
-                            Alignment.topLeft, 
+                        alignment: Alignment.topLeft,
                         child: CircleAvatar(
                           radius: 25.r,
-                          child: Text(connection.firstname[
-                              0]), 
+                          child: Text(connection.firstname[0]),
                         ),
                       ),
                     ),
@@ -84,6 +83,12 @@ class connections_List_View extends StatelessWidget {
                         onPressed: () {
                           //todo : the
                           print("hello ${connection.firstname} more");
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return removeSheet();
+                            },
+                          );
                         },
                         icon: Icon(Icons.more_horiz, size: 20.sp)),
                   ],

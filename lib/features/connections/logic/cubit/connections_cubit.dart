@@ -29,12 +29,18 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
                 (item) => UserConnection.fromJson(item as Map<String, dynamic>))
             .toList();
         connections = fetchedconnections;
-        emit(ConnectionsLoaded(fetchedconnections));
+        if (!isClosed) {
+          emit(ConnectionsLoaded(fetchedconnections));
+        }
       } else {
-        emit(ConnectionsError("Failed to load connections"));
+        if (!isClosed) {
+          emit(ConnectionsError("Failed to load connections"));
+        }
       }
     } catch (error) {
-      emit(ConnectionsError("An error occurred: $error"));
+      if (!isClosed) {
+        emit(ConnectionsError("An error occurred: $error"));
+      }
     }
   }
 
