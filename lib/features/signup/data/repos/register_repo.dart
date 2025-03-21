@@ -1,4 +1,5 @@
-import 'package:joblinc/features/login/data/services/securestorage_service.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_service.dart';
 import 'package:joblinc/features/signup/data/models/register_request_model.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 
@@ -9,7 +10,11 @@ class RegisterRepo {
 
   Future<void> register(RegisterRequestModel req) async {
     final response = await _registerApiService.register(req);
-    await SecureStorage.saveTokens(
-        accessToken: response.accessToken, refreshToken: response.refreshToken);
+    final AuthService authService = getIt<AuthService>();
+    await authService.saveAuthInfo(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+        userId: response.userId,
+        role: response.role);
   }
 }

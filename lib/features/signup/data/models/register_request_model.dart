@@ -3,12 +3,18 @@ class RegisterRequestModel {
   final String lastname;
   final String email;
   final String password;
+  final String country;
+  final String city;
+  final String phoneNumber;
 
   RegisterRequestModel({
     required this.firstname,
     required this.lastname,
     required this.email,
     required this.password,
+    required this.country,
+    required this.city,
+    required this.phoneNumber,
   });
 
   Map<String, dynamic> toJson() {
@@ -17,9 +23,9 @@ class RegisterRequestModel {
       'lastname': lastname,
       'email': email,
       'password': password,
-      'country': 'Nigeria',
-      'city': 'city',
-      'phoneNumber': 'phoneNo',
+      'country': country,
+      'city': city,
+      'phoneNumber': phoneNumber
     };
   }
 }
