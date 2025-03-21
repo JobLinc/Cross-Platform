@@ -17,18 +17,6 @@ class PostApiService {
     }
   }
 
-  String _handleDioError(DioException e) {
-    if (e.response != null) {
-      if (e.response?.statusCode == 401) {
-        return 'unauthorized';
-      } else {
-        return 'internal Server error';
-      }
-    } else {
-      return 'Network error: ${e.message}';
-    }
-  }
-
   Future<List<PostModel>> getFeed(int amount) async {
     try {
       final response = await _dio.get('/feed/$amount');
@@ -41,6 +29,30 @@ class PostApiService {
       return posts;
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<String> addPost(String text) async {
+    try {
+      final response = await _dio.post('/post/add', data: {
+        'repostId': null,
+        'Text': text,
+      });
+      return response.data['postId'];
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  String _handleDioError(DioException e) {
+    if (e.response != null) {
+      if (e.response?.statusCode == 401) {
+        return 'unauthorized';
+      } else {
+        return 'internal Server error';
+      }
+    } else {
+      return 'Network error: ${e.message}';
     }
   }
 }

@@ -23,7 +23,7 @@ final getIt = GetIt.instance;
 Future<void> setupGetIt() async {
   Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:3000/api',
+      baseUrl: 'http://192.168.1.11:3000/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -53,14 +53,15 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit());
 
+  // Home
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
+
   // Posts
   getIt.registerLazySingleton<PostApiService>(
       () => PostApiService(getIt<Dio>()));
 
   getIt
       .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
-
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
 
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));
@@ -72,12 +73,13 @@ Future<void> setupGetIt() async {
       () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
 
   getIt.registerLazySingleton<ChatApiService>(
-    () =>ChatApiService(getIt<Dio>()) ,);
-  
-  getIt.registerLazySingleton<ChatRepo>(
-    () => ChatRepo(getIt<ChatApiService>()));
-  
-  getIt.registerFactory<ChatListCubit>(
-    () =>ChatListCubit( getIt<ChatRepo>()) ,);
-}
+    () => ChatApiService(getIt<Dio>()),
+  );
 
+  getIt
+      .registerLazySingleton<ChatRepo>(() => ChatRepo(getIt<ChatApiService>()));
+
+  getIt.registerFactory<ChatListCubit>(
+    () => ChatListCubit(getIt<ChatRepo>()),
+  );
+}

@@ -13,4 +13,8 @@ class PostRepo {
   Future<List<PostModel>> getFeed(int amount) async {
     return await _postApiService.getFeed(amount);
   }
+
+  Future<String> addPost(String text) async {
+    return await _postApiService.addPost(text);
+  }
 }

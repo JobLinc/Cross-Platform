@@ -45,7 +45,6 @@ class AddPostScreen extends StatelessWidget {
 }
 
 AppBar addPostTopBar(BuildContext context) {
-  bool enabled = false;
   return AppBar(
     leading: IconButton(
       onPressed: () => {Navigator.pop(context)},
@@ -77,7 +76,7 @@ AppBar addPostTopBar(BuildContext context) {
               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
               disabledBackgroundColor: Colors.grey.shade300,
               disabledForegroundColor: Colors.grey),
-          onPressed: enabled ? () {} : null,
+          onPressed: () {},
           child: Text('Post'),
         ),
       )
