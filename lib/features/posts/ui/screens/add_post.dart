@@ -8,28 +8,37 @@ class AddPostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: addPostTopBar(context),
-      body: Column(
-        children: [
-          TextField(
-            maxLines: null,
-            decoration: InputDecoration(
-              hintText: 'Share your thoughts...',
-              hintStyle: TextStyle(color: Colors.grey.shade600),
-              border: InputBorder.none,
+      body: Padding(
+        padding: const EdgeInsets.only(
+          left: 10.0,
+          right: 10.0,
+          bottom: 20.0,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: TextField(
+                maxLines: null,
+                expands: true,
+                decoration: InputDecoration(
+                  hintText: 'Share your thoughts...',
+                  hintStyle: TextStyle(color: Colors.grey.shade600),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(),
+                showCursor: true,
+                cursorColor: Colors.black,
+              ),
             ),
-            style: TextStyle(),
-            showCursor: true,
-            cursorColor: Colors.black,
-          ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.image)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-            ],
-          )
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(onPressed: () {}, icon: Icon(Icons.image)),
+                IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -81,22 +90,63 @@ Future<dynamic> showPostSettings(BuildContext context) {
       showDragHandle: true,
       context: context,
       builder: (context) {
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-            child: Column(
-              children: [
-                Text(
-                  "Who can see your post?",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeightHelper.bold,
-                  ),
-                ),
-                Icon(Icons.public)
-              ],
-            ),
-          ),
-        );
+        return BottomSheet();
       });
+}
+
+class BottomSheet extends StatefulWidget {
+  const BottomSheet({super.key});
+
+  @override
+  State<BottomSheet> createState() => BottomSheetState();
+}
+
+class BottomSheetState extends State<BottomSheet> {
+  late int selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = 1;
+  }
+
+  void _updateSelectedValue(int value) {
+    setState(() {
+      selectedValue = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+        child: Column(
+          children: [
+            Text(
+              "Who can see your post?",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeightHelper.bold,
+              ),
+            ),
+            OverflowBar(
+              children: [
+                RadioListTile(
+                    title: Text('public'),
+                    subtitle: Text('data'),
+                    value: 1,
+                    groupValue: selectedValue,
+                    onChanged: (value) => _updateSelectedValue),
+                RadioListTile(
+                    value: 2,
+                    groupValue: selectedValue,
+                    onChanged: (value) => _updateSelectedValue),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

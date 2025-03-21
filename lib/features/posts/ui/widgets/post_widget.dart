@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
+import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
@@ -41,10 +42,26 @@ class PostContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PostHeader(
+        UserHeader(
           imageURL: data.profilePictureURL,
           username: data.username,
           headline: data.headline,
+          action: Padding(
+            padding: const EdgeInsets.only(right: 5.0),
+            child: GestureDetector(
+              onTap: () => {UnimplementedError()},
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(color: ColorsManager.darkBurgundy),
+                    children: [
+                      TextSpan(
+                        text: '+ Linc',
+                        semanticsLabel: 'post_header_lincButton',
+                      )
+                    ]),
+              ),
+            ),
+          ),
         ),
         PostBody(
           text: data.text,
@@ -66,117 +83,6 @@ class PostContent extends StatelessWidget {
     );
   }
 }
-
-//
-class PostHeader extends StatelessWidget {
-  const PostHeader({
-    super.key,
-    required this.imageURL,
-    required this.username,
-    required this.headline,
-  });
-  final String imageURL;
-  final String username;
-  final String headline;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'post_header_container',
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          ProfileImage(imageURL: imageURL),
-          Expanded(
-            flex: 9,
-            child: UserInfo(
-              username: username,
-              headline: headline,
-            ),
-          ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(right: 5.0),
-            child: GestureDetector(
-              onTap: () => {UnimplementedError()},
-              child: RichText(
-                text: TextSpan(
-                    style: TextStyle(color: ColorsManager.darkBurgundy),
-                    children: [
-                      TextSpan(
-                          text: '+ Linc',
-                          semanticsLabel: 'post_header_lincButton')
-                    ]),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.imageURL});
-  final String imageURL;
-
-  @override
-  Widget build(BuildContext context) {
-    //TODO this needs revising
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Semantics(
-        label: 'post_header_avatar',
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(imageURL),
-        ),
-      ),
-    );
-  }
-}
-
-class UserInfo extends StatelessWidget {
-  const UserInfo({
-    super.key,
-    required this.username,
-    required this.headline,
-  });
-
-  final String username;
-  final String headline;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'post_header_userInfoContainer',
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            username,
-            semanticsLabel: 'post_header_username',
-            style: TextStyle(
-              fontWeight: FontWeightHelper.extraBold,
-            ),
-          ),
-          Text(
-            headline,
-            semanticsLabel: 'post_header_headline',
-            style: TextStyle(
-              overflow: TextOverflow.ellipsis,
-              fontWeight: FontWeightHelper.extraLight,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-//endregion
 
 class PostBody extends StatefulWidget {
   const PostBody({super.key, required this.text});
@@ -297,7 +203,14 @@ class PostActionBar extends StatelessWidget {
           Semantics(
             label: 'post_actionBar_comment',
             child: IconButton(
-              onPressed: () => {UnimplementedError()},
+              onPressed: () => {
+                showModalBottomSheet(
+                    showDragHandle: true,
+                    context: context,
+                    builder: (context) {
+                      return CommentSection();
+                    })
+              },
               icon: Icon(Icons.comment),
             ),
           ),
