@@ -15,7 +15,7 @@ class PostModel {
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     final bool companyPost;
-    if (json['userId']) {
+    if (json['userId'] == null) {
       companyPost = true;
     } else {
       companyPost = false;
