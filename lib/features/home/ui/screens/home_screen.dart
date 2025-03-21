@@ -5,7 +5,6 @@ import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
