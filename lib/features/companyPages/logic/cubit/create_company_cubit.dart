@@ -7,8 +7,11 @@ part 'create_company_state.dart';
 
 class CreateCompanyCubit extends Cubit<CreateCompanyState> {
   final CreateCompanyRepo _createCompanyRepo;
+   final void Function(Company) onCompanyCreated; // Callback for navigation
 
-  CreateCompanyCubit(this._createCompanyRepo) : super(CreateCompanyInitial());
+  CreateCompanyCubit(this._createCompanyRepo, {required this.onCompanyCreated})
+      : super(CreateCompanyInitial());
+
 
   Future<void> createCompany(
       {required TextEditingController nameController,
@@ -33,12 +36,13 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
 
       await _createCompanyRepo.createCompany(
           companyToAdd.name,
-          "a123@gmail.com",
-          "123456789",
+          "a@gmail.com",
+          "123456",
           companyToAdd.industry.displayName,
           "overview");
       mockCompanies.add(companyToAdd);
 
+      onCompanyCreated(companyToAdd);
       emit(CreateCompanySuccess());
       // ignore: unused_catch_clause
     } catch (e) {

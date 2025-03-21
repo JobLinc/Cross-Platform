@@ -17,7 +17,12 @@ void main() {
 
   setUp(() {
     mockCreateCompanyRepo = MockCreateCompanyRepo();
-    createCompanyCubit = CreateCompanyCubit(mockCreateCompanyRepo);
+    createCompanyCubit = CreateCompanyCubit(
+      mockCreateCompanyRepo,
+      onCompanyCreated: (company) {
+        // Dummy callback for testing
+      },
+    );
   });
 
   tearDown(() {

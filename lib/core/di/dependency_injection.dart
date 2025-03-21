@@ -9,8 +9,8 @@ import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
-
 import '../../features/login/logic/cubit/login_cubit.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 final getIt = GetIt.instance;
 
@@ -53,6 +53,10 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<CreateCompanyRepo>(
       () => CreateCompanyRepo(getIt<CreateCompanyApiService>()));
 
-  getIt.registerFactory<CreateCompanyCubit>(
-      () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
+  getIt.registerFactoryParam<CreateCompanyCubit, void Function(Company), void>(
+  (param1, _) => CreateCompanyCubit(
+    getIt<CreateCompanyRepo>(),
+    onCompanyCreated: param1, // Pass the callback dynamically
+  ),
+);
 }

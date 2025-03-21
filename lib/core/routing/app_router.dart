@@ -4,6 +4,7 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/companyPages/ui/screens/company_dashboard.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
@@ -67,6 +68,21 @@ class AppRouter {
             builder: (context) => Scaffold(
               body: Center(
                 child: Text("Invalid arguments for CompanyPageHome"),
+              ),
+            ),
+          );
+        }
+
+        case Routes.companyDashboard:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyDashboard(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
               ),
             ),
           );
