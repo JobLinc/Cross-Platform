@@ -221,23 +221,23 @@ List<Chat> mockChats = [
     lastSender: "You",
     isOnline: false,
   ),
-  Chat(
-    id: "conv_007",
-    userID: "user8",
-    userName: "Georgina",
-    userAvatar:
-        "https://v.wpimg.pl/NWJkMGEyYTYrCTt0agJsI2hRby4sW2J1P0l3ZWpAfW8yXn9_ah8nOy8ZKDcqVyklPxssMDVXPjtlCj0uag9_eC4CPjcpGDd4LwYvIiFWfWR5Wi4hJ0pjYXlaL2pxHC1jZwkvJSZUfWd6D3glIUkvZXMKbzo",
-    lastMessage: LastMessage(
-      senderID: "user8",
-      text: "Are you free later ;)",
-      timestamp: DateTime.now().subtract(Duration(days: 0, hours: 8)),
-      messageType: "text",
-    ),
-    lastUpdate: DateTime.now().subtract(Duration(days: 0, hours: 8)),
-    unreadCount: 4,
-    lastSender: "Grace Martinez",
-    isOnline: true,
-  ),
+  // Chat(
+  //   id: "conv_007",
+  //   userID: "user8",
+  //   userName: "Georgina",
+  //   userAvatar:
+  //       "https://v.wpimg.pl/NWJkMGEyYTYrCTt0agJsI2hRby4sW2J1P0l3ZWpAfW8yXn9_ah8nOy8ZKDcqVyklPxssMDVXPjtlCj0uag9_eC4CPjcpGDd4LwYvIiFWfWR5Wi4hJ0pjYXlaL2pxHC1jZwkvJSZUfWd6D3glIUkvZXMKbzo",
+  //   lastMessage: LastMessage(
+  //     senderID: "user8",
+  //     text: "Are you free later ;)",
+  //     timestamp: DateTime.now().subtract(Duration(days: 0, hours: 8)),
+  //     messageType: "text",
+  //   ),
+  //   lastUpdate: DateTime.now().subtract(Duration(days: 0, hours: 8)),
+  //   unreadCount: 4,
+  //   lastSender: "Grace Martinez",
+  //   isOnline: true,
+  // ),
   Chat(
     id: "conv_008",
     userID: "user9",

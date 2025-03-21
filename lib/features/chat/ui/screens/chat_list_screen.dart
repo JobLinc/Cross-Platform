@@ -105,12 +105,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     icon: Icon(Icons.arrow_back,
                         size: 24.sp, color: Colors.white),
                   ),
-                  CustomSearchBar(
-                      keyName: "chatList_search_textField",
-                      text: "search messages",
-                      onPress: (){}/*startSearch*/,
-                      onTextChange: searchChats /*addSearchedToSearchedList*/,
-                      controller: searchTextController),
+                  Expanded(
+                    child: CustomSearchBar(
+                        keyName: "chatList_search_textField",
+                        text: "search messages",
+                        onPress: (){}/*startSearch*/,
+                        onTextChange: searchChats /*addSearchedToSearchedList*/,
+                        controller: searchTextController),
+                  ),
                   IconButton(
                     key: Key("chatList_filter_iconButton"),
                     onPressed: () {
