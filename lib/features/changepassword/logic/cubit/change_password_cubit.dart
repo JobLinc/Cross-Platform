@@ -1,0 +1,13 @@
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+part 'change_password_state.dart';
+
+class ChangePasswordCubit extends Cubit<ChangePasswordState> {
+  ChangePasswordCubit() : super(ChangePasswordInitial());
+
+
+  changePassword(String currentPassword, String newPassword) {
+    
+  }
+}

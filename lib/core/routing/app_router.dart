@@ -52,7 +52,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => getIt<ForgetPasswordCubit>(),
-            child: ForgetpasswordScreen(),
+            child: ForgotPasswordSteps(),
           ),
         );
       case Routes.chatListScreen:

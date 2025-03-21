@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/login/data/services/securestorage_service.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_service.dart';
 import '../models/createcompany_response.dart';
 
 class CreateCompanyApiService {
@@ -10,8 +11,10 @@ class CreateCompanyApiService {
   Future<CreateCompanyResponse> createCompany(String name, String email,
       String phone, String industry, String overview) async {
     try {
-      final accessToken = await SecureStorage.getAccessToken();
-      print('Access Token: $accessToken'); 
+      final authService = getIt<AuthService>();
+
+      final accessToken = await authService.getAccessToken();
+      print('Access Token: $accessToken');
       print(
           'Request Payload: {name: $name, email: $email, phone: $phone, industry: $industry, overview: $overview}');
       final response = await _dio.post(
