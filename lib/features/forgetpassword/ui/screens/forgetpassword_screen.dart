@@ -53,6 +53,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Stepper(
+              key: Key('forgotPassword_stepper'),
               connectorColor: WidgetStateColor.resolveWith(
                   (states) => ColorsManager.crimsonRed),
               type: StepperType.vertical,
@@ -63,6 +64,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
                 return Row(
                   children: [
                     ElevatedButton(
+                      key: Key('forgotPassword_continue_button'),
                       onPressed: details.onStepContinue,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorsManager.crimsonRed,
@@ -72,6 +74,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
                     ),
                     const SizedBox(width: 8),
                     TextButton(
+                      key: Key('forgotPassword_cancel_button'),
                       onPressed: details.onStepCancel,
                       style: TextButton.styleFrom(
                         foregroundColor: ColorsManager.crimsonRed,
@@ -93,6 +96,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
                 Step(
                   title: const Text("Enter Email"),
                   content: TextField(
+                    key: Key('forgotPassword_email_textfield'),
                     controller: emailController,
                     decoration: const InputDecoration(
                         focusedBorder: UnderlineInputBorder(
@@ -111,6 +115,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
                 Step(
                   title: const Text("Enter OTP"),
                   content: TextField(
+                    key: Key('forgotPassword_otp_textfield'),
                     style: TextStyle(letterSpacing: 20.sp, fontSize: 30.sp),
                     controller: otpController,
                     decoration: const InputDecoration(
@@ -131,6 +136,7 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
                 Step(
                   title: const Text("Reset Password"),
                   content: TextField(
+                    key: Key('forgotPassword_newPassword_textfield'),
                     controller: passwordController,
                     decoration:
                         const InputDecoration(labelText: "New Password"),
