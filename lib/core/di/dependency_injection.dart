@@ -56,7 +56,7 @@ Future<void> setupGetIt() async {
   getIt.registerFactoryParam<CreateCompanyCubit, void Function(Company), void>(
   (param1, _) => CreateCompanyCubit(
     getIt<CreateCompanyRepo>(),
-    onCompanyCreated: param1, // Pass the callback dynamically
+    onCompanyCreated: param1,
   ),
 );
 }

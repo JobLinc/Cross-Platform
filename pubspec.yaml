@@ -23,6 +23,7 @@ dependencies:
   url_launcher: ^6.1.11
   fluttertoast: ^8.2.12
   hyperlink: ^0.0.4
+  flutter_svg: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

@@ -10,4 +10,5 @@ class Routes {
   static  const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String companyDashboard = '/companyDashboard';
+  static const String companyPagePosts = '/companyPagePosts';
 }

@@ -36,8 +36,8 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
 
       await _createCompanyRepo.createCompany(
           companyToAdd.name,
-          "a@gmail.com",
-          "123456",
+          "aboooo@gmail.com",
+          "1234",
           companyToAdd.industry.displayName,
           "overview");
       mockCompanies.add(companyToAdd);
