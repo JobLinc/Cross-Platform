@@ -1,5 +1,5 @@
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/signup/data/models/register_request_model.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 

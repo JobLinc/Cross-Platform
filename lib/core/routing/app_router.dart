@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
+import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
@@ -14,6 +16,7 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
+import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
@@ -23,9 +26,8 @@ import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
-
     final arguments = settings.arguments;
-    
+
     switch (settings.name) {
       case Routes.onBoardingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
@@ -57,10 +59,10 @@ class AppRouter {
         );
       case Routes.chatListScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-          create: (context)=>getIt<ChatListCubit>(),
-          child:ChatListScreen(),
-          ));
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChatListCubit>(),
+                  child: ChatListScreen(),
+                ));
       case Routes.jobListScreen:
         return MaterialPageRoute(builder: (context) => JobListScreen());
       case Routes.jobSearchScreen:
@@ -85,9 +87,17 @@ class AppRouter {
           );
         }
 
+      case Routes.settingsScreen:
+        return MaterialPageRoute(builder: (context) => SettingsScreen());
+
+      case Routes.changePasswordScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => getIt<ChangePasswordCubit>(),
+                child: ChangePasswordScreen()));
+
       default:
         return null;
     }
   }
 }
-

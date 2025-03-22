@@ -24,6 +24,14 @@ class AuthService {
     await _storage.write(key: _userIdKey, value: userId);
   }
 
+  Future<void> saveTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    await _storage.write(key: _accessTokenKey, value: accessToken);
+    await _storage.write(key: _refreshTokenKey, value: refreshToken);
+  }
+
   Future<Map<String, dynamic>> getUserInfo() async {
     final String? role = await _storage.read(key: _roleKey);
     final String? userId = await _storage.read(key: _userIdKey);

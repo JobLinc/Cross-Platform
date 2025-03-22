@@ -12,4 +12,6 @@ class Routes {
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
+  static const String settingsScreen = '/settingsScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
 }

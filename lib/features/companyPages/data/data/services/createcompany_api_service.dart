@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import '../models/createcompany_response.dart';
 
 class CreateCompanyApiService {

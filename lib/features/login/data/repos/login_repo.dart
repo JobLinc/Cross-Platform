@@ -1,6 +1,6 @@
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
-import 'package:joblinc/core/helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 
 class LoginRepo {
   final LoginApiService _loginApiService;
