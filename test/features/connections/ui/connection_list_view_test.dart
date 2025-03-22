@@ -41,7 +41,7 @@ void main() {
             home: BlocProvider(
               create: (context) => ConnectionsCubit(MockConnectionApiService()),
               child: Scaffold(
-                body: connections_List_View(connections: mockConnections),
+                body: ConnectionsListView(connections: mockConnections),
               ),
             ),
           );
@@ -53,8 +53,6 @@ void main() {
 
     expect(find.text("John Doe"), findsOneWidget);
     expect(find.text("Jane Smith"), findsOneWidget);
-
-
 
     expect(find.text("Software Engineer"), findsOneWidget);
     expect(find.text("Product Manager"), findsOneWidget);

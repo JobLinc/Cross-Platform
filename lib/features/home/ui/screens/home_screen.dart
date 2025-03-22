@@ -104,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(),
             accountName: Text('Ahmed Hesham'),
             accountEmail: Text('ahmed@example.com'),
             currentAccountPicture: CircleAvatar(
@@ -112,6 +111,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 'https://placehold.co/400/png',
               ),
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.connect_without_contact_rounded),
+            title: const Text('View my connections'),
+            onTap: () {
+              Navigator.pushNamed(context, Routes.connectionListScreen);
+            },
           ),
           ListTile(
             leading: const Icon(Icons.analytics),
@@ -156,7 +162,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, Routes.settingsScreen);
             },
           ),
-
         ],
       ),
     );

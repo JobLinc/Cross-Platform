@@ -2,10 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
-import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 class InvitationsList extends StatelessWidget {

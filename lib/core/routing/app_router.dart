@@ -8,6 +8,9 @@ import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
+import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
@@ -90,6 +93,13 @@ class AppRouter {
           );
         }
 
+      case Routes.connectionListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConnectionsCubit>(),
+            child: ConnectionPage(),
+          ),
+        );
       case Routes.settingsScreen:
         return MaterialPageRoute(builder: (context) => SettingsScreen());
 

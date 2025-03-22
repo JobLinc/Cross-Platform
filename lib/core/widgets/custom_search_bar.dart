@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  final String keyName;
+  final String? keyName ;
   final String text;
   //bool? isSearching=false;
   //List<dynamic>? allItems;
@@ -14,7 +14,7 @@ class CustomSearchBar extends StatelessWidget {
   final Color? backgroundColor;
 
   CustomSearchBar(
-      {required this.keyName,
+      { this.keyName,
       required this.text,
       //this.isSearching,
       //this.allItems,
@@ -36,7 +36,7 @@ class CustomSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: TextField(
-          key: Key(keyName),
+          key: Key(keyName ?? 'Search bar'),
           cursorColor: Colors.red[400],
           controller: controller,
           onTap: () {

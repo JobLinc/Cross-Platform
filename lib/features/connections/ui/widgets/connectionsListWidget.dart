@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
-import 'package:joblinc/features/connections/ui/widgets/remove_connection_widget.dart';
 
-class connections_List_View extends StatelessWidget {
+class ConnectionsListView extends StatelessWidget {
   List<UserConnection> connections;
-  connections_List_View({
+  ConnectionsListView({
     Key? key,
     required this.connections,
   }) : super(key: key);
@@ -83,10 +83,36 @@ class connections_List_View extends StatelessWidget {
                         onPressed: () {
                           //todo : the
                           print("hello ${connection.firstname} more");
+                          // Todo : remove the connection
+
+                          // context
+                          //     .read<ConnectionsCubit>()
+                          //     .removeConnection(connection);
+
                           showModalBottomSheet(
                             context: context,
-                            builder: (context) {
-                              return removeSheet();
+                            builder: (innerContext) {
+                              return Padding(
+                                padding: EdgeInsets.all(16.0.sp),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(innerContext);
+                                  },
+                                  child: Builder(builder: (innerContext) {
+                                    return ListTile(
+                                      leading: Icon(Icons.person_remove,
+                                          color: ColorsManager.darkBurgundy),
+                                      title: Text("Remove connection"),
+                                      onTap: () {
+                                        context
+                                            .read<ConnectionsCubit>()
+                                            .removeConnection(connection);
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  }),
+                                ),
+                              );
                             },
                           );
                         },

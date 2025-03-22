@@ -24,7 +24,7 @@ class ConnectionList extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               leading: IconButton(
-                key: Key("connections_back_button"),
+                  key: Key("connections_back_button"),
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(Icons.arrow_back)),
               title: Text("Connection", style: TextStyle(fontSize: 20.sp)),
@@ -46,7 +46,7 @@ class ConnectionList extends StatelessWidget {
                         height: 0, // No extra spacing
                       ),
                       Expanded(
-                          child: connections_List_View(
+                          child: ConnectionsListView(
                               key: Key("the List of connections"),
                               connections: connections)),
                     ],
