@@ -1,27 +1,20 @@
-
-
-
-
-
-
 //===============================Last Message Model(DTO)=========================//
 
 import 'package:intl/intl.dart';
 
 class LastMessage {
-  final String senderID;
-  final String text;
-  final DateTime timestamp;
+  final String? senderID;
+  final String? text;
+  final DateTime? timestamp;
   String? time;
-  final String messageType;
+  final String? messageType;
 
-  LastMessage(
-      {required this.senderID,
+  LastMessage({
+      required this.senderID,
       required this.text,
       required this.timestamp,
-      required this.messageType}) {
-    time = formatDynamicTime(timestamp);
-  }
+      required this.messageType
+      }) {time = formatDynamicTime(timestamp!);}
 
   factory LastMessage.fromJson(Map<String, dynamic> json) {
     return LastMessage(
@@ -69,16 +62,16 @@ class LastMessage {
 //==============================Chat Model(DTO)=================================//
 
 class Chat {
-  final String id;
-  final String userID;
-  final String userName;
+  final String? id;
+  final String? userID;
+  final String? userName;
   final String? userAvatar;
-  final bool isOnline;
-  final String lastSender;
+  final bool? isOnline;
+  final String? lastSender;
   //final List<String> participants;
-  final LastMessage lastMessage;
-  final int unreadCount;
-  final DateTime lastUpdate;
+  final LastMessage? lastMessage;
+  final int? unreadCount;
+  final DateTime? lastUpdate;
 
   Chat({
     required this.id,
@@ -116,7 +109,7 @@ class Chat {
       'isOnline': isOnline,
       'lastSender': lastSender,
       //'participants':participants,
-      'lastMessage': lastMessage.toJson(),
+      'lastMessage': lastMessage!.toJson(),
       'unreadCount': unreadCount,
       'lastUpdate': lastUpdate,
     };

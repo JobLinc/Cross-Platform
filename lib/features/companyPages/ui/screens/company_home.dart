@@ -37,6 +37,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
         title: Row(
           children: [
               CustomSearchBar(
+                keyName: 'company',
                 text: widget.company.name,
                 onPress: () {},
                 onTextChange: (searched) {},

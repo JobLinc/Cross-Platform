@@ -7,7 +7,8 @@ class CustomRoundedTextFormField extends StatelessWidget {
       required TextEditingController controller,
       this.obscureText,
       this.labelText,
-      this.validator})
+      this.validator,
+      this.keyboardType})
       : _controller = controller;
 
   final TextEditingController _controller;
@@ -15,30 +16,33 @@ class CustomRoundedTextFormField extends StatelessWidget {
   String? labelText;
   bool? obscureText;
   FormFieldValidator<String>? validator;
+  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-        controller: _controller,
-        obscureText: obscureText ?? false,
-        decoration: InputDecoration(
-          labelText: labelText ?? "",
-          labelStyle: TextStyle(color: Colors.grey.shade500),
-          filled: true,
-          fillColor: const Color.fromARGB(255, 244, 251, 255),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.grey.shade400),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.grey.shade400),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.grey.shade400),
-          ),
+      controller: _controller,
+      obscureText: obscureText ?? false,
+      decoration: InputDecoration(
+        labelText: labelText ?? "",
+        labelStyle: TextStyle(color: Colors.grey.shade500),
+        filled: true,
+        fillColor: const Color.fromARGB(255, 244, 251, 255),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.grey.shade400),
         ),
-        validator: validator);
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+      ),
+      validator: validator,
+      keyboardType: keyboardType ?? TextInputType.text,
+    );
   }
 }

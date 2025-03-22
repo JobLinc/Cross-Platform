@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  
+  final String keyName;
   final String text;
   //bool? isSearching=false;
   //List<dynamic>? allItems;
@@ -11,17 +11,19 @@ class CustomSearchBar extends StatelessWidget {
   final Function onTextChange;
   final TextEditingController controller;
 
-  
-  CustomSearchBar({
-    required this.text,
-    //this.isSearching,
-    //this.allItems,
-    //this.searchedItems,
-    required this.onPress,
-    required this.onTextChange,
-    required this.controller,
-    super.key
-  });
+  final Color? backgroundColor;
+
+  CustomSearchBar(
+      {required this.keyName,
+      required this.text,
+      //this.isSearching,
+      //this.allItems,
+      //this.searchedItems,
+      required this.onPress,
+      required this.onTextChange,
+      required this.controller,
+      this.backgroundColor,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +32,24 @@ class CustomSearchBar extends StatelessWidget {
         height: 40.h,
         padding: EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: backgroundColor ?? Colors.white,
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: TextField(
+          key: Key(keyName),
+          cursorColor: Colors.red[400],
           controller: controller,
-          onTap: (){ onPress();} ,
-          onChanged: (searched){onTextChange(searched);},
+          onTap: () {
+            onPress();
+          },
+          onChanged: (searched) {
+            onTextChange(searched);
+          },
           decoration: InputDecoration(
             hintText: text,
             prefixIcon: Icon(Icons.search, size: 20.sp, color: Colors.black87),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: backgroundColor ?? Colors.white,
             contentPadding: EdgeInsets.symmetric(vertical: 10.h),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.r),
