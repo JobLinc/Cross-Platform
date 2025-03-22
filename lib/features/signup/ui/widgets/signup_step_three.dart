@@ -26,11 +26,17 @@ class SignupStepThree extends StatelessWidget {
         children: [
           const Text("Step 3 of 3"),
           const SizedBox(height: 20),
-          CountryTextFormField(countryController: countryController),
+          CountryTextFormField(
+              key: Key('register_country_textfield'),
+              countryController: countryController),
           const SizedBox(height: 15),
-          CityTextFormField(cityController: cityController),
+          CityTextFormField(
+              key: Key('register_city_textfield'),
+              cityController: cityController),
           const SizedBox(height: 15),
-          PhoneTextFormField(phoneController: phoneController),
+          PhoneTextFormField(
+              key: Key('register_phone_textfield'),
+              phoneController: phoneController),
         ],
       ),
     );

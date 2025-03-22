@@ -23,9 +23,13 @@ class SignupStepTwo extends StatelessWidget {
         children: [
           const Text("Step 2 of 3"),
           const SizedBox(height: 20),
-          EmailTextFormField(emailController: emailController),
+          EmailTextFormField(
+              key: Key('register_email_textfield'),
+              emailController: emailController),
           const SizedBox(height: 15),
-          PasswordTextFormField(passwordController: passwordController),
+          PasswordTextFormField(
+              key: Key('register_password_textfield'),
+              passwordController: passwordController),
         ],
       ),
     );

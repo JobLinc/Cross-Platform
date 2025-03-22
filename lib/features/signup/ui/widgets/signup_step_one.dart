@@ -23,9 +23,11 @@ class SignupStepOne extends StatelessWidget {
         children: [
           const Text("Step 1 of 3"),
           const SizedBox(height: 20),
-          FirstnameTextFormField(firstNameController: firstNameController),
+          FirstnameTextFormField(key: Key('register_firstname_textfield'),firstNameController: firstNameController),
           const SizedBox(height: 15),
-          LastnameTextFormField(lastNameController: lastNameController),
+          LastnameTextFormField(
+              key: Key('register_lastname_textfield'),
+              lastNameController: lastNameController),
         ],
       ),
     );

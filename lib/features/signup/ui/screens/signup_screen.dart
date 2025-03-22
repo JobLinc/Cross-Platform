@@ -101,6 +101,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       SizedBox(height: 5.sp),
                       RichText(
+                        key: Key('register_returnToLogin_textbutton'),
                         text: TextSpan(
                           children: [
                             const TextSpan(text: "or "),
@@ -133,16 +134,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         SignupStepOne(
+                          key: Key('register_step1_form'),
                           formKey: formKey1,
                           firstNameController: firstNameController,
                           lastNameController: lastNameController,
                         ),
                         SignupStepTwo(
+                          key: Key('register_step2_form'),
                           formKey: formKey2,
                           emailController: emailController,
                           passwordController: passwordController,
                         ),
                         SignupStepThree(
+                          key: Key('register_step3_form'),
                           formKey: formKey3,
                           countryController: countryController,
                           cityController: cityController,
@@ -189,6 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
         if (currentPage > 0)
           Expanded(
             child: customRoundedButton(
+              key: Key('register_back_button'),
               borderColor: ColorsManager.mutedSilver,
               backgroundColor: ColorsManager.mutedSilver,
               foregroundColor: Colors.white,
@@ -199,6 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
         if (currentPage > 0) const SizedBox(width: 10),
         Expanded(
           child: customRoundedButton(
+            key: Key('register_continue_button'),
             borderColor: ColorsManager.crimsonRed,
             backgroundColor: ColorsManager.crimsonRed,
             foregroundColor: ColorsManager.warmWhite,
