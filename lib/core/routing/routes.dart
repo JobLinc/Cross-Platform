@@ -4,8 +4,15 @@ class Routes {
   static const String homeScreen = '/homeScreen';
   static const String profileScreen = '/profileScreen';
   static const String chatListScreen = '/chatListScreen';
+  static const String companyListScreen = '/companyListScreen';
+  static const String companyPageHome = '/companyPageHome';
+  static const String jobListScreen = '/jobListScreen';
+  static const String jobSearchScreen = '/jobSearchScreen';
+  static const String premiumScreen = '/premiumScreen';
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String connectionListScreen = '/connectionListScreen';
+  static const String settingsScreen = '/settingsScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
 }
