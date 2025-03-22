@@ -32,18 +32,21 @@ class ChangePasswordScreen extends StatelessWidget {
             children: [
               Expanded(flex: 2, child: SizedBox()),
               CustomRoundedTextFormField(
+                key: Key('changePassword_currentPassword_textfield'),
                 controller: _currentPasswordController,
                 labelText: 'Current Password',
                 obscureText: true,
               ),
               Expanded(flex: 1, child: SizedBox()),
               CustomRoundedTextFormField(
+                key: Key('changePassword_newPassword_textfield'),
                 controller: _newPasswordController,
                 labelText: 'New Password',
                 obscureText: true,
               ),
               Expanded(flex: 1, child: SizedBox()),
               CustomRoundedTextFormField(
+                key: Key('changePassword_confirmPassword_textfield'),
                 controller: _confirmPasswordController,
                 labelText: 'Confirm New Password',
                 obscureText: true,
@@ -66,6 +69,7 @@ class ChangePasswordScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: customRoundedButton(
+                      key: Key('changePassword_submit_button'),
                       foregroundColor: Colors.white,
                       backgroundColor: ColorsManager.crimsonRed,
                       borderColor: ColorsManager.crimsonRed,
