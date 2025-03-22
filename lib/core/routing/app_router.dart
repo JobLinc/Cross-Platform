@@ -7,6 +7,7 @@ import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart' show CompanyAnalytics;
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
@@ -117,6 +118,21 @@ class AppRouter {
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyPagePosts(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+        case Routes.companyAnalytics:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyAnalytics(company: arguments),
           );
         } else {
           return MaterialPageRoute(

@@ -25,7 +25,7 @@ class CompanyMoreButton extends StatelessWidget {
         _showMoreActions(context);
       },
       child: const Icon(Icons.more_horiz_outlined,
-          color: Colors.black), // Add const
+          color: Colors.black), 
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(
           side: BorderSide(

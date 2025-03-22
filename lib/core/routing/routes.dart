@@ -14,6 +14,7 @@ class Routes {
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String companyDashboard = '/companyDashboard';
   static const String companyPagePosts = '/companyPagePosts';
+  static const String companyAnalytics = '/companyAnalytics';
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
 }
