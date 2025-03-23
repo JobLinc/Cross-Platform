@@ -15,7 +15,8 @@ class CompanyDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DashboardAppbar(
-        company: company
+        company: company,
+        selectedValue: "Dashboard",
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -45,9 +46,7 @@ class CompanyDashboard extends StatelessWidget {
                       color: Colors.grey[700],
                     ),
                   ),
-                  SizedBox(height: 8.h),
-
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 24.h),
                   Center(
                     child: SvgPicture.asset(
                       'assets/images/company_dashboard_img1.svg',

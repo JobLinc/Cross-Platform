@@ -6,22 +6,31 @@ import '../../../data/data/company.dart';
 
 class DashboardAppbar extends StatefulWidget implements PreferredSizeWidget {
   final Company company;
-  const DashboardAppbar({super.key, required this.company});
+  final String selectedValue;
+  const DashboardAppbar(
+      {super.key, required this.company, this.selectedValue = "Dashboard"}
+    );
 
   @override
   State<DashboardAppbar> createState() => _DashboardAppbarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(100.0); // Set your preferred height
+  Size get preferredSize => const Size.fromHeight(100.0);
 }
 
 class _DashboardAppbarState extends State<DashboardAppbar> {
-  String _selectedValue = "Dashboard"; // State variable to track the selected value
+  late String _selectedValue = widget.selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.selectedValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 100.h, // Ensure flutter_screenutil is initialized
+      toolbarHeight: 100.h,
       title: Column(
         children: [
           Row(
@@ -64,22 +73,38 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   setState(() {
                     _selectedValue = newValue!;
                   });
-
+                  _selectedValue = newValue!;
                   // Handle navigation or other logic based on the selected value
                   switch (newValue) {
                     case "Dashboard":
-                      // Already on the dashboard, no action needed
+                      _selectedValue = "Dashboard";
+                      Navigator.pushNamed(
+                        context,
+                        Routes.companyDashboard,
+                        arguments: widget.company,
+                      );
+
                       break;
                     case "Page Posts":
+                      _selectedValue = "Page Posts";
                       Navigator.pushNamed(
                         context,
                         Routes.companyPagePosts,
                         arguments: widget.company,
                       );
+
                       break;
                     // case "Analytics":
                     //   Navigator.pushNamed(context, Routes.analytics);
                     //   break;
+                    case "Feed":
+                      _selectedValue = "Feed";
+                      Navigator.pushNamed(
+                        context,
+                        Routes.companyFeed,
+                        arguments: widget.company,
+                      );
+                      break;
                     // case "Inbox":
                     //   Navigator.pushNamed(context, Routes.inboxPage);
                     //   break;
@@ -95,6 +120,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   'Dashboard',
                   'Page Posts',
                   'Analytics',
+                  'Feed',
                   'Inbox',
                   'Edit Page',
                   'Jobs',
@@ -106,7 +132,8 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                 }).toList(),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 180.w), // Ensure flutter_screenutil is initialized
+                padding: EdgeInsets.only(
+                    left: 180.w), // Ensure flutter_screenutil is initialized
                 child: IconButton(
                   onPressed: () {
                     // TODO: Implement add post logic here Fathy

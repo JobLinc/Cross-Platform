@@ -13,7 +13,10 @@ class CompanyPagePosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DashboardAppbar(company: company),
+      appBar: DashboardAppbar(
+        company: company,
+        selectedValue: "Page Posts",  
+      ),
       body: SingleChildScrollView(
           child: Column(
         children: [
