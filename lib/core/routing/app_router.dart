@@ -12,7 +12,11 @@ import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashb
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
+import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
@@ -63,10 +67,12 @@ class AppRouter {
         );
       case Routes.chatListScreen:
         return MaterialPageRoute(
-            builder: (_) => BlocProvider(
-                  create: (context) => getIt<ChatListCubit>(),
-                  child: ChatListScreen(),
-                ));
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ChatListCubit>(),
+            child: ChatListScreen(),
+          ),
+        );
+
       case Routes.jobListScreen:
         return MaterialPageRoute(builder: (context) => JobListScreen());
       case Routes.jobSearchScreen:
@@ -91,6 +97,13 @@ class AppRouter {
           );
         }
 
+      case Routes.connectionListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConnectionsCubit>(),
+            child: ConnectionPage(),
+          ),
+        );
       case Routes.settingsScreen:
         return MaterialPageRoute(builder: (context) => SettingsScreen());
 

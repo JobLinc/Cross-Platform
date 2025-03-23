@@ -1,0 +1,28 @@
+import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
+import 'package:joblinc/features/connections/data/models/pendingconnectionsdemomodel.dart';
+
+class UserConnectionsRepository {
+  final UserConnectionsApiService _apiService;
+
+  UserConnectionsRepository(this._apiService);
+
+  Future<List<UserConnection>> getConnections() async {
+    try {
+      final data = await _apiService.getConnections();
+
+      return data.map((json) => UserConnection.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Error mapping users: $e');
+    }
+  }
+
+  Future<List<PendingInvitation>> getInvitations() async {
+    try {
+      final data = await _apiService.getInvitations();
+      return data.map((json) => PendingInvitation.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Error mapping invitations: $e');
+    }
+  }
+}

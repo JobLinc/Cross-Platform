@@ -14,10 +14,18 @@ import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
+import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
+import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
+
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
+
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/data/repos/post_repo.dart';
 import 'package:joblinc/features/home/data/services/post_api_service.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
+
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
@@ -38,7 +46,7 @@ Future<void> setupGetIt() async {
 
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:3000/api',
+      baseUrl: 'https://joblinc.me/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -66,7 +74,6 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<RegisterRepo>(
       () => RegisterRepo(getIt<RegisterApiService>()));
-
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
 
@@ -120,4 +127,17 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ChatListCubit>(
     () => ChatListCubit(getIt<ChatRepo>()),
   );
+///////////////////////////////////////////////////////////////////////////
+
+  getIt.registerLazySingleton<UserConnectionsApiService>(
+      () => UserConnectionsApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<UserConnectionsRepository>(
+      () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
+
+  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
+      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+
+  getIt.registerFactory<InvitationsCubit>(
+      () => InvitationsCubit(MockConnectionApiService()));
 }
