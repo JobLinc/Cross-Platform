@@ -44,6 +44,11 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
   }
 
+  void removeConnection(UserConnection connection) {
+    apiService.removeConnection(connection.userId);
+    fetchConnections();
+  }
+
   void Searchclicked() {
     if (state != SearchState()) {
       emit(SearchState());
@@ -92,4 +97,6 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
     return data;
   }
+
+  
 }

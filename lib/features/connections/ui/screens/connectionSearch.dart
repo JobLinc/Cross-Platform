@@ -8,8 +8,9 @@ import 'package:joblinc/features/connections/ui/widgets/connectionsListWidget.da
 import 'package:joblinc/features/connections/ui/widgets/filterButtons.dart';
 
 class Connectionsearch extends StatelessWidget {
-  const Connectionsearch({super.key});
+  Connectionsearch({super.key});
 
+  TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -26,7 +27,13 @@ class Connectionsearch extends StatelessWidget {
                 BlocProvider.of<ConnectionsCubit>(context).Backclicked();
               },
             ),
-            title: CustomSearchBar(key: Key("Search bar "), text: 'Search'),
+            title: CustomSearchBar(
+              key: Key("Search bar"),
+              text: 'Search',
+              onPress: () {},
+              onTextChange: (_searchController) {},
+              controller: _searchController,
+            ),
           ),
           body: Column(
             key: Key("search Page body"),
@@ -34,7 +41,9 @@ class Connectionsearch extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
-                child: SingleChildScrollFilter(key: Key("Search bage filters"),),
+                child: SingleChildScrollFilter(
+                  key: Key("Search bage filters"),
+                ),
               ),
               Divider(
                 color: Colors.grey[300], // Line color
@@ -42,7 +51,8 @@ class Connectionsearch extends StatelessWidget {
                 height: 0, // No extra spacing
               ),
               Expanded(
-                  child: connections_List_View(key: Key("Search page connections List"),
+                  child: ConnectionsListView(
+                key: Key("Search_page_connectionsList"),
                 connections:
                     BlocProvider.of<ConnectionsCubit>(context).connections,
               )),

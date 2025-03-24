@@ -5,7 +5,7 @@ Widget customRoundedButton({
   required String text,
   required Color backgroundColor,
   IconData? icon,
-  required GestureTapCallback onPressed,
+  required void Function()? onPressed,
   required Color foregroundColor,
   Color? borderColor,
   double? width,

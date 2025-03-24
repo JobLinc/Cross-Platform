@@ -31,13 +31,16 @@ class OnboardingScreen extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Center(
-                child: Text(
-                  "Join a trusted community of 1B professionals",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 19.sp, // Responsive text size
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "Join a trusted community of 1B professionals",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 19.sp, // Responsive text size
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -57,7 +60,7 @@ class OnboardingScreen extends StatelessWidget {
                 text: "Continue with google",
                 backgroundColor: Colors.transparent,
                 icon: FontAwesomeIcons.g,
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pushReplacementNamed(context, Routes.homeScreen);
                 }),
             customDividerWithText(child: Text("OR")),

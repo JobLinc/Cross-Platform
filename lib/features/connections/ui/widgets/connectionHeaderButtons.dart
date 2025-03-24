@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
-import 'package:joblinc/features/connections/ui/widgets/sortSheet.dart';
 
 class connection_Buttons extends StatelessWidget {
   List<UserConnection> connections;
