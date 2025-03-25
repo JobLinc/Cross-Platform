@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/data/models/pendingconnectionsdemomodel.dart';
+import 'package:joblinc/features/connections/data/models/sentconnectionsmodel.dart';
 
 class MockConnectionApiService {
   final Dio dio = Dio();
-
 
   Future<Response> getConnections() async {
     await Future.delayed(const Duration(seconds: 1));
@@ -17,7 +17,7 @@ class MockConnectionApiService {
   }
 
   Future<Response> getPendingInvitations() async {
-    await Future.delayed(const Duration(seconds: 0));
+    await Future.delayed(const Duration(seconds: 1));
 
     return Response(
       requestOptions: RequestOptions(path: '/pending-invitations'),
@@ -28,6 +28,16 @@ class MockConnectionApiService {
     );
   }
 
+  Future<Response> getSentConnections() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    return Response(
+      requestOptions: RequestOptions(path: '/sent-connections'),
+      statusCode: 200,
+      data:
+          mockSentConnections.map((connection) => connection.toJson()).toList(),
+    );
+  }
 
   Future<Response> addConnection(UserConnection connection) async {
     await Future.delayed(const Duration(seconds: 0));
@@ -44,7 +54,6 @@ class MockConnectionApiService {
       },
     );
   }
-
 
   Future<Response> removeConnection(String userId) async {
     await Future.delayed(const Duration(seconds: 0));
@@ -93,6 +102,32 @@ class MockConnectionApiService {
         data: {
           "status": "error",
           "message": "Pending invitation not found",
+        },
+      );
+    }
+  }
+
+  Future<Response> removeSentConnection(String userId) async {
+    await Future.delayed(const Duration(seconds: 0));
+
+    final index = mockSentConnections.indexWhere((c) => c.userId == userId);
+    if (index != -1) {
+      mockSentConnections.removeAt(index);
+      return Response(
+        requestOptions: RequestOptions(path: '/sent-connections/remove'),
+        statusCode: 200,
+        data: {
+          "status": "success",
+          "message": "Sent connection removed successfully",
+        },
+      );
+    } else {
+      return Response(
+        requestOptions: RequestOptions(path: '/sent-connections/remove'),
+        statusCode: 404,
+        data: {
+          "status": "error",
+          "message": "Sent connection not found",
         },
       );
     }

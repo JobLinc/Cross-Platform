@@ -9,6 +9,7 @@ import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
@@ -77,7 +78,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => PremiumScreen());
       case Routes.companyListScreen:
         return MaterialPageRoute(builder: (context) => CompanyList());
-
+      case Routes.invitationsTabs:
+        return MaterialPageRoute(builder: (context) => InvitationsTabs());
       case Routes.companyPageHome:
         if (arguments is Company) {
           return MaterialPageRoute(

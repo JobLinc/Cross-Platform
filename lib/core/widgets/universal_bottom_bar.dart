@@ -5,6 +5,7 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
+import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 
@@ -55,25 +56,19 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                 _selectedIndex = value;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-         switch (value) {
+              switch (value) {
                 case 0:
                   Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder:(context)=>HomeScreen()));
-                      // MaterialPageRoute(builder:(context)=> Scaffold(
-                      //   appBar: universalAppBar(context, _selectedIndex),
-                      //   body: HomeScreen(),
-                      //   bottomNavigationBar: UniversalBottomBar(),
-                      // )));
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                // MaterialPageRoute(builder:(context)=> Scaffold(
+                //   appBar: universalAppBar(context, _selectedIndex),
+                //   body: HomeScreen(),
+                //   bottomNavigationBar: UniversalBottomBar(),
+                // )));
                 case 1:
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                              create: (context) => getIt<InvitationsCubit>(),
-                              child: InvitationPage(
-                                key: Key("connections home screen"),
-                              ),
-                            )),
+                    MaterialPageRoute(builder: (context) => InvitationsTabs()),
                   );
                   break;
                 case 2:
@@ -82,9 +77,9 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
                         appBar: universalAppBar(context, _selectedIndex),
-                        body:Center(
+                        body: Center(
                           child: Text("My Posts"),
-                        ), 
+                        ),
                         bottomNavigationBar: UniversalBottomBar(),
                       ),
                     ),
