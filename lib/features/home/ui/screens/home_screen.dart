@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 1,
         leadingWidth: 0.1.sw,
         leading: IconButton(
+          key: Key('home_topBar_profile'),
           iconSize: 30,
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
