@@ -16,8 +16,7 @@ class ForgotPasswordOtpVerified extends ForgotPasswordState {
 }
 
 class ForgotPasswordSuccess extends ForgotPasswordState {
-  final Map<String, dynamic> userData;
-  ForgotPasswordSuccess(this.userData);
+
 }
 
 class ForgotPasswordError extends ForgotPasswordState {
