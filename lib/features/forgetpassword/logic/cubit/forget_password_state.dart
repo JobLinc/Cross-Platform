@@ -1,24 +1,25 @@
-part of 'forget_password_cubit.dart';
 
-abstract class ForgetPasswordState {}
+abstract class ForgotPasswordState{}
 
-final class ForgetPasswordInitial extends ForgetPasswordState {}
+class ForgotPasswordInitial extends ForgotPasswordState {}
 
-final class ForgetPasswordLoading extends ForgetPasswordState {}
+class ForgotPasswordLoading extends ForgotPasswordState {}
 
-final class EnteringCode extends ForgetPasswordState {}
-
-final class CodeSent extends ForgetPasswordState {}
-
-final class CodeResending extends ForgetPasswordState {}
-
-final class EnteringNewPassword extends ForgetPasswordState {}
-
-final class PasswordChanged extends ForgetPasswordState {}
-
-final class ForgetPasswordFailure extends ForgetPasswordState {
-  final String error;
-  ForgetPasswordFailure(this.error);
+class ForgotPasswordEmailSent extends ForgotPasswordState {
+  final String forgotToken;
+  ForgotPasswordEmailSent(this.forgotToken);
 }
 
-final class ForgetPasswordSuccess extends ForgetPasswordState {}
+class ForgotPasswordOtpVerified extends ForgotPasswordState {
+  final String resetToken;
+  ForgotPasswordOtpVerified(this.resetToken);
+}
+
+class ForgotPasswordSuccess extends ForgotPasswordState {
+
+}
+
+class ForgotPasswordError extends ForgotPasswordState {
+  final String message;
+  ForgotPasswordError(this.message);
+}

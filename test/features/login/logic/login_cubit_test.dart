@@ -11,7 +11,6 @@ class MockLoginRepo extends Mock implements LoginRepo {}
 void main() {
   late LoginCubit loginCubit;
   late MockLoginRepo mockLoginRepo;
-  WidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     mockLoginRepo = MockLoginRepo();
