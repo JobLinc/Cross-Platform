@@ -1,50 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/helpers/loading_overlay.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
 
 class AddPostScreen extends StatelessWidget {
-  const AddPostScreen({super.key});
+  AddPostScreen({super.key});
+  final TextEditingController _inputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: addPostTopBar(context),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 10.0,
-          right: 10.0,
-          bottom: 20.0,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: TextField(
-                maxLines: null,
-                expands: true,
-                decoration: InputDecoration(
-                  hintText: 'Share your thoughts...',
-                  hintStyle: TextStyle(color: Colors.grey.shade600),
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(),
-                showCursor: true,
-                cursorColor: Colors.black,
-              ),
+    return BlocConsumer<AddPostCubit, AddPostState>(
+      listener: (context, state) {
+        if (state is AddPostStateLoading) {
+        } else if (state is AddPostStateSuccess) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Post successful')));
+          Navigator.pop(context);
+        } else if (state is AddPostStateFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+            "Error: ${state.error}",
+            style: TextStyle(color: Colors.red),
+          )));
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: addPostTopBar(context, _inputController),
+          body: Padding(
+            padding: const EdgeInsets.only(
+              left: 10.0,
+              right: 10.0,
+              bottom: 20.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            child: Column(
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.image)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                Expanded(
+                  child: LoadingIndicatorOverlay(
+                    inAsyncCall: state is AddPostStateLoading,
+                    child: TextField(
+                      controller: _inputController,
+                      maxLines: null,
+                      expands: true,
+                      onChanged: (text) => {if (text == '') {} else {}},
+                      decoration: InputDecoration(
+                        hintText: 'Share your thoughts...',
+                        hintStyle: TextStyle(color: Colors.grey.shade600),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(),
+                      showCursor: true,
+                      cursorColor: Colors.black,
+                    ),
+                  ),
+                ),
+                BottomButtons()
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-AppBar addPostTopBar(BuildContext context) {
+class BottomButtons extends StatelessWidget {
+  const BottomButtons({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(onPressed: () {}, icon: Icon(Icons.image)),
+        IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+      ],
+    );
+  }
+}
+
+AppBar addPostTopBar(
+    BuildContext context, TextEditingController inputController) {
   return AppBar(
     leading: IconButton(
       onPressed: () => {Navigator.pop(context)},
@@ -52,7 +92,12 @@ AppBar addPostTopBar(BuildContext context) {
     ),
     title: GestureDetector(
       onTap: () {
-        showPostSettings(context);
+        showModalBottomSheet(
+            showDragHandle: true,
+            context: context,
+            builder: (context) {
+              return PrivacySettings();
+            });
       },
       child: Row(
         spacing: 8,
@@ -71,36 +116,36 @@ AppBar addPostTopBar(BuildContext context) {
     actions: [
       Padding(
         padding: const EdgeInsets.all(5.0),
-        child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-              disabledBackgroundColor: Colors.grey.shade300,
-              disabledForegroundColor: Colors.grey),
-          onPressed: () {},
-          child: Text('Post'),
-        ),
+        child: ValueListenableBuilder<TextEditingValue>(
+            valueListenable: inputController,
+            builder: (context, value, child) {
+              return TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
+                    disabledBackgroundColor: Colors.grey.shade300,
+                    disabledForegroundColor: Colors.grey),
+                onPressed: value.text.isNotEmpty
+                    ? () {
+                        // context.read<AddPostCubit>().addPost(value.text);
+                      }
+                    : null,
+                child: Text(context.toString()),
+              );
+            }),
       )
     ],
   );
 }
 
-Future<dynamic> showPostSettings(BuildContext context) {
-  return showModalBottomSheet(
-      showDragHandle: true,
-      context: context,
-      builder: (context) {
-        return BottomSheet();
-      });
-}
-
-class BottomSheet extends StatefulWidget {
-  const BottomSheet({super.key});
+class PrivacySettings extends StatefulWidget {
+  const PrivacySettings({super.key});
 
   @override
-  State<BottomSheet> createState() => BottomSheetState();
+  State<PrivacySettings> createState() => PrivacySettingsState();
 }
 
-class BottomSheetState extends State<BottomSheet> {
+class PrivacySettingsState extends State<PrivacySettings> {
   late int selectedValue;
 
   @override
