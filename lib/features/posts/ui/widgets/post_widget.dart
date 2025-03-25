@@ -206,6 +206,7 @@ class PostActionBar extends StatelessWidget {
               onPressed: () => {
                 showModalBottomSheet(
                     showDragHandle: true,
+                    scrollControlDisabledMaxHeightRatio: 0.9,
                     context: context,
                     builder: (context) {
                       return CommentSection();

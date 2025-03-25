@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:joblinc/core/helpers/loading_overlay.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
 
@@ -44,7 +44,9 @@ class AddPostScreen extends StatelessWidget {
                       controller: _inputController,
                       maxLines: null,
                       expands: true,
-                      onChanged: (text) => {if (text == '') {} else {}},
+                      onChanged: (text) => {if (text == '') {} else {
+                        
+                      }},
                       decoration: InputDecoration(
                         hintText: 'Share your thoughts...',
                         hintStyle: TextStyle(color: Colors.grey.shade600),
