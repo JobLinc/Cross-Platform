@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/core/helpers/auth_helpers/constants.dart';
 
 class AuthService {
   final FlutterSecureStorage _storage;
@@ -68,7 +69,7 @@ class AuthService {
       final String? userId = await getUserId();
 
       if (refreshToken == null || userId == null) {
-        throw Exception('Missing refresh token or user ID');
+        return false;
       }
 
       final requestBody = {
@@ -96,7 +97,8 @@ class AuthService {
           throw Exception('Invalid response data');
         }
       } else {
-        throw Exception('Failed to refresh token');
+        await clearUserInfo();
+        throw Exception('Session ended please login again');
       }
     } on DioException catch (e) {
       print('Dio error: ${e.message}');
@@ -107,6 +109,44 @@ class AuthService {
     } catch (e) {
       print('Unexpected error: $e');
       return false;
+    }
+  }
+
+  Future<void> checkIfLoggedInUser() async {
+    final accessToken = await getAccessToken();
+    final refToken = await getRefreshToken();
+
+    if (accessToken == null || refToken == null) {
+      isLoggedInUser = false;
+    }
+    isLoggedInUser = await refreshToken();
+  }
+
+  Future<Map<String, dynamic>?> getMainUserInfo() async {
+    try {
+      final response = await _dio.get('/user/me');
+
+      if (response.statusCode == 200) {
+        final userData = response.data;
+        return {
+          'userId': userData['userId'],
+          'firstname': userData['firstname'],
+          'lastname': userData['lastname'],
+          'headline': userData['headline'],
+          'profilePicture': userData['profilePicture'],
+          'coverPicture': userData['coverPicture'],
+          'about': userData['about'],
+          'numberOfConnections': userData['numberOfConnections'],
+        };
+      } else {
+        throw Exception('Failed to load user data');
+      }
+    } on DioException catch (e) {
+      print('Error fetching user data: ${e.message}');
+      return null;
+    } catch (e) {
+      print('Unexpected error: $e');
+      return null;
     }
   }
 }

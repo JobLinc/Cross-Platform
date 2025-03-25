@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/auth_helpers/constants.dart';
 import 'package:joblinc/core/routing/app_router.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
@@ -21,13 +23,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthService authService = getIt.get<AuthService>();
     return ScreenUtilInit(
       designSize: Size(412, 924),
       minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.onBoardingScreen,
+          initialRoute: isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
           theme: lightTheme,
           onGenerateRoute: appRouter.generateRoute,
         );
