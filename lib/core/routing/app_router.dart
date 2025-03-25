@@ -28,6 +28,7 @@ import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
+import 'package:joblinc/features/userprofile/data/user.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
@@ -55,7 +56,7 @@ class AppRouter {
       case Routes.homeScreen:
         return MaterialPageRoute(builder: (context) => HomeScreen());
       case Routes.profileScreen:
-        return MaterialPageRoute(builder: (context) => ProfileScreen());
+        return MaterialPageRoute(builder: (context) => ProfileScreen(user:User(firstName: "Ahmed", lastName: "Mohsen", headline: "Headline", connections: 211)));
       case Routes.chatScreen:
         return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:

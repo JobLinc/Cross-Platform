@@ -103,12 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text('Ahmed Hesham'),
-            accountEmail: Text('ahmed@example.com'),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://placehold.co/400/png',
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, Routes.profileScreen);
+            },
+            child: UserAccountsDrawerHeader(
+              accountName: Text('Ahmed Hesham'),
+              accountEmail: Text('ahmed@example.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://placehold.co/400/png',
+                ),
               ),
             ),
           ),
