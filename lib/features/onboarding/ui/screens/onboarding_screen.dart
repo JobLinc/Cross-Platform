@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
-import 'package:joblinc/features/login/data/services/securestorage_service.dart';
 import 'package:joblinc/features/onboarding/ui/widgets/agreement_text.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -32,13 +31,16 @@ class OnboardingScreen extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Center(
-                child: Text(
-                  "Join a trusted community of 1B professionals",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 19.sp, // Responsive text size
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "Join a trusted community of 1B professionals",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 19.sp, // Responsive text size
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -59,8 +61,6 @@ class OnboardingScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 icon: FontAwesomeIcons.g,
                 onPressed: () async {
-                  Future accessToken = SecureStorage.getAccessToken();
-                  print(accessToken);
                   Navigator.pushReplacementNamed(context, Routes.homeScreen);
                 }),
             customDividerWithText(child: Text("OR")),

@@ -1,6 +1,6 @@
 part of 'signup_cubit.dart';
 
-sealed class RegisterState {}
+abstract class RegisterState {}
 
 final class RegisterInitial extends RegisterState {}
 
