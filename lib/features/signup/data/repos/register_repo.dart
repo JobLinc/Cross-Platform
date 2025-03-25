@@ -15,6 +15,9 @@ class RegisterRepo {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
         userId: response.userId,
-        role: response.role);
+        role: response.role,
+        confirmed: response.confirmed,
+        email: req.email
+        );
   }
 }

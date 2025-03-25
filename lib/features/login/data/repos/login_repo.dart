@@ -7,13 +7,21 @@ class LoginRepo {
 
   LoginRepo(this._loginApiService);
 
-  Future<void> login(String email, String password) async {
+  Future<Map<String,dynamic>> login(String email, String password) async {
     final response = await _loginApiService.login(email, password);
     final AuthService authService = getIt<AuthService>();
     await authService.saveAuthInfo(
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
         userId: response.userId,
-        role: response.role);
+        role: response.role,
+        confirmed: response.confirmed,
+        email: email
+        );
+
+    return {
+      'confirmed': response.confirmed,
+      'email': email
+    };
   }
 }

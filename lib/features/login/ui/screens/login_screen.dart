@@ -27,11 +27,20 @@ class LoginScreen extends StatelessWidget {
         } else if (state is LoginSuccess) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("login success")));
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+
+          if (state.confirmed) {
+            Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          } else {
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.emailConfirmationScreen,
+              arguments: state.email,
+            );
+          }
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              "wrewrw ${state.error}",
+              "Error: ${state.error}",
               style: TextStyle(color: Colors.red),
             ),
           ));

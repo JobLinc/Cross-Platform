@@ -57,7 +57,16 @@ class _SignupScreenState extends State<SignupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Signup success")),
           );
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+
+          if (state.confirmed) {
+            Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          } else {
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.emailConfirmationScreen,
+              arguments: state.email,
+            );
+          }
         } else if (state is RegisterFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

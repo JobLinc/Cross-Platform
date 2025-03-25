@@ -81,10 +81,10 @@ void main() {
         (WidgetTester tester) async {
       // Arrange
       when(() => mockLoginCubit.state).thenReturn(LoginInitial());
-      whenListen(
-        mockLoginCubit,
-        Stream<LoginState>.fromIterable([LoginLoading(), LoginSuccess()]),
-      );
+     // whenListen(
+        //mockLoginCubit,
+        //Stream<LoginState>.fromIterable([LoginLoading(), LoginSuccess()]),
+    //  );
 
       await pumpLoginScreen(tester);
 

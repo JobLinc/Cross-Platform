@@ -11,17 +11,23 @@ class AuthService {
   static const _refreshTokenKey = 'refreshToken';
   static const _roleKey = 'role';
   static const _userIdKey = 'userId';
+  static const _confirmed = 'confirmed';
+  static const _email = "";
 
   Future<void> saveAuthInfo({
     required String accessToken,
     required String refreshToken,
     required int role,
     required String userId,
+    required bool confirmed,
+    required String email,
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
     await _storage.write(key: _roleKey, value: role.toString());
     await _storage.write(key: _userIdKey, value: userId);
+    await _storage.write(key: _confirmed, value: confirmed.toString());
+    await _storage.write(key: _email, value: email);
   }
 
   Future<void> saveTokens({
@@ -37,11 +43,15 @@ class AuthService {
     final String? userId = await _storage.read(key: _userIdKey);
     final String? accessToken = await _storage.read(key: _accessTokenKey);
     final String? refreshToken = await _storage.read(key: _refreshTokenKey);
+    final String? confirmed = await _storage.read(key: _confirmed);
+    final String? email = await _storage.read(key: _email);
     return {
       'role': role,
       'userId': userId,
       'accessToken': accessToken,
-      'refreshToken': refreshToken
+      'refreshToken': refreshToken,
+      'confirmed': confirmed,
+      'email': email
     };
   }
 

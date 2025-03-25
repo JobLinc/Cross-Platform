@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'login_state.dart';
 import '../../data/repos/login_repo.dart';
 
@@ -11,8 +12,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-      await _loginRepo.login(email, password);
-      emit(LoginSuccess());
+      final response = await _loginRepo.login(email, password);
+      emit(LoginSuccess(
+        confirmed: response["confirmed"],
+        email: response["email"],
+      ));
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }

@@ -3,18 +3,24 @@ class LoginResponse {
   final String refreshToken;
   final String userId;
   final int role;
+  final bool confirmed;
+  final String email;
 
   LoginResponse(
       {required this.accessToken,
       required this.refreshToken,
       required this.userId,
-      required this.role});
+      required this.role,
+      required this.email,
+      required this.confirmed});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
         accessToken: json['accessToken'],
         refreshToken: json['refreshToken'],
         userId: json['userId'],
-        role: json['role']);
+        role: json['role'],
+        email: json['email'],
+        confirmed: json['confirmed'] ?? false);
   }
 }

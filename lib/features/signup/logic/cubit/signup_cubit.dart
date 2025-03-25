@@ -13,8 +13,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoading());
 
     try {
-      await registerRepo.register(req);
-      emit(RegisterSuccess());
+      final response = await registerRepo.register(req);
+      emit(RegisterSuccess(
+        confirmed: false,
+        email: req.email,
+      ));
     } catch (e) {
       emit(RegisterFailure(e.toString()));
     }

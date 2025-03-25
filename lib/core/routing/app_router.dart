@@ -23,6 +23,10 @@ import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
+import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
+import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -95,6 +99,16 @@ class AppRouter {
             builder: (_) => BlocProvider(
                 create: (context) => getIt<ChangePasswordCubit>(),
                 child: ChangePasswordScreen()));
+
+      case Routes.emailConfirmationScreen:
+        final email = arguments as String;
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                getIt<EmailConfirmationCubit>()..setEmail(email),
+            child: EmailConfirmationScreen(email: email),
+          ),
+        );
 
       default:
         return null;

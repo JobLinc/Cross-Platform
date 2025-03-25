@@ -1,21 +1,41 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/signup/data/models/register_response_model.dart';
-import '../models/register_request_model.dart';
+import '../models/send_confirmation_email_request.dart';
+import '../models/send_confirmation_email_response.dart';
+import '../models/confirm_email_request.dart';
+import '../models/confirm_email_response.dart';
 
-class RegisterApiService {
+class EmailConfirmationApiService {
   final Dio _dio;
 
-  RegisterApiService(this._dio);
+  EmailConfirmationApiService(this._dio);
 
-  Future<RegisterResponse> register(
-      RegisterRequestModel registerRequestModel) async {
+  Future<SendConfirmationEmailResponse> sendConfirmationEmail(
+      SendConfirmationEmailRequest request) async {
     try {
       final response = await _dio.post(
-        '/auth/register',
-        data: registerRequestModel.toJson(),
+        '/auth/send-confirmation-email',
+        data: request.toJson(),
       );
-      
-      return RegisterResponse.fromJson(response.data);
+
+      return SendConfirmationEmailResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      final errorMessage = _handleDioError(e);
+      throw Exception(errorMessage);
+    } catch (e) {
+      throw Exception('Unexpected error occurred');
+    }
+  }
+
+  Future<ConfirmEmailResponse> confirmEmail(ConfirmEmailRequest request) async {
+    try {
+      final response = await _dio.post(
+        '/auth/confirm-email',
+        data: request.toJson(),
+      );
+      print(response.data);
+      ConfirmEmailResponse res = ConfirmEmailResponse.fromJson(response.data);
+      print(res);
+      return ConfirmEmailResponse.fromJson(response.data);
     } on DioException catch (e) {
       final errorMessage = _handleDioError(e);
       throw Exception(errorMessage);
@@ -55,7 +75,7 @@ class RegisterApiService {
       case 409:
         return backendMessage.isNotEmpty
             ? backendMessage
-            : 'User already exists';
+            : 'Conflict with current state';
       case 500:
         return 'Internal server error';
       default:
