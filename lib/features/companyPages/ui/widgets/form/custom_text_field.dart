@@ -10,6 +10,7 @@ class CustomRectangularTextFormField extends StatefulWidget {
     this.labelText,
     this.validator,
     this.maxLength,
+    this.maxLines,
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class CustomRectangularTextFormField extends StatefulWidget {
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
   final int? maxLength;
+  final int? maxLines;
 
   @override
   _CustomRectangularTextFormFieldState createState() =>
@@ -46,6 +48,7 @@ class _CustomRectangularTextFormFieldState
           controller: widget.controller,
           obscureText: widget.obscureText ?? false,
           maxLength: widget.maxLength,
+          maxLines: widget.maxLines,
           cursorColor: const Color(0xFFD72638), 
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),

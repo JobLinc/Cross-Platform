@@ -28,7 +28,7 @@ class _CompanyFeedState extends State<CompanyFeed> {
       body: SingleChildScrollView(
           child: Column(children: [
         Container(
-          height: 420.h,
+          height: 480.h,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -47,7 +47,6 @@ class _CompanyFeedState extends State<CompanyFeed> {
                 padding: EdgeInsets.symmetric(horizontal: 80.w),
                 child: Center(
                   child: Text(
-                    //TODO: Add company name
                     "$companyName can now follow other Pages",
                     style: TextStyle(
                       fontSize: 24.sp,

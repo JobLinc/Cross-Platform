@@ -5,7 +5,17 @@ class CreateCompanyRepo {
 
   CreateCompanyRepo(this._createCompanyApiService);
 
-  Future<void> createCompany(String name, String email, String phone, String industry, String overview) async {
-    await _createCompanyApiService.createCompany(name, email, phone, industry, overview);
-  }
+  Future<void> createCompany({
+  required String name,
+  required String addressUrl,
+  required String industry,
+  required String size,
+  required String type,
+  required String overview,
+  required String website,
+}) async {
+  await _createCompanyApiService.createCompany(
+    name, addressUrl, industry, size, type, overview, website
+  );
+}
 }

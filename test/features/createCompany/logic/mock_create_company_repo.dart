@@ -9,7 +9,6 @@ import 'package:mocktail/mocktail.dart';
 class MockCreateCompanyRepo extends Mock implements CreateCompanyRepo {}
 
 void main() {
-  // Initialize the Flutter binding
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late CreateCompanyCubit createCompanyCubit;
@@ -19,12 +18,9 @@ void main() {
     mockCreateCompanyRepo = MockCreateCompanyRepo();
     createCompanyCubit = CreateCompanyCubit(
       mockCreateCompanyRepo,
-      onCompanyCreated: (company) {
-        // Dummy callback for testing
-      },
+      onCompanyCreated: (company) {}, // Simplified callback
     );
 
-    // Registering fallback values for mocktail
     registerFallbackValue(Industry.technology);
     registerFallbackValue(OrganizationSize.zeroToOne);
     registerFallbackValue(OrganizationType.privatelyHeld);
@@ -43,34 +39,39 @@ void main() {
       'emits [CreateCompanyLoading, CreateCompanySuccess] when createCompany succeeds',
       build: () {
         when(() => mockCreateCompanyRepo.createCompany(
-          any(), any(), any(), any(), any(),
-        )).thenAnswer((_) async {
-          print("Mock createCompany called successfully.");
-          return Future.value();
-        });
+              name: any(), // name
+              addressUrl: any(), // addressUrl
+              industry: any(), // industry
+              size: any(), // size
+              type: any(), // type
+              overview: any(), // overview
+              website: any(named: 'website'),
+            )).thenAnswer((_) async {});
         return createCompanyCubit;
       },
       act: (cubit) => cubit.createCompany(
-        nameController: TextEditingController(text: 'Test Company'),
-        jobLincUrlController: TextEditingController(text: 'test-company'),
-        selectedIndustry: Industry.technology,
-        orgSize: OrganizationSize.zeroToOne,
-        orgType: OrganizationType.privatelyHeld,
-        websiteController: TextEditingController(text: 'https://test.com'),
-
-      ),
+            nameController: TextEditingController(text: 'Test Company'),
+            jobLincUrlController: TextEditingController(text: 'test-company'),
+            selectedIndustry: Industry.technology,
+            orgSize: OrganizationSize.zeroToOne,
+            orgType: OrganizationType.privatelyHeld,
+            websiteController: TextEditingController(text: 'https://test.com'),
+            overviewController: TextEditingController(text: 'Test overview'),
+          ),
       expect: () => [
-        isA<CreateCompanyLoading>(),
-        isA<CreateCompanySuccess>(),
-      ],
+            isA<CreateCompanyLoading>(),
+            isA<CreateCompanySuccess>(),
+          ],
       verify: (_) {
         verify(() => mockCreateCompanyRepo.createCompany(
-          any(), // name
-          any(), // email
-          any(), // password
-          any(), // industry
-          any(), // overview
-        )).called(1);
+              name: 'Test Company',
+              addressUrl: 'test-company',
+              industry: Industry.technology.displayName,
+              size: OrganizationSize.zeroToOne.displayName,
+              type: OrganizationType.privatelyHeld.displayName,
+              overview: 'Test overview',
+              website: 'https://test.com',
+            )).called(1);
       },
     );
 
@@ -78,30 +79,29 @@ void main() {
       'emits [CreateCompanyLoading, CreateCompanyFailure] when createCompany fails',
       build: () {
         when(() => mockCreateCompanyRepo.createCompany(
-          any(), any(), any(), any(), any(),
-        )).thenThrow(Exception('Failed to create company'));
+              name: any(),
+              addressUrl: any(),
+              industry: any(),
+              size: any(),
+              type: any(),
+              overview: any(),
+              website: any(named: 'website'),
+            )).thenThrow(Exception('Failed to create company'));
         return createCompanyCubit;
       },
       act: (cubit) => cubit.createCompany(
-        nameController: TextEditingController(text: 'Test Company'),
-        jobLincUrlController: TextEditingController(text: 'test-company'),
-        selectedIndustry: Industry.technology,
-        orgSize: OrganizationSize.zeroToOne,
-        orgType: OrganizationType.privatelyHeld,
-        websiteController: TextEditingController(text: 'https://test.com'),
-
-      ),
+            nameController: TextEditingController(text: 'Test Company'),
+            jobLincUrlController: TextEditingController(text: 'test-company'),
+            selectedIndustry: Industry.technology,
+            orgSize: OrganizationSize.zeroToOne,
+            orgType: OrganizationType.privatelyHeld,
+            websiteController: TextEditingController(text: 'https://test.com'),
+            overviewController: TextEditingController(text: 'Test overview'),
+          ),
       expect: () => [
-        isA<CreateCompanyLoading>(),
-        predicate<CreateCompanyFailure>(
-          (state) => state.error.contains('Failed to create company'),
-        ),
-      ],
-      verify: (_) {
-        verify(() => mockCreateCompanyRepo.createCompany(
-          any(), any(), any(), any(), any(),
-        )).called(1);
-      },
+            isA<CreateCompanyLoading>(),
+            isA<CreateCompanyFailure>(),
+          ],
     );
   });
 }

@@ -19,7 +19,9 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
       required Industry selectedIndustry,
       required OrganizationSize orgSize,
       required OrganizationType orgType,
-      required TextEditingController websiteController}) async {
+      required TextEditingController websiteController,
+      required TextEditingController overviewController,
+      }) async {
     emit(CreateCompanyLoading());
 
     try {
@@ -29,22 +31,25 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
         industry: selectedIndustry,
         organizationSize: orgSize,
         organizationType: orgType,
-        website: websiteController.text.isEmpty
+        website: websiteController.text.isEmpty 
             ? "https://www.linkedin.com"
             : websiteController.text,
+        overview: overviewController.text,
       );
 
       await _createCompanyRepo.createCompany(
-          companyToAdd.name,
-          "ohhhoohpo@gmail.com",
-          "12347859788212734567876547",
-          companyToAdd.industry.displayName,
-          "overview");
+        name: companyToAdd.name,
+        addressUrl: companyToAdd.profileUrl,
+        industry: companyToAdd.industry.displayName,
+        size: companyToAdd.organizationSize.displayName,
+        type: companyToAdd.organizationType.displayName,
+        overview: companyToAdd.overview!,
+        website: companyToAdd.website!
+      );
       mockCompanies.add(companyToAdd);
 
       onCompanyCreated(companyToAdd);
       emit(CreateCompanySuccess());
-      // ignore: unused_catch_clause
     } catch (e) {
       emit(CreateCompanyFailure(e.toString()));
     }

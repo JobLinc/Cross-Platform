@@ -8,50 +8,48 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/companyPages/ui/screens/create_company.dart';
 import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:get_it/get_it.dart';
 
 // Mock classes
 class MockCreateCompanyCubit extends MockCubit<CreateCompanyState>
     implements CreateCompanyCubit {}
 
-class FakeCreateCompanyState extends Fake implements CreateCompanyState {}
+class MockCreateCompanyRepo extends Mock implements CreateCompanyRepo {}
 
-class FakeTextEditingController extends Fake implements TextEditingController {}
+class FakeCreateCompanyState extends Fake implements CreateCompanyState {}
 
 void main() {
   late MockCreateCompanyCubit mockCreateCompanyCubit;
+  final getIt = GetIt.instance;
 
   setUpAll(() {
-    // Register fallback values
     registerFallbackValue(FakeCreateCompanyState());
-    registerFallbackValue(FakeTextEditingController());
-    registerFallbackValue(
-        Industry.technology); // Register an enum value for Industry
-    registerFallbackValue(OrganizationSize
-        .zeroToOne); // Register an enum value for OrganizationSize
-    registerFallbackValue(OrganizationType
-        .privatelyHeld); // Register an enum value for OrganizationType
+    registerFallbackValue(Industry.technology);
+    registerFallbackValue(OrganizationSize.zeroToOne);
+    registerFallbackValue(OrganizationType.privatelyHeld);
   });
 
   setUp(() {
+    // Clear any existing registrations
+    getIt.reset();
+
+    // Register mock repository
+    getIt.registerSingleton<CreateCompanyRepo>(MockCreateCompanyRepo());
+
     mockCreateCompanyCubit = MockCreateCompanyCubit();
     when(() => mockCreateCompanyCubit.state).thenReturn(CreateCompanyInitial());
   });
 
-  testWidgets('does not call createCompany when checkbox is unchecked',
-      (tester) async {
-    // Arrange
-    when(() => mockCreateCompanyCubit.createCompany(
-          nameController: any(named: 'nameController'),
-          jobLincUrlController: any(named: 'jobLincUrlController'),
-          selectedIndustry: any(named: 'selectedIndustry'),
-          orgSize: any(named: 'orgSize'),
-          orgType: any(named: 'orgType'),
-          websiteController: any(named: 'websiteController'),
-        )).thenAnswer((_) async {});
+  tearDown(() {
+    getIt.reset();
+  });
 
+  testWidgets('does not call createCompany when checkbox is unchecked', (tester) async {
+    // Build our app and trigger a frame
     await tester.pumpWidget(
       ScreenUtilInit(
-        designSize: Size(412, 924),
+        designSize: const Size(412, 924),
         minTextAdapt: true,
         builder: (context, child) {
           return MaterialApp(
@@ -64,67 +62,79 @@ void main() {
       ),
     );
 
-    // Act
-    await tester.pumpAndSettle(); // Wait for the UI to settle
+    // Verify initial state
+    expect(find.byType(CreateCompanyPage), findsOneWidget);
 
-    // Enter text into the form fields
+    // Find all form fields
     final nameField = find.byKey(const Key('createcompany_name_textfield'));
-    final jobLincUrlField =
-        find.byKey(const Key('createcompany_jobLincUrl_textfield'));
-    final websiteField =
-        find.byKey(const Key('createcompany_website_textfield'));
-    final submitButton = find.byType(SubmitCompany);
+    final jobLincUrlField = find.byKey(const Key('createcompany_jobLincUrl_textfield'));
+    final websiteField = find.byKey(const Key('createcompany_website_textfield'));
+    final overviewField = find.byKey(const Key('createcompany_overview_textfield'));
 
+    // Verify fields exist before interacting
+    expect(nameField, findsOneWidget);
+    expect(jobLincUrlField, findsOneWidget);
+    expect(websiteField, findsOneWidget);
+    expect(overviewField, findsOneWidget);
+
+    // Fill out the form
     await tester.enterText(nameField, 'Test Company');
     await tester.enterText(jobLincUrlField, 'test-company');
     await tester.enterText(websiteField, 'https://test.com');
+    await tester.enterText(overviewField, 'Test overview');
 
-    // Simulate selecting values for dropdowns
-    final industryDropdown =
-        find.byKey(const Key('createcompany_industry_dropdown'));
-    final orgSizeDropdown =
-        find.byKey(const Key('createcompany_orgSize_dropdown'));
-    final orgTypeDropdown =
-        find.byKey(const Key('createcompany_orgType_dropdown'));
+    // Select dropdown values
+    await _selectDropdownValue(
+      tester,
+      'createcompany_industry_dropdown',
+      Industry.technology.displayName,
+    );
+    await _selectDropdownValue(
+      tester,
+      'createcompany_orgSize_dropdown',
+      OrganizationSize.twoHundredOneToFiveHundred.displayName,
+    );
+    await _selectDropdownValue(
+      tester,
+      'createcompany_orgType_dropdown',
+      OrganizationType.privatelyHeld.displayName,
+    );
 
-    await tester.ensureVisible(industryDropdown);
-    await tester.tap(industryDropdown);
-    await tester.pumpAndSettle(); // Wait for the dropdown menu to appear
-    await tester.tap(find
-        .text(Industry.technology.displayName)
-        .last); // Select a value from the dropdown
+    // Ensure checkbox is unchecked (default state)
+    final checkbox = find.byType(Checkbox);
+    expect(checkbox, findsOneWidget);
+    expect(tester.widget<Checkbox>(checkbox).value, isFalse);
+
+    // Attempt to submit
+    await tester.tap(find.byType(SubmitCompany));
     await tester.pumpAndSettle();
 
-    await tester.ensureVisible(orgSizeDropdown);
-    await tester.tap(orgSizeDropdown);
-    await tester.pumpAndSettle(); // Wait for the dropdown menu to appear
-    await tester.tap(find
-        .text(OrganizationSize.twoHundredOneToFiveHundred.displayName)
-        .last); // Select a value from the dropdown
-    await tester.pumpAndSettle();
-
-    await tester.ensureVisible(orgTypeDropdown);
-    await tester.tap(orgTypeDropdown);
-    await tester.pumpAndSettle(); // Wait for the dropdown menu to appear
-    await tester.tap(find
-        .text(OrganizationType.privatelyHeld.displayName)
-        .last); // Select a value from the dropdown
-    await tester.pumpAndSettle();
-
-    // Tap the submit button
-    await tester.tap(submitButton);
-    await tester.pumpAndSettle();
-
+    // Verify the cubit was never called
     verifyNever(() => mockCreateCompanyCubit.createCompany(
-          nameController: any(named: 'nameController'),
-          jobLincUrlController: any(named: 'jobLincUrlController'),
-          selectedIndustry: any(named: 'selectedIndustry'),
-          orgSize: any(named: 'orgSize'),
-          orgType: any(named: 'orgType'),
-          websiteController: any(named: 'websiteController'),
-        ));
+      nameController: any(named: 'nameController'),
+      jobLincUrlController: any(named: 'jobLincUrlController'),
+      selectedIndustry: any(named: 'selectedIndustry'),
+      orgSize: any(named: 'orgSize'),
+      orgType: any(named: 'orgType'),
+      websiteController: any(named: 'websiteController'),
+      overviewController: any(named: 'overviewController'),
+    ));
 
-    expect(
-        find.text('Please approve the terms and conditions'), findsOneWidget);
+    // Verify error message is shown
+    expect(find.text('Please approve the terms and conditions'), findsOneWidget);
   });
+}
+
+// Helper function to select dropdown values
+Future<void> _selectDropdownValue(
+  WidgetTester tester,
+  String key,
+  String value,
+) async {
+  final dropdown = find.byKey(Key(key));
+  await tester.ensureVisible(dropdown);
+  await tester.tap(dropdown);
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(value).last);
+  await tester.pumpAndSettle();
 }

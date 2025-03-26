@@ -38,13 +38,15 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
         backgroundColor: const Color(0xFFFAFAFA),
         title: Row(
           children: [
-              CustomSearchBar(
-                keyName: 'company',
-                text: widget.company.name,
-                onPress: () {},
-                onTextChange: (searched) {},
-                controller: TextEditingController(),
-            ),
+              Expanded(
+                child: CustomSearchBar(
+                  keyName: 'company',
+                  text: widget.company.name,
+                  onPress: () {},
+                  onTextChange: (searched) {},
+                  controller: TextEditingController(),
+                ),
+              ),
           ],
         ),
       ),

@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import '../models/createcompany_response.dart';
 
 class CreateCompanyApiService {
@@ -8,43 +6,76 @@ class CreateCompanyApiService {
 
   CreateCompanyApiService(this._dio);
 
-  Future<CreateCompanyResponse> createCompany(String name, String email,
-      String phone, String industry, String overview) async {
-    try {
-      final authService = getIt<AuthService>();
-
-      final accessToken = await authService.getAccessToken();
-      print('Access Token: $accessToken');
-      print(
-          'Request Payload: {name: $name, email: $email, phone: $phone, industry: $industry, overview: $overview}');
-      final response = await _dio.post(
-        '/companies',
-        options: Options(
-          headers: {
-            'authorization': accessToken,
-          },
-        ),
-        data: {
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'industry': industry,
-          'overview': overview,
-        },
-      );
-      print(response.data);
-      return CreateCompanyResponse.fromJson(response.data);
-    } on DioException catch (e) {
-      print('API Error: ${e.message}');
-      throw Exception(_handleDioError(e));
+  String _handleDioError(DioException e) {
+    if (e.response != null) {
+      final responseData = e.response?.data;
+      if (responseData is Map && responseData.containsKey('message')) {
+        return responseData['message'] as String;
+      }
+      return 'Server error ${e.response!.statusCode}: ${e.response!.statusMessage}';
+    } else {
+      return 'Network error: ${e.message}';
     }
   }
 
-  String _handleDioError(DioException e) {
-    if (e.response != null) {
-      return 'Internal Server error ${e.response!.statusCode}   ${e.message}';
-    } else {
-      return 'Network error: ${e.message}';
+  Future<CreateCompanyResponse> createCompany(
+    String name,
+    String addressUrl,
+    String industry,
+    String size,
+    String type,
+    String overview,
+    String website,
+  ) async {
+    try {
+      print('''
+        === Sending Company Creation Request ===
+        Endpoint: /companies
+        Payload:
+        - Name: $name
+        - Address URL: $addressUrl
+        - Industry: $industry
+        - Size: $size
+        - Type: $type
+        - Overview: ${overview.length > 50 ? '${overview.substring(0, 50)}...' : overview}
+        - Website: $website
+        '''
+      );
+      final response = await _dio.post(
+        '/companies',
+        data: {
+          'name': name,
+          'addressUrl': addressUrl,
+          'industry': industry,
+          'size': size,
+          'type': type,
+          'overview': overview,
+          'website': website,
+        },
+      );
+      print('''
+        === Received Response ===
+        Status: ${response.statusCode} ${response.statusMessage}
+        Headers: ${response.headers}
+        Data: ${response.data}
+        '''
+      );
+      return CreateCompanyResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data is Map) {
+        final errorResponse = {
+          "message": _handleDioError(e),
+          "errorCode": e.response!.statusCode,
+        };
+        print(errorResponse); 
+      }
+      rethrow;
+    } catch (e) {
+      print({
+        "message": 'Unexpected error: $e',
+        "errorCode": 500,
+      });
+      throw Exception('Unexpected error: $e');
     }
   }
 }

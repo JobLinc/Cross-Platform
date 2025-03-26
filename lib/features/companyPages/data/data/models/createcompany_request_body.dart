@@ -1,39 +1,37 @@
 class CreateCompanyRequestBody {
-  final String email;
+  final String addressUrl;
   final String name;
-  final String overview = "overview";
+  final String overview;
   final String industry;
-  final String phone;
+  final String size;
+  final String type;
   String? website = "website";
   String? logo;
   String? coverPhoto;
-  DateTime? founded;
-  int? employees;
 
   CreateCompanyRequestBody({
-    required this.email,
     required this.name,
+    required this.addressUrl,
     required this.industry,
-    required this.phone,
+    required this.size,
+    required this.type,
+    required this.overview,
     this.logo,
     this.coverPhoto,
-    this.founded,
-    this.employees,
     this.website,
   });
 
   Map<String, dynamic> toJson() {
     return {
       "name": name,
-      "email": email,
-      "phone": phone,
+      "addressUrl": addressUrl,
       "industry": industry,
+      "size": size,
+      "type": type,
       "overview": overview,
       "website": website,
       "logo": "logo.png",
       "coverPhoto": "logo.png",
-      "founded": "01-01-2001",
-      "employees": 2000,
       // "locations": [
       //   {
       //     "address": "address",

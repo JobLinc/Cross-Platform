@@ -142,6 +142,7 @@ extension OrganizationTypeExtension on OrganizationType {
 class Company {
   final String name;
   final String profileUrl;
+  String? overview;
   String? website;
   String? tagline;
   String? logoUrl;
@@ -158,6 +159,7 @@ class Company {
     required this.profileUrl,
     this.website,
     this.tagline,
+    this.overview,
     required this.industry,
     required this.organizationSize,
     required this.organizationType,

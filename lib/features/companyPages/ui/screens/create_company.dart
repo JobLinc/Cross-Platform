@@ -9,6 +9,7 @@ import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo
 import 'package:joblinc/features/companyPages/ui/widgets/edit_button.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/organizationType_comboBox.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
 import '../../data/data/company.dart';
 import '../widgets/square_avatar.dart';
@@ -22,16 +23,18 @@ import '../../logic/cubit/create_company_cubit.dart';
 
 // ignore: must_be_immutable
 class CreateCompanyPage extends StatelessWidget {
-  CreateCompanyPage({super.key});
+  CreateCompanyPage({super.key, this.cubit}); 
   final _formKey = GlobalKey<FormState>();
   final _termsAndConditionsKey = GlobalKey<TermsAndConditionsCheckBoxState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _jobLincUrlController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _overviewController = TextEditingController();
   late Industry _selectedIndustry;
   late OrganizationSize _orgSize;
   late OrganizationType _orgType;
-
+  
+  final CreateCompanyCubit? cubit; 
   bool get isTestEnvironment {
     return Platform.environment.containsKey('FLUTTER_TEST');
   }
@@ -39,7 +42,7 @@ class CreateCompanyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CreateCompanyCubit(
+      create: (context) => cubit ?? CreateCompanyCubit(
         getIt<CreateCompanyRepo>(),
         onCompanyCreated: (company) {
           // Navigate to the Company Dashboard
@@ -101,6 +104,7 @@ class CreateCompanyPage extends StatelessWidget {
                               orgSize: _orgSize,
                               orgType: _orgType,
                               websiteController: _websiteController,
+                              overviewController: _overviewController,
                             );
                       } else {
                         print('Form is invalid');
@@ -213,6 +217,11 @@ class CreateCompanyPage extends StatelessWidget {
                         SizedBox(height: 10.h),
                         TermsAndConditionsCheckBox(
                           key: _termsAndConditionsKey,
+                        ),
+                        SizedBox(height: 10.h),
+                        OverviewTextFormField(
+                          overviewController: _overviewController,
+                          key: Key('createcompany_overview_textfield'),
                         ),
                         SizedBox(height: 10.h),
                         Hyperlink(
