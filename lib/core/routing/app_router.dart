@@ -8,7 +8,9 @@ import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
+import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
+import 'package:joblinc/features/jobs/ui/screens/my_jobs_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
@@ -65,6 +67,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => JobListScreen());
       case Routes.jobSearchScreen:
         return MaterialPageRoute(builder: (context) => JobSearchScreen());
+      case Routes.myJobsScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+          create: (context)=>getIt<MyJobsCubit>(),
+          child:MyJobsScreen(),
+          ));
       case Routes.premiumScreen:
         return MaterialPageRoute(builder: (context) => PremiumScreen());
       case Routes.companyListScreen:
