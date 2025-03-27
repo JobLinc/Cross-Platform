@@ -215,13 +215,13 @@ class CreateCompanyPage extends StatelessWidget {
                           },
                         ),
                         SizedBox(height: 10.h),
-                        TermsAndConditionsCheckBox(
-                          key: _termsAndConditionsKey,
-                        ),
-                        SizedBox(height: 10.h),
                         OverviewTextFormField(
                           overviewController: _overviewController,
                           key: Key('createcompany_overview_textfield'),
+                        ),
+                        SizedBox(height: 10.h),
+                        TermsAndConditionsCheckBox(
+                          key: _termsAndConditionsKey,
                         ),
                         SizedBox(height: 10.h),
                         Hyperlink(
@@ -232,6 +232,7 @@ class CreateCompanyPage extends StatelessWidget {
                               "https://www.linkedin.com/legal/l/linkedin-pages-terms",
                           size: 16,
                         ),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),

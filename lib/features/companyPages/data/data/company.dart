@@ -91,6 +91,13 @@ extension IndustryExtension on Industry {
         return "Software Development";
     }
   }
+
+  static Industry? fromDisplayName(String name) {
+    for (final value in Industry.values) {
+      if (value.displayName == name) return value;
+    }
+    return null; // or throw ArgumentError
+  }
 }
 
 extension OrganizationSizeExtension on OrganizationSize {
@@ -116,6 +123,13 @@ extension OrganizationSizeExtension on OrganizationSize {
         return "10000+ employees";
     }
   }
+
+  static OrganizationSize? fromDisplayName(String name) {
+    for (final value in OrganizationSize.values) {
+      if (value.displayName == name) return value;
+    }
+    return null;
+  }
 }
 
 extension OrganizationTypeExtension on OrganizationType {
@@ -136,6 +150,13 @@ extension OrganizationTypeExtension on OrganizationType {
       case OrganizationType.privatelyHeld:
         return "Privately Held";
     }
+  }
+
+  static OrganizationType? fromDisplayName(String name) {
+    for (final value in OrganizationType.values) {
+      if (value.displayName == name) return value;
+    }
+    return null;
   }
 }
 
