@@ -133,6 +133,39 @@ class Location {
   }
 }
 
+List<Job> mockAppliedJobs=[
+    Job(
+    id:2,
+    title: "Marketing Specialist",
+    industry: "Marketing",
+    company: Company(name: "AdWorks", size: "200 employees"),
+    description: "Create and implement marketing campaigns.",
+    workplace: "Remote",
+    type: "Contract",
+    experienceLevel: "Entry-Level",
+    salaryRange: SalaryRange(min: 40000, max: 60000),
+    location: Location(city: "New York", country: "USA"),
+    keywords: ["SEO", "Content Marketing", "Social Media"],
+    createdAt: DateTime.now(),
+  ),
+];
+
+List<Job> mockSavedJobs=[
+    Job(
+    id:1,
+    title: "Software Engineer",
+    industry: "Technology",
+    company: Company(name: "TechCorp", size: "500+ employees"),
+    description: "Develop and maintain software solutions.",
+    workplace: "Hybrid",
+    type: "Full-time",
+    experienceLevel: "Mid-Level",
+    salaryRange: SalaryRange(min: 60000, max: 90000),
+    location: Location(city: "San Francisco", country: "USA"),
+    keywords: ["Flutter", "Dart", "Backend"],
+    createdAt: DateTime.now(),
+  ),
+];
 
 List<Job> mockJobs= [
   Job(
