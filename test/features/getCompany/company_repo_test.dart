@@ -1,21 +1,17 @@
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:dio/dio.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companyPages/data/data/models/company_model.dart';
 
-class MockDio extends Mock implements Dio {}
 class MockCompanyApiService extends Mock implements CompanyApiService {}
 
 void main() {
   late CompanyRepositoryImpl repository;
-  late CompanyApiService mockApiService;
-  late MockDio mockDio;
+  late MockCompanyApiService mockApiService;
 
   setUp(() {
-    mockDio = MockDio();
     mockApiService = MockCompanyApiService();
     repository = CompanyRepositoryImpl(mockApiService);
   });
@@ -36,12 +32,8 @@ void main() {
   group('getCurrentCompany', () {
     test('should convert CompanyResponse to Company with proper enum mapping', () async {
       // Arrange
-      when(() => mockDio.get('/companies/me'))
-          .thenAnswer((_) async => Response(
-                requestOptions: RequestOptions(path: '/companies/me'),
-                data: mockApiResponse.toJson(),
-                statusCode: 200,
-              ));
+      when(() => mockApiService.getCurrentCompany())
+          .thenAnswer((_) async => mockApiResponse);
 
       // Act
       final result = await repository.getCurrentCompany();
@@ -69,12 +61,8 @@ void main() {
         website: 'https://techcorp.com',
       );
       
-      when(() => mockDio.get('/companies/me'))
-          .thenAnswer((_) async => Response(
-                requestOptions: RequestOptions(path: '/companies/me'),
-                data: invalidResponse.toJson(),
-                statusCode: 200,
-              ));
+      when(() => mockApiService.getCurrentCompany())
+          .thenAnswer((_) async => invalidResponse);
 
       // Act & Assert
       expect(
@@ -97,12 +85,8 @@ void main() {
         profilePictureUrl: null,
       );
       
-      when(() => mockDio.get('/companies/me'))
-          .thenAnswer((_) async => Response(
-                requestOptions: RequestOptions(path: '/companies/me'),
-                data: minimalResponse.toJson(),
-                statusCode: 200,
-              ));
+      when(() => mockApiService.getCurrentCompany())
+          .thenAnswer((_) async => minimalResponse);
 
       // Act
       final result = await repository.getCurrentCompany();
@@ -115,26 +99,8 @@ void main() {
 
     test('should propagate API service exceptions', () async {
       // Arrange
-      when(() => mockDio.get('/companies/me'))
-          .thenThrow(DioException(
-            requestOptions: RequestOptions(path: '/companies/me'),
-            error: 'Network error',
-          ));
-
-      // Act & Assert
-      expect(
-        () => repository.getCurrentCompany(),
-        throwsA(isA<Exception>()),
-      );
-    });
-
-    test('should handle non-200 status codes', () async {
-      // Arrange
-      when(() => mockDio.get('/companies/me'))
-          .thenAnswer((_) async => Response(
-                requestOptions: RequestOptions(path: '/companies/me'),
-                statusCode: 404,
-              ));
+      when(() => mockApiService.getCurrentCompany())
+          .thenThrow(Exception('API Error'));
 
       // Act & Assert
       expect(

@@ -22,6 +22,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
       organizationType: OrganizationTypeExtension.fromDisplayName(companyResponse.type)!,
       overview: companyResponse.overview,
       website: companyResponse.website,
+      logoUrl: companyResponse.profilePictureUrl,
     );
     return company; 
   } catch (e) {
