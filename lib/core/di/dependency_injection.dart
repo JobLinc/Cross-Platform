@@ -28,6 +28,7 @@ import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -104,6 +105,8 @@ Future<void> setupGetIt() async {
 
   getIt
       .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
+
+  getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
 
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));

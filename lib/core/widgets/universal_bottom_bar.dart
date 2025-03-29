@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
@@ -78,10 +79,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   );
                   break;
                 case 2:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddPostScreen()),
-                  );
+                  Navigator.pushNamed(context, Routes.addPostScreen);
                   break;
                 case 3:
                   Navigator.pushReplacement(
