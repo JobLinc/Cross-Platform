@@ -11,17 +11,14 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'post_main_container',
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Container(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: PostContent(data: data),
-          ),
+    return Padding(
+      key: Key('post_main_container'),
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: PostContent(data: data),
         ),
       ),
     );
@@ -49,14 +46,14 @@ class PostContent extends StatelessWidget {
           action: Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: GestureDetector(
+              key: Key('post_header_lincButton'),
               onTap: () => {UnimplementedError()},
               child: RichText(
                 text: TextSpan(
                     style: TextStyle(color: ColorsManager.darkBurgundy),
                     children: [
                       TextSpan(
-                        text: '+ Linc',
-                        semanticsLabel: 'post_header_lincButton',
+                        text: data.isCompany ? '+ Follow' : '+ Linc',
                       )
                     ]),
               ),
@@ -98,20 +95,20 @@ class _PostBodyState extends State<PostBody> {
   @override
   Widget build(BuildContext context) {
     //? might improve the UI for the 'more' used at the end of the paragraph
-    return Semantics(
-      container: true,
-      label: 'post_body_container',
-      child: Wrap(children: [
+    return Wrap(
+      key: Key('post_body_container'),
+      children: [
         Text(
+          key: Key('post_body_text'),
           widget.text,
           maxLines: (_expandText) ? (null) : (3),
           overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
           softWrap: true,
-          semanticsLabel: 'post_body_text',
         ),
         _expandText
             ? SizedBox()
             : GestureDetector(
+                key: Key('post_body_showMoreButton'),
                 onTap: () {
                   setState(() {
                     _expandText = true;
@@ -119,13 +116,12 @@ class _PostBodyState extends State<PostBody> {
                 },
                 child: Text(
                   'more',
-                  semanticsLabel: 'post_body_showMoreButton',
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold),
                 ),
               )
-      ]),
+      ],
     );
   }
 }
@@ -146,36 +142,33 @@ class PostNumerics extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
-      child: Semantics(
-        container: true,
-        label: 'post_numerics_container',
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.thumb_up,
-              size: 15,
-            ),
-            Text(
-              ' ${likesCount.toString()}',
-              semanticsLabel: 'post_numerics_likeCount',
-            ),
-            Spacer(),
-            (commentCount == 0)
-                ? SizedBox()
-                : Text(
-                    '$commentCount comment${(commentCount == 1) ? ('') : ('s')}',
-                    semanticsLabel: 'post_numerics_commentCount',
-                  ),
-            (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
-            (repostCount == 0)
-                ? SizedBox()
-                : Text(
-                    '$repostCount repost${(repostCount == 1) ? ('') : ('s')}',
-                    semanticsLabel: 'post_numerics_repostCount',
-                  ),
-          ],
-        ),
+      child: Row(
+        key: Key('post_numerics_container'),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.thumb_up,
+            size: 15,
+          ),
+          Text(
+            key: Key('post_numerics_likeCount'),
+            ' ${likesCount.toString()}',
+          ),
+          Spacer(),
+          (commentCount == 0)
+              ? SizedBox()
+              : Text(
+                  key: Key('post_numerics_commentCount'),
+                  '$commentCount comment${(commentCount == 1) ? ('') : ('s')}',
+                ),
+          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
+          (repostCount == 0)
+              ? SizedBox()
+              : Text(
+                  key: Key('post_numerics_repostCount'),
+                  '$repostCount repost${(repostCount == 1) ? ('') : ('s')}',
+                ),
+        ],
       ),
     );
   }
@@ -187,47 +180,40 @@ class PostActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      key: Key('post_actionaBar_container'),
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //TODO Implement Buttons
-          Semantics(
-            label: 'post_actionBar_like',
-            child: IconButton(
-              onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.thumb_up),
-            ),
+          IconButton(
+            key: Key('post_actionBar_like'),
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.thumb_up),
           ),
-          Semantics(
-            label: 'post_actionBar_comment',
-            child: IconButton(
-              onPressed: () => {
-                showModalBottomSheet(
-                    showDragHandle: true,
-                    scrollControlDisabledMaxHeightRatio: 0.9,
-                    context: context,
-                    builder: (context) {
-                      return CommentSection();
-                    })
-              },
-              icon: Icon(Icons.comment),
-            ),
+          IconButton(
+            key: Key('post_actionBar_comment'),
+            onPressed: () => {
+              showModalBottomSheet(
+                  showDragHandle: true,
+                  scrollControlDisabledMaxHeightRatio: 0.9,
+                  context: context,
+                  builder: (context) {
+                    return CommentSection();
+                  })
+            },
+            icon: Icon(Icons.comment),
           ),
-          Semantics(
-            label: 'post_actionBar_repost',
-            child: IconButton(
-              onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.loop),
-            ),
+          IconButton(
+            key: Key('post_actionBar_repost'),
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.loop),
           ),
-          Semantics(
-            label: 'post_actionBar_share',
-            child: IconButton(
-              onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.send),
-            ),
+          IconButton(
+            key: Key('post_actionBar_share'),
+            onPressed: () => {UnimplementedError()},
+            icon: Icon(Icons.send),
           ),
         ],
       ),
@@ -248,8 +234,8 @@ class PostAttachments extends StatelessWidget {
     //   image: attachmentURL,spaceAround
     // );
     return Image.network(
+      key: Key('post_body_attachments'),
       attachmentURLs[0],
-      semanticLabel: 'post_body_attachments',
     );
   }
 }

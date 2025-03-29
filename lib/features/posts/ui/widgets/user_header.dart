@@ -23,25 +23,22 @@ class UserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'post_header_container',
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          ProfileImage(imageURL: imageURL),
-          Expanded(
-            flex: 9,
-            child: UserInfo(
-              username: username,
-              headline: headline,
-            ),
+    return Row(
+      key: Key('post_header_container'),
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        ProfileImage(imageURL: imageURL),
+        Expanded(
+          flex: 9,
+          child: UserInfo(
+            username: username,
+            headline: headline,
           ),
-          Spacer(),
-          action ?? SizedBox()
-        ],
-      ),
+        ),
+        Spacer(),
+        action ?? SizedBox()
+      ],
     );
   }
 }
@@ -58,31 +55,28 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'post_header_userInfoContainer',
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            username,
-            semanticsLabel: 'post_header_username',
-            style: TextStyle(
-              fontWeight: FontWeightHelper.extraBold,
-            ),
+    return Column(
+      key: Key('post_header_userInfoContainer'),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          key: Key('post_header_username'),
+          username,
+          style: TextStyle(
+            fontWeight: FontWeightHelper.extraBold,
           ),
-          Text(
-            headline,
-            semanticsLabel: 'post_header_headline',
-            style: TextStyle(
-              color: Colors.grey,
-              overflow: TextOverflow.ellipsis,
-              fontWeight: FontWeightHelper.extraLight,
-            ),
+        ),
+        Text(
+          key: Key('post_header_headline'),
+          headline,
+          style: TextStyle(
+            color: Colors.grey,
+            overflow: TextOverflow.ellipsis,
+            fontWeight: FontWeightHelper.extraLight,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -96,11 +90,9 @@ class ProfileImage extends StatelessWidget {
     //TODO this needs revising
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: Semantics(
-        label: 'post_header_avatar',
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(imageURL),
-        ),
+      child: CircleAvatar(
+        key: Key('post_header_avatar'),
+        backgroundImage: NetworkImage(imageURL),
       ),
     );
   }
