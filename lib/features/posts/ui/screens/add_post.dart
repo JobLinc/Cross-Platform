@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
@@ -44,9 +45,7 @@ class AddPostScreen extends StatelessWidget {
                       controller: _inputController,
                       maxLines: null,
                       expands: true,
-                      onChanged: (text) => {if (text == '') {} else {
-                        
-                      }},
+                      onChanged: (text) => {if (text == '') {} else {}},
                       decoration: InputDecoration(
                         hintText: 'Share your thoughts...',
                         hintStyle: TextStyle(color: Colors.grey.shade600),
@@ -78,7 +77,12 @@ class BottomButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.image)),
+        IconButton(
+            onPressed: () async {
+              final picker = ImagePicker();
+              final List<XFile> medias = await picker.pickMultipleMedia();
+            },
+            icon: Icon(Icons.image)),
         IconButton(onPressed: () {}, icon: Icon(Icons.add)),
       ],
     );
@@ -129,10 +133,10 @@ AppBar addPostTopBar(
                     disabledForegroundColor: Colors.grey),
                 onPressed: value.text.isNotEmpty
                     ? () {
-                        // context.read<AddPostCubit>().addPost(value.text);
+                        context.read<AddPostCubit>().addPost(value.text);
                       }
                     : null,
-                child: Text(context.toString()),
+                child: Text('Post'),
               );
             }),
       )

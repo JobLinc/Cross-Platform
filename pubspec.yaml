@@ -1,6 +1,6 @@
 name: joblinc
-description: "A new Flutter project."
-publish_to: "none"
+description: 'A new Flutter project.'
+publish_to: 'none'
 version: 0.1.0
 
 environment:
@@ -25,6 +25,7 @@ dependencies:
   hyperlink: ^0.0.4
   flutter_stripe: ^11.4.0
   equatable: ^2.0.7
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
