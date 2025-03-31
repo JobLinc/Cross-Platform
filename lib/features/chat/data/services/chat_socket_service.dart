@@ -49,9 +49,9 @@ class ChatSocketService {
   }
 
   // Send a message (you can include an acknowledgment callback if needed)
-  void sendMessage(Map<String, dynamic> message, [Function? ack]) {
-    socket.emit("sendMessage", message, ack);
-  }
+  // void sendMessage(Map<String, dynamic> message, [Function? ack]) {
+  //   socket.emit("sendMessage", message, ack);
+  // }
 
   // Open a chat by joining a room (for two users)
   void openChat(String chatId, String userId) {
