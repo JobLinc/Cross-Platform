@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:joblinc/features/premium/data/services/stripe_service.dart';
-import 'package:joblinc/features/premium/payment_constants.dart';
 
 class PlanSelectionScreen extends StatefulWidget {
   const PlanSelectionScreen({super.key});
-  
+
   @override
   State<PlanSelectionScreen> createState() => _PlanSelectionScreenState();
 }
@@ -25,11 +23,12 @@ class _PlanSelectionScreenState extends State<PlanSelectionScreen> {
               children: [
                 Center(
                   child: Container(
-                      width: 50.w,
-                      height: 5.h,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[600],
-                          borderRadius: BorderRadius.circular(10.r))),
+                    width: 50.w,
+                    height: 5.h,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[600],
+                        borderRadius: BorderRadius.circular(10.r)),
+                  ),
                 ),
                 Text('Choose your billing cycle',
                     style:
@@ -51,9 +50,7 @@ class _PlanSelectionScreenState extends State<PlanSelectionScreen> {
                 Spacer(),
                 ElevatedButton(
                   key: Key("planSelection_try_elevatedButton"),
-                  onPressed: () {
-                    StripeService.instance.makePayment(selectedPlan!);
-                  },
+                  onPressed: () {StripeService.instance.makePayment(context, selectedPlan!, () {setState(() {});});},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[400],
                     foregroundColor: Colors.white,
@@ -68,7 +65,7 @@ class _PlanSelectionScreenState extends State<PlanSelectionScreen> {
         });
   }
 
-  Widget buildPlanOption(
+ Widget buildPlanOption(
       String keyName, double value, String title, String subtitle) {
     return ListTile(
       title: Text(title),
@@ -90,5 +87,5 @@ class _PlanSelectionScreenState extends State<PlanSelectionScreen> {
         }),
       ),
     );
-  }
+  }  
 }

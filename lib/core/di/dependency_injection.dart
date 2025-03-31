@@ -25,7 +25,10 @@ import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubi
 import 'package:joblinc/features/home/data/repos/post_repo.dart';
 import 'package:joblinc/features/home/data/services/post_api_service.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
-
+import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
+import 'package:joblinc/features/jobs/data/services/job_api_service.dart';
+import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
+import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
@@ -125,8 +128,20 @@ Future<void> setupGetIt() async {
       .registerLazySingleton<ChatRepo>(() => ChatRepo(getIt<ChatApiService>()));
 
   getIt.registerFactory<ChatListCubit>(
-    () => ChatListCubit(getIt<ChatRepo>()),
-  );
+    () =>ChatListCubit( getIt<ChatRepo>()) ,);
+
+      getIt.registerLazySingleton<JobApiService>(
+    () =>JobApiService(getIt<Dio>()) ,);
+  
+  getIt.registerLazySingleton<JobRepo>(
+    () => JobRepo(getIt<JobApiService>()));
+  
+  getIt.registerFactory<MyJobsCubit>(
+    () =>MyJobsCubit( getIt<JobRepo>()) ,);
+
+  getIt.registerFactory<JobListCubit>(
+    () =>JobListCubit( getIt<JobRepo>()) ,);
+
 ///////////////////////////////////////////////////////////////////////////
 
   getIt.registerLazySingleton<UserConnectionsApiService>(

@@ -8,6 +8,9 @@ class Routes {
   static const String companyPageHome = '/companyPageHome';
   static const String jobListScreen = '/jobListScreen';
   static const String jobSearchScreen = '/jobSearchScreen';
+  static const String jobApplicationScreen = '/jobApplicationScreen';
+  static const String jobDetailsScreen = '/jobDetailsScreen';
+  static const String myJobsScreen = '/MyJobsScreen';
   static const String premiumScreen = '/premiumScreen';
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
