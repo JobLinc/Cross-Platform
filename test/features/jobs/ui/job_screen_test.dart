@@ -42,7 +42,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  debugPrint("✅ Widget tree pumped!");
+  debugPrint(" Widget tree pumped!");
   group('JobListScreen Widget Tests', () {
     testWidgets('Job List screen opens succesfully',
         (WidgetTester tester) async {

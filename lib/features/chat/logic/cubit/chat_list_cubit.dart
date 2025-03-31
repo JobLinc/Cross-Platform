@@ -16,9 +16,7 @@ class ChatListCubit extends Cubit<ChatListState> {
   ChatListCubit(this.chatRepo) : super(ChatListInitial());
 
   Future<void> getAllChats() async{
-    
     emit(ChatListLoading());
-
     try {
       _chats=await chatRepo.getAllChats();
       if (_chats.isEmpty){
@@ -27,8 +25,6 @@ class ChatListCubit extends Cubit<ChatListState> {
         emit(ChatListLoaded(chats: _chats ));
       }
     } catch (e) {
-      //print("Error loading chats: $e");
-      //print("StackTrace: $stackTrace");
       emit(ChatListErrorLoading(e.toString()));
     } 
   }
@@ -50,7 +46,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     if (query.isEmpty){
       emit(ChatListLoaded(chats: _chats));
     } else {
-      final searchedChat = _chats.where((chat) =>chat.userName!.toLowerCase().contains(query.toLowerCase())).toList();
+      final searchedChat = _chats.where((chat) =>chat.chatName.toLowerCase().contains(query.toLowerCase())).toList();
       if(searchedChat.isNotEmpty){
         emit(ChatListSearch(searchedChat));
       }
@@ -69,7 +65,7 @@ class ChatListCubit extends Cubit<ChatListState> {
   void addNewMessage(){}
 
   void filteredChats(bool onlyUnread){
-    final filteredChats= onlyUnread ? _chats.where((chat)=>chat.unreadCount! > 0).toList():_chats;
+    final filteredChats= onlyUnread ? _chats.where((chat)=>chat.unreadCount > 0).toList():_chats;
     emit(ChatListFilter(filteredChats));
   }
 }

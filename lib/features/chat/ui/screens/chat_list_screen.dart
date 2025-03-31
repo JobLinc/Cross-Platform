@@ -172,24 +172,24 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   void addNewChat() {
-    final Chat newChat = Chat(
-      id: "conv_010",
-      userID: "user11",
-      userName: "Jack Robinson",
-      userAvatar: null,
-      lastMessage: LastMessage(
-        senderID: "user11",
-        text: "Can you send me the document?",
-        timestamp: DateTime.now().subtract(Duration(days: 4, hours: 2)),
-        messageType: "file",
-      ),
-      lastUpdate: DateTime.now().subtract(Duration(days: 4, hours: 2)),
-      unreadCount: 1,
-      lastSender: "Jack Robinson",
-      isOnline: false,
-    );
+    // final Chat newChat = Chat(
+    //   id: "conv_010",
+    //   userID: "user11",
+    //   userName: "Jack Robinson",
+    //   userAvatar: null,
+    //   lastMessage: LastMessage(
+    //     senderID: "user11",
+    //     text: "Can you send me the document?",
+    //     timestamp: DateTime.now().subtract(Duration(days: 4, hours: 2)),
+    //     messageType: "file",
+    //   ),
+    //   lastUpdate: DateTime.now().subtract(Duration(days: 4, hours: 2)),
+    //   unreadCount: 1,
+    //   lastSender: "Jack Robinson",
+    //   isOnline: false,
+    // );
 
-    context.read<ChatListCubit>().addNewChat(newChat);
+    // context.read<ChatListCubit>().addNewChat(newChat);
   }
 
   void startSearch() {
