@@ -25,3 +25,11 @@ final class MyJobsErrorLoading extends MyJobsState {
 final class MySavedJobsEmpty extends MyJobsState {}
 
 final class MyAppliedJobsEmpty extends MyJobsState {}
+
+
+final class MyJobApplicationsLoaded extends MyJobsState {
+  final List<JobApplication>? jobApplications;
+  MyJobApplicationsLoaded({this.jobApplications});
+}
+
+final class MyJobApplicationsEmpty extends MyJobsState{}

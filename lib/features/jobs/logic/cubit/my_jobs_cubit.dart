@@ -11,6 +11,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   final JobRepo jobRepo;
 
   List<Job> _jobs =[];
+  List<JobApplication> _jobsApplications=[];
 
   MyJobsCubit(this.jobRepo) : super(MyJobsInitial());
 
@@ -37,6 +38,21 @@ class MyJobsCubit extends Cubit<MyJobsState> {
         emit(MyAppliedJobsEmpty());
       } else{
         emit(MyAppliedJobsLoaded(appliedJobs: _jobs ));
+      }
+    } catch (e) {
+      emit(MyJobsErrorLoading(e.toString()));
+    } 
+  }
+
+
+  Future<void> getJobApplications() async {
+        emit(MyJobsLoading());
+    try {
+      _jobsApplications=await jobRepo.getJobApplications();
+      if (_jobs.isEmpty){
+        emit(MyJobApplicationsEmpty());
+      } else{
+        emit(MyJobApplicationsLoaded(jobApplications: _jobsApplications ));
       }
     } catch (e) {
       emit(MyJobsErrorLoading(e.toString()));
