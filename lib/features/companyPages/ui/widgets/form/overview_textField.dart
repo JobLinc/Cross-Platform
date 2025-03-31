@@ -15,7 +15,7 @@ class OverviewTextFormField extends StatelessWidget {
         controller: _overviewController,
         hintText: "Add an about us with a brief overview of your products and services",
         labelText: "Overview*",
-        maxLines: 5,
+        maxLines: 10,
         maxLength: 2000,
         validator: (value) {
           if (value == null || value.isEmpty) {
