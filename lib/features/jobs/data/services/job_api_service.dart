@@ -205,6 +205,27 @@ class JobApiService {
   }
   }
 
+
+  Future<Response> getJobApplications() async{
+    if (0 == 1) {
+      try {
+        final response = await _dio.get('/job/applications');
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: mockJobApplications.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      return response;
+    }
+  } 
+
   /// Retrieves all uploaded resume files from the server.
   Future<Response> getAllResumes() async {
     if (0 == 1) {
@@ -275,6 +296,7 @@ class JobApiService {
     } else {
       await Future.delayed(Duration(milliseconds: 500));
       mockAppliedJobs.add(jobApplication.job);
+      mockJobApplications.add(jobApplication);
       final response = Response(
         requestOptions: RequestOptions(path: ''),
         statusCode: 200,

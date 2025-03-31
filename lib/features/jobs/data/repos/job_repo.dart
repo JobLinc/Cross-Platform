@@ -45,6 +45,14 @@ class JobRepo {
     return jobs;
   }
 
+  Future<List<JobApplication>> getJobApplications() async{
+    final response = await _jobApiService.getJobApplications();
+    final List<JobApplication> jobApplications= (response.data as List)
+        .map((jobAppJson) => JobApplication.fromJson(jobAppJson as Map<String, dynamic>))
+        .toList();
+    return jobApplications;
+  }
+
   Future<List<Resume>> getAllResumes() async {
     final response = await _jobApiService.getAllResumes();
     final List<Resume> resumes = (response.data as List)
