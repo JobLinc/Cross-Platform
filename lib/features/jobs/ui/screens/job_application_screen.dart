@@ -249,23 +249,23 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 ),
                 child: const Text("Upload New Resume"),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  await _clearStoredResume();
-                  setState(() {
-                    _selectedResumeId = null;
-                    _selectedResumeLocalPath = null;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Resume storage cleared.")),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text("Clear Resume Data"),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     await _clearStoredResume();
+              //     setState(() {
+              //       _selectedResumeId = null;
+              //       _selectedResumeLocalPath = null;
+              //     });
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       SnackBar(content: Text("Resume storage cleared.")),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.grey,
+              //     foregroundColor: Colors.white,
+              //   ),
+              //   child: const Text("Clear Resume Data"),
+              // ),
             ],
           ),
         ),
