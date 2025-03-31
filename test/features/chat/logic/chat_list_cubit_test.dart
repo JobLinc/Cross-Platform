@@ -164,18 +164,20 @@
 
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-
+//import 'package:mocktail/mocktail.dart';
 class MockChatRepo extends Mock implements ChatRepo {}
 @GenerateMocks([ChatRepo])
 void main() {
   late MockChatRepo mockChatRepo;
   late ChatListCubit chatListCubit;
+  WidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     mockChatRepo = MockChatRepo();
@@ -188,24 +190,24 @@ void main() {
   });
 
   group('ChatListCubit Tests', () {
-    final mockChats = [
-      Chat(
-        id: "1",
-        userID: "user1",
-        userName: "Alice",
-        userAvatar: null,
-        lastMessage: LastMessage(
-          senderID: "user1",
-          text: "Hello!",
-          timestamp: DateTime.now(),
-          messageType: "text",
-        ),
-        lastUpdate: DateTime.now(),
-        unreadCount: 2,
-        lastSender: "Alice",
-        isOnline: true,
-      ),
-    ];
+    // final mockChats = [
+    //   Chat(
+    //     id: "1",
+    //     userID: "user1",
+    //     userName: "Alice",
+    //     userAvatar: null,
+    //     lastMessage: LastMessage(
+    //       senderID: "user1",
+    //       text: "Hello!",
+    //       timestamp: DateTime.now(),
+    //       messageType: "text",
+    //     ),
+    //     lastUpdate: DateTime.now(),
+    //     unreadCount: 2,
+    //     lastSender: "Alice",
+    //     isOnline: true,
+    //   ),
+    // ];
 
     blocTest<ChatListCubit, ChatListState>(
       'emits [ChatListLoading, ChatListLoaded] when getAllChats is successful',
