@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:joblinc/features/userProfile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 
-// Using GenerateNiceMocks to handle unexpected calls gracefully
 @GenerateNiceMocks([MockSpec<Dio>()])
 import 'get_my_user_profile_test.mocks.dart';
 
@@ -17,9 +16,8 @@ void main() {
     mockDio = MockDio();
     apiService = UserProfileApiService(mockDio);
 
-    // Mock the options property since it's being used
     final mockOptions = BaseOptions(
-      baseUrl: 'https://api.example.com',
+      baseUrl: 'https://localhost:3000/api',
     );
     when(mockDio.options).thenReturn(mockOptions);
   });

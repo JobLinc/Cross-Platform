@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
 
@@ -49,32 +51,35 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   // Profile info
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${profile.firstname} ${profile.lastname}',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        Text(
-                          profile.headline,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        SizedBox(height: 8),
-                        _buildConnectionsInfo(profile),
-                        
-                        if (profile.about.isNotEmpty) ...[
-                          SizedBox(height: 16),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            'About',
-                            style: Theme.of(context).textTheme.titleLarge,
+                            '${profile.firstname} ${profile.lastname}',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          Text(
+                            profile.headline,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           SizedBox(height: 8),
-                          Text(profile.about),
+                          _buildConnectionsInfo(profile),
+                          
+                          if (profile.about.isNotEmpty) ...[
+                            SizedBox(height: 16),
+                            Text(
+                              'About',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            SizedBox(height: 8),
+                            Text(profile.about),
+                          ],
+                          
+                          // Add more sections for experience, education, etc.
                         ],
-                        
-                        // Add more sections for experience, education, etc.
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -155,23 +160,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
   
   Widget _buildConnectionsInfo(UserProfile profile) {
-    return Row(
-      children: [
-        Text(
-          '${profile.numberOfConnections} connections',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: Colors.blue.shade800,
-          ),
-        ),
-        if (profile.matualConnections > 0) ...[
-          Text(' • '),
+    return GestureDetector(
+      child: Row(
+        children: [
           Text(
-            '${profile.matualConnections} mutual',
-            style: TextStyle(color: Colors.grey.shade700),
+            '${profile.numberOfConnections} connections',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.blue.shade800,
+            ),
           ),
+          if (profile.matualConnections > 0) ...[
+            Text(' • '),
+            Text(
+              '${profile.matualConnections} mutual',
+              style: TextStyle(color: Colors.grey.shade700),
+            ),
+          ],
         ],
-      ],
+      ),
+      onTap: (){
+        Navigator.pushNamed(context, Routes.connectionListScreen);
+      },
     );
   }
 }
