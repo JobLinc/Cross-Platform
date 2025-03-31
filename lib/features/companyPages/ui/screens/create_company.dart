@@ -214,15 +214,18 @@ class CreateCompanyPage extends StatelessWidget {
                             _orgType = value!;
                           },
                         ),
-                        SizedBox(height: 10.h),
-                        TermsAndConditionsCheckBox(
-                          key: _termsAndConditionsKey,
-                        ),
-                        SizedBox(height: 10.h),
+
+                         SizedBox(height: 10.h),
                         OverviewTextFormField(
                           overviewController: _overviewController,
                           key: Key('createcompany_overview_textfield'),
                         ),
+                        
+                        SizedBox(height: 10.h),
+                        TermsAndConditionsCheckBox(
+                          key: _termsAndConditionsKey,
+                        ),
+                       
                         SizedBox(height: 10.h),
                         Hyperlink(
                           key: Key('createcompany_termsAndConditions_hyperlink'),

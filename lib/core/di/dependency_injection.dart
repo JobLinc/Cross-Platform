@@ -37,6 +37,10 @@ import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
 
+import 'package:joblinc/features/userProfile/data/service/my_user_profile_api.dart';
+import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
+import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupGetIt() async {
@@ -114,11 +118,11 @@ Future<void> setupGetIt() async {
       () => CreateCompanyRepo(getIt<CreateCompanyApiService>()));
 
   getIt.registerFactoryParam<CreateCompanyCubit, void Function(Company), void>(
-  (param1, _) => CreateCompanyCubit(
-    getIt<CreateCompanyRepo>(),
-    onCompanyCreated: param1,
-  ),
-);
+    (param1, _) => CreateCompanyCubit(
+      getIt<CreateCompanyRepo>(),
+      onCompanyCreated: param1,
+    ),
+  );
 
   getIt.registerLazySingleton<ChatApiService>(
     () => ChatApiService(getIt<Dio>()),
@@ -128,19 +132,22 @@ Future<void> setupGetIt() async {
       .registerLazySingleton<ChatRepo>(() => ChatRepo(getIt<ChatApiService>()));
 
   getIt.registerFactory<ChatListCubit>(
-    () =>ChatListCubit( getIt<ChatRepo>()) ,);
+    () => ChatListCubit(getIt<ChatRepo>()),
+  );
 
-      getIt.registerLazySingleton<JobApiService>(
-    () =>JobApiService(getIt<Dio>()) ,);
-  
-  getIt.registerLazySingleton<JobRepo>(
-    () => JobRepo(getIt<JobApiService>()));
-  
+  getIt.registerLazySingleton<JobApiService>(
+    () => JobApiService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<JobRepo>(() => JobRepo(getIt<JobApiService>()));
+
   getIt.registerFactory<MyJobsCubit>(
-    () =>MyJobsCubit( getIt<JobRepo>()) ,);
+    () => MyJobsCubit(getIt<JobRepo>()),
+  );
 
   getIt.registerFactory<JobListCubit>(
-    () =>JobListCubit( getIt<JobRepo>()) ,);
+    () => JobListCubit(getIt<JobRepo>()),
+  );
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -155,4 +162,15 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<InvitationsCubit>(
       () => InvitationsCubit(MockConnectionApiService()));
+
+  getIt.registerLazySingleton<UserProfileApiService>(
+      () => UserProfileApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<UserProfileRepository>(
+      () => UserProfileRepository(getIt<UserProfileApiService>()));
+
+  getIt.registerFactory<ProfileCubit>(
+      () => ProfileCubit(getIt<UserProfileRepository>()));
+
+  //User profile
 }

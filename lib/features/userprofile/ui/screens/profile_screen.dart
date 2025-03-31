@@ -1,163 +1,177 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/company_more.dart';
-import 'package:joblinc/features/userprofile/data/user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
 
+class UserProfileScreen extends StatefulWidget {
+  @override
+  _UserProfileScreenState createState() => _UserProfileScreenState();
+}
 
-class ProfileScreen extends StatelessWidget {
-  final User user;
-
-  ProfileScreen({required this.user, super.key});
-
+class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          // Cover Photo and Profile Picture
-          Container(
-            height: 90.h,
-            child: Stack(
-              children: [
-                // Cover Photo
-                Image.network(
-                  user.coverPicture ??
-                      "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png",
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 60.h,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 40.h,
-                    color: Colors.grey[300], // Fallback color
-                  ),
-                ),
-                // Profile Picture (Circle Avatar)
-                Positioned(
-                  top: 20.h,
-                  left: 17.w,
-                  child: CircleAvatar(
-                    radius: 30.h,
-                    backgroundImage: NetworkImage(
-                      user.profilePicture ??
-                          'https://www.w3schools.com/howto/img_avatar.png',
-                    ),
-                    backgroundColor: Colors.grey[300],
-                  ),
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listener: (context, state) {
+        if (state is ProfileError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return Scaffold(
+            appBar: AppBar(title: Text('Profile')),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        if (state is ProfileLoaded) {
+          final profile = state.profile;
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Profile'),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () => context.read<ProfileCubit>().getUserProfile(),
                 ),
               ],
             ),
-          ),
-      
-          // User Name & Headline
-          Padding(
-            padding: EdgeInsets.only(top: 5.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                    "${user.firstName} ${user.lastName}",
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Profile header with cover and profile images
+                  _buildProfileHeader(profile),
+                  
+                  // Profile info
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${profile.firstname} ${profile.lastname}',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        Text(
+                          profile.headline,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        SizedBox(height: 8),
+                        _buildConnectionsInfo(profile),
+                        
+                        if (profile.about.isNotEmpty) ...[
+                          SizedBox(height: 16),
+                          Text(
+                            'About',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          SizedBox(height: 8),
+                          Text(profile.about),
+                        ],
+                        
+                        // Add more sections for experience, education, etc.
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                    user.headline,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-      
-          // Connections Count (Pressable)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.h),
-            child: GestureDetector(
-              onTap: () {
-                // Handle tap (e.g., navigate to connections list)
-              },
-              child: Text(
-                "${user.connections} connections",
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                ),
+                ],
               ),
             ),
-          ),
-      
-          // About Section
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-            child: Text(
-              user.about ?? "No about information available.",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
-            ),
-          ),
-      
-          // Action Buttons (Follow, Message, More)
-          Padding(
-            padding: EdgeInsets.only(top: 12.h),
-            child: Row(
+          );
+        }
+        
+        // Default state or error state
+        return Scaffold(
+          appBar: AppBar(title: Text('Profile')),
+          body: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    // Handle follow action
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    child: Text(
-                      "+ Follow",
-                      style: TextStyle(color: Colors.blue, fontSize: 14.sp),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                GestureDetector(
-                  onTap: () {
-                    // Handle message action
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "Message",
-                      style: TextStyle(color: Colors.white, fontSize: 14.sp),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CompanyMoreButton(),
+                Text('No profile data available'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.read<ProfileCubit>().getUserProfile(),
+                  child: Text('Load Profile'),
                 ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+  
+  Widget _buildProfileHeader(UserProfile profile) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Cover image
+        Container(
+          height: 150,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.blue.shade800,
+            image: profile.coverPicture.isNotEmpty 
+                ? DecorationImage(
+                    image: NetworkImage(profile.coverPicture),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+          ),
+        ),
+        
+        // Profile image
+        Positioned(
+          left: 20,
+          top: 100,
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 4),
+              image: profile.profilePicture.isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(profile.profilePicture),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: profile.profilePicture.isEmpty
+                ? Icon(
+                    Icons.person,
+                    size: 50,
+                    color: Colors.grey.shade400,
+                  )
+                : null,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildConnectionsInfo(UserProfile profile) {
+    return Row(
+      children: [
+        Text(
+          '${profile.numberOfConnections} connections',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.blue.shade800,
+          ),
+        ),
+        if (profile.matualConnections > 0) ...[
+          Text(' • '),
+          Text(
+            '${profile.matualConnections} mutual',
+            style: TextStyle(color: Colors.grey.shade700),
+          ),
         ],
-      ),
+      ],
     );
   }
 }
