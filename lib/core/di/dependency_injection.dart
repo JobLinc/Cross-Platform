@@ -1,11 +1,26 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
+import 'package:joblinc/features/changepassword/data/services/change_password_api_service.dart';
+import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
 import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
 import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
+import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
+import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
+import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
+
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
+
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/data/repos/post_repo.dart';
 import 'package:joblinc/features/home/data/services/post_api_service.dart';
@@ -25,9 +40,16 @@ import '../../features/login/logic/cubit/login_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupGetIt() async {
-  Dio dio = Dio(
+  final FlutterSecureStorage storage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
+
+  getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
+
+  final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:3000/api',
+      baseUrl: 'https://joblinc.me:3000/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -35,6 +57,10 @@ Future<void> setupGetIt() async {
       },
     ),
   );
+
+  getIt.registerLazySingleton<AuthService>(() => AuthService(storage, dio));
+
+  dio.interceptors.add(AuthInterceptor(getIt<AuthService>(), dio));
 
   getIt.registerLazySingleton<Dio>(() => dio);
 
@@ -51,11 +77,26 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<RegisterRepo>(
       () => RegisterRepo(getIt<RegisterApiService>()));
-
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
 
-  getIt.registerFactory<ForgetPasswordCubit>(() => ForgetPasswordCubit());
+  getIt.registerLazySingleton<ChangePasswordApiService>(
+      () => ChangePasswordApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ChangePasswordRepo>(
+      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
+
+  getIt.registerFactory<ChangePasswordCubit>(
+      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
+
+  getIt.registerLazySingleton<ForgetPasswordApiService>(
+      () => ForgetPasswordApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ForgetPasswordRepo>(
+      () => ForgetPasswordRepo(apiService: getIt<ForgetPasswordApiService>()));
+
+  getIt.registerFactory<ForgetPasswordCubit>(
+      () => ForgetPasswordCubit(repository: getIt<ForgetPasswordRepo>()));
 
   // Posts
   getIt.registerLazySingleton<PostApiService>(
@@ -76,11 +117,12 @@ Future<void> setupGetIt() async {
       () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
 
   getIt.registerLazySingleton<ChatApiService>(
-    () =>ChatApiService(getIt<Dio>()) ,);
-  
-  getIt.registerLazySingleton<ChatRepo>(
-    () => ChatRepo(getIt<ChatApiService>()));
-  
+    () => ChatApiService(getIt<Dio>()),
+  );
+
+  getIt
+      .registerLazySingleton<ChatRepo>(() => ChatRepo(getIt<ChatApiService>()));
+
   getIt.registerFactory<ChatListCubit>(
     () =>ChatListCubit( getIt<ChatRepo>()) ,);
 
@@ -95,5 +137,18 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<JobListCubit>(
     () =>JobListCubit( getIt<JobRepo>()) ,);
-}
 
+///////////////////////////////////////////////////////////////////////////
+
+  getIt.registerLazySingleton<UserConnectionsApiService>(
+      () => UserConnectionsApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<UserConnectionsRepository>(
+      () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
+
+  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
+      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+
+  getIt.registerFactory<InvitationsCubit>(
+      () => InvitationsCubit(MockConnectionApiService()));
+}

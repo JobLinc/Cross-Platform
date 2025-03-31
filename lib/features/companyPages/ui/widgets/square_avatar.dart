@@ -15,12 +15,12 @@ class SquareAvatar extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: 
-        BoxDecoration(shape: BoxShape.rectangle // Square shape
-      ),
+      decoration: BoxDecoration(shape: BoxShape.rectangle // Square shape
+          ),
       child: Image(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover, // Ensure the image covers the entire square
+        errorBuilder: (context, error, stackTrace) => Container(),
+        image: NetworkImage(imageUrl),
+        fit: BoxFit.cover, // Ensure the image covers the entire square
       ),
     );
   }

@@ -14,24 +14,54 @@ class RegisterApiService {
         '/auth/register',
         data: registerRequestModel.toJson(),
       );
-      print(response.data);
+
       return RegisterResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw Exception(_handleDioError(e));
+      final errorMessage = _handleDioError(e);
+      throw Exception(errorMessage);
+    } catch (e) {
+      throw Exception('Unexpected error occurred');
     }
   }
 
   String _handleDioError(DioException e) {
-    if (e.response != null) {
-      if (e.response?.statusCode == 400) {
-        return e.response?.statusMessage?.toString() ?? 'Invalid data';
-      } else if (e.response?.statusCode == 409) {
-        return 'User already exists';
-      } else {
-        return 'Internal Server Error';
-      }
-    } else {
-      return 'Network error: ${e.message}';
+    // No response: This is likely a network issue
+    if (e.response == null) {
+      return 'Network error! please try again';
+    }
+
+    final statusCode = e.response?.statusCode;
+    final data = e.response?.data;
+
+    String backendMessage = '';
+
+    if (data is Map<String, dynamic>) {
+      backendMessage = data['message']?.toString() ?? '';
+    } else if (data is String) {
+      backendMessage = data;
+    }
+
+    switch (statusCode) {
+      case 400:
+        return backendMessage.isNotEmpty
+            ? backendMessage
+            : 'Invalid input data';
+      case 401:
+        return 'Unauthorized request';
+      case 403:
+        return 'Access forbidden';
+      case 404:
+        return 'Requested resource not found';
+      case 409:
+        return backendMessage.isNotEmpty
+            ? backendMessage
+            : 'User already exists';
+      case 500:
+        return 'Internal server error';
+      default:
+        return backendMessage.isNotEmpty
+            ? backendMessage
+            : 'Something went wrong. Please try again later.';
     }
   }
 }

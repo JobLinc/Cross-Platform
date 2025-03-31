@@ -1,45 +1,52 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-part 'forget_password_state.dart';
+import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
+import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_state.dart';
 
-class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
-  ForgetPasswordCubit() : super(ForgetPasswordInitial());
 
-  Future<void> sendResetCode(String email) async {
-    emit(ForgetPasswordLoading());
+class ForgetPasswordCubit extends Cubit<ForgotPasswordState> {
+  final ForgetPasswordRepo repository;
 
+  ForgetPasswordCubit({required this.repository})
+      : super(ForgotPasswordInitial());
+
+  Future<void> sendEmail(String email) async {
+    emit(ForgotPasswordLoading());
     try {
-      await Future.delayed(Duration(seconds: 2));
-
-      // i Will call the repo to send reset code
-      emit(CodeSent());
+      final forgotToken = await repository.forgotPassword(email);
+      emit(ForgotPasswordEmailSent(forgotToken));
     } catch (e) {
-      emit(ForgetPasswordFailure(e.toString()));
+      emit(ForgotPasswordError(e.toString()));
     }
   }
 
-  Future<void> verifyResetCode(String code) async {
-    emit(ForgetPasswordLoading());
 
+
+  Future<void> verifyOtp(String email, String forgotToken, String otp) async {
+    emit(ForgotPasswordLoading());
     try {
-      await Future.delayed(Duration(seconds: 2));
-      // i Will call the repo to send reset code
-      emit(EnteringNewPassword());
+      final resetToken = await repository.confirmOtp(
+        email: email,
+        forgotToken: forgotToken,
+        otp: otp,
+      );
+      emit(ForgotPasswordOtpVerified(resetToken));
     } catch (e) {
-      emit(ForgetPasswordFailure(e.toString()));
+      emit(ForgotPasswordError(e.toString()));
     }
   }
 
-  Future<void> resetPassword(String newPassword) async {
-    emit(ForgetPasswordLoading());
-
+  Future<void> resetPassword(
+      String email, String newPassword, String resetToken) async {
+    emit(ForgotPasswordLoading());
     try {
-      await Future.delayed(Duration(seconds: 2));
-
-      // i Will call the repo to send reset code
-      emit(PasswordChanged());
+      final userData = await repository.resetPassword(
+        email: email,
+        newPassword: newPassword,
+        resetToken: resetToken,
+      );
+      emit(ForgotPasswordSuccess());
     } catch (e) {
-      emit(ForgetPasswordFailure(e.toString()));
+      emit(ForgotPasswordError(e.toString()));
     }
   }
 }
