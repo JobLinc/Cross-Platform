@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/widgets/custom_horizontal_pill_bar.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
+import 'package:joblinc/features/jobs/ui/widgets/job_application_card.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
-import 'package:joblinc/features/jobs/data/models/job_model.dart';
 
 class MyJobsScreen extends StatefulWidget {
   const MyJobsScreen({super.key});
@@ -32,7 +31,11 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
           children: [
             CustomHorizontalPillBar(
                 selectedLabel: "Saved",
-                items: ["Saved", "Applied", "In Progress", "Archived"],
+                items: [
+                  "Saved",
+                  "Applied",
+                  "Job Applications",
+                ],
                 onItemSelected: labelClicked),
             Expanded(child: BlocBuilder<MyJobsCubit, MyJobsState>(
                 builder: (context, state) {
@@ -42,6 +45,10 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
                 return Center(child: Text("Save Jobs to see them here "));
               } else if (state is MyAppliedJobsEmpty) {
                 return Center(child: Text("Apply to Jobs to see them here "));
+              } else if (state is MyJobApplicationsEmpty) {
+                return Center(
+                    child:
+                        Text("Apply to Jobs to see your Applications here "));
               } else if (state is MySavedJobsLoaded) {
                 return JobList(
                     key: ValueKey(state.savedJobs!.length),
@@ -50,6 +57,10 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
                 return JobList(
                     key: ValueKey(state.appliedJobs!.length),
                     jobs: state.appliedJobs!);
+              } else if (state is MyJobApplicationsLoaded) {
+                return JobApplicationList(
+                    key: ValueKey(state.jobApplications!.length),
+                    jobApplications: state.jobApplications!);
               } else {
                 return Center(child: Text("Something went wrong."));
               }
@@ -64,7 +75,8 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
         context.read<MyJobsCubit>().getSavedJobs();
       } else if (label == "Applied") {
         context.read<MyJobsCubit>().getAppliedJobs();
-      } else if (label == "In Progress") {
+      } else if (label == "Job Applications") {
+        context.read<MyJobsCubit>().getJobApplications();
       } else if (label == "Archived") {}
     });
     return;
