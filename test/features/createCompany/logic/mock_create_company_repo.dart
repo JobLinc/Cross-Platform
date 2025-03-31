@@ -40,7 +40,7 @@ void main() {
       build: () {
         when(() => mockCreateCompanyRepo.createCompany(
               name: any(), // name
-              addressUrl: any(), // addressUrl
+              urlSlug: any(), // urlSlug
               industry: any(), // industry
               size: any(), // size
               type: any(), // type
@@ -50,22 +50,22 @@ void main() {
         return createCompanyCubit;
       },
       act: (cubit) => cubit.createCompany(
-            nameController: TextEditingController(text: 'Test Company'),
-            jobLincUrlController: TextEditingController(text: 'test-company'),
-            selectedIndustry: Industry.technology,
-            orgSize: OrganizationSize.zeroToOne,
-            orgType: OrganizationType.privatelyHeld,
-            websiteController: TextEditingController(text: 'https://test.com'),
-            overviewController: TextEditingController(text: 'Test overview'),
-          ),
+        nameController: TextEditingController(text: 'Test Company'),
+        jobLincUrlController: TextEditingController(text: 'test-company'),
+        selectedIndustry: Industry.technology,
+        orgSize: OrganizationSize.zeroToOne,
+        orgType: OrganizationType.privatelyHeld,
+        websiteController: TextEditingController(text: 'https://test.com'),
+        overviewController: TextEditingController(text: 'Test overview'),
+      ),
       expect: () => [
-            isA<CreateCompanyLoading>(),
-            isA<CreateCompanySuccess>(),
-          ],
+        isA<CreateCompanyLoading>(),
+        isA<CreateCompanySuccess>(),
+      ],
       verify: (_) {
         verify(() => mockCreateCompanyRepo.createCompany(
               name: 'Test Company',
-              addressUrl: 'test-company',
+              urlSlug: 'test-company',
               industry: Industry.technology.displayName,
               size: OrganizationSize.zeroToOne.displayName,
               type: OrganizationType.privatelyHeld.displayName,
@@ -80,7 +80,7 @@ void main() {
       build: () {
         when(() => mockCreateCompanyRepo.createCompany(
               name: any(),
-              addressUrl: any(),
+              urlSlug: any(),
               industry: any(),
               size: any(),
               type: any(),
@@ -90,18 +90,18 @@ void main() {
         return createCompanyCubit;
       },
       act: (cubit) => cubit.createCompany(
-            nameController: TextEditingController(text: 'Test Company'),
-            jobLincUrlController: TextEditingController(text: 'test-company'),
-            selectedIndustry: Industry.technology,
-            orgSize: OrganizationSize.zeroToOne,
-            orgType: OrganizationType.privatelyHeld,
-            websiteController: TextEditingController(text: 'https://test.com'),
-            overviewController: TextEditingController(text: 'Test overview'),
-          ),
+        nameController: TextEditingController(text: 'Test Company'),
+        jobLincUrlController: TextEditingController(text: 'test-company'),
+        selectedIndustry: Industry.technology,
+        orgSize: OrganizationSize.zeroToOne,
+        orgType: OrganizationType.privatelyHeld,
+        websiteController: TextEditingController(text: 'https://test.com'),
+        overviewController: TextEditingController(text: 'Test overview'),
+      ),
       expect: () => [
-            isA<CreateCompanyLoading>(),
-            isA<CreateCompanyFailure>(),
-          ],
+        isA<CreateCompanyLoading>(),
+        isA<CreateCompanyFailure>(),
+      ],
     );
   });
 }

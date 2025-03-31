@@ -2,7 +2,7 @@ class CompanyResponse {
   final String id;
   final String name;
   final String? profilePictureUrl;
-  final String addressUrl;
+  final String urlSlug;
   final String industry;
   final String size;
   final String type;
@@ -13,7 +13,7 @@ class CompanyResponse {
     required this.id,
     required this.name,
     this.profilePictureUrl,
-    required this.addressUrl,
+    required this.urlSlug,
     required this.industry,
     required this.size,
     required this.type,
@@ -22,7 +22,7 @@ class CompanyResponse {
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {
-    final requiredFields = ['name', 'addressUrl', 'industry', 'size', 'type'];
+    final requiredFields = ['name', 'urlSlug', 'industry', 'size', 'type'];
     for (final field in requiredFields) {
       if (json[field] == null) {
         throw FormatException('Missing required field: $field');
@@ -32,7 +32,7 @@ class CompanyResponse {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       profilePictureUrl: json['profilePictureUrl'],
-      addressUrl: json['addressUrl'] ?? '',
+      urlSlug: json['urlSlug'] ?? '',
       industry: json['industry'] ?? '',
       size: json['size'] ?? 'Unknown Size',
       type: json['type'] ?? 'Unknown Typw',
@@ -45,7 +45,7 @@ class CompanyResponse {
         'id': id,
         'name': name,
         'profilePictureUrl': profilePictureUrl,
-        'addressUrl': addressUrl,
+        'urlSlug': urlSlug,
         'industry': industry,
         'size': size,
         'type': type,

@@ -20,7 +20,7 @@ class CreateCompanyApiService {
 
   Future<CreateCompanyResponse> createCompany(
     String name,
-    String addressUrl,
+    String urlSlug,
     String industry,
     String size,
     String type,
@@ -33,19 +33,18 @@ class CreateCompanyApiService {
         Endpoint: /companies
         Payload:
         - Name: $name
-        - Address URL: $addressUrl
+        - Address URL: $urlSlug
         - Industry: $industry
         - Size: $size
         - Type: $type
         - Overview: ${overview.length > 50 ? '${overview.substring(0, 50)}...' : overview}
         - Website: $website
-        '''
-      );
+        ''');
       final response = await _dio.post(
         '/companies',
         data: {
           'name': name,
-          'addressUrl': addressUrl,
+          'urlSlug': urlSlug,
           'industry': industry,
           'size': size,
           'type': type,
@@ -58,8 +57,7 @@ class CreateCompanyApiService {
         Status: ${response.statusCode} ${response.statusMessage}
         Headers: ${response.headers}
         Data: ${response.data}
-        '''
-      );
+        ''');
       return CreateCompanyResponse.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response != null && e.response!.data is Map) {
@@ -67,7 +65,7 @@ class CreateCompanyApiService {
           "message": _handleDioError(e),
           "errorCode": e.response!.statusCode,
         };
-        print(errorResponse); 
+        print(errorResponse);
       }
       rethrow;
     } catch (e) {

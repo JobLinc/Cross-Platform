@@ -20,7 +20,7 @@ void main() {
   final mockApiResponse = CompanyResponse(
     id: 'comp_123',
     name: 'Tech Corp',
-    addressUrl: 'https://techcorp.com',
+    urlSlug: 'https://techcorp.com',
     industry: 'Technology, Information and Internet',
     size: '11-50 employees',
     type: 'Privately Held',
@@ -53,7 +53,7 @@ void main() {
       final invalidResponse = CompanyResponse(
         id: 'comp_123',
         name: 'Tech Corp',
-        addressUrl: 'https://techcorp.com',
+        urlSlug: 'https://techcorp.com',
         industry: 'Invalid Industry',
         size: 'Invalid Size',
         type: 'Invalid Type',
@@ -76,7 +76,7 @@ void main() {
       final minimalResponse = CompanyResponse(
         id: 'comp_123',
         name: 'Minimal Corp',
-        addressUrl: 'https://minimal.com',
+        urlSlug: 'https://minimal.com',
         industry: 'IT Services and IT Consulting',
         size: '2-10 employees',
         type: 'Public Company',

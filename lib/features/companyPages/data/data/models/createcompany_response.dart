@@ -29,7 +29,7 @@ class CreateCompanyResponse {
   final String size;
   final String type;
   final String industry;
-  final String addressUrl;
+  final String urlSlug;
   final String overview;
   // final String website;
   // final List<String> admins;
@@ -50,7 +50,7 @@ class CreateCompanyResponse {
     required this.industry,
     required this.size,
     required this.type,
-    required this.addressUrl,
+    required this.urlSlug,
     required this.overview,
     // required this.website,
     // required this.admins,
@@ -75,7 +75,7 @@ class CreateCompanyResponse {
     return CreateCompanyResponse(
       name: json['name'] ?? "",
       size: json['size'] ?? "",
-      addressUrl: json['addressUrl'] ?? "",
+      urlSlug: json['urlSlug'] ?? "",
       industry: json['industry'] ?? "",
       overview: json['overview'] ?? "",
       type: json['type'] ?? "",

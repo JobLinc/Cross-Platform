@@ -2,7 +2,7 @@
 class CompanyResponse {
   final String id;
   final String name;
-  final String addressUrl;
+  final String urlSlug;
   final String industry;
   final String size;
   final String type;
@@ -14,7 +14,7 @@ class CompanyResponse {
     required this.id,
     required this.name,
     this.profilePictureUrl,
-    required this.addressUrl,
+    required this.urlSlug,
     required this.industry,
     required this.size,
     required this.type,
@@ -26,7 +26,7 @@ class CompanyResponse {
     return CompanyResponse(
       id: json['id'],
       name: json['name'],
-      addressUrl: json['addressUrl'],
+      urlSlug: json['urlSlug'],
       industry: json['industry'],
       size: json['size'],
       type: json['type'],

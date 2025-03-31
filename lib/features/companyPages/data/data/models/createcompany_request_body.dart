@@ -1,5 +1,5 @@
 class CreateCompanyRequestBody {
-  final String addressUrl;
+  final String urlSlug;
   final String name;
   final String overview;
   final String industry;
@@ -11,7 +11,7 @@ class CreateCompanyRequestBody {
 
   CreateCompanyRequestBody({
     required this.name,
-    required this.addressUrl,
+    required this.urlSlug,
     required this.industry,
     required this.size,
     required this.type,
@@ -24,7 +24,7 @@ class CreateCompanyRequestBody {
   Map<String, dynamic> toJson() {
     return {
       "name": name,
-      "addressUrl": addressUrl,
+      "urlSlug": urlSlug,
       "industry": industry,
       "size": size,
       "type": type,

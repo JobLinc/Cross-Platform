@@ -20,7 +20,7 @@ void main() {
   final validResponse = {
     'id': 'comp_123',
     'name': 'Tech Corp',
-    'addressUrl': 'https://techcorp.com',
+    'urlSlug': 'https://techcorp.com',
     'industry': 'Technology, Information and Internet',
     'size': '11-50 employees',
     'type': 'Privately Held',
@@ -46,7 +46,7 @@ void main() {
       // Assert
       expect(result, isA<CompanyResponse>());
       expect(result.name, equals('Tech Corp'));
-      expect(result.addressUrl, equals('https://techcorp.com'));
+      expect(result.urlSlug, equals('https://techcorp.com'));
       expect(result.industry, equals('Technology, Information and Internet'));
       verify(() => mockDio.get(testUrl)).called(1);
     });

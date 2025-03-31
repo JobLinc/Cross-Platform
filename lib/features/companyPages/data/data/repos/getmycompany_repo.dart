@@ -16,7 +16,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
     final companyResponse = await apiService.getCurrentCompany();
     final company = Company(
       name: companyResponse.name,
-      profileUrl: companyResponse.addressUrl,
+      profileUrl: companyResponse.urlSlug,
       industry: IndustryExtension.fromDisplayName(companyResponse.industry)!,
       organizationSize: OrganizationSizeExtension.fromDisplayName(companyResponse.size)!,
       organizationType: OrganizationTypeExtension.fromDisplayName(companyResponse.type)!,
