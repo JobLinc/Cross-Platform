@@ -4,7 +4,7 @@ import 'package:joblinc/features/premium/data/models/user_model.dart';
 class JobApplication {
   final User applicant; 
   final Job job; 
-  final String resume;
+  final Resume resume;
   final String status;
   final DateTime createdAt;
 
@@ -21,7 +21,7 @@ class JobApplication {
     return JobApplication(
       applicant: User.fromJson(json['applicant']),
       job: Job.fromJson(json['job']),
-      resume: json['resume'] as String,
+      resume: Resume.fromJson(json['resume']),
       status: json['status'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
@@ -32,7 +32,7 @@ class JobApplication {
     return {
       'applicant': applicant.toJson(),
       'job': job.toJson(),
-      'resume': resume,
+      'resume': resume.toJson(),
       'status': status,
       'createdAt': createdAt.toIso8601String(),
     };
@@ -80,6 +80,10 @@ class Resume {
     };
   }
 }
+
+
+
+List<JobApplication> mockJobApplications = [];
 
 
 List<Resume> mockResumes = [

@@ -333,7 +333,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                       final jobApplication = JobApplication(
                         applicant: mockMainUser,
                         job: widget.job,
-                        resume: _selectedResumeId!,
+                        resume: resumes!.firstWhere(((resume)=> resume.id==_selectedResumeId!)),
                         status: "JustApplied",
                         createdAt: DateTime.now(),
                       );
