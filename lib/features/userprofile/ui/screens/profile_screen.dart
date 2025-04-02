@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -19,6 +20,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
+        } else if (state is ProfileUpdated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
         }
       },
       builder: (context, state) {
@@ -27,6 +32,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             appBar: AppBar(title: Text('Profile')),
             body: Center(child: CircularProgressIndicator()),
           );
+        }
+        
+        if (state is ProfileUpdating) {
+          return EditUserProfileScreen();
         }
         
         if (state is ProfileLoaded) {
@@ -56,9 +65,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${profile.firstname} ${profile.lastname}',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${profile.firstname} ${profile.lastname}',
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                ),
+                              ),
+                              // Alternative edit button
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  print('Edit button pressed next to name');
+                                  Navigator.pushNamed(context, Routes.editProfileScreen);
+                                },
+                                tooltip: 'Edit Profile',
+                              ),
+                            ],
                           ),
                           Text(
                             profile.headline,
@@ -77,7 +102,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Text(profile.about),
                           ],
                           
-                          // Add more sections for experience, education, etc.
                         ],
                       ),
                     ),
@@ -128,31 +152,64 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         
-        // Profile image
+        // Profile image with edit button
         Positioned(
           left: 20,
           top: 100,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 4),
-              image: profile.profilePicture.isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(profile.profilePicture),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: profile.profilePicture.isEmpty
-                ? Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.grey.shade400,
-                  )
-                : null,
+          child: Stack(
+            children: [
+              // Profile image
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 4),
+                  image: profile.profilePicture.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(profile.profilePicture),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                child: profile.profilePicture.isEmpty
+                    ? Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.grey.shade400,
+                      )
+                    : null,
+              ),
+              
+              // Edit button overlay
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.edit, size: 18),
+                    padding: EdgeInsets.all(4),
+                    constraints: BoxConstraints(),
+                    onPressed: () {
+                      print('Edit button pressed from profile image');
+                      Navigator.pushNamed(context, Routes.editProfileScreen);
+                    },
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

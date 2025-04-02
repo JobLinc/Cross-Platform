@@ -22,4 +22,5 @@ class Routes {
   static const String companyFeed = '/companyFeed';
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
+  static const String editProfileScreen = '/editProfileScreen';
 }

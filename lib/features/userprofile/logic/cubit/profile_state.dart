@@ -13,11 +13,24 @@ class ProfileLoaded extends ProfileState {
   ProfileLoaded(this.profile);
 }
 
-class ProfileUpdating extends ProfileState {}
 
-class ProfileUpdated extends ProfileState {}
+class ProfileUpdating extends ProfileState {
+  final String operation;
+  
+  ProfileUpdating([this.operation = 'profile']);
+}
 
-class ProfilePictureUpdated extends ProfileState {}
+class ProfileUpdated extends ProfileState {
+  final String message;
+  
+  ProfileUpdated([this.message = 'Profile updated successfully']);
+}
+
+class ProfilePictureUpdated extends ProfileState {
+  final String imageUrl;
+  
+  ProfilePictureUpdated(this.imageUrl);
+}
 
 class ProfileError extends ProfileState {
   final String message;

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:joblinc/features/userProfile/data/models/update_user_profile_model.dart';
 import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
@@ -20,17 +21,17 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // Future<void> updateUserProfile(UserProfile updatedProfile) async {
-  //   try {
-  //     emit(ProfileUpdating());
-  //     await _profileRepository.updateUserProfile(updatedProfile);
-  //     emit(ProfileUpdated());
-  //     // Reload the profile to get the updated data
-  //     getUserProfile();
-  //   } catch (e) {
-  //     emit(ProfileError('Failed to update profile: ${e.toString()}'));
-  //   }
-  // }
+    Future<void> updateUserProfile(UserProfileUpdateModel updateData) async {
+    try {
+      emit(ProfileUpdating());
+      await _profileRepository.updateUserPersonalInfo(updateData);
+      emit(ProfileUpdated());
+      // Reload the profile to get the updated data
+      getUserProfile();
+    } catch (e) {
+      emit(ProfileError('Failed to update profile: ${e.toString()}'));
+    }
+  }
 
   // Future<void> updateProfilePicture(String imagePath) async {
   //   try {

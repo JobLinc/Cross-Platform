@@ -1,14 +1,16 @@
-// user_profile_repository.dart
 import '../models/user_profile_model.dart';
+import '../models/update_user_profile_model.dart';
 import '../service/my_user_profile_api.dart';
+import '../service/update_user_profile_api.dart';
 
 class UserProfileRepository {
   final UserProfileApiService _apiService;
+  final UpdateUserProfileApiService _updateApiService;
   
   // Optional in-memory cache
   UserProfile? _cachedProfile;
   
-  UserProfileRepository(this._apiService);
+  UserProfileRepository(this._apiService, this._updateApiService);
   
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
@@ -37,6 +39,24 @@ class UserProfileRepository {
     }
   }
 
+  /// Updates the user's personal information
+  /// Only the fields included in updateData will be modified
+  Future<void> updateUserPersonalInfo(UserProfileUpdateModel updateData) async {
+    try {
+      print('Updating user personal information');
+      await _updateApiService.updateUserPersonalInfo(updateData);
+      
+      // Clear cache to force fresh data on next get
+      clearCache();
+      
+      print('User profile updated successfully');
+    } catch (e) {
+      print('Error updating user personal information: $e');
+      throw Exception('Failed to update profile: ${e.toString()}');
+    }
+  }
+
+  /// Clears the cached profile data
   void clearCache() {
     _cachedProfile = null;
   }
