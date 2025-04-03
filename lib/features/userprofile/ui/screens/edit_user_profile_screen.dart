@@ -32,7 +32,6 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
     headlineController = TextEditingController();
-    // TODO : Hedar should add these to users/me:
     addressController = TextEditingController();
     cityController = TextEditingController();
     countryController = TextEditingController();
@@ -60,10 +59,10 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
       lastNameController.text = profile.lastname;
       headlineController.text = profile.headline;
       // addressController.text = profile.address ?? '';
-      // cityController.text = profile.city ?? '';
-      // countryController.text = profile.country ?? '';
-      // phoneController.text = profile.phoneNo ?? '';
-      // biographyController.text = profile.about;
+      cityController.text = profile.city ?? '';
+      countryController.text = profile.country ?? '';
+      phoneController.text = profile.phoneNumber ?? '';
+      biographyController.text = profile.biography ?? '';
       _formInitialized = true;
     }
   }
@@ -79,7 +78,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
             lastNameController.text.isNotEmpty ? lastNameController.text : null,
         headline:
             headlineController.text.isNotEmpty ? headlineController.text : null,
-        address: addressController.text.isNotEmpty ? addressController.text : null,
+        address:
+            addressController.text.isNotEmpty ? addressController.text : null,
         city: cityController.text.isNotEmpty ? cityController.text : null,
         country:
             countryController.text.isNotEmpty ? countryController.text : null,
@@ -258,10 +258,9 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                             key: Key('country_updateProfile_textField'),
                             controller: countryController,
                             labelText: 'Country/Region*',
-                            validator: (value) => 
-                                value == null || value.isEmpty
-                                    ? 'Country/Region is a required field.'
-                                    : null,
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Country/Region is a required field.'
+                                : null,
                             hintText: 'e.g. United States',
                           ),
                           SizedBox(height: 24),
@@ -285,7 +284,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                           CustomRectangularTextFormField(
                             key: Key('biography_updateProfile_textField'),
                             controller: biographyController,
-                            labelText: 'You can write about your years of experience, industry, or skills. People also talk about their achievements or previous job experiences.',
+                            labelText:
+                                'You can write about your years of experience, industry, or skills. People also talk about their achievements or previous job experiences.',
                             hintText: 'Tell us about yourself',
                             maxLines: 20,
                             maxLength: 2600,
@@ -296,14 +296,15 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                     ),
                   ),
                 ),
-                
+
                 // Persistent save button at bottom
                 Positioned(
                   left: 0,
                   right: 0,
                   bottom: 0,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [

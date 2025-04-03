@@ -85,26 +85,54 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                             ],
                           ),
+
+                          SizedBox(height: 8.h),
+                          
+                          if (profile.headline.isNotEmpty) ...[
+                            // Headline
+                            Text(
+                              profile.headline,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ],
+
+                          SizedBox(height: 5.h),
+
                           Text(
-                            profile.headline,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            '${profile.city}, ${profile.country}',
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
+
+                          // TODO: Connection status
                           SizedBox(height: 8),
                           _buildConnectionsInfo(profile),
                           
-                          if (profile.about.isNotEmpty) ...[
-                            SizedBox(height: 16),
-                            Text(
-                              'About',
-                              style: Theme.of(context).textTheme.titleLarge,
+                          // Profile biography 
+                          SizedBox(height: 20.h),
+                          if (profile.biography.isNotEmpty) ...[
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'About',
+                                    style: Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(profile.biography),
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 8),
-                            Text(profile.about),
+                            
                           ],
                           
                         ],
                       ),
                     ),
+                    
                   ),
                 ],
               ),

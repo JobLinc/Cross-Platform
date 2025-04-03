@@ -7,8 +7,11 @@ class UserProfile {
   final String headline;
   final String profilePicture;
   final String coverPicture;
-  final String about;
   final String connectionStatus;
+  final String country;
+  final String city;
+  final String biography;
+  final String phoneNumber;
   final int numberOfConnections;
   final int matualConnections;
   final List<Post> recentPosts;
@@ -25,7 +28,10 @@ class UserProfile {
     required this.headline,
     required this.profilePicture,
     required this.coverPicture,
-    required this.about,
+    required this.country,
+    required this.city,
+    required this.biography,
+    required this.phoneNumber,
     required this.connectionStatus,
     required this.numberOfConnections,
     required this.matualConnections,
@@ -45,10 +51,13 @@ class UserProfile {
       headline: json['headline'] ?? '',
       profilePicture: json['profilePicture'] ?? '',
       coverPicture: json['coverPicture'] ?? '',
-      about: json['about'] ?? '',
       connectionStatus: json['connectionStatus'] ?? 'NotConnected',
       numberOfConnections: json['numberOfConnections'] ?? 0,
       matualConnections: json['matualConnections'] ?? 0,
+      country: json['country'] ?? '',
+      city: json['city'] ?? '',
+      biography: json['biography'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
       recentPosts: (json['recentPosts'] as List<dynamic>?)
               ?.map((post) => Post.fromJson(post))
               .toList() ??
@@ -84,7 +93,10 @@ class UserProfile {
       'headline': headline,
       'profilePicture': profilePicture,
       'coverPicture': coverPicture,
-      'about': about,
+      'country': country,
+      'city': city,
+      'biography': biography,
+      'phoneNumber': phoneNumber,
       'connectionStatus': connectionStatus,
       'numberOfConnections': numberOfConnections,
       'matualConnections': matualConnections,
