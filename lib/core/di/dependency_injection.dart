@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -51,10 +53,12 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-
+  final baseUrl = Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api'
+      : 'http://localhost:3000/api';
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:3000/api',
+      baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -165,17 +169,15 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<InvitationsCubit>(
       () => InvitationsCubit(MockConnectionApiService()));
 
-    getIt.registerLazySingleton<UserProfileApiService>(
+  getIt.registerLazySingleton<UserProfileApiService>(
       () => UserProfileApiService(getIt<Dio>()));
-      
+
   getIt.registerLazySingleton<UpdateUserProfileApiService>(
       () => UpdateUserProfileApiService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<UserProfileRepository>(
-      () => UserProfileRepository(
-        getIt<UserProfileApiService>(),
-        getIt<UpdateUserProfileApiService>()
-      ));
+  getIt.registerLazySingleton<UserProfileRepository>(() =>
+      UserProfileRepository(getIt<UserProfileApiService>(),
+          getIt<UpdateUserProfileApiService>()));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));

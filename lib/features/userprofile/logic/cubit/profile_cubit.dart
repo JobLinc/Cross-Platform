@@ -15,13 +15,17 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       emit(ProfileLoading());
       final profile = await _profileRepository.getUserProfile();
-      emit(ProfileLoaded(profile));
+      if (!isClosed) {
+        emit(ProfileLoaded(profile));
+      }
     } catch (e) {
-      emit(ProfileError('Failed to load profile: ${e.toString()}'));
+      if (!isClosed) {
+        emit(ProfileError('Failed to load profile: ${e.toString()}'));
+      }
     }
   }
 
-    Future<void> updateUserProfile(UserProfileUpdateModel updateData) async {
+  Future<void> updateUserProfile(UserProfileUpdateModel updateData) async {
     try {
       emit(ProfileUpdating());
       await _profileRepository.updateUserPersonalInfo(updateData);
