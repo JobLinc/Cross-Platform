@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen.dart';
@@ -60,80 +61,77 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                   // Profile info
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '${profile.firstname} ${profile.lastname}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                ),
+                    padding: EdgeInsets.only(bottom:16.h, left: 16.w, right: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${profile.firstname} ${profile.lastname}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium,
                               ),
-                              // Alternative edit button
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  print('Edit button pressed next to name');
-                                  Navigator.pushNamed(
-                                      context, Routes.editProfileScreen);
-                                },
-                                tooltip: 'Edit Profile',
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 8.h),
-
-                          if (profile.headline.isNotEmpty) ...[
-                            // Headline
-                            Text(
-                              profile.headline,
-                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            // Alternative edit button
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                print('Edit button pressed next to name');
+                                Navigator.pushNamed(
+                                    context, Routes.editProfileScreen);
+                              },
+                              tooltip: 'Edit Profile',
                             ),
                           ],
-
-                          SizedBox(height: 5.h),
-
+                        ),
+                    
+                        SizedBox(height: 8.h),
+                    
+                        if (profile.headline.isNotEmpty) ...[
+                          // Headline
                           Text(
-                            '${profile.city}, ${profile.country}',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            profile.headline,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-
-                          // TODO: Connection status
-                          SizedBox(height: 8),
-                          _buildConnectionsInfo(profile),
-
-                          // Profile biography
-                          SizedBox(height: 20.h),
-                          if (profile.biography.isNotEmpty) ...[
-                            Container(
-                              color: Colors.white,
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'About',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Text(profile.biography),
-                                ],
-                              ),
-                            ),
-                          ],
                         ],
-                      ),
+                    
+                        SizedBox(height: 5.h),
+                    
+                        Text(
+                          '${profile.city}, ${profile.country}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                    
+                        // TODO: Connection status
+                        SizedBox(height: 8),
+                        _buildConnectionsInfo(profile),
+                    
+                        // Profile biography
+                        SizedBox(height: 20.h),
+                        if (profile.biography.isNotEmpty) ...[
+                          Container(
+                            color: Colors.white,
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About',
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge,
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(profile.biography),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],
@@ -169,66 +167,87 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       clipBehavior: Clip.none,
       children: [
         // Cover image
-        Container(
-          height: 150,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade800,
-            image: profile.coverPicture.isNotEmpty
-                ? DecorationImage(
-                    image: NetworkImage(profile.coverPicture),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-          ),
+        Column(
+          children: [
+            Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: ColorsManager.softRosewood,
+                image: profile.coverPicture.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(profile.coverPicture),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
+            ),
+            Container(
+              height: 50,
+              width: double.infinity,
+            ),
+          ],
         ),
 
         // Profile image with edit button
         Positioned(
           left: 20,
           top: 100,
-          child: Container(
-            width: 100.r,
-            height: 100.r,
-            child: GestureDetector(
-              child: CircleAvatar(
-                radius: 50.r, // Adjust size as needed
-                backgroundColor: Colors.grey.shade200,
-                child: profile.profilePicture.isNotEmpty
-                    ? ClipOval(
-                        child: Image.network(
-                          "http://10.0.2.2:3000${profile.profilePicture}",
-                          fit: BoxFit.cover,
-                          width: 96.r, // Match the radius size
-                          height: 96.r, // Match the radius size
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child; // Show the image when loaded
-                            } else {
-                              return Center(
-                                child:
-                                    CircularProgressIndicator(), // Show loading indicator
-                              );
-                            }
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent, // Ensures hit testing works
+            onTap: () {
+              print("Profile picture tapped");
+            },
+            child: SizedBox(
+              width: 100.r,
+              height: 100.r,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                    ),
+                    child: CircleAvatar(
+                      radius: 50.r,
+                      backgroundColor: Colors.grey.shade200,
+                      child: profile.profilePicture.isNotEmpty
+                          ? ClipOval(
+                              child: Image.network(
+                                "http://localhost:3000${profile.profilePicture}",
+                                fit: BoxFit.cover,
+                                width: 96.r,
+                                height: 96.r,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.person,
+                                    size: 55.r,
+                                    color: Colors.grey.shade400,
+                                  );
+                                },
+                              ),
+                            )
+                          : Icon(
                               Icons.person,
                               size: 55.r,
                               color: Colors.grey.shade400,
-                            ); // Show error icon if image fails to load
-                          },
-                        ),
-                      )
-                    : Icon(
-                        Icons.person,
-                        size: 55.r,
-                        color: Colors.grey.shade400,
-                      ),
+                            ),
+                    ),
+                  ),
+                ],
               ),
-              onTap: () {
-                print("hello");
-              },
             ),
           ),
         ),

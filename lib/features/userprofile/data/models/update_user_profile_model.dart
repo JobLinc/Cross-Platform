@@ -29,7 +29,7 @@ class UserProfileUpdateModel {
     if (address != null) data['address'] = address;
     if (country != null) data['country'] = country;
     if (city != null) data['city'] = city;
-    //if (phoneNo != null) data['phone'] = phoneNo;
+    if (phoneNo != null) data['phoneNumber'] = phoneNo;
     if (biography != null) data['biography'] = biography;
     
     return data;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
@@ -126,8 +127,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            // Navigate back after successful update
-            Navigator.pop(context);
+              context.read<ProfileCubit>().getUserProfile();
+              Navigator.pushReplacementNamed(context, Routes.profileScreen);  
           }
         },
         builder: (context, state) {
