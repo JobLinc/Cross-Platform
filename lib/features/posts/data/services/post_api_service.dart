@@ -35,8 +35,7 @@ class PostApiService {
   Future<String> addPost(String text) async {
     try {
       final response = await _dio.post('/post/add', data: {
-        'repostId': null,
-        'Text': text,
+        'text': text,
       });
       return response.data['postId'];
     } on DioException catch (e) {
