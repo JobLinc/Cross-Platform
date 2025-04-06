@@ -14,7 +14,12 @@ class LoginCubit extends Cubit<LoginState> {
       await _loginRepo.login(email, password);
       emit(LoginSuccess());
     } catch (e) {
-      emit(LoginFailure(e.toString()));
+      // Remove "Exception: " prefix if it exists
+      final errorMessage = e.toString().startsWith('Exception: ')
+          ? e.toString().substring('Exception: '.length)
+          : e.toString();
+
+      emit(LoginFailure(errorMessage));
     }
   }
 }

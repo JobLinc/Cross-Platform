@@ -6,33 +6,50 @@ class LoginApiService {
 
   LoginApiService(this._dio);
 
-  Future<LoginResponse> login(String username, String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     try {
-      print(username);
-      print(password);
       final response = await _dio.post(
         '/auth/login',
         data: {
-          'email': username,
+          'email': email,
           'password': password,
         },
       );
-      print(response.data);
       return LoginResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw Exception(_handleDioError(e));
+      // Throw the error message directly instead of wrapping in Exception
+      throw _handleDioError(e);
     }
   }
 
   String _handleDioError(DioException e) {
     if (e.response != null) {
-      if (e.response?.statusCode == 401) {
-        return 'Incorrect credentials';
-      } else {
-        return 'internal Server error}';
+      // Try to extract the error message from the response
+      // if (e.response?.data != null && e.response?.data['message'] != null) {
+      //   return e.response?.data['message'];
+      // }
+
+      switch (e.response?.statusCode) {
+        case 400:
+          return 'Incorrect credentials. Please try again.';
+        case 401:
+          return 'Incorrect credentials. Please try again.';
+        case 403:
+          return 'Access denied';
+        case 404:
+          return 'The requested resource was not found';
+        case 500:
+          return 'Internal server error. Please try again later.';
+        default:
+          return 'Server error (${e.response?.statusCode})';
       }
-    } else {
-      return 'Network error: ${e.message}';
+    } else if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout) {
+      return 'Connection timeout. Please check your internet connection.';
+    } else if (e.type == DioExceptionType.connectionError) {
+      return 'Network error. Please check your internet connection.';
     }
+    return 'An unexpected error occurred: ${e.message}';
   }
 }
