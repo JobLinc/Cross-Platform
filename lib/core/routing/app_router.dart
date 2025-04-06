@@ -9,7 +9,8 @@ import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart' show CompanyAnalytics;
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart'
+    show CompanyAnalytics;
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
@@ -41,11 +42,12 @@ import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen
 import 'package:joblinc/features/userProfile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
     final arguments = settings.arguments;
-    
+
     switch (settings.name) {
       case Routes.onBoardingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
@@ -73,12 +75,21 @@ class AppRouter {
         );
 
       case Routes.editProfileScreen:
-  return MaterialPageRoute(
-    builder: (context) => BlocProvider(
-      create: (context) => getIt<ProfileCubit>()..getUserProfile(),
-      child: EditUserProfileScreen(),
-    ),
-  );
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>()..getUserProfile(),
+            child: EditUserProfileScreen(),
+          ),
+        );
+      case Routes.profilePictureUpdate:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<ProfileCubit>(),
+              child: FullScreenImagePage(imagePath: arguments),
+            ),
+          );
+        }
 
       case Routes.chatScreen:
         return MaterialPageRoute(builder: (context) => ChatScreen());
@@ -166,7 +177,7 @@ class AppRouter {
                 create: (context) => getIt<ChangePasswordCubit>(),
                 child: ChangePasswordScreen()));
 
-        case Routes.companyDashboard:
+      case Routes.companyDashboard:
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyDashboard(company: arguments),
@@ -181,7 +192,7 @@ class AppRouter {
           );
         }
 
-        case Routes.companyPagePosts:
+      case Routes.companyPagePosts:
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyPagePosts(company: arguments),
@@ -196,7 +207,7 @@ class AppRouter {
           );
         }
 
-        case Routes.companyAnalytics:
+      case Routes.companyAnalytics:
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyAnalytics(company: arguments),
@@ -211,7 +222,7 @@ class AppRouter {
           );
         }
 
-        case Routes.companyFeed:
+      case Routes.companyFeed:
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyFeed(company: arguments),

@@ -103,6 +103,12 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit intro'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, Routes.profileScreen);
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.save),
@@ -127,8 +133,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-              context.read<ProfileCubit>().getUserProfile();
-              Navigator.pushReplacementNamed(context, Routes.profileScreen);  
+            context.read<ProfileCubit>().getUserProfile();
+            Navigator.pushReplacementNamed(context, Routes.profileScreen);
           }
         },
         builder: (context, state) {

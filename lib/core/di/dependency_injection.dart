@@ -37,6 +37,7 @@ import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/userProfile/data/service/update_user_profile_api.dart';
+import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
 
@@ -174,10 +175,12 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<UpdateUserProfileApiService>(
       () => UpdateUserProfileApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<UploadApiService>(
+      () => UploadApiService(getIt<Dio>()));
 
   getIt.registerLazySingleton<UserProfileRepository>(() =>
       UserProfileRepository(getIt<UserProfileApiService>(),
-          getIt<UpdateUserProfileApiService>()));
+          getIt<UpdateUserProfileApiService>(), getIt<UploadApiService>()));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));

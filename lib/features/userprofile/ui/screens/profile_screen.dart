@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
+import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/Pictureuploadingsheet.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -28,6 +32,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SnackBar(content: Text(state.message)),
           );
         }
+        // if (state is ProfilePictureUpdating) {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (_) => FullScreenImagePage(imagePath: state.imagepath),
+        //     ),
+        //   );
+        // }
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -44,7 +56,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         }
 
         if (state is ProfileLoaded) {
-          final profile = state.profile;
+          var profile = state.profile;
           return Scaffold(
             appBar: AppBar(
               title: Text('Profile'),
@@ -61,7 +73,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Profile header with cover and profile images
-                  _buildProfileHeader(profile),
+                  _buildProfileHeader(state.profile),
 
                   // Profile info
                   Padding(
@@ -85,7 +97,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               icon: Icon(Icons.edit),
                               onPressed: () {
                                 print('Edit button pressed next to name');
-                                Navigator.pushNamed(
+                                Navigator.pushReplacementNamed(
                                     context, Routes.editProfileScreen);
                               },
                               tooltip: 'Edit Profile',
@@ -134,6 +146,122 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ),
                         ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is ProfilePictureUpdating) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: Text(
+                'Profile photo',
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // context.read<ProfileCubit>().getUserProfile();
+                  BlocProvider.of<ProfileCubit>(context).getUserProfile();
+                },
+              ),
+            ),
+            backgroundColor: Colors.black,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  // Expanded Image Viewer
+                  Expanded(
+                    child: Center(
+                      child: Image.network(
+                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            size: 80,
+                            color: Colors.grey.shade400,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  // Footer with 2 Image Buttons
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              // final ProfileCubit profilecubit = context.read<ProfileCubit>();
+
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (bottomSheetContext) => Container(
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(Icons.camera_alt),
+                                        title: Text("Tile 1"),
+                                        onTap: () async {
+                                          File? image =
+                                              await pickImage("camera");
+                                          // Do something when Tile 1 is tapped
+                                          print("Tile 1 tapped");
+                                          context
+                                              .read<ProfileCubit>()
+                                              .uploadProfilePicture(image!);
+                                          Navigator.pop(
+                                              bottomSheetContext); // Close the bottom sheet
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.photo_library),
+                                        title: Text("Tile 2"),
+                                        onTap: () async {
+                                          File? image =
+                                              await pickImage("gallery");
+                                          // Do something when Tile 2 is tapped
+                                          print("Tile 2 tapped");
+                                          context
+                                              .read<ProfileCubit>()
+                                              .uploadProfilePicture(image!);
+                                          // Response response = await getIt<UserProfileRepository>()
+                                          //     .uploadProfilePicture(image!);
+                                          // print(response.statusCode);
+                                          Navigator.pop(
+                                              bottomSheetContext); // Close the bottom sheet
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.abc_outlined)),
+                        GestureDetector(
+                          onTap: () {
+                            // Button 2 action
+                          },
+                          child: IconButton(
+                              onPressed: () {}, icon: Icon(Icons.abc_outlined)),
+                        ),
                       ],
                     ),
                   ),
@@ -199,7 +327,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent, // Ensures hit testing works
             onTap: () {
-              print("Profile picture tapped");
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (_) => BlocProvider<ProfileCubit>(
+              //       create: (context) => getIt<
+              //           ProfileCubit>(), // Make sure ProfileCubit is created here
+              //       child:
+              //           FullScreenImagePage(imagePath: profile.profilePicture),
+              //     ),
+              //   ),
+              // );
+              // Navigator.pushNamed(context, Routes.profilePictureUpdate,arguments : profile.profilePicture);
+              BlocProvider.of<ProfileCubit>(context)
+                  .updateprofilepicture(profile.profilePicture);
             },
             child: SizedBox(
               width: 100.r,

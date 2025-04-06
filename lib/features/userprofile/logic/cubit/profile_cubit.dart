@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:joblinc/features/userProfile/data/models/update_user_profile_model.dart';
 import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
+import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/Pictureuploadingsheet.dart';
 import 'package:meta/meta.dart';
 import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
 
@@ -33,10 +38,35 @@ class ProfileCubit extends Cubit<ProfileState> {
       // Reload the profile to get the updated data
       getUserProfile();
     } catch (e) {
-      emit(ProfileError('Failed to update profile: ${e.toString()}'));
+      if (!isClosed) {
+        emit(ProfileError('Failed to update profile: ${e.toString()}'));
+      }
     }
   }
 
+  Future<void> uploadProfilePicture(File imageFile) async {
+    // UserProfileUpdateModel updateData =
+    //     UserProfileUpdateModel(profilePicture: imageFile.path);
+    try {
+      // Call the repository to upload the image
+      emit(ProfileUpdating("Profile Picture"));
+      Response response =
+          await _profileRepository.uploadProfilePicture(imageFile);
+
+      if (response.statusCode == 200) {
+        // updateUserProfile(updateData);
+        await getUserProfile();
+      } else {
+        emit(ProfileError('Failed to upload profile picture'));
+      }
+    } catch (e) {
+      emit(ProfileError('Error: $e'));
+    }
+  }
+
+  void updateprofilepicture(String imagepath) {
+    emit(ProfilePictureUpdating(imagepath));
+  }
   // Future<void> updateProfilePicture(String imagePath) async {
   //   try {
   //     emit(ProfileUpdating());
