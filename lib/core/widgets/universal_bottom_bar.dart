@@ -55,6 +55,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
               if (value == _selectedIndex) return;
               setState(() {
                 _selectedIndex = value;
+                if (value == 2) _selectedIndex = 0;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
               switch (value) {
