@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +32,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       builder: (context, state) {
         if (state is ProfileLoading) {
           return Scaffold(
-            appBar: AppBar(title: Text('Profile')),
+            appBar: AppBar(
+              title: Text('Profile'),
+            ),
             body: Center(child: CircularProgressIndicator()),
           );
         }
@@ -61,7 +65,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                   // Profile info
                   Padding(
-                    padding: EdgeInsets.only(bottom:16.h, left: 16.w, right: 16.w),
+                    padding:
+                        EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -71,9 +76,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Expanded(
                               child: Text(
                                 '${profile.firstname} ${profile.lastname}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               ),
                             ),
                             // Alternative edit button
@@ -88,9 +92,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ],
                         ),
-                    
+
                         SizedBox(height: 8.h),
-                    
+
                         if (profile.headline.isNotEmpty) ...[
                           // Headline
                           Text(
@@ -98,18 +102,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
-                    
+
                         SizedBox(height: 5.h),
-                    
+
                         Text(
                           '${profile.city}, ${profile.country}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                    
+
                         // TODO: Connection status
                         SizedBox(height: 8),
                         _buildConnectionsInfo(profile),
-                    
+
                         // Profile biography
                         SizedBox(height: 20.h),
                         if (profile.biography.isNotEmpty) ...[
@@ -122,8 +126,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               children: [
                                 Text(
                                   'About',
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 SizedBox(height: 8.h),
                                 Text(profile.biography),
@@ -216,7 +219,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: profile.profilePicture.isNotEmpty
                           ? ClipOval(
                               child: Image.network(
-                                "http://localhost:3000${profile.profilePicture}",
+                                "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.profilePicture}",
                                 fit: BoxFit.cover,
                                 width: 96.r,
                                 height: 96.r,
