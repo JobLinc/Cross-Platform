@@ -22,7 +22,9 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
+import 'package:joblinc/features/posts/data/services/comment_api_service.dart';
 import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 
@@ -47,7 +49,7 @@ Future<void> setupGetIt() async {
 
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'https://joblinc.me:3000/api',
+      baseUrl: 'http://192.168.1.108:3000/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -95,19 +97,26 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ForgetPasswordCubit>(
       () => ForgetPasswordCubit(repository: getIt<ForgetPasswordRepo>()));
-
+///////////////////////////////////////////////////////////////////////////
   // Home
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
-
+  getIt.registerFactory<HomeCubit>(
+      () => HomeCubit(getIt<PostRepo>(), getIt<CommentRepo>()));
+///////////////////////////////////////////////////////////////////////////
   // Posts
   getIt.registerLazySingleton<PostApiService>(
       () => PostApiService(getIt<Dio>()));
 
+  getIt.registerLazySingleton<CommentApiService>(
+      () => CommentApiService(getIt<Dio>()));
+
   getIt
       .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
 
-  getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+  getIt.registerLazySingleton<CommentRepo>(
+      () => CommentRepo(getIt<CommentApiService>()));
 
+  getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));
 
@@ -116,7 +125,7 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<CreateCompanyCubit>(
       () => CreateCompanyCubit(getIt<CreateCompanyRepo>()));
-
+///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<ChatApiService>(
     () => ChatApiService(getIt<Dio>()),
   );
