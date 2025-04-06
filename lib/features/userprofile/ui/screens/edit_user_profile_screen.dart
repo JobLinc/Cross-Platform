@@ -68,7 +68,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
     }
   }
 
-  void _submitForm() {
+  void updateProfileData() {
     if (_formKey.currentState!.validate()) {
       // Create update model with only the fields that are active in the form
       final updateData = UserProfileUpdateModel(
@@ -112,7 +112,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: _submitForm,
+            onPressed: updateProfileData,
             tooltip: 'Save Changes',
           )
         ],
@@ -329,7 +329,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorsManager.crimsonRed,
                         ),
-                        onPressed: _submitForm,
+                        onPressed: updateProfileData,
                         child: Text(
                           'Save',
                           style: TextStyle(
