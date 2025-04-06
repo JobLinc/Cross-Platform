@@ -20,13 +20,14 @@ class ChangePasswordApiService {
         },
       );
       if (response.statusCode != 200) {
-        throw Exception('Failed to change password');
+        throw 'Failed to change password';
       }
       return response.data;
     } on DioException catch (e) {
-      throw Exception(_handleDioError(e));
+      // Throw direct error message without Exception wrapper
+      throw _handleDioError(e);
     } catch (e) {
-      throw Exception('Unexpected error occurred');
+      throw 'Unexpected error occurred';
     }
   }
 

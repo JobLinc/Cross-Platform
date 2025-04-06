@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(myUser['name']),
+            accountName: Text(""),
             accountEmail: Text(''),
             currentAccountPicture: CircleAvatar(
               backgroundImage: NetworkImage(
