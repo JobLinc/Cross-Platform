@@ -224,6 +224,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               await pickImage("camera");
                                           // Do something when Tile 1 is tapped
                                           print("Tile 1 tapped");
+
+                                          if (image == null) {
+                                            return;
+                                          }
                                           context
                                               .read<ProfileCubit>()
                                               .uploadProfilePicture(image!);
