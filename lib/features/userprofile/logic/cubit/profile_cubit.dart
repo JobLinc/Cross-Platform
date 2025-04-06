@@ -58,7 +58,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           profilePicture: response.data['profilePicture'],
         );
         updateUserProfile(picModel);
-        await getUserProfile();
       } else {
         emit(ProfileError('Failed to upload profile picture'));
       }
