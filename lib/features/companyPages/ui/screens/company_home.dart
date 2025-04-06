@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/homePage/about.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../../data/data/company.dart';
 import '../widgets/scrollable_tabs.dart';
@@ -36,13 +38,15 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
         backgroundColor: const Color(0xFFFAFAFA),
         title: Row(
           children: [
-              CustomSearchBar(
-                keyName: 'company',
-                text: widget.company.name,
-                onPress: () {},
-                onTextChange: (searched) {},
-                controller: TextEditingController(),
-            ),
+              Expanded(
+                child: CustomSearchBar(
+                  keyName: 'company',
+                  text: widget.company.name,
+                  onPress: () {},
+                  onTextChange: (searched) {},
+                  controller: TextEditingController(),
+                ),
+              ),
           ],
         ),
       ),
@@ -57,12 +61,10 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const [
+              children: [
                 Center(child: Text("Home")),
-                Center(child: Text("About")),
-                Image(
-                    image: NetworkImage(
-                        "https://cdn.prod.website-files.com/6548f623e03389ab980fec2a/6752d7396fec014ddeb7d400_672a0de7927a7ff2a130709e_65eb1da89da0e332894adecd_Frame%2525201000006945.webp")),
+                CompanyHomeAbout(company: widget.company),
+                CompanyHomePosts(),
                 Center(child: Text("Jobs")),
                 Center(child: Text("People")),
               ],

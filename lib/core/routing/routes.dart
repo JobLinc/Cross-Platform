@@ -8,11 +8,21 @@ class Routes {
   static const String companyPageHome = '/companyPageHome';
   static const String jobListScreen = '/jobListScreen';
   static const String jobSearchScreen = '/jobSearchScreen';
+  static const String jobApplicationScreen = '/jobApplicationScreen';
+  static const String jobDetailsScreen = '/jobDetailsScreen';
+  static const String myJobsScreen = '/MyJobsScreen';
   static const String premiumScreen = '/premiumScreen';
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String connectionListScreen = '/connectionListScreen';
+  static const String companyDashboard = '/companyDashboard';
+  static const String companyPagePosts = '/companyPagePosts';
+  static const String companyAnalytics = '/companyAnalytics';
+  static const String companyFeed = '/companyFeed';
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
+  static const String editProfileScreen = '/editProfileScreen';
+    static const String profilePictureUpdate = '/profilePictureUpdate';
+
 }

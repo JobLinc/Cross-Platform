@@ -51,7 +51,7 @@ class ForgetPasswordCubit extends Cubit<ForgotPasswordState> {
         newPassword: newPassword,
         resetToken: resetToken,
       );
-      emit(ForgotPasswordSuccess(userData));
+      emit(ForgotPasswordSuccess());
     } catch (e) {
       // Clean error message
       final errorMessage = e.toString().startsWith('Exception: ')

@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 1,
         leadingWidth: 0.1.sw,
         leading: IconButton(
+          key: Key('home_topBar_profile'),
           iconSize: 30,
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
@@ -108,12 +109,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text(""),
-            accountEmail: Text(''),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://placehold.co/400/png',
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, Routes.profileScreen);
+            },
+            child: UserAccountsDrawerHeader(
+              accountName: Text('Ahmed Hesham'),
+              accountEmail: Text('ahmed@example.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://placehold.co/400/png',
+                ),
               ),
             ),
           ),
