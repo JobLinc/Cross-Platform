@@ -23,6 +23,8 @@ class AuthService {
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
     await _storage.write(key: _roleKey, value: role.toString());
     await _storage.write(key: _userIdKey, value: userId);
+    // Update global login status
+    isLoggedInUser = true;
   }
 
   Future<void> saveTokens({
@@ -31,6 +33,8 @@ class AuthService {
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
+    // Update global login status
+    isLoggedInUser = true;
   }
 
   Future<Map<String, dynamic>> getUserInfo() async {

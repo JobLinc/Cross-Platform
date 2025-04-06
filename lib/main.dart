@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupGetIt();
   await ScreenUtil.ensureScreenSize();
+  await checkIfLoggedInUser();
 
   runApp(MainApp(
     appRouter: AppRouter(),
@@ -23,18 +24,34 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = getIt.get<AuthService>();
     return ScreenUtilInit(
       designSize: Size(412, 924),
       minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
+          initialRoute:
+              isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
           theme: lightTheme,
           onGenerateRoute: appRouter.generateRoute,
         );
       },
     );
+  }
+}
+
+Future<void> checkIfLoggedInUser() async {
+  try {
+    AuthService authService = getIt<AuthService>();
+    String? userToken = await authService.getAccessToken();
+    if (userToken == null || userToken.isEmpty) {
+      isLoggedInUser = false;
+    } else {
+      bool refreshResult = await authService.refreshToken();
+      isLoggedInUser = refreshResult;
+    }
+  } catch (e) {
+    print("Error in checkIfLoggedInUser: $e");
+    isLoggedInUser = false;
   }
 }
