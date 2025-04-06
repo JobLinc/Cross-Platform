@@ -99,8 +99,7 @@ Future<void> setupGetIt() async {
       () => ForgetPasswordCubit(repository: getIt<ForgetPasswordRepo>()));
 ///////////////////////////////////////////////////////////////////////////
   // Home
-  getIt.registerFactory<HomeCubit>(
-      () => HomeCubit(getIt<PostRepo>(), getIt<CommentRepo>()));
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
 ///////////////////////////////////////////////////////////////////////////
   // Posts
   getIt.registerLazySingleton<PostApiService>(
