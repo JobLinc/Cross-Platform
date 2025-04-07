@@ -120,8 +120,60 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
 
                         // TODO: Connection status
-                        SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         _buildConnectionsInfo(profile),
+                        SizedBox(height: 8.h),
+                        //this row is the buttons row in the user profile home page
+                        Row(
+                          children: [
+                            Flexible(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Your action here
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                      color: ColorsManager
+                                          .darkBurgundy), // White border
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 12),
+                                  backgroundColor:
+                                      Colors.white, // Set your own color here
+                                ),
+                                child: Center(
+                                  // This ensures the text is centered
+                                  child: Text(
+                                    'Add section',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: ColorsManager.darkBurgundy,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: const Icon(Icons.more_horiz_outlined,
+                                  color: Colors.black),
+                              style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(
+                                  side: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.all(5),
+                                backgroundColor: Color(0xFFFAFAFA),
+                                foregroundColor: Colors.black,
+                                fixedSize: Size(50.w, 50.h),
+                              ),
+                            ),
+                          ],
+                        ),
 
                         // Profile biography
                         SizedBox(height: 20.h),
@@ -486,8 +538,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
         // Profile image with edit button
         Positioned(
-          left: 20,
-          top: 100,
+          left: 20.w,
+          top: 100.h,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent, // Ensures hit testing works
             onTap: () {
