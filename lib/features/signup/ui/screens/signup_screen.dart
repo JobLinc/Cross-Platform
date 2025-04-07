@@ -61,7 +61,12 @@ class _SignupScreenState extends State<SignupScreen> {
             message: "Registration successful",
             type: SnackBarType.success,
           );
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          // Navigate to email confirmation screen
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.emailConfirmationScreen,
+            arguments: emailController.text,
+          );
         } else if (state is RegisterFailure) {
           CustomSnackBar.show(
             context: context,

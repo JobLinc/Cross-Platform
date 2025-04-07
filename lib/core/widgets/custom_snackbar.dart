@@ -39,7 +39,7 @@ class CustomSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.only(bottom: 60.sp, left: 20.sp, right: 20.sp),
+        margin: EdgeInsets.only(bottom: 35.sp, left: 20.sp, right: 20.sp),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.sp),
         ),

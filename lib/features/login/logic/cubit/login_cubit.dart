@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'login_state.dart';
-import '../../data/repos/login_repo.dart';
+import 'package:joblinc/features/login/data/repos/login_repo.dart';
+import 'package:joblinc/features/login/logic/cubit/login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepo _loginRepo;
@@ -11,15 +11,17 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-      await _loginRepo.login(email, password);
+      final loginResponse = await _loginRepo.login(email, password);
+
+      // Check if the user's email is confirmed
+      if (!loginResponse.confirmed) {
+        emit(LoginEmailNotConfirmed(email));
+        return;
+      }
+
       emit(LoginSuccess());
     } catch (e) {
-      // Remove "Exception: " prefix if it exists
-      final errorMessage = e.toString().startsWith('Exception: ')
-          ? e.toString().substring('Exception: '.length)
-          : e.toString();
-
-      emit(LoginFailure(errorMessage));
+      emit(LoginFailure(e.toString()));
     }
   }
 }

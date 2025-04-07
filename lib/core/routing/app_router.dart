@@ -43,6 +43,8 @@ import 'package:joblinc/features/userProfile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/email_confirmation/ui/screens/email_confirmation_screen.dart';
+import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -232,6 +234,26 @@ class AppRouter {
             builder: (context) => Scaffold(
               body: Center(
                 child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+      case Routes.emailConfirmationScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EmailConfirmationCubit>()
+                ..resendConfirmationEmail(arguments),
+              child: EmailConfirmationScreen(email: arguments),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text(
+                    "Invalid arguments for EmailConfirmationScreen. Email is required."),
               ),
             ),
           );

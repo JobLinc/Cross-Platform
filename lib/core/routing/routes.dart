@@ -1,6 +1,7 @@
 class Routes {
   static const String loginScreen = '/loginScreen';
   static const String signUpScreen = '/signUpScreen';
+  static const String emailConfirmationScreen = '/emailConfirmationScreen';
   static const String homeScreen = '/homeScreen';
   static const String profileScreen = '/profileScreen';
   static const String chatListScreen = '/chatListScreen';
@@ -23,6 +24,5 @@ class Routes {
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
   static const String editProfileScreen = '/editProfileScreen';
-    static const String profilePictureUpdate = '/profilePictureUpdate';
-
+  static const String profilePictureUpdate = '/profilePictureUpdate';
 }

@@ -1,27 +1,27 @@
-class LoginResponse {
+class LoginResponseModel {
   final String accessToken;
   final String refreshToken;
   final String userId;
   final int role;
-  final String email;
   final bool confirmed;
+  final String email;
 
-  LoginResponse({
+  LoginResponseModel({
     required this.accessToken,
     required this.refreshToken,
     required this.userId,
     required this.role,
-    required this.email,
     required this.confirmed,
+    required this.email,
   });
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    return LoginResponseModel(
       accessToken: json['accessToken'],
       refreshToken: json['refreshToken'],
       userId: json['userId'],
-      role: json['role'],
       email: json['email'] ?? '',
+      role: json['role'],
       confirmed: json['confirmed'] ?? false,
     );
   }

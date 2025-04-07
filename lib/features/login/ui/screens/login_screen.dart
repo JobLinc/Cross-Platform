@@ -39,6 +39,13 @@ class LoginScreen extends StatelessWidget {
             message: state.error,
             type: SnackBarType.error,
           );
+        } else if (state is LoginEmailNotConfirmed) {
+          // Navigate to email confirmation screen
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.emailConfirmationScreen,
+            arguments: state.email,
+          );
         }
       },
       builder: (context, state) {

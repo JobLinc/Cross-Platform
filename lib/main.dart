@@ -12,6 +12,9 @@ void main() async {
   await setupGetIt();
   await ScreenUtil.ensureScreenSize();
   await checkIfLoggedInUser();
+  await checkIfConfirmedUser();
+  // Initialize the app with the appropriate theme and initial route
+  // based on the user's login status
 
   runApp(MainApp(
     appRouter: AppRouter(),
@@ -55,3 +58,27 @@ Future<void> checkIfLoggedInUser() async {
     isLoggedInUser = false;
   }
 }
+
+// check if confirmed user
+Future<void> checkIfConfirmedUser() async {
+  try {
+    AuthService authService = getIt<AuthService>();
+    String? token = await authService.getAccessToken();
+    if (token == null || token.isEmpty) {
+      isConfirmedUser =  false;
+    } else {
+       isConfirmedUser = await authService.getConfirmationStatus();
+    }
+  } catch (e) {
+    print("Error in checkIfConfirmedUser: $e");
+    isConfirmedUser = false;
+  }
+
+  if(!isConfirmedUser) {
+    // If the user is not confirmed, clear the user info
+    AuthService authService = getIt<AuthService>();
+    await authService.clearUserInfo();
+    isLoggedInUser = false;
+  }
+}
+
