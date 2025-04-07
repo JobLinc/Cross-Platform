@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
-import 'package:joblinc/features/email_confirmation/data/repos/email_confirmation_repo.dart';
-import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_state.dart';
-import 'package:joblinc/features/login/data/models/login_response_model.dart';
+import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_state.dart';
 
 class EmailConfirmationCubit extends Cubit<EmailConfirmationState> {
   final EmailConfirmationRepo _repo;

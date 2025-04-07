@@ -6,8 +6,8 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
-import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
-import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_state.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_state.dart';
 
 class EmailConfirmationScreen extends StatefulWidget {
   final String email;

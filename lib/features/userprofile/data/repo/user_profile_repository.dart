@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
-
 import '../models/user_profile_model.dart';
 import '../models/update_user_profile_model.dart';
 import '../service/my_user_profile_api.dart';
