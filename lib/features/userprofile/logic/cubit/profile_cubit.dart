@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/userProfile/data/models/update_user_profile_model.dart';
-import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
-import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
-import 'package:joblinc/features/userprofile/ui/widgets/Pictureuploadingsheet.dart';
-import 'package:meta/meta.dart';
-import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
+
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 part 'profile_state.dart';
 

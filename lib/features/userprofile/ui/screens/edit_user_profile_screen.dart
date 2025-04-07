@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/form/custom_text_field.dart';
-import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
-import 'package:joblinc/features/userProfile/data/models/update_user_profile_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
 
 class EditUserProfileScreen extends StatefulWidget {
   @override
