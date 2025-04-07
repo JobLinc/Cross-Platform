@@ -13,7 +13,7 @@ class ChatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      key:Key("chatList_openChat_card${chat!.id}"),
+      key:Key("chatList_openChat_card${chat!.chatId}"),
       onTap: press,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
@@ -27,11 +27,11 @@ class ChatCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 25,
                   backgroundImage: NetworkImage(
-                    chat?.userAvatar ??
-                        "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
+                    chat!.chatPicture != null ?
+                    chat!.chatPicture![0] : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
                   ),
                 ),
-                if (chat?.isOnline ?? false)
+                if (true )
                   Positioned(
                     bottom: 2,
                     right: 2,
@@ -53,12 +53,12 @@ class ChatCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    chat?.userName ?? "Unknown User",
+                    chat?.chatName ?? "Unknown User",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
                   Text(
-                    "${chat?.lastSender == 'You' ? 'You' : chat?.userName}: ${chat?.lastMessage!.text ?? 'No messages'}",
+                    /*"${chat?.lastSender == 'You' ? 'You' : chat?.chatName}: */chat?.lastMessage ?? 'No messages',
                     style: TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -69,7 +69,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount! > 0)
+                if (chat!.unreadCount > 0)
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -95,7 +95,7 @@ class ChatCard extends StatelessWidget {
                 SizedBox(
                   width: 60.w,
                   child: Text(
-                    chat?.lastMessage != null ? chat!.lastMessage!.time! : '',
+                    chat?.lastMessage != null ? chat!.time : '',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -115,14 +115,11 @@ class ChatList extends StatefulWidget {
 
 
   @override
-  State<ChatList> createState() => _ChatListState(chats:this.chats);
+  State<ChatList> createState() => _ChatListState();
 }
 
 class _ChatListState extends State<ChatList> {
-  final List<Chat> chats;
   List<Chat> sortedChats = [];
-
-  _ChatListState({ required this.chats});
 
   @override
   void initState() {
@@ -133,9 +130,9 @@ class _ChatListState extends State<ChatList> {
 
   void sortChats() {
     setState(() {
-      sortedChats = List.from(chats); // Copy the list
+      sortedChats = List.from(widget.chats); 
       sortedChats.sort(
-          (a, b) => b.lastMessage!.timestamp!.compareTo(a.lastMessage!.timestamp!));
+          (a, b) => b.sentDate.compareTo(a.sentDate));
     });
     // for (var convo in sortedChats) {
     //   print("${convo.userName} - ${convo.lastMessage.time}");

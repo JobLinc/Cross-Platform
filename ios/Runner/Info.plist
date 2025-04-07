@@ -3,6 +3,10 @@
 <plist version="1.0">
 	<dict>
 		<key>NSCameraUsageDescription</key>
+		<string>We need access to the camera</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to the photo library</string>
+		<key>NSMicrophoneUsageDescription</key>
 		<string>Scan your card to add it automatically</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>

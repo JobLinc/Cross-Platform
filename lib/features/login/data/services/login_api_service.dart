@@ -1,38 +1,28 @@
 import 'package:dio/dio.dart';
-import '../models/login_response.dart';
+import 'package:joblinc/features/login/data/models/login_response_model.dart';
 
 class LoginApiService {
   final Dio _dio;
 
   LoginApiService(this._dio);
 
-  Future<LoginResponse> login(String username, String password) async {
+  Future<LoginResponseModel> login(String email, String password) async {
     try {
-      print(username);
-      print(password);
       final response = await _dio.post(
         '/auth/login',
         data: {
-          'email': username,
+          'email': email,
           'password': password,
         },
       );
-      print(response.data);
-      return LoginResponse.fromJson(response.data);
+      return LoginResponseModel.fromJson(response.data);
     } on DioException catch (e) {
-      throw Exception(_handleDioError(e));
-    }
-  }
-
-  String _handleDioError(DioException e) {
-    if (e.response != null) {
-      if (e.response?.statusCode == 401) {
-        return 'Incorrect credentials';
-      } else {
-        return 'internal Server error}';
+      // Handle error response
+      if (e.response != null) {
+        final message = e.response!.data['message'] ?? 'Login failed';
+        throw message;
       }
-    } else {
-      return 'Network error: ${e.message}';
+      throw 'Connection error. Please check your internet connection.';
     }
   }
 }

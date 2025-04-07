@@ -3,9 +3,9 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import '../../data/models/post_model.dart';
 
-class Post extends StatelessWidget {
+class PostWidget extends StatelessWidget {
   //this will need to be changed to support live updates to likes/comments/reposts
-  const Post({super.key, required this.data});
+  const PostWidget({super.key, required this.data});
   final PostModel data;
 
   @override

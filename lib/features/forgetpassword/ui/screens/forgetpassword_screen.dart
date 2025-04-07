@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_state.dart';
 
@@ -28,18 +29,32 @@ class _ForgotPasswordStepsState extends State<ForgotPasswordSteps> {
       listener: (context, state) {
         if (state is ForgotPasswordEmailSent) {
           forgotToken = state.forgotToken;
+          CustomSnackBar.show(
+            context: context,
+            message: "OTP sent to your email",
+            type: SnackBarType.success,
+          );
           setState(() => _currentStep = 1);
         } else if (state is ForgotPasswordOtpVerified) {
           resetToken = state.resetToken;
+          CustomSnackBar.show(
+            context: context,
+            message: "OTP verified successfully",
+            type: SnackBarType.success,
+          );
           setState(() => _currentStep = 2);
         } else if (state is ForgotPasswordSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Password reset successfully!")),
+          CustomSnackBar.show(
+            context: context,
+            message: "Password reset successfully!",
+            type: SnackBarType.success,
           );
           Navigator.pop(context);
         } else if (state is ForgotPasswordError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+          CustomSnackBar.show(
+            context: context,
+            message: state.message,
+            type: SnackBarType.error,
           );
         }
       },

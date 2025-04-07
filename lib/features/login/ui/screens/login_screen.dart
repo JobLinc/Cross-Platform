@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
@@ -24,17 +25,27 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginLoading) {
+          // Loading state handled by LoadingIndicatorOverlay
         } else if (state is LoginSuccess) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("login success")));
+          CustomSnackBar.show(
+            context: context,
+            message: "Login successful",
+            type: SnackBarType.success,
+          );
           Navigator.pushReplacementNamed(context, Routes.homeScreen);
         } else if (state is LoginFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              "wrewrw ${state.error}",
-              style: TextStyle(color: Colors.red),
-            ),
-          ));
+          CustomSnackBar.show(
+            context: context,
+            message: state.error,
+            type: SnackBarType.error,
+          );
+        } else if (state is LoginEmailNotConfirmed) {
+          // Navigate to email confirmation screen
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.emailConfirmationScreen,
+            arguments: state.email,
+          );
         }
       },
       builder: (context, state) {
