@@ -1,6 +1,7 @@
 class UserProfileUpdateModel {
   final String? firstName;
   final String? lastName;
+  final String? username;
   final String? headline;
   final String? profilePicture;
   final String? coverPicture;
@@ -20,7 +21,8 @@ class UserProfileUpdateModel {
       this.phoneNo,
       this.biography,
       this.profilePicture,
-      this.coverPicture});
+      this.coverPicture,
+      this.username});
 
   // Convert model to JSON for API requests, only including non-null fields
   Map<String, dynamic> toJson() {
@@ -36,6 +38,7 @@ class UserProfileUpdateModel {
     if (city != null) data['city'] = city;
     if (phoneNo != null) data['phoneNumber'] = phoneNo;
     if (biography != null) data['biography'] = biography;
+    if (username != null) data['username'] = username;
 
     return data;
   }

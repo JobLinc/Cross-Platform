@@ -4,8 +4,12 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
+import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
+import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
+import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
@@ -16,14 +20,12 @@ import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
-import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/my_jobs_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
@@ -35,14 +37,15 @@ import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
-import 'package:joblinc/features/userProfile/data/models/update_user_profile_model.dart';
-import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
-import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
-import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen.dart';
-import 'package:joblinc/features/userProfile/ui/screens/profile_screen.dart';
+
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/email_confirmation/ui/screens/email_confirmation_screen.dart';
+import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -232,6 +235,39 @@ class AppRouter {
             builder: (context) => Scaffold(
               body: Center(
                 child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+      case Routes.changeEmailScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeEmailCubit>(),
+                  child: ChangeEmailScreen(),
+                ));
+
+      case Routes.changeUsernameScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeUsernameCubit>(),
+                  child: ChangeUsernameScreen(),
+                ));
+
+      case Routes.emailConfirmationScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EmailConfirmationCubit>()
+                ..resendConfirmationEmail(arguments),
+              child: EmailConfirmationScreen(email: arguments),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text(
+                    "Invalid arguments for EmailConfirmationScreen. Email is required."),
               ),
             ),
           );

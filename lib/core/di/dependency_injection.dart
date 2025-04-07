@@ -5,15 +5,22 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
+import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
 import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
 import 'package:joblinc/features/changepassword/data/services/change_password_api_service.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
+import 'package:joblinc/features/changeusername/data/repos/change_username_repo.dart';
+import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
 import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
 import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/email_confirmation/data/repos/email_confirmation_repo.dart';
+import 'package:joblinc/features/email_confirmation/data/services/email_confirmation_api_service.dart';
+import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
 import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
@@ -36,14 +43,13 @@ import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
-import 'package:joblinc/features/userProfile/data/service/update_user_profile_api.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
+import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
+import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
-
-import 'package:joblinc/features/userProfile/data/service/my_user_profile_api.dart';
-import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
-import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -185,5 +191,29 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));
 
+  // Email confirmation dependencies
+  getIt.registerLazySingleton<EmailConfirmationApiService>(
+      () => EmailConfirmationApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<EmailConfirmationRepo>(
+      () => EmailConfirmationRepo(getIt<EmailConfirmationApiService>()));
+
+  getIt.registerFactory<EmailConfirmationCubit>(
+      () => EmailConfirmationCubit(getIt<EmailConfirmationRepo>()));
+
+  getIt.registerFactory<ChangeEmailApiService>(
+    () => ChangeEmailApiService(getIt<Dio>()),
+  );
+  getIt.registerFactory<ChangeEmailRepo>(
+    () => ChangeEmailRepo(getIt<ChangeEmailApiService>()),
+  );
+
+  getIt.registerFactory<ChangeUsernameRepo>(
+    () => ChangeUsernameRepo(getIt<UpdateUserProfileApiService>()),
+  );
+
+  getIt.registerFactory<ChangeUsernameCubit>(
+    () => ChangeUsernameCubit(getIt<ChangeUsernameRepo>()),
+  );
   //User profile
 }

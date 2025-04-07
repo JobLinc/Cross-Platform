@@ -12,6 +12,7 @@ class ForgetPasswordApiService {
       });
       return response.data;
     } on DioException catch (e) {
+      // Throw direct error message, not wrapped in Exception
       throw _handleDioError(e);
     } catch (e) {
       throw 'Something went wrong. Please try again.';
@@ -31,6 +32,7 @@ class ForgetPasswordApiService {
       });
       return response.data;
     } on DioException catch (e) {
+      // Throw direct error message, not wrapped in Exception
       throw _handleDioError(e);
     } catch (e) {
       throw 'Something went wrong. Please try again.';
@@ -50,6 +52,7 @@ class ForgetPasswordApiService {
       });
       return response.data;
     } on DioException catch (e) {
+      // Throw direct error message, not wrapped in Exception
       throw _handleDioError(e);
     } catch (e) {
       throw 'Something went wrong. Please try again.';

@@ -3,15 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
-import 'package:joblinc/features/userProfile/logic/cubit/profile_cubit.dart';
-import 'package:joblinc/features/userProfile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
-import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
-import 'package:joblinc/features/userprofile/ui/widgets/Pictureuploadingsheet.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
