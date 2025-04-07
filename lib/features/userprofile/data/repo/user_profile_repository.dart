@@ -70,6 +70,14 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> uploadCoverPicture(File imageFile) async {
+    try {
+      return await uploadApiService.uploadCoverPicture(imageFile);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// Clears the cached profile data
   void clearCache() {
     _cachedProfile = null;

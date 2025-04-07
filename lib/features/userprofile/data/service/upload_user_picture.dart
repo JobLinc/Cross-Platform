@@ -32,6 +32,31 @@ class UploadApiService {
       throw Exception('Error uploading file: $e');
     }
   }
+
+  Future<Response> uploadCoverPicture(File imageFile) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+
+      // Prepare FormData to send the file
+      FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: fileName,
+          contentType: getMediaType(imageFile),
+        ),
+      });
+
+      // Send POST request to upload the file
+      Response response = await dio.post(
+        '/user/edit/cover-picture',
+        data: formData,
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Error uploading file: $e');
+    }
+  }
 }
 
 MediaType getMediaType(File file) {

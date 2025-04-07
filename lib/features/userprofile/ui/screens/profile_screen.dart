@@ -218,7 +218,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     children: [
                                       ListTile(
                                         leading: Icon(Icons.camera_alt),
-                                        title: Text("Tile 1"),
+                                        title: Text("Take a photo"),
                                         onTap: () async {
                                           File? image =
                                               await pickImage("camera");
@@ -237,12 +237,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       ),
                                       ListTile(
                                         leading: Icon(Icons.photo_library),
-                                        title: Text("Tile 2"),
+                                        title: Text("Upload from photos"),
                                         onTap: () async {
                                           File? image =
                                               await pickImage("gallery");
                                           // Do something when Tile 2 is tapped
                                           print("Tile 2 tapped");
+                                          if (image == null) {
+                                            return;
+                                          }
                                           context
                                               .read<ProfileCubit>()
                                               .uploadProfilePicture(image!);
@@ -258,13 +261,146 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 ),
                               );
                             },
-                            child: Icon(Icons.abc_outlined)),
+                            child: Icon(Icons.upload,
+                                color: ColorsManager.warmWhite)),
                         GestureDetector(
                           onTap: () {
                             // Button 2 action
                           },
                           child: IconButton(
-                              onPressed: () {}, icon: Icon(Icons.abc_outlined)),
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.delete,
+                                color: ColorsManager.darkBurgundy,
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is CoverPictureUpdating) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: Text(
+                'Cover Photo',
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // context.read<ProfileCubit>().getUserProfile();
+                  BlocProvider.of<ProfileCubit>(context).getUserProfile();
+                },
+              ),
+            ),
+            backgroundColor: Colors.black,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  // Expanded Image Viewer
+                  Expanded(
+                    child: Center(
+                      child: Image.network(
+                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            size: 80,
+                            color: Colors.grey.shade400,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  // Footer with 2 Image Buttons
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              // final ProfileCubit profilecubit = context.read<ProfileCubit>();
+
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (bottomSheetContext) => Container(
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(Icons.camera_alt),
+                                        title: Text("Take a photo"),
+                                        onTap: () async {
+                                          File? image =
+                                              await pickImage("camera");
+                                          // Do something when Tile 1 is tapped
+                                          print("Tile 1 tapped");
+
+                                          if (image == null) {
+                                            return;
+                                          }
+                                          context
+                                              .read<ProfileCubit>()
+                                              .uploadCoverPicture(image!);
+                                          Navigator.pop(
+                                              bottomSheetContext); // Close the bottom sheet
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.photo_library),
+                                        title: Text("Upload from photos"),
+                                        onTap: () async {
+                                          File? image =
+                                              await pickImage("gallery");
+                                          // Do something when Tile 2 is tapped
+                                          print("Tile 2 tapped");
+                                          if (image == null) {
+                                            return;
+                                          }
+                                          context
+                                              .read<ProfileCubit>()
+                                              .uploadCoverPicture(image!);
+                                          // Response response = await getIt<UserProfileRepository>()
+                                          //     .uploadProfilePicture(image!);
+                                          // print(response.statusCode);
+                                          Navigator.pop(
+                                              bottomSheetContext); // Close the bottom sheet
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.upload,
+                                color: ColorsManager.warmWhite)),
+                        GestureDetector(
+                          onTap: () {
+                            // Button 2 action
+                          },
+                          child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.delete,
+                                color: ColorsManager.darkBurgundy,
+                              )),
                         ),
                       ],
                     ),
@@ -304,21 +440,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         // Cover image
         Column(
           children: [
-            Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: ColorsManager.softRosewood,
-                image: profile.coverPicture.isNotEmpty
-                    ? DecorationImage(
-                        image: NetworkImage(profile.coverPicture),
+            GestureDetector(
+              onTap: () {
+                // Add action here when tapped
+                print('Cover picture tapped');
+                BlocProvider.of<ProfileCubit>(context)
+                    .updatecoverpicture(profile.coverPicture);
+              },
+              child: Container(
+                height: 150.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200], // Soft color for the background
+                  image: profile.coverPicture.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(
+                              "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}"),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                child: profile.coverPicture.isNotEmpty
+                    ? Image.network(
+                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}",
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey,
+                          );
+                        },
                       )
                     : null,
               ),
             ),
             Container(
-              height: 50,
+              height: 50.h,
               width: double.infinity,
             ),
           ],
