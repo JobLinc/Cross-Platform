@@ -24,7 +24,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 &&
-        err.response?.data["errorCode"] == 40101) {
+        err.response?.data["errorCode"] == 401101) {
       RequestOptions originalRequest = err.requestOptions;
 
       if (!_isRefreshing) {
