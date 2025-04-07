@@ -1,4 +1,4 @@
-import 'package:joblinc/features/email_confirmation/data/services/email_confirmation_api_service.dart';
+import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
 
 class EmailConfirmationRepo {
   final EmailConfirmationApiService _apiService;

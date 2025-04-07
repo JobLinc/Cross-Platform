@@ -18,9 +18,9 @@ import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.d
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-import 'package:joblinc/features/email_confirmation/data/repos/email_confirmation_repo.dart';
-import 'package:joblinc/features/email_confirmation/data/services/email_confirmation_api_service.dart';
-import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
+import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
+import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
 import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';

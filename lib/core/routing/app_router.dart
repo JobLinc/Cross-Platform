@@ -44,8 +44,8 @@ import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
-import 'package:joblinc/features/email_confirmation/ui/screens/email_confirmation_screen.dart';
-import 'package:joblinc/features/email_confirmation/logic/cubit/email_confirmation_cubit.dart';
+import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
