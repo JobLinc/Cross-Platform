@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/userProfile/data/service/my_user_profile_api.dart';
-import 'package:joblinc/features/userProfile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 @GenerateNiceMocks([MockSpec<Dio>()])
 import 'get_my_user_profile_test.mocks.dart';

@@ -20,10 +20,10 @@ class UserProfileRepository {
 
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
-    if (!forceRefresh && _cachedProfile != null) {
-      print('Returning cached user profile');
-      return _cachedProfile!;
-    }
+    // if (!forceRefresh && _cachedProfile != null) {
+    //   print('Returning cached user profile');
+    //   return _cachedProfile!;
+    // }
 
     try {
       // Fetch fresh data from API
@@ -64,6 +64,14 @@ class UserProfileRepository {
   Future<Response> uploadProfilePicture(File imageFile) async {
     try {
       return await uploadApiService.uploadProfilePicture(imageFile);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> uploadCoverPicture(File imageFile) async {
+    try {
+      return await uploadApiService.uploadCoverPicture(imageFile);
     } catch (e) {
       rethrow;
     }

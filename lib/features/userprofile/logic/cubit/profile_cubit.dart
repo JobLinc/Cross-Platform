@@ -52,9 +52,30 @@ class ProfileCubit extends Cubit<ProfileState> {
           await _profileRepository.uploadProfilePicture(imageFile);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel picModel = UserProfileUpdateModel(
-          profilePicture: response.data['profilePicture'],
-        );
+        UserProfileUpdateModel picModel =
+            UserProfileUpdateModel(firstName: response.data["firstname"]);
+        updateUserProfile(picModel);
+        // getUserProfile();
+      } else {
+        emit(ProfileError('Failed to upload profile picture'));
+      }
+    } catch (e) {
+      emit(ProfileError('Error: $e'));
+    }
+  }
+
+  Future<void> uploadCoverPicture(File imageFile) async {
+    // UserProfileUpdateModel updateData =
+    //     UserProfileUpdateModel(profilePicture: imageFile.path);
+    try {
+      // Call the repository to upload the image
+      emit(ProfileUpdating("Cover Picture"));
+      Response response =
+          await _profileRepository.uploadCoverPicture(imageFile);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel picModel =
+            UserProfileUpdateModel(firstName: response.data["firstname"]);
         updateUserProfile(picModel);
       } else {
         emit(ProfileError('Failed to upload profile picture'));
@@ -66,6 +87,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void updateprofilepicture(String imagepath) {
     emit(ProfilePictureUpdating(imagepath));
+  }
+
+  void updatecoverpicture(String imagepath) {
+    emit(CoverPictureUpdating(imagepath));
   }
   // Future<void> updateProfilePicture(String imagePath) async {
   //   try {

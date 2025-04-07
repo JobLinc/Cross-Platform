@@ -29,6 +29,11 @@ class ProfilePictureUpdating extends ProfileState {
   ProfilePictureUpdating(this.imagepath);
 }
 
+class CoverPictureUpdating extends ProfileState {
+  String imagepath;
+  CoverPictureUpdating(this.imagepath);
+}
+
 class ProfileError extends ProfileState {
   final String message;
 
