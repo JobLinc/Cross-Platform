@@ -4,8 +4,12 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
+import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
+import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
+import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
@@ -238,6 +242,19 @@ class AppRouter {
             ),
           );
         }
+      case Routes.changeEmailScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeEmailCubit>(),
+                  child: ChangeEmailScreen(),
+                ));
+
+      case Routes.changeUsernameScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeUsernameCubit>(),
+                  child: ChangeUsernameScreen(),
+                ));
 
       case Routes.emailConfirmationScreen:
         if (arguments is String) {
