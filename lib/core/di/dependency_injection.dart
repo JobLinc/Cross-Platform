@@ -31,7 +31,7 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
-import 'package:joblinc/features/home/data/repos/post_repo.dart';
+import 'package:joblinc/features/home/data/repos/home_repo.dart';
 import 'package:joblinc/features/home/data/services/post_api_service.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
@@ -119,7 +119,7 @@ Future<void> setupGetIt() async {
       () => PostApiService(getIt<Dio>()));
 
   getIt
-      .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
+      .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>(), getIt<UserProfileApiService>()));
 
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
 

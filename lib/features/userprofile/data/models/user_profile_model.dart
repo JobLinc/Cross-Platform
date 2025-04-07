@@ -4,6 +4,7 @@ class UserProfile {
   final String userId;
   final String firstname;
   final String lastname;
+  final String email;
   final String headline;
   final String profilePicture;
   final String coverPicture;
@@ -25,6 +26,7 @@ class UserProfile {
     required this.userId,
     required this.firstname,
     required this.lastname,
+    required this.email,
     required this.headline,
     required this.profilePicture,
     required this.coverPicture,
@@ -82,6 +84,7 @@ class UserProfile {
               ?.map((lang) => Language.fromJson(lang))
               .toList() ??
           [],
+      email: json['email'] ?? '',
     );
   }
 
@@ -90,6 +93,7 @@ class UserProfile {
       'userId': userId,
       'firstname': firstname,
       'lastname': lastname,
+      'email': email,
       'headline': headline,
       'profilePicture': profilePicture,
       'coverPicture': coverPicture,
