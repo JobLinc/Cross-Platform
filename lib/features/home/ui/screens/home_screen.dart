@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,7 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(
-                    'https://placehold.co/400/png',
+                    myUser.profilePicture == ''
+                        ? 'https://placehold.co/400/png'
+                        : "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${myUser.profilePicture}",
                   ),
                 ),
               ),
@@ -148,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundImage: NetworkImage(
                   myUser.profilePicture == ''
                       ? 'https://placehold.co/400/png'
-                      : myUser.profilePicture,
+                      : "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${myUser.profilePicture}",
                 ),
               ),
             ),

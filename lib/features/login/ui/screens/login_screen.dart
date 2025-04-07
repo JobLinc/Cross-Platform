@@ -116,8 +116,7 @@ class LoginScreen extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           icon: FontAwesomeIcons.g,
                           onPressed: () {
-                            Navigator.pushReplacementNamed(
-                                context, Routes.homeScreen);
+                         
                           }),
                     ),
                     const SizedBox(height: 20),

@@ -55,15 +55,14 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                 _selectedIndex = value;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-         switch (value) {
+              switch (value) {
                 case 0:
-                  Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder:(context)=>HomeScreen()));
-                      // MaterialPageRoute(builder:(context)=> Scaffold(
-                      //   appBar: universalAppBar(context, _selectedIndex),
-                      //   body: HomeScreen(),
-                      //   bottomNavigationBar: UniversalBottomBar(),
-                      // )));
+                  Navigator.pushReplacementNamed(context, Routes.homeScreen);
+                // MaterialPageRoute(builder:(context)=> Scaffold(
+                //   appBar: universalAppBar(context, _selectedIndex),
+                //   body: HomeScreen(),
+                //   bottomNavigationBar: UniversalBottomBar(),
+                // )));
                 case 1:
                   Navigator.pushReplacement(
                     context,
@@ -81,10 +80,11 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar:  universalAppBar(context :context, selectedIndex: _selectedIndex),
-                        body:Center(
+                        appBar: universalAppBar(
+                            context: context, selectedIndex: _selectedIndex),
+                        body: Center(
                           child: Text("My Posts"),
-                        ), 
+                        ),
                         bottomNavigationBar: UniversalBottomBar(),
                       ),
                     ),
@@ -95,7 +95,8 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar:  universalAppBar(context :context, selectedIndex: _selectedIndex),
+                        appBar: universalAppBar(
+                            context: context, selectedIndex: _selectedIndex),
                         body: Center(
                           child: Text("Notifications"),
                         ),
@@ -105,7 +106,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   );
                   break;
                 case 4:
-                  Navigator.pushReplacementNamed(context,Routes.jobListScreen);
+                  Navigator.pushReplacementNamed(context, Routes.jobListScreen);
                   break;
                 default:
                   throw UnimplementedError();
@@ -118,11 +119,12 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
   }
 }
 
-void goToJobSearch(BuildContext context){
-  Navigator.pushNamed(context,Routes.jobSearchScreen);
+void goToJobSearch(BuildContext context) {
+  Navigator.pushNamed(context, Routes.jobSearchScreen);
   //Navigator.of(context).pushNamed(Routes.jobSearchScreen);
-  }
-void emptyFunction(){}
+}
+
+void emptyFunction() {}
 
 
 
