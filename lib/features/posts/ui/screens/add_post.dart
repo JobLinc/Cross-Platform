@@ -81,7 +81,7 @@ class BottomButtons extends StatelessWidget {
             onPressed: () async {
               //TODO use the media
               final picker = ImagePicker();
-              final List<XFile> medias = await picker.pickMultipleMedia();
+              List<XFile> medias = await picker.pickMultipleMedia();
             },
             icon: Icon(Icons.image)),
         IconButton(onPressed: () {}, icon: Icon(Icons.add)),

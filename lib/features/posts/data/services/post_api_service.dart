@@ -43,6 +43,12 @@ class PostApiService {
     }
   }
 
+  // Future<bool> likePost(String postID) async {
+  //   try {
+  //     final response = await _dio.post('/post/')
+  //   }
+  // }
+
   String _handleDioError(DioException e) {
     if (e.response != null) {
       if (e.response?.statusCode == 401) {

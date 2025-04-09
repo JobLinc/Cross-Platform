@@ -1,38 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment.dart';
 
 class CommentSection extends StatelessWidget {
-  const CommentSection({
+  final TextEditingController _commentController = TextEditingController();
+  CommentSection({
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                spacing: 10,
+                children: [
+                  GestureDetector(
+                    //TODO implement this sort
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Text(
+                          'Most relevant',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeightHelper.semiBold),
+                        ),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: 20,
+                        itemBuilder: (context, index) => Comment()),
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              height: 0,
+            ),
+            CommentBottomBar()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CommentBottomBar extends StatelessWidget {
+  final TextEditingController _commentController = TextEditingController();
+  CommentBottomBar({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
-      child: Column(
-        spacing: 10,
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: Row(
-              children: [
-                Text(
-                  'Most relevant',
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeightHelper.semiBold),
-                ),
-                Icon(Icons.arrow_drop_down),
-              ],
+    return Row(
+      spacing: 10,
+      children: [
+        CircleAvatar(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: CustomRoundedTextFormField(
+              controller: _commentController,
+              filled: false,
+              borderRadius: BorderRadius.circular(40),
+              hintText: "Add a comment...",
+              hintStyle: TextStyle(color: Colors.grey),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: 20, itemBuilder: (context, index) => Comment()),
-          )
-        ],
-      ),
+        ),
+        IconButton(onPressed: () {}, icon: Icon(Icons.send))
+      ],
     );
   }
 }
