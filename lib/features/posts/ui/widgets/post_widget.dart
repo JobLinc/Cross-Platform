@@ -1,24 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
-  //this will need to be changed to support live updates to likes/comments/reposts
+  //this would need to be changed to support live updates to likes/comments/reposts
   const Post({super.key, required this.data});
   final PostModel data;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      key: Key('post_main_container'),
-      padding: const EdgeInsets.only(top: 8),
-      child: Container(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: PostContent(data: data),
+    return BlocProvider<PostCubit>(
+      create: (context) => getIt<PostCubit>(),
+      child: BlocConsumer<PostCubit, PostState>(
+        listener: (context, state) {
+          if (state is PostStateLoading) {
+          } else if (state is PostStateSuccess) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Post successful')));
+            Navigator.pop(context);
+          } else if (state is PostStateFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+              "Error: ${state.error}",
+              style: TextStyle(color: Colors.red),
+            )));
+          }
+        },
+        builder: (context, state) => Padding(
+          key: Key('post_main_container'),
+          padding: const EdgeInsets.only(top: 8),
+          child: Container(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: PostContent(data: data),
+            ),
+          ),
         ),
       ),
     );
@@ -47,7 +70,9 @@ class PostContent extends StatelessWidget {
             padding: const EdgeInsets.only(right: 5.0),
             child: GestureDetector(
               key: Key('post_header_lincButton'),
-              onTap: () => {UnimplementedError()},
+              onTap: () => {
+                // context.read<UserConnectionsRepository>()
+              },
               child: RichText(
                 text: TextSpan(
                     style: TextStyle(color: ColorsManager.darkBurgundy),
