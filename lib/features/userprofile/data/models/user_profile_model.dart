@@ -1,4 +1,4 @@
-// user_profile_models.dart
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 
 class UserProfile {
   final String userId;
@@ -15,7 +15,7 @@ class UserProfile {
   final String phoneNumber;
   final int numberOfConnections;
   final int matualConnections;
-  final List<Post> recentPosts;
+  final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
   final List<Experience> experience;
@@ -61,7 +61,7 @@ class UserProfile {
       biography: json['biography'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       recentPosts: (json['recentPosts'] as List<dynamic>?)
-              ?.map((post) => Post.fromJson(post))
+              ?.map((post) => PostModel.fromJson(post))
               .toList() ??
           [],
       skills: (json['skills'] as List<dynamic>?)
@@ -88,95 +88,95 @@ class UserProfile {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'firstname': firstname,
-      'lastname': lastname,
-      'email': email,
-      'headline': headline,
-      'profilePicture': profilePicture,
-      'coverPicture': coverPicture,
-      'country': country,
-      'city': city,
-      'biography': biography,
-      'phoneNumber': phoneNumber,
-      'connectionStatus': connectionStatus,
-      'numberOfConnections': numberOfConnections,
-      'mutualConnections': matualConnections,
-      'recentPosts': recentPosts.map((post) => post.toJson()).toList(),
-      'skills': skills.map((skill) => skill.toJson()).toList(),
-      'education': education.map((edu) => edu.toJson()).toList(),
-      'experience': experience.map((exp) => exp.toJson()).toList(),
-      'certifications': certifications.map((cert) => cert.toJson()).toList(),
-      'languages': languages.map((lang) => lang.toJson()).toList(),
-    };
-  }
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'userId': userId,
+  //     'firstname': firstname,
+  //     'lastname': lastname,
+  //     'email': email,
+  //     'headline': headline,
+  //     'profilePicture': profilePicture,
+  //     'coverPicture': coverPicture,
+  //     'country': country,
+  //     'city': city,
+  //     'biography': biography,
+  //     'phoneNumber': phoneNumber,
+  //     'connectionStatus': connectionStatus,
+  //     'numberOfConnections': numberOfConnections,
+  //     'mutualConnections': matualConnections,
+  //     'recentPosts': recentPosts.map((post) => post.toJson()).toList(),
+  //     'skills': skills.map((skill) => skill.toJson()).toList(),
+  //     'education': education.map((edu) => edu.toJson()).toList(),
+  //     'experience': experience.map((exp) => exp.toJson()).toList(),
+  //     'certifications': certifications.map((cert) => cert.toJson()).toList(),
+  //     'languages': languages.map((lang) => lang.toJson()).toList(),
+  //   };
+  // }
 }
 
-class Post {
-  final String postId;
-  final PostContent content;
-  final int timestamp;
-  final int likes;
-  final int comments;
-  final int shares;
+// class Post {
+//   final String postId;
+//   final PostContent content;
+//   final int timestamp;
+//   final int likes;
+//   final int comments;
+//   final int shares;
 
-  Post({
-    required this.postId,
-    required this.content,
-    required this.timestamp,
-    required this.likes,
-    required this.comments,
-    required this.shares,
-  });
+//   Post({
+//     required this.postId,
+//     required this.content,
+//     required this.timestamp,
+//     required this.likes,
+//     required this.comments,
+//     required this.shares,
+//   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      postId: json['postId'] ?? '',
-      content: PostContent.fromJson(json['content'] ?? {}),
-      timestamp: json['timestamp'] ?? 0,
-      likes: json['likes'] ?? 0,
-      comments: json['comments'] ?? 0,
-      shares: json['shares'] ?? 0,
-    );
-  }
+//   factory Post.fromJson(Map<String, dynamic> json) {
+//     return Post(
+//       postId: json['postId'] ?? '',
+//       content: PostContent.fromJson(json['content'] ?? {}),
+//       timestamp: json['timestamp'] ?? 0,
+//       likes: json['likes'] ?? 0,
+//       comments: json['comments'] ?? 0,
+//       shares: json['shares'] ?? 0,
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'postId': postId,
-      'content': content.toJson(),
-      'timestamp': timestamp,
-      'likes': likes,
-      'comments': comments,
-      'shares': shares,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'postId': postId,
+//       'content': content.toJson(),
+//       'timestamp': timestamp,
+//       'likes': likes,
+//       'comments': comments,
+//       'shares': shares,
+//     };
+//   }
+// }
 
-class PostContent {
-  final String text;
-  final String? image;
+// class PostContent {
+//   final String text;
+//   final String? image;
 
-  PostContent({
-    required this.text,
-    this.image,
-  });
+//   PostContent({
+//     required this.text,
+//     this.image,
+//   });
 
-  factory PostContent.fromJson(Map<String, dynamic> json) {
-    return PostContent(
-      text: json['text'] ?? '',
-      image: json['image'],
-    );
-  }
+//   factory PostContent.fromJson(Map<String, dynamic> json) {
+//     return PostContent(
+//       text: json['text'] ?? '',
+//       image: json['image'],
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      if (image != null) 'image': image,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'text': text,
+//       if (image != null) 'image': image,
+//     };
+//   }
+// }
 
 class Skill {
   final String name;
