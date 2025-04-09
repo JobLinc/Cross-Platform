@@ -26,10 +26,11 @@ class Location {
 
 class CreateCompanyResponse {
   final String name;
-  final String email;
-  final String phone;
+  final String size;
+  final String type;
   final String industry;
-  final String owner;
+  final String urlSlug;
+  final String overview;
   // final String website;
   // final List<String> admins;
   // final String overview;
@@ -46,10 +47,11 @@ class CreateCompanyResponse {
 
   CreateCompanyResponse({
     required this.name,
-    required this.email,
-    required this.phone,
     required this.industry,
-    required this.owner,
+    required this.size,
+    required this.type,
+    required this.urlSlug,
+    required this.overview,
     // required this.website,
     // required this.admins,
     // required this.overview,
@@ -72,10 +74,11 @@ class CreateCompanyResponse {
 
     return CreateCompanyResponse(
       name: json['name'] ?? "",
-      email: json['email'] ?? "",
-      phone: json['phone'] ?? "",
+      size: json['size'] ?? "",
+      urlSlug: json['urlSlug'] ?? "",
       industry: json['industry'] ?? "",
-      owner: json['owner'] ?? "",
+      overview: json['overview'] ?? "",
+      type: json['type'] ?? "",
       // website: json['website'] ?? "",
       // admins: List<String>.from(json['admins'] ?? "") ?? [""],
       // overview: json['overview'] ?? "",

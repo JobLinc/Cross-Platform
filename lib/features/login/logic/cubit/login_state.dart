@@ -1,12 +1,17 @@
 abstract class LoginState {}
 
-final class LoginInitial extends LoginState {}
+class LoginInitial extends LoginState {}
 
-final class LoginLoading extends LoginState {}
+class LoginLoading extends LoginState {}
 
-final class LoginSuccess extends LoginState {}
+class LoginSuccess extends LoginState {}
 
-final class LoginFailure extends LoginState {
+class LoginFailure extends LoginState {
   final String error;
   LoginFailure(this.error);
+}
+
+class LoginEmailNotConfirmed extends LoginState {
+  final String email;
+  LoginEmailNotConfirmed(this.email);
 }

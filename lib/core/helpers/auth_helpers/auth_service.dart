@@ -1,27 +1,37 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/core/helpers/auth_helpers/constants.dart';
 
 class AuthService {
   final FlutterSecureStorage _storage;
   final Dio _dio;
-
-  AuthService(this._storage, this._dio);
+  bool isLoggedInUser = false;
 
   static const _accessTokenKey = 'accessToken';
   static const _refreshTokenKey = 'refreshToken';
   static const _roleKey = 'role';
   static const _userIdKey = 'userId';
+  static const _emailKey = 'email';
+  static const _confirmedKey = 'confirmed';
+
+  AuthService(this._storage, this._dio);
 
   Future<void> saveAuthInfo({
     required String accessToken,
     required String refreshToken,
     required int role,
     required String userId,
+    required String email,
+    required bool confirmed,
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
     await _storage.write(key: _roleKey, value: role.toString());
     await _storage.write(key: _userIdKey, value: userId);
+    await _storage.write(key: _emailKey, value: email);
+    await _storage.write(key: _confirmedKey, value: confirmed.toString());
+    // Update global login status
+    isLoggedInUser = true;
   }
 
   Future<void> saveTokens({
@@ -30,6 +40,8 @@ class AuthService {
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
+    // Update global login status
+    isLoggedInUser = true;
   }
 
   Future<Map<String, dynamic>> getUserInfo() async {
@@ -37,11 +49,15 @@ class AuthService {
     final String? userId = await _storage.read(key: _userIdKey);
     final String? accessToken = await _storage.read(key: _accessTokenKey);
     final String? refreshToken = await _storage.read(key: _refreshTokenKey);
+    final String? email = await _storage.read(key: _emailKey);
+    final String? confirmed = await _storage.read(key: _confirmedKey);
     return {
       'role': role,
       'userId': userId,
       'accessToken': accessToken,
-      'refreshToken': refreshToken
+      'refreshToken': refreshToken,
+      'email': email,
+      'confirmed': confirmed
     };
   }
 
@@ -55,11 +71,29 @@ class AuthService {
   Future<String?> getRefreshToken() async =>
       await _storage.read(key: _refreshTokenKey);
 
+  Future<String?> getEmail() async => await _storage.read(key: _emailKey);
+
+  Future<bool> getConfirmationStatus() async {
+    final confirmedString = await _storage.read(key: _confirmedKey);
+    return confirmedString != null
+        ? confirmedString.toLowerCase() == 'true'
+        : false;
+  }
+
   Future<void> clearUserInfo() async {
     await _storage.delete(key: _accessTokenKey);
     await _storage.delete(key: _refreshTokenKey);
     await _storage.delete(key: _userIdKey);
     await _storage.delete(key: _roleKey);
+    await _storage.delete(key: _emailKey);
+    await _storage.delete(key: _confirmedKey);
+    isLoggedInUser = false;
+  }
+  Future<void> updateEmail(String email) async {
+    await _storage.write(key: _emailKey, value: email);
+  }
+  Future<void> updateConfirmationStatus(bool confirmed) async {
+    await _storage.write(key: _confirmedKey, value: confirmed.toString());
   }
 
   Future<bool> refreshToken({String? companyId}) async {
@@ -68,7 +102,7 @@ class AuthService {
       final String? userId = await getUserId();
 
       if (refreshToken == null || userId == null) {
-        throw Exception('Missing refresh token or user ID');
+        return false;
       }
 
       final requestBody = {
@@ -96,7 +130,8 @@ class AuthService {
           throw Exception('Invalid response data');
         }
       } else {
-        throw Exception('Failed to refresh token');
+        await clearUserInfo();
+        throw Exception('Session ended please login again');
       }
     } on DioException catch (e) {
       print('Dio error: ${e.message}');
@@ -107,6 +142,44 @@ class AuthService {
     } catch (e) {
       print('Unexpected error: $e');
       return false;
+    }
+  }
+
+  Future<void> checkIfLoggedInUser() async {
+    final accessToken = await getAccessToken();
+    final refToken = await getRefreshToken();
+
+    if (accessToken == null || refToken == null) {
+      isLoggedInUser = false;
+    }
+    isLoggedInUser = await refreshToken();
+  }
+
+  Future<Map<String, dynamic>?> getMainUserInfo() async {
+    try {
+      final response = await _dio.get('/user/me');
+
+      if (response.statusCode == 200) {
+        final userData = response.data;
+        return {
+          'userId': userData['userId'],
+          'firstname': userData['firstname'],
+          'lastname': userData['lastname'],
+          'headline': userData['headline'],
+          'profilePicture': userData['profilePicture'],
+          'coverPicture': userData['coverPicture'],
+          'about': userData['about'],
+          'numberOfConnections': userData['numberOfConnections'],
+        };
+      } else {
+        throw Exception('Failed to load user data');
+      }
+    } on DioException catch (e) {
+      print('Error fetching user data: ${e.message}');
+      return null;
+    } catch (e) {
+      print('Unexpected error: $e');
+      return null;
     }
   }
 }

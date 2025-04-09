@@ -18,6 +18,11 @@ class EmailTextFormField extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return 'Please enter your email';
           }
+          // Email format validation
+          final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+          if (!emailRegExp.hasMatch(value)) {
+            return 'Please enter a valid email address';
+          }
           return null;
         });
   }

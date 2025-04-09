@@ -1,7 +1,7 @@
 part of 'chat_list_cubit.dart';
 
 //@immutable
-sealed class ChatListState {}
+abstract class ChatListState {}
 
 final class ChatListInitial extends ChatListState {}
 
