@@ -87,7 +87,7 @@ class UserProfile {
       email: json['email'] ?? '',
     );
   }
-
+  //TODO add PostModel.toJson() before uncommenting
   // Map<String, dynamic> toJson() {
   //   return {
   //     'userId': userId,
