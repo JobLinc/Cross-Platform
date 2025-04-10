@@ -11,6 +11,8 @@ import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 
 class MainContainerScreen extends StatefulWidget {
   final int initialTab;
@@ -62,6 +64,24 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     });
   }
 
+  // Handle result from post creation
+  Future<void> _navigateToAddPost() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => getIt<AddPostCubit>(),
+          child: AddPostScreen(),
+        ),
+      ),
+    );
+
+    // If result is 0, navigate to home tab
+    if (result == 0) {
+      _onItemTapped(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Now we build the screens with context available
@@ -88,7 +108,9 @@ class _MainContainerScreenState extends State<MainContainerScreen>
 
           // Post tab
           _buildKeepAliveScreen(
-            _buildPlaceholderScreen("My Posts", 2),
+            BlocProvider(
+                create: (context) => getIt<AddPostCubit>(),
+                child: AddPostScreen()),
           ),
 
           // Notifications tab

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
@@ -18,7 +19,7 @@ class AddPostScreen extends StatelessWidget {
         } else if (state is AddPostStateSuccess) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Post successful')));
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, Routes.homeScreen);
         } else if (state is AddPostStateFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
@@ -93,10 +94,6 @@ class BottomButtons extends StatelessWidget {
 AppBar addPostTopBar(
     BuildContext context, TextEditingController inputController) {
   return AppBar(
-    leading: IconButton(
-      onPressed: () => {Navigator.pop(context)},
-      icon: Icon(Icons.arrow_back),
-    ),
     title: GestureDetector(
       onTap: () {
         showModalBottomSheet(
