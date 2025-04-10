@@ -58,100 +58,226 @@ class _ChatScreenState extends State<ChatScreen> {
 
 
 
-  void _initializeSocket(String userId) {
-    print("trying to connect");
-  socket = IO.io('http://10.0.2.2:3000', {
-    "transports": ["websocket"],
-    "autoConnect": false,
+// void _initializeSocket(String userId) {
+//   print("🛠️ Initializing socket…");
+//   socket = IO.io('http://10.0.2.2:3000', <String, dynamic>{
+//     'transports': ['websocket'],
+//     'autoConnect': false,
+//   });
+
+//   // debug all incoming events
+//   socket.onAny((event, data) {
+//     print('🛎️ [socket event] $event → $data');
+//   });
+
+//   socket
+//     ..on('connect', (_) {
+//       print('✅ Socket connected (id=${socket.id})');
+//       socket.emit('openChat', widget.chat.chatId);
+//       print('➡️ openChat → ${widget.chat.chatId}');
+//     })
+//     ..on('receiveMessage', (data) {
+//       print('📩 receiveMessage → $data');
+//       final Map<String, dynamic> map = Map<String, dynamic>.from(data);
+//       final msg = Message.fromJson(map);
+//       setState(() => messages.add(msg));
+//       _scrollToBottom();
+//     })
+//     ..on('messageTyping', (_) {
+//       setState(() => isTyping = true);
+//     })
+//     ..on('stopTyping', (_) {
+//       setState(() => isTyping = false);
+//     })
+//     ..on('disconnect', (reason) {
+//       print('⚠️ Socket disconnected: $reason');
+//     });
+
+//   socket.connect();
+// }
+
+// void sendMessage() {
+//   final text = messageController.text.trim();
+//   if (text.isEmpty) return;
+
+//   final payload = {
+//     'content': { 'text': text },
+//     'chatId': widget.chat.chatId,
+//   };
+
+//   // send with ack so we know the server saved it
+//   socket.emitWithAck('sendMessage', payload, ack: (ackData) {
+//     print('✅ sendMessage acknowledged by server');
+//   });
+
+//   // optimistic UI
+//   final newMsg = Message(
+//     messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+//     type: 'text',
+//     seenBy: [],
+//     content: MessageContent(text: text),
+//     sentDate: DateTime.now(),
+//     senderId: userId!,
+//   );
+
+//   setState(() {
+//     messages.add(newMsg);
+//     messageController.clear();
+//   });
+//   _scrollToBottom();
+
+//   // let others know we stopped typing
+//   socket.emit('stopTyping', widget.chat.chatId);
+// }
+
+// void startTyping() {
+//   socket.emit('messageTyping', widget.chat.chatId);
+// }
+
+// void stopTyping() {
+//   socket.emit('stopTyping', widget.chat.chatId);
+// }
+
+// void markMessagesAsRead() {
+//   // note the correct spelling:
+//   socket.emit('messageReceived', widget.chat.chatId);
+// }
+
+// void _scrollToBottom() {
+//   Future.delayed(const Duration(milliseconds: 100), () {
+//     if (_scrollController.hasClients) {
+//       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+//     }
+//   });
+// }
+
+// @override
+// void dispose() {
+//   socket.emit('leaveChat', widget.chat.chatId);
+//   socket.disconnect();
+//   super.dispose();
+// }
+
+
+// ─── inside your _ChatScreenState ───
+
+void _initializeSocket(String userId) {
+  print("🛠️ Initializing socket…");
+  socket = IO.io('http://10.0.2.2:3000', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false,
   });
+
+  // Log *every* event for debugging
+  socket.onAny((event, data) {
+    print('🛎️ [socket event] $event → $data');
+  });
+
+  socket
+    // Fired when the socket is connected to the server
+    ..on('connect', (_) {
+      print('✅ Socket connected (id=${socket.id})');
+      // Join the room
+      socket.emit('openChat', widget.chat.chatId);
+      print('➡️ openChat → ${widget.chat.chatId}');
+    })
+
+    // Our incoming chat messages
+    ..on('receiveMessage', (data) {
+      print('📩 receiveMessage → $data');
+      try {
+        final Map<String, dynamic> map = Map<String, dynamic>.from(data);
+        final msg = Message.fromJson(map);
+        setState(() => messages.add(msg));
+        _scrollToBottom();
+      } catch (e) {
+        print('⚠️ Error parsing receiveMessage: $e');
+      }
+    })
+
+    // Typing indicators
+    ..on('messageTyping', (_) {
+      print('⌨️ someone is typing…');
+      setState(() => isTyping = true);
+    })
+    ..on('stopTyping', (_) {
+      print('✋ stopped typing');
+      setState(() => isTyping = false);
+    })
+
+    // Read receipts (if you care)
+    ..on('messageRead', (readerId) {
+      print('👀 messageRead by $readerId');
+    })
+
+    // Clean up
+    ..on('disconnect', (reason) {
+      print('⚠️ Socket disconnected: $reason');
+    });
+
   socket.connect();
-  socket.onConnect((_) {
-    // OpenChat expects only chatId according to docs
-    socket.emit("openChat", widget.chat.chatId);
-    print("Socket connected successfully to ${widget.chat.chatId}");
-  });
-
-  socket.on("receiveMessage", (data) {
-    setState(() {
-      messages.add(Message.fromJson(data));
-      print("MessageReceived");
-    });
-
-    Future.delayed(Duration(milliseconds: 100), () {
-      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-    });
-  });
-
-  socket.on("messageTyping", (_) {
-    setState(() => isTyping = true);
-  });
-
-  socket.on("stopTyping", (_) {
-    setState(() => isTyping = false);
-  });
-
-  socket.on("userStatus", (data) {
-    setState(() => status = data["status"]);
-  });
 }
 
 void sendMessage() {
   final text = messageController.text.trim();
   if (text.isEmpty) return;
 
-  // Format according to the documentation structure
-  final messagePayload = {
-    "content": {
-      "text": text
-    },
-    "chatId": widget.chat.chatId
+  final payload = {
+    'content': { 'text': text },
+    'chatId': widget.chat.chatId,
   };
 
-  socket.emit("sendMessage", messagePayload);
-  
-  // Local message handling
-  final newMessage = Message(
+  print('✋ sending message');  
+  socket.emit('sendMessage', payload);
+
+  // Optimistic UI
+  final newMsg = Message(
     messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-    type: "text",
+    type: 'text',
     seenBy: [],
     content: MessageContent(text: text),
     sentDate: DateTime.now(),
     senderId: userId!,
   );
-
   setState(() {
-    messages.add(newMessage);
+    messages.add(newMsg);
     messageController.clear();
   });
-  
-  Future.delayed(const Duration(milliseconds: 100), () {
-    _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-  });
-  
-  socket.emit("stopTyping", widget.chat.chatId);
+  _scrollToBottom();
+
+  // Tell server we stopped typing
+  socket.emit('stopTyping', widget.chat.chatId);
 }
 
 void startTyping() {
-  // messageTyping expects only chatId
-  socket.emit("messageTyping", widget.chat.chatId);
+  socket.emit('messageTyping', widget.chat.chatId);
 }
 
 void stopTyping() {
-  // stopTyping expects only chatId
-  socket.emit("stopTyping", widget.chat.chatId);
+  socket.emit('stopTyping', widget.chat.chatId);
 }
 
 void markMessagesAsRead() {
-  // Add message received functionality
-  socket.emit("messageRecieved", widget.chat.chatId);
+  // Note: backend listens on "messageReceived" (capital R)
+  socket.emit('messageReceived', widget.chat.chatId);
+}
+
+void _scrollToBottom() {
+  Future.delayed(const Duration(milliseconds: 100), () {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+    }
+  });
 }
 
 @override
 void dispose() {
-  socket.emit("leaveChat", widget.chat.chatId);
+  socket.emit('leaveChat', widget.chat.chatId);
   socket.disconnect();
   super.dispose();
 }
+
+
   //=============================================Attachement Handelling=============================================//
 
 
@@ -847,3 +973,99 @@ class _MoreOptionsSheet extends StatelessWidget {
   //     _scrollController.jumpTo(_scrollController.position.minScrollExtent);
   //   });
   // }
+
+
+  //   void _initializeSocket(String userId) {
+//     print("trying to connect");
+//   socket = IO.io('http://10.0.2.2:3000', {
+//     "transports": ["websocket"],
+//     "autoConnect": false,
+//   });
+//   socket.connect();
+//   socket.onConnect((_) {
+//     // OpenChat expects only chatId according to docs
+//     socket.emit("openChat", widget.chat.chatId);
+//     print("Socket connected successfully to ${widget.chat.chatId}");
+//   });
+
+//   socket.on("receiveMessage", (data) {
+//     setState(() {
+//       messages.add(Message.fromJson(data));
+//       print("MessageReceived");
+//     });
+
+//     Future.delayed(Duration(milliseconds: 100), () {
+//       _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+//     });
+//   });
+
+//   socket.on("messageTyping", (_) {
+//     setState(() => isTyping = true);
+//   });
+
+//   socket.on("stopTyping", (_) {
+//     setState(() => isTyping = false);
+//   });
+
+//   socket.on("userStatus", (data) {
+//     setState(() => status = data["status"]);
+//   });
+// }
+
+// void sendMessage() {
+//   final text = messageController.text.trim();
+//   if (text.isEmpty) return;
+
+//   // Format according to the documentation structure
+//   final messagePayload = {
+//     "content": {
+//       "text": text
+//     },
+//     "chatId": widget.chat.chatId
+//   };
+
+//   socket.emit("sendMessage", messagePayload);
+  
+//   // Local message handling
+//   final newMessage = Message(
+//     messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+//     type: "text",
+//     seenBy: [],
+//     content: MessageContent(text: text),
+//     sentDate: DateTime.now(),
+//     senderId: userId!,
+//   );
+
+//   setState(() {
+//     messages.add(newMessage);
+//     messageController.clear();
+//   });
+  
+//   Future.delayed(const Duration(milliseconds: 100), () {
+//     _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+//   });
+  
+//   socket.emit("stopTyping", widget.chat.chatId);
+// }
+
+// void startTyping() {
+//   // messageTyping expects only chatId
+//   socket.emit("messageTyping", widget.chat.chatId);
+// }
+
+// void stopTyping() {
+//   // stopTyping expects only chatId
+//   socket.emit("stopTyping", widget.chat.chatId);
+// }
+
+// void markMessagesAsRead() {
+//   // Add message received functionality
+//   socket.emit("messageRecieved", widget.chat.chatId);
+// }
+
+// @override
+// void dispose() {
+//   socket.emit("leaveChat", widget.chat.chatId);
+//   socket.disconnect();
+//   super.dispose();
+// }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -17,6 +18,24 @@ class Filter {
     this.minSalary,
     this.maxSalary,
   });
+
+    Map<String, dynamic> toJson() {
+    return {
+      'experienceFilter': experienceFilter,
+      'companyFilter': companyFilter,
+      'minSalary': minSalary,
+      'maxSalary': maxSalary,
+    };
+  }
+
+  factory Filter.fromJson(Map<String, dynamic> json) {
+    return Filter(
+      experienceFilter: (json['experienceFilter'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      companyFilter: (json['companyFilter'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      minSalary: json['minSalary'] as int?,
+      maxSalary: json['maxSalary'] as int?,
+    );
+  }
 }
 
 class JobSearchScreen extends StatefulWidget {
@@ -51,6 +70,7 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
       appBar: buildAppBar(context),
       body: Column(
         children: [
+          //Expanded(child: LinkedInProfileWidget()),
           Expanded(
             child: BlocBuilder<JobListCubit, JobListState>(
               builder: (context, state) {
@@ -425,3 +445,573 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
     );
   }
 }
+
+
+// //import 'package:flutter/material.dart';
+
+// class LinkedInProfileWidget extends StatelessWidget {
+//   final String name;
+//   final String headline;
+//   final String location;
+//   final String connections;
+//   final String companyName;
+//   final String companyDuration;
+//   final String? profileImageUrl;
+//   final String? companyLogoUrl;
+//   final VoidCallback? onConnectPressed;
+//   final VoidCallback? onMessagePressed;
+
+//   const LinkedInProfileWidget({
+//     Key? key,
+//     this.name = 'Sarah Johnson',
+//     this.headline = 'Senior Product Manager at Acme Tech | Ex-Google | MBA, Stanford',
+//     this.location = 'San Francisco Bay Area',
+//     this.connections = '500+ connections',
+//     this.companyName = 'Acme Technology Inc.',
+//     this.companyDuration = 'Full-time · 3 yrs 2 mos',
+//     this.profileImageUrl,
+//     this.companyLogoUrl,
+//     this.onConnectPressed,
+//     this.onMessagePressed,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 360,
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(8),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.1),
+//             blurRadius: 12,
+//             offset: const Offset(0, 2),
+//           ),
+//         ],
+//         border: Border.all(color: Colors.grey.shade300),
+//       ),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           // Cover image with LinkedIn logo
+//           Stack(
+//             clipBehavior: Clip.none,
+//             children: [
+//               Container(
+//                 height: 80,
+//                 width: double.infinity,
+//                 decoration: BoxDecoration(
+//                   gradient: LinearGradient(
+//                     colors: [
+//                       const Color(0xFF0077B5),
+//                       const Color(0xFF00A0DC),
+//                     ],
+//                     begin: Alignment.topLeft,
+//                     end: Alignment.bottomRight,
+//                   ),
+//                   borderRadius: BorderRadius.only(
+//                     topLeft: Radius.circular(8),
+//                     topRight: Radius.circular(8),
+//                   ),
+//                 ),
+//               ),
+//               Positioned(
+//                 top: 10,
+//                 right: 10,
+//                 child: Icon(
+//                   Icons.filter,
+//                   color: Colors.white,
+//                   size: 24,
+//                 ),
+//               ),
+//               Positioned(
+//                 top: 30,
+//                 left: 20,
+//                 child: Container(
+//                   width: 90,
+//                   height: 90,
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey.shade200,
+//                     shape: BoxShape.circle,
+//                     border: Border.all(color: Colors.white, width: 4),
+//                   ),
+//                   child: ClipRRect(
+//                     borderRadius: BorderRadius.circular(45),
+//                     child: profileImageUrl != null
+//                         ? Image.network(
+//                             profileImageUrl!,
+//                             fit: BoxFit.cover,
+//                             errorBuilder: (context, error, stackTrace) {
+//                               return _buildProfilePlaceholder();
+//                             },
+//                           )
+//                         : _buildProfilePlaceholder(),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+          
+//           // Profile info
+//           Container(
+//             padding: const EdgeInsets.fromLTRB(20, 52, 20, 20),
+//             alignment: Alignment.centerLeft,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   name,
+//                   style: TextStyle(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.w600,
+//                     color: Colors.black,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   headline,
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                     color: Colors.grey.shade700,
+//                     height: 1.4,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 8),
+//                 Row(
+//                   children: [
+//                     Icon(
+//                       Icons.location_on,
+//                       size: 16,
+//                       color: Colors.grey.shade600,
+//                     ),
+//                     const SizedBox(width: 4),
+//                     Text(
+//                       location,
+//                       style: TextStyle(
+//                         fontSize: 13,
+//                         color: Colors.grey.shade600,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Text(
+//                   connections,
+//                   style: TextStyle(
+//                     fontSize: 13,
+//                     color: Color(0xFF0077B5),
+//                     fontWeight: FontWeight.w500,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+          
+//           // Divider
+//           Divider(
+//             height: 1,
+//             thickness: 1,
+//             color: Colors.grey.shade300,
+//             indent: 20,
+//             endIndent: 20,
+//           ),
+          
+//           // Current company
+//           Padding(
+//             padding: const EdgeInsets.all(15),
+//             child: Row(
+//               children: [
+//                 Container(
+//                   width: 42,
+//                   height: 42,
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey.shade200,
+//                     borderRadius: BorderRadius.circular(6),
+//                     border: Border.all(color: Colors.grey.shade300),
+//                   ),
+//                   child: companyLogoUrl != null
+//                       ? ClipRRect(
+//                           borderRadius: BorderRadius.circular(6),
+//                           child: Image.network(
+//                             companyLogoUrl!,
+//                             fit: BoxFit.cover,
+//                             errorBuilder: (context, error, stackTrace) {
+//                               return _buildCompanyPlaceholder();
+//                             },
+//                           ),
+//                         )
+//                       : _buildCompanyPlaceholder(),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         companyName,
+//                         style: TextStyle(
+//                           fontSize: 15,
+//                           fontWeight: FontWeight.w600,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 3),
+//                       Text(
+//                         companyDuration,
+//                         style: TextStyle(
+//                           fontSize: 13,
+//                           color: Colors.grey.shade600,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+          
+//           // Footer with action buttons
+//           Container(
+//             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+//             decoration: BoxDecoration(
+//               color: Colors.grey.shade100,
+//               borderRadius: BorderRadius.only(
+//                 bottomLeft: Radius.circular(8),
+//                 bottomRight: Radius.circular(8),
+//               ),
+//             ),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 ElevatedButton(
+//                   onPressed: onConnectPressed,
+//                   style: ElevatedButton.styleFrom(
+//                     //primary: Color(0xFF0077B5),
+//                     //onPrimary: Colors.white,
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(16),
+//                     ),
+//                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+//                     minimumSize: Size(0, 32),
+//                   ),
+//                   child: Text(
+//                     'Connect',
+//                     style: TextStyle(
+//                       fontSize: 14,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//                 OutlinedButton(
+//                   onPressed: onMessagePressed,
+//                   style: OutlinedButton.styleFrom(
+//                     //primary: Colors.black.withOpacity(0.6),
+//                     side: BorderSide(color: Colors.black.withOpacity(0.3)),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(16),
+//                     ),
+//                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+//                     minimumSize: Size(0, 32),
+//                   ),
+//                   child: Text(
+//                     'Message',
+//                     style: TextStyle(
+//                       fontSize: 14,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildProfilePlaceholder() {
+//     return Center(
+//       child: Icon(
+//         Icons.person,
+//         size: 45,
+//         color: Colors.grey.shade400,
+//       ),
+//     );
+//   }
+
+//   Widget _buildCompanyPlaceholder() {
+//     return Center(
+//       child: Text(
+//         companyName.isNotEmpty ? companyName[0] : 'A',
+//         style: TextStyle(
+//           fontSize: 20,
+//           fontWeight: FontWeight.bold,
+//           color: Colors.grey.shade700,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+// // void _showFilterBottomSheet(Filter filter,BuildContext context) {
+// //   // final Filter filter = Filter(
+// //   //   experienceFilter: [],
+// //   //   companyFilter: [],
+// //   //   minSalary: null,
+// //   //   maxSalary: null,
+// //   // );
+
+// //   // Experience level options
+// //   final experienceLevels = ['Entry', 'Mid', 'Senior'];
+  
+// //   // Company options (example companies - replace with your actual list)
+// //   final companies = ['Google', 'Apple', 'Microsoft', 'Amazon', 'Meta', 'Netflix', 'IBM', 'Oracle'];
+  
+// //   // Initialize selected experience levels
+// //   Map<String, bool> experienceSelected = {};
+// //   for (var level in experienceLevels) {
+// //     experienceSelected[level] = filter.experienceFilter != null && 
+// //                                 filter.experienceFilter!.contains(level);
+// //   }
+  
+// //   // Initialize selected companies
+// //   Map<String, bool> companySelected = {};
+// //   for (var company in companies) {
+// //     companySelected[company] = filter.companyFilter != null && 
+// //                                filter.companyFilter!.contains(company);
+// //   }
+  
+// //   // TextEditingControllers for salary inputs
+// //   final minSalaryController = TextEditingController(
+// //     text: filter.minSalary != null ? filter.minSalary.toString() : ''
+// //   );
+// //   final maxSalaryController = TextEditingController(
+// //     text: filter.maxSalary != null ? filter.maxSalary.toString() : ''
+// //   );
+  
+// //   showModalBottomSheet(
+// //     context: context,
+// //     isScrollControlled: true,
+// //     isDismissible: true,
+// //     shape: const RoundedRectangleBorder(
+// //       borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+// //     ),
+// //     builder: (context) {
+// //       return StatefulBuilder(
+// //         builder: (BuildContext context, StateSetter setState) {
+// //           return Container(
+// //             padding: const EdgeInsets.all(16),
+// //             height: MediaQuery.of(context).size.height * 0.6, // Fixed height
+// //             child: Column(
+// //               crossAxisAlignment: CrossAxisAlignment.start,
+// //               children: [
+// //                 Row(
+// //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                   children: [
+// //                     Text(
+// //                       'Filters',
+// //                       style: TextStyle(
+// //                         fontSize: 18,
+// //                         fontWeight: FontWeight.bold,
+// //                       ),
+// //                     ),
+// //                     TextButton(
+// //                       onPressed: () {
+// //                         setState(() {
+// //                           // Reset all filters
+// //                           for (var level in experienceLevels) {
+// //                             experienceSelected[level] = false;
+// //                           }
+// //                           for (var company in companies) {
+// //                             companySelected[company] = false;
+// //                           }
+// //                           minSalaryController.clear();
+// //                           maxSalaryController.clear();
+// //                         });
+// //                       },
+// //                       child: Text(
+// //                         'Reset',
+// //                         style: TextStyle(color: Colors.red),
+// //                       ),
+// //                     ),
+// //                   ],
+// //                 ),
+// //                 const SizedBox(height: 16),
+                
+// //                 // Make the content scrollable
+// //                 Expanded(
+// //                   child: SingleChildScrollView(
+// //                     child: Column(
+// //                       crossAxisAlignment: CrossAxisAlignment.start,
+// //                       children: [
+// //                         // Experience Level Filter
+// //                         const Text(
+// //                           'Experience Level',
+// //                           style: TextStyle(
+// //                             fontSize: 16,
+// //                             fontWeight: FontWeight.bold,
+// //                           ),
+// //                         ),
+// //                         const SizedBox(height: 8),
+// //                         Row(
+// //                           children: experienceLevels.map((level) {
+// //                             return Row(
+// //                               mainAxisSize: MainAxisSize.min,
+// //                               children: [
+// //                                 Text(level),
+// //                                 Checkbox(
+// //                                   value: experienceSelected[level],
+// //                                   onChanged: (bool? value) {
+// //                                     setState(() {
+// //                                       experienceSelected[level] = value!;
+// //                                     });
+// //                                   },
+// //                                 ),
+// //                                 const SizedBox(width: 10),
+// //                               ],
+// //                             );
+// //                           }).toList(),
+// //                         ),
+// //                         const SizedBox(height: 16),
+                        
+// //                         // Company Filter
+// //                         const Text(
+// //                           'Company',
+// //                           style: TextStyle(
+// //                             fontSize: 16,
+// //                             fontWeight: FontWeight.bold,
+// //                           ),
+// //                         ),
+// //                         const SizedBox(height: 8),
+// //                         Container(
+// //                           padding: const EdgeInsets.symmetric(horizontal: 12),
+// //                           decoration: BoxDecoration(
+// //                             border: Border.all(color: Colors.grey),
+// //                             borderRadius: BorderRadius.circular(8),
+// //                           ),
+// //                           child: DropdownButton<String>(
+// //                             isExpanded: true,
+// //                             underline: const SizedBox(),
+// //                             hint: const Text('Select Companies'),
+// //                             onChanged: (_) {}, // Dropdown doesn't actually change selection
+// //                             items: [
+// //                               DropdownMenuItem<String>(
+// //                                 value: '',
+// //                                 child: Column(
+// //                                   children: companies.map((company) {
+// //                                     return CheckboxListTile(
+// //                                       title: Text(company),
+// //                                       value: companySelected[company],
+// //                                       onChanged: (bool? value) {
+// //                                         setState(() {
+// //                                           companySelected[company] = value!;
+// //                                         });
+// //                                       },
+// //                                     );
+// //                                   }).toList(),
+// //                                 ),
+// //                               ),
+// //                             ],
+// //                           ),
+// //                         ),
+// //                         const SizedBox(height: 16),
+                        
+// //                         // Salary Range Filter
+// //                         const Text(
+// //                           'Salary Range',
+// //                           style: TextStyle(
+// //                             fontSize: 16,
+// //                             fontWeight: FontWeight.bold,
+// //                           ),
+// //                         ),
+// //                         const SizedBox(height: 8),
+// //                         Row(
+// //                           children: [
+// //                             Expanded(
+// //                               child: TextField(
+// //                                 controller: minSalaryController,
+// //                                 decoration: const InputDecoration(
+// //                                   labelText: 'Min Salary',
+// //                                   border: OutlineInputBorder(),
+// //                                 ),
+// //                                 keyboardType: TextInputType.number,
+// //                                 inputFormatters: [
+// //                                   FilteringTextInputFormatter.digitsOnly,
+// //                                 ],
+// //                               ),
+// //                             ),
+// //                             const SizedBox(width: 16),
+// //                             Expanded(
+// //                               child: TextField(
+// //                                 controller: maxSalaryController,
+// //                                 decoration: const InputDecoration(
+// //                                   labelText: 'Max Salary',
+// //                                   border: OutlineInputBorder(),
+// //                                 ),
+// //                                 keyboardType: TextInputType.number,
+// //                                 inputFormatters: [
+// //                                   FilteringTextInputFormatter.digitsOnly,
+// //                                 ],
+// //                               ),
+// //                             ),
+// //                           ],
+// //                         ),
+// //                       ],
+// //                     ),
+// //                   ),
+// //                 ),
+                
+// //                 const SizedBox(height: 16),
+// //                 SizedBox(
+// //                   width: double.infinity,
+// //                   child: ElevatedButton(
+// //                     onPressed: () {
+// //                       // Update filter values based on selections
+// //                       filter.experienceFilter = experienceLevels
+// //                           .where((level) => experienceSelected[level] == true)
+// //                           .toList();
+                      
+// //                       filter.companyFilter = companies
+// //                           .where((company) => companySelected[company] == true)
+// //                           .toList();
+                      
+// //                       if (minSalaryController.text.isNotEmpty) {
+// //                         filter.minSalary = int.parse(minSalaryController.text);
+// //                       }
+                      
+// //                       if (maxSalaryController.text.isNotEmpty) {
+// //                         filter.maxSalary = int.parse(maxSalaryController.text);
+// //                       }
+                      
+// //                       // You can now use the updated filter object
+// //                       // For example, you might want to pass it back to the parent widget
+// //                       Navigator.pop(context, filter);
+// //                     },
+// //                     style: ElevatedButton.styleFrom(
+// //                       backgroundColor: Colors.blue,
+// //                     ),
+// //                     child: Text(
+// //                       'Apply',
+// //                       style: TextStyle(color: Colors.red),
+// //                     ),
+// //                   ),
+// //                 ),
+// //               ],
+// //             ),
+// //           );
+// //         },
+// //       );
+// //     },
+// //   ).then((value) {
+// //     // Handle the returned filter if needed
+// //     if (value != null) {
+// //       // Apply the filter to your data
+// //       print('Experience Filters: ${value.experienceFilter}');
+// //       print('Company Filters: ${value.companyFilter}');
+// //       print('Min Salary: ${value.minSalary}');
+// //       print('Max Salary: ${value.maxSalary}');
+// //     }
+// //   });
+// // }

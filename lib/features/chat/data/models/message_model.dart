@@ -233,17 +233,17 @@ class MessageContent {
 }
 
 class Message {
-  final String messageId;
-  final String type;
-  final List<String> seenBy;
+  String? messageId;
+  String? type;
+  List<String>? seenBy;
   final MessageContent content;
   final DateTime sentDate;
   final String senderId;
 
   Message({
-    required this.messageId,
+    this.messageId,
     required this.type,
-    required this.seenBy,
+    this.seenBy,
     required this.content,
     required this.sentDate,
     required this.senderId,
