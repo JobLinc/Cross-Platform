@@ -326,10 +326,10 @@ class User {
 
   // Mock User Object
   User mockMainUser = User(
-    id: "60d0fe4f5311236168a109ca",
-    firstname: "John",
-    lastname: "Doe",
-    username: "johndoe",
+    id: "user_001",
+    firstname: "Abdelrahman",
+    lastname: "Sameh",
+    username: "abdelrahman388",
     email: "abdelrahmansameh092@gmail.com",
     password: "securepassword",
     country: "USA",
@@ -395,4 +395,76 @@ class User {
       ),
     ],
   );
+
+ User mockSecondaryUser = User(
+    id: "user_009",
+    firstname: "john",
+    lastname: "doe",
+    username: "johnny22",
+    email: "johnDoe@gmail.com",
+    password: "securepassword2",
+    country: "USA",
+    city: "New York",
+    phoneNumber: "+1234567890",
+    refreshToken: ["token1", "token2"],
+    profile: "https://example.com/profile.jpg",
+    visibility: "public",
+    role: "user",
+    isPremiumUser: false,
+    experiences: [
+      UserExperience(
+        id: "exp1",
+        company: "Google",
+        position: "Software Engineer",
+        startDate: DateTime(2020, 1, 1),
+        endDate: DateTime(2023, 1, 1),
+        description: "Worked on Flutter apps.",
+      ),
+    ],
+    certificates: [
+      UserCertificate(
+        id: "cert1",
+        name: "AWS Certified Developer",
+        organization: "Amazon",
+        issueDate: DateTime(2022, 5, 10),
+        expirationDate: DateTime(2025, 5, 10),
+      ),
+    ],
+    skills: [
+      UserSkill(
+        id: "skill1",
+        name: "Flutter",
+        level: 5,
+      ),
+      UserSkill(
+        id: "skill2",
+        name: "Dart",
+        level: 5,
+      ),
+    ],
+    education: [
+      UserEducation(
+        id: "edu1",
+        name: "MIT",
+        degree: "BSc in Computer Science",
+        fieldOfStudy: "Software Engineering",
+        startDate: DateTime(2016, 9, 1),
+        endDate: DateTime(2020, 6, 30),
+        description: "Graduated with honors.",
+        CGPA: 3.9,
+      ),
+    ],
+    managedCompanies: ["company1", "company2"],
+    passwordResetRequests: [
+      ResetPasswordRequest(
+        status: "pending",
+        forgotToken: "abc123",
+        otp: "567890",
+        resetToken: "xyz789",
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+    ],
+  );
+
 

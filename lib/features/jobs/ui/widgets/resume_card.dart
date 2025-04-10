@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 
 class ResumeCard extends StatelessWidget {
   final Resume resume;
