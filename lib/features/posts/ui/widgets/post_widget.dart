@@ -6,6 +6,7 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
+import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
@@ -106,47 +107,18 @@ class PostContent extends StatelessWidget {
   }
 }
 
-class PostBody extends StatefulWidget {
+class PostBody extends StatelessWidget {
   const PostBody({super.key, required this.text});
   final String text;
 
   @override
-  State<PostBody> createState() => _PostBodyState();
-}
-
-class _PostBodyState extends State<PostBody> {
-  bool _expandText = false;
-
-  @override
   Widget build(BuildContext context) {
-    //? might improve the UI for the 'more' used at the end of the paragraph
-    return Wrap(
-      key: Key('post_body_container'),
-      children: [
-        Text(
-          key: Key('post_body_text'),
-          widget.text,
-          maxLines: (_expandText) ? (null) : (3),
-          overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
-          softWrap: true,
-        ),
-        _expandText
-            ? SizedBox()
-            : GestureDetector(
-                key: Key('post_body_showMoreButton'),
-                onTap: () {
-                  setState(() {
-                    _expandText = true;
-                  });
-                },
-                child: Text(
-                  'more',
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold),
-                ),
-              )
-      ],
+    return ReadMoreText(
+      text,
+      trimLines: 3,
+      trimCollapsedText: "more",
+      trimExpandedText: " show less",
+      trimMode: TrimMode.Line,
     );
   }
 }
@@ -247,7 +219,7 @@ class PostActionBar extends StatelessWidget {
 }
 
 class PostAttachments extends StatelessWidget {
-  final List<String> attachmentURLs;
+  final List<dynamic> attachmentURLs;
 
   const PostAttachments({super.key, required this.attachmentURLs});
 
