@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
+import 'package:joblinc/features/chat/data/models/message_model.dart';
 
-bool apiEndPointFunctional=false;
+bool apiEndPointFunctional=true;
 
 class ChatApiService {
   final Dio _dio;
@@ -9,9 +10,10 @@ class ChatApiService {
   ChatApiService(this._dio);
 
   Future<Response> getAllChats() async {
-    if(0==1){
+    if(apiEndPointFunctional){
       try {
         final response = await _dio.get('/chat/all',);
+        print(response);
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -30,30 +32,32 @@ class ChatApiService {
   }
 
 
-Future<Response> getChatById(String chatId) async {
-    if(0==1){
+  Future<Response> getChatDetails(String chatId) async {
+    //if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/c/$chatId');
+        print("1 $response");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chat details: $e");
       }
-    } else {
-      await Future.delayed(Duration(seconds: 1));
-      final response = Response<dynamic>(
-        requestOptions: RequestOptions(path: ''),
-        data: mockChats.map((job) => job.toJson()).toList(),
-        statusCode: 200,
-        statusMessage: 'OK',
-      );
-      return response;
-    }
+   // } else {
+      //ChatDetail mockChatDetail = mockChatDetails
+      //     .firstWhere((chatDetail) => chatDetail.chatId == chatId);
+      // final response = Response<dynamic>(
+      //   requestOptions: RequestOptions(path: ''),
+      //   data: mockChatDetail.toJson(),
+      //   statusCode: 200,
+      //   statusMessage: 'OK',
+      // );
+      // return response;
+    //}
   }
   
 
   /// Create a new chat group
   Future<void> createChat() async {
-    if(0==1){
+    if(apiEndPointFunctional){
       try {
         await _dio.post('/chat/create');
       } catch (e) {
@@ -66,7 +70,7 @@ Future<Response> getChatById(String chatId) async {
 
   /// Open a chat with specified participants
   Future<Response> openChat({required List<String> receiverIDs,required String senderID,}) async {
-    if(0==1){
+    if(apiEndPointFunctional){
       try {
         final response = await _dio.post('/chat/openChat', data: {
           "receiverIDs": receiverIDs,
@@ -96,8 +100,16 @@ Future<Response> getChatById(String chatId) async {
     }
   }
 
+    Future<void> archiveChat(String chatId) async {
+    try {
+      await _dio.put('/chat/archive', data: {"chatId": chatId});
+    } catch (e) {
+      throw Exception("Failed to delete chat: $e");
+    }
+  }
+
   /// Change the chat title
-  Future<void> changeChatTitle({required String chatId,required String chatTitle}) async {
+  Future<void> changeTitle({required String chatId,required String chatTitle}) async {
     try {
       await _dio.put('/chat/changeTitle', data: {
         "chatId": chatId,
@@ -109,17 +121,18 @@ Future<Response> getChatById(String chatId) async {
   }
 
   /// Mark a chat as read/unread for a user
-  Future<void> markChatAsRead({required String chatId, required String userId}) async {
+  Future<void> markReadOrUnread({required String chatId}) async {
     try {
-      await _dio.put('/chat/mark', data: {
+      await _dio.put('/chat/readOrUnread', data: {
         "chatId": chatId,
-        "userId": userId,
       });
     } catch (e) {
       throw Exception("Failed to mark chat: $e");
     }
   }
 }
+
+
 
 //   Future<List<dynamic>> getAllChats() async {
 //   try {
@@ -134,15 +147,271 @@ Future<Response> getChatById(String chatId) async {
 //   }
 // }
 
-
-  String _handleDioError(DioException e) {
-    if (e.response != null) {
-      if (e.response?.statusCode == 401) {
-        return 'Incorrect credentials';
-      } else {
-        return 'internal Server error}';
-      }
-    } else {
-      return 'Network error: ${e.message}';
-    }
-  }
+// List<ChatDetail> mockChatDetails = [
+//   ChatDetail(
+//     chatId: "chat_001",
+//     chatName: "اخويا الجيار في اللة",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQybOhACvhkP99hH4-8UVZyRs429BfgjPBiNA&s",],
+//     participants: [
+//       Participant(
+//         userId: "user_001",
+//         firstName: "Abdelrahman",
+//         lastName: "Sameh",
+//         profilePicture: "https://example.com/john.jpg",
+//       ),
+//       Participant(
+//         userId: "user_002",
+//         firstName: "Jane",
+//         lastName: "Doe",
+//         profilePicture: "https://example.com/jane.jpg",
+//       ),
+//     ],
+//     messages: [
+//       Message(
+//         messageId: "msg_001",
+//         content: MessageContent(
+//           text: "ezayak ya 3m tamer",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_001",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_002",
+//         content: MessageContent(
+//           text:  "انزل يا متدلع",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_002",
+//         status: "read",
+//       ),
+//     ],
+//   ),
+//   ChatDetail(
+//     chatId: "chat_002",
+//     chatName: "عم احمد",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFhJVW-WJ9ShTQP5iQtnp_jqxbI5VB_Fm3NHgirqN_GXZ2wNDwxgq_s0E6MmL5uwhUj0o&usqp=CAU",],
+//     participants: [
+//       Participant(
+//         userId: "user_001",
+//         firstName: "Abdelrahman",
+//         lastName: "Sameh",
+//         profilePicture: "https://example.com/alice.jpg",
+//       ),
+//       Participant(
+//         userId: "user_004",
+//         firstName: "Bob",
+//         lastName: "Johnson",
+//         profilePicture: "https://example.com/bob.jpg",
+//       ),
+//     ],
+//     messages: [
+//       Message(
+//         messageId: "msg_003",
+//         content: MessageContent(
+//           text: "....",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_003",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_004",
+//         content: MessageContent(
+//           text: " انت منين ؟",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_001",
+//         status: "read",
+//       ),
+//     ],
+//   ),
+//   ChatDetail(
+//     chatId: "chat_003",
+//     chatName: "ٍSakr ",
+//     chatPicture:
+//                 ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFinmoBS3C0r1jV9YOTvO6HFLcrDYYffSN-i7LJs6fAsJ24SV3-lpLKvTpp1WnCJWbUP4&usqp=CAU",],
+//     participants: [
+//       Participant(
+//         userId: "user_001",
+//         firstName: "Abdelrahman",
+//         lastName: "Sameh",
+//         profilePicture: "https://example.com/alice.jpg",
+//       ),
+//       Participant(
+//         userId: "user_004",
+//         firstName: "Sakr",
+//         lastName: " ",
+//         profilePicture: "https://example.com/bob.jpg",
+//       ),
+//     ],
+//     messages: [
+//       Message(
+//         messageId: "msg_003",
+//         content: MessageContent(
+//           text: "Ana 2afelt el control w ha2afel ba2y el mawad",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_004",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_004",
+//         content: MessageContent(
+//           text: "Ana awel el dof3a",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_004",
+//         status: "read",
+//       ),
+//     ],
+//   ),
+//   ChatDetail(
+//     chatId: "chat_004",
+//     chatName: "Ahmed Hesham",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsyI44s5kurKNs7i-ZSj0JlEGcBlCdAYGegg&s",],
+//     participants: [
+//       Participant(
+//         userId: "user_001",
+//         firstName: "Abdelrahman",
+//         lastName: "Sameh",
+//         profilePicture: "https://example.com/alice.jpg",
+//       ),
+//       Participant(
+//         userId: "user_004",
+//         firstName: "Ahmed",
+//         lastName: "Hesham",
+//         profilePicture: "https://example.com/bob.jpg",
+//       ),
+//     ],
+//     messages: [
+//       Message(
+//         messageId: "msg_003",
+//         content: MessageContent(
+//           text: "The project deadline is tomorrow.",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_005",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_004",
+//         content: MessageContent(
+//           text: " اخلص يبني الديدلاين قرب",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_005",
+//         status: "read",
+//       ),
+//     ],
+//   ),
+//   ChatDetail(
+//     chatId: "chat_005",
+//     chatName: "Margot Robbie",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReFc97WTW0sr9jvt-3n9_01sJdimMpIL9lxpNJytt6kIeSbRHEjNxBQrZ8yHipEMdxyyw&usqp=CAU",],    participants: [
+//       Participant(
+//         userId: "user_001",
+//         firstName: "Abdelrahman",
+//         lastName: "Sameh",
+//         profilePicture: "https://example.com/alice.jpg",
+//       ),
+//       Participant(
+//         userId: "user_004",
+//         firstName: "Bob",
+//         lastName: "Johnson",
+//         profilePicture: "https://example.com/bob.jpg",
+//       ),
+//     ],
+//     messages: [
+//       Message(
+//         messageId: "msg_003",
+//         content: MessageContent(
+//           text: "don't leave me pls ",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_006",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_003",
+//         content: MessageContent(
+//           text: "I cant live without you",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_006",
+//         status: "delivered",
+//       ),
+//       Message(
+//         messageId: "msg_004",
+//         content: MessageContent(
+//           text: "انا داخل انام",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_001",
+//         status: "read",
+//       ),
+//       Message(
+//         messageId: "msg_004",
+//         content: MessageContent(
+//           text: "Night darling ❤️❤️",
+//           image: "",
+//           video: "",
+//           audio: "",
+//           document: "",
+//         ),
+//         sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//         senderId: "user_006",
+//         status: "read",
+//       ),
+      
+//     ],
+//   ),
+// ];
