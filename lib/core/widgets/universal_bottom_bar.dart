@@ -1,119 +1,122 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
-import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
-import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
+import 'package:joblinc/core/theming/font_weight_helper.dart';
 
-class UniversalBottomBar extends StatefulWidget {
-  static final UniversalBottomBar _bar = UniversalBottomBar._constructor();
-  const UniversalBottomBar._constructor();
+class UniversalBottomBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
 
-  factory UniversalBottomBar() {
-    return _bar;
-  }
-
-  @override
-  State<UniversalBottomBar> createState() => _UniversalBottomBarState();
-}
-
-class _UniversalBottomBarState extends State<UniversalBottomBar> {
-  static int _selectedIndex = 0;
+  const UniversalBottomBar({
+    Key? key,
+    required this.currentIndex,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      label: 'core_bottombar_container',
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Divider(
-            thickness: 1,
-            height: 0,
-          ),
-          BottomNavigationBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            currentIndex: _selectedIndex,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: ColorsManager.darkBurgundy,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.people), label: 'My Network'),
-              BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Post'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: 'Notifications'),
-              BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Jobs'),
-            ],
-            onTap: (value) {
-              if (value == _selectedIndex) return;
-              setState(() {
-                _selectedIndex = value;
-              });
-              //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-              switch (value) {
-                case 0:
-                  Navigator.pushReplacementNamed(context, Routes.homeScreen);
-                // MaterialPageRoute(builder:(context)=> Scaffold(
-                //   appBar: universalAppBar(context, _selectedIndex),
-                //   body: HomeScreen(),
-                //   bottomNavigationBar: UniversalBottomBar(),
-                // )));
-                case 1:
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                              create: (context) => getIt<InvitationsCubit>(),
-                              child: InvitationPage(
-                                key: Key("connections home screen"),
-                              ),
-                            )),
-                  );
-                  break;
-                case 2:
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar: universalAppBar(
-                            context: context, selectedIndex: _selectedIndex),
-                        body: Center(
-                          child: Text("My Posts"),
-                        ),
-                        bottomNavigationBar: UniversalBottomBar(),
-                      ),
-                    ),
-                  );
-                  break;
-                case 3:
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar: universalAppBar(
-                            context: context, selectedIndex: _selectedIndex),
-                        body: Center(
-                          child: Text("Notifications"),
-                        ),
-                        bottomNavigationBar: UniversalBottomBar(),
-                      ),
-                    ),
-                  );
-                  break;
-                case 4:
-                  Navigator.pushReplacementNamed(context, Routes.jobListScreen);
-                  break;
-                default:
-                  throw UnimplementedError();
-              }
-            },
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode
+            ? ColorsManager.darkModeCardBackground
+            : Theme.of(context).colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.1),
+            blurRadius: 10,
+            offset: Offset(0, -2),
           ),
         ],
+      ),
+      child: SafeArea(
+        child: Semantics(
+          container: true,
+          label: 'core_bottombar_container',
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Divider(
+                thickness: 0.5,
+                height: 0,
+                color: isDarkMode
+                    ? Colors.grey.withOpacity(0.2)
+                    : Colors.grey.withOpacity(0.3),
+              ),
+              SizedBox(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(context, 0, Icons.home, 'Home'),
+                    _buildNavItem(context, 1, Icons.people, 'Network'),
+                    _buildNavItem(context, 2, Icons.add_box, 'Post'),
+                    _buildNavItem(context, 3, Icons.notifications, 'Alerts'),
+                    _buildNavItem(context, 4, Icons.work, 'Jobs'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+      BuildContext context, int index, IconData icon, String label) {
+    final isSelected = currentIndex == index;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    // Choose colors based on theme and selection state
+    final selectedColor =
+        isDarkMode ? ColorsManager.darkCrimsonRed : ColorsManager.darkBurgundy;
+
+    final unselectedColor =
+        isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600;
+
+    final backgroundColor = isSelected
+        ? (isDarkMode
+            ? selectedColor.withOpacity(0.15)
+            : selectedColor.withOpacity(0.1))
+        : Colors.transparent;
+
+    return GestureDetector(
+      onTap: () => onTap(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              child: Icon(
+                icon,
+                color: isSelected ? selectedColor : unselectedColor,
+                size: isSelected ? 26 : 24,
+              ),
+            ),
+            const SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: Duration(milliseconds: 200),
+              style: TextStyle(
+                color: isSelected ? selectedColor : unselectedColor,
+                fontSize: isSelected ? 12 : 11,
+                fontWeight: isSelected
+                    ? FontWeightHelper.semiBold
+                    : FontWeightHelper.regular,
+              ),
+              child: Text(label),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,117 +124,6 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
 
 void goToJobSearch(BuildContext context) {
   Navigator.pushNamed(context, Routes.jobSearchScreen);
-  //Navigator.of(context).pushNamed(Routes.jobSearchScreen);
 }
 
 void emptyFunction() {}
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:joblinc/core/di/dependency_injection.dart';
-// import 'package:joblinc/core/routing/routes.dart';
-// import 'package:joblinc/core/theming/colors.dart';
-// import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
-// import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
-// import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
-
-// class UniversalBottomBar extends StatefulWidget {
-//   static final UniversalBottomBar _bar = UniversalBottomBar._constructor();
-//   const UniversalBottomBar._constructor();
-
-//   factory UniversalBottomBar() {
-//     return _bar;
-//   }
-
-//   @override
-//   State<UniversalBottomBar> createState() => _UniversalBottomBarState();
-// }
-
-// class _UniversalBottomBarState extends State<UniversalBottomBar> {
-//   static int _selectedIndex = 0; // Ensure it updates properly
-
-//   void _onItemTapped(int index) {
-//     if (_selectedIndex == index) return;
-    
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-
-//     switch (index) {
-//       case 0:
-//         Navigator.pushReplacementNamed(context, Routes.homeScreen);
-//         break;
-//       case 1:
-//         Navigator.pushReplacement(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => Scaffold(
-//               appBar: universalAppBar(context: context, selectedIndex: _selectedIndex),
-//               body: Center(child: Text("My Network")),
-//               bottomNavigationBar: UniversalBottomBar(),
-//             ),
-//           ),
-//         );
-//         break;
-//       case 2:
-//         Navigator.pushReplacement(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => Scaffold(
-//               appBar: universalAppBar(context: context, selectedIndex: _selectedIndex),
-//               body: Center(child: Text("My Posts")),
-//               bottomNavigationBar: UniversalBottomBar(),
-//             ),
-//           ),
-//         );
-//         break;
-//       case 3:
-//         Navigator.pushReplacement(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => Scaffold(
-//               appBar: universalAppBar(context: context, selectedIndex: _selectedIndex),
-//               body: Center(child: Text("Notifications")),
-//               bottomNavigationBar: UniversalBottomBar(),
-//             ),
-//           ),
-//         );
-//         break;
-//       case 4:
-//         Navigator.pushReplacementNamed(context,Routes.jobListScreen);
-//         break;
-//       default:
-//         throw UnimplementedError();
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         Divider(thickness: 1, height: 0),
-//         BottomNavigationBar(
-//           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-//           currentIndex: _selectedIndex,
-//           type: BottomNavigationBarType.fixed,
-//           selectedItemColor: ColorsManager.darkBurgundy,
-//           items: [
-//             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-//             BottomNavigationBarItem(icon: Icon(Icons.people), label: 'My Network'),
-//             BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Post'),
-//             BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
-//             BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Jobs'),
-//           ],
-//           onTap: _onItemTapped,
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// void goToJobSearch(BuildContext context) {
-//   Navigator.pushNamed(context, Routes.jobSearchScreen);
-// }

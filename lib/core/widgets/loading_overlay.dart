@@ -1,59 +1,48 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:joblinc/core/theming/colors.dart';
 
 class LoadingIndicatorOverlay extends StatelessWidget {
   final bool inAsyncCall;
-
   final double opacity;
-
-  final Color color;
-
-  final Offset? offset;
-
-  final bool dismissible;
-
+  final Color? color;
   final Widget child;
 
-  final double blur;
-
-  LoadingIndicatorOverlay({
+  const LoadingIndicatorOverlay({
     super.key,
     required this.inAsyncCall,
-    this.opacity = 0.3,
-    this.color = Colors.grey,
-    this.offset,
-    this.dismissible = false,
+    this.opacity = 0.5,
+    this.color,
     required this.child,
-    this.blur = 0.0,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget layOutProgressIndicator;
-    if (offset == null) {
-      layOutProgressIndicator = Center(child: CircularProgressIndicator());
-    } else {
-      layOutProgressIndicator = Positioned(
-        left: offset!.dx,
-        top: offset!.dy,
-        child: CircularProgressIndicator(),
-      );
-    }
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
         child,
-        if (inAsyncCall) ...[
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-            child: Opacity(
-              opacity: opacity,
-              child: ModalBarrier(dismissible: dismissible, color: color),
+        if (inAsyncCall)
+          Positioned.fill(
+            child: AbsorbPointer(
+              absorbing: inAsyncCall,
+              child: Opacity(
+                opacity: opacity,
+                child: ModalBarrier(
+                  dismissible: false,
+                  color: color ?? (isDarkMode ? Colors.black : Colors.white),
+                ),
+              ),
             ),
           ),
-          layOutProgressIndicator,
-        ],
+        if (inAsyncCall)
+          Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                ColorsManager.getPrimaryColor(context),
+              ),
+            ),
+          ),
       ],
     );
   }

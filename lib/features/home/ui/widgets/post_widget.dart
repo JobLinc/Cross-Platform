@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import '../../data/models/post_model.dart';
 
@@ -16,7 +17,7 @@ class PostWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Container(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Theme.of(context).cardColor,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: PostContent(data: data),
@@ -59,7 +60,7 @@ class PostContent extends StatelessWidget {
         ),
         Divider(
           height: 0,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          color: ColorsManager.getTextSecondary(context),
         ),
         PostActionBar(),
       ],
@@ -103,7 +104,8 @@ class PostHeader extends StatelessWidget {
               onTap: () => {UnimplementedError()},
               child: RichText(
                 text: TextSpan(
-                    style: TextStyle(color: ColorsManager.darkBurgundy),
+                    style: TextStyle(
+                        color: ColorsManager.getPrimaryColor(context)),
                     children: [
                       TextSpan(
                           text: '+ Linc',
@@ -161,6 +163,7 @@ class UserInfo extends StatelessWidget {
             semanticsLabel: 'post_header_username',
             style: TextStyle(
               fontWeight: FontWeightHelper.extraBold,
+              color: ColorsManager.getTextPrimary(context),
             ),
           ),
           Text(
@@ -169,6 +172,7 @@ class UserInfo extends StatelessWidget {
             style: TextStyle(
               overflow: TextOverflow.ellipsis,
               fontWeight: FontWeightHelper.extraLight,
+              color: ColorsManager.getTextSecondary(context),
             ),
           ),
         ],
@@ -202,6 +206,7 @@ class _PostBodyState extends State<PostBody> {
           overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
           softWrap: true,
           semanticsLabel: 'post_body_text',
+          style: TextStyle(color: ColorsManager.getTextPrimary(context)),
         ),
         _expandText
             ? SizedBox()
@@ -215,8 +220,10 @@ class _PostBodyState extends State<PostBody> {
                   'more',
                   semanticsLabel: 'post_body_showMoreButton',
                   style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold),
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold,
+                    color: ColorsManager.getTextPrimary(context),
+                  ),
                 ),
               )
       ]),
@@ -249,10 +256,12 @@ class PostNumerics extends StatelessWidget {
             Icon(
               Icons.thumb_up,
               size: 15,
+              color: ColorsManager.getTextSecondary(context),
             ),
             Text(
               ' ${likesCount.toString()}',
               semanticsLabel: 'post_numerics_likeCount',
+              style: TextStyle(color: ColorsManager.getTextSecondary(context)),
             ),
             Spacer(),
             (commentCount == 0)
@@ -260,13 +269,21 @@ class PostNumerics extends StatelessWidget {
                 : Text(
                     '$commentCount comment${(commentCount == 1) ? ('') : ('s')}',
                     semanticsLabel: 'post_numerics_commentCount',
+                    style: TextStyle(
+                        color: ColorsManager.getTextSecondary(context)),
                   ),
-            (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
+            (repostCount == 0 || commentCount == 0)
+                ? SizedBox()
+                : Text(' • ',
+                    style: TextStyle(
+                        color: ColorsManager.getTextSecondary(context))),
             (repostCount == 0)
                 ? SizedBox()
                 : Text(
                     '$repostCount repost${(repostCount == 1) ? ('') : ('s')}',
                     semanticsLabel: 'post_numerics_repostCount',
+                    style: TextStyle(
+                        color: ColorsManager.getTextSecondary(context)),
                   ),
           ],
         ),
@@ -291,28 +308,40 @@ class PostActionBar extends StatelessWidget {
             label: 'post_actionBar_like',
             child: IconButton(
               onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.thumb_up),
+              icon: Icon(
+                Icons.thumb_up,
+                color: ColorsManager.getTextSecondary(context),
+              ),
             ),
           ),
           Semantics(
             label: 'post_actionBar_comment',
             child: IconButton(
               onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.comment),
+              icon: Icon(
+                Icons.comment,
+                color: ColorsManager.getTextSecondary(context),
+              ),
             ),
           ),
           Semantics(
             label: 'post_actionBar_repost',
             child: IconButton(
               onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.loop),
+              icon: Icon(
+                Icons.loop,
+                color: ColorsManager.getTextSecondary(context),
+              ),
             ),
           ),
           Semantics(
             label: 'post_actionBar_share',
             child: IconButton(
               onPressed: () => {UnimplementedError()},
-              icon: Icon(Icons.send),
+              icon: Icon(
+                Icons.send,
+                color: ColorsManager.getTextSecondary(context),
+              ),
             ),
           ),
         ],

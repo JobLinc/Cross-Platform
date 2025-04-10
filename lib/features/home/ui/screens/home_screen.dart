@@ -10,7 +10,6 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/home/data/models/post_model.dart';
-import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
@@ -34,13 +33,16 @@ class _HomeScreenState extends State<HomeScreen> {
         if (state is HomePostsLoading) {
           return Scaffold(
               body: Container(
-                  color: ColorsManager.lightGray,
-                  child: Center(child: CircularProgressIndicator())));
+                  color: ColorsManager.getBackgroundColor(context),
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: ColorsManager.getPrimaryColor(context),
+                  ))));
         } else if (state is HomePostsFailure) {
           return Center(
             child: Text(
               state.error,
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );
         } else if (state is HomeLoaded) {
@@ -50,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
             key: _scaffoldKey, // Important to control the drawer!
             drawer: _buildDrawer(context, myUser),
             appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              elevation: 1,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              elevation: 0,
               leadingWidth: 0.1.sw,
               leading: IconButton(
                 key: Key('home_topBar_profile'),
@@ -80,7 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Semantics(
                       label: 'home_topBar_search',
                       child: CustomSearchBar(
-                        backgroundColor: ColorsManager.lightGray,
+                        backgroundColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? ColorsManager.lightGray
+                                : ColorsManager.darkModeCardBackground,
                         keyName: 'home_topBar_search',
                         text: 'Search',
                         onPress: () {
@@ -98,14 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Semantics(
                   label: 'home_topBar_chatButton',
                   child: IconButton(
-                    icon: const Icon(Icons.message, color: Colors.black),
+                    icon: Icon(Icons.message,
+                        color: ColorsManager.getTextPrimary(context)),
                     onPressed: () {
                       Navigator.pushNamed(context, Routes.chatListScreen);
                     },
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(FontAwesomeIcons.crown, color: Colors.black),
+                  icon: Icon(FontAwesomeIcons.crown,
+                      color: ColorsManager.getTextPrimary(context)),
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.premiumScreen);
                   },
@@ -116,19 +123,30 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Semantics(
                 container: true,
                 label: 'home_body_postList',
-                child: ListView.builder(
-                  itemCount: 30,
-                  itemBuilder: (context, index) => PostWidget(data: mockData),
+                child: RefreshIndicator(
+                  color: ColorsManager.getPrimaryColor(context),
+                  onRefresh: () async {
+                    // Call cubit to refresh the feed data
+                    await context.read<HomeCubit>().getUserInfo();
+                  },
+                  child: ListView.builder(
+                    itemCount: state.posts.length > 0 ? state.posts.length : 30,
+                    itemBuilder: (context, index) => PostWidget(
+                      data: state.posts.length > 0
+                          ? state.posts[index]
+                          : mockData,
+                    ),
+                  ),
                 ),
               ),
             ),
-            bottomNavigationBar: UniversalBottomBar(),
+            // Removed the bottom navigation bar as it's now handled by MainContainerScreen
           );
         } else {
           return Center(
             child: Text(
               "error occured",
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );
         }
@@ -138,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDrawer(BuildContext context, UserProfile myUser) {
     return Drawer(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -146,8 +165,19 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, Routes.profileScreen);
             },
             child: UserAccountsDrawerHeader(
-              accountName: Text('${myUser.firstname} ${myUser.lastname}'),
-              accountEmail: Text(myUser.email),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              accountName: Text(
+                '${myUser.firstname} ${myUser.lastname}',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
+              accountEmail: Text(
+                myUser.email,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                   myUser.profilePicture == ''

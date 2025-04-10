@@ -27,4 +27,6 @@ class Routes {
   static const String changeUsernameScreen = '/changeUsernameScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String profilePictureUpdate = '/profilePictureUpdate';
+
+  // We'll use the homeScreen route for the main container
 }
