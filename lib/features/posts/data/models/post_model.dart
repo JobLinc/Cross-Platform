@@ -14,13 +14,8 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    final bool companyPost;
-    if (json['userId'] == null) {
-      companyPost = true;
-    } else {
-      companyPost = false;
-    }
-
+    final bool companyPost = (json['userId'] == null);
+    print(json);
     return PostModel(
       postID: json['postId'],
       senderID: companyPost ? (json['compamyId']) : (json['userId']),
@@ -28,14 +23,15 @@ class PostModel {
       username: companyPost
           ? json['companyName']
           : '${json['firstname']} ${json['lastname']}',
-      headline: json['headline'],
-      profilePictureURL:
-          companyPost ? json['companyLogo'] : json['profilePicture'],
+      headline: json['headline'] ?? '',
+      profilePictureURL: companyPost
+          ? json['companyLogo'] ?? ''
+          : json['profilePicture'] ?? '',
       text: json['text'],
-      attachmentURLs: json['attachments'],
-      commentCount: json['comments'],
-      likeCount: json['likes'],
-      repostCount: json['reposts'],
+      attachmentURLs: json['mediaUrl'] ?? [],
+      commentCount: json['comments'] ?? 0,
+      likeCount: json['likes'] ?? 0,
+      repostCount: json['reposts'] ?? 0,
     );
   }
 
@@ -46,7 +42,7 @@ class PostModel {
   final String headline;
   final String profilePictureURL;
   final String text;
-  List<String> attachmentURLs;
+  List<dynamic> attachmentURLs;
   int commentCount;
   int likeCount;
   int repostCount;

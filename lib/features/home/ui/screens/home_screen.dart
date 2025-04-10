@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
-import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
@@ -114,8 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 container: true,
                 label: 'home_body_postList',
                 child: ListView.builder(
-                  itemCount: 30,
-                  itemBuilder: (context, index) => Post(data: mockData),
+                  itemCount: state.posts.length,
+                  itemBuilder: (context, index) =>
+                      Post(data: state.posts[index]),
                 ),
               ),
             ),

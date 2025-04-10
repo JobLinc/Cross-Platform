@@ -19,10 +19,10 @@ class PostApiService {
 
   Future<List<PostModel>> getFeed(int? start, int? end) async {
     try {
-      final response = await _dio.get('/post/feed/');
-      List<PostModel> posts = List.empty();
+      final response = await _dio.get('/post/feed');
+      List<PostModel> posts = [];
 
-      for (Map<String, dynamic> post in response.data['posts']) {
+      for (Map<String, dynamic> post in response.data) {
         posts.add(PostModel.fromJson(post));
       }
 
@@ -41,7 +41,7 @@ class PostApiService {
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
-  } 
+  }
 
   // Future<bool> likePost(String postID) async {
   //   try {
