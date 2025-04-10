@@ -16,7 +16,8 @@ class JobApplicationCard extends StatelessWidget {
     required this.jobApplication,
   }) : super(key: key);
 
-  Future<void> _openResume(BuildContext context, String resumeUrl, String resumeName) async {
+  Future<void> _openResume(
+      BuildContext context, String resumeUrl, String resumeName) async {
     final directory = await getApplicationDocumentsDirectory();
     final localPath = '${directory.path}/$resumeName';
     final file = File(localPath);
@@ -43,7 +44,8 @@ class JobApplicationCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.red, width: 2), // Red border around card
+        border:
+            Border.all(color: Colors.red, width: 2), // Red border around card
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -115,65 +117,67 @@ class JobApplicationCard extends StatelessWidget {
           SizedBox(height: 4.h),
 
           // Resume Card
-          GestureDetector(
-            onTap: () => _openResume(context, resume.url, resume.name),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.red.shade400),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              padding: EdgeInsets.all(8.w),
-              child: Row(
-                children: [
-                  // Extension badge
-                  Container(
-                    width: 50.w,
-                    height: 50.w,
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade400,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      resume.extension.replaceAll('.', '').toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
 
-                  // Name, size, date
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          resume.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                            color: Colors.black,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "${(resume.size / 1024.0).toStringAsFixed(1)} kB - Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        buildResumeCard(context, resume)
+          // GestureDetector(
+          //   onTap: () => _openResume(context, resume.url, resume.name),
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       border: Border.all(color: Colors.red.shade400),
+          //       borderRadius: BorderRadius.circular(8.r),
+          //     ),
+          //     padding: EdgeInsets.all(8.w),
+          //     child: Row(
+          //       children: [
+          //         // Extension badge
+          //         Container(
+          //           width: 50.w,
+          //           height: 50.w,
+          //           decoration: BoxDecoration(
+          //             color: Colors.red.shade400,
+          //             borderRadius: BorderRadius.circular(8.r),
+          //           ),
+          //           alignment: Alignment.center,
+          //           child: Text(
+          //             resume.extension.replaceAll('.', '').toUpperCase(),
+          //             style: const TextStyle(
+          //               color: Colors.white,
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //         ),
+          //         SizedBox(width: 8.w),
+
+          //         // Name, size, date
+          //         Expanded(
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Text(
+          //                 resume.name,
+          //                 style: TextStyle(
+          //                   fontWeight: FontWeight.w600,
+          //                   fontSize: 14.sp,
+          //                   color: Colors.black,
+          //                 ),
+          //                 overflow: TextOverflow.ellipsis,
+          //               ),
+          //               SizedBox(height: 4.h),
+          //               Text(
+          //                 "${(resume.size / 1024.0).toStringAsFixed(1)} kB - Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
+          //                 style: TextStyle(
+          //                   color: Colors.grey.shade600,
+          //                   fontSize: 12.sp,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -193,8 +197,69 @@ class JobApplicationCard extends StatelessWidget {
         return Colors.grey;
     }
   }
-}
 
+  Widget buildResumeCard(BuildContext context, Resume resume) {
+    return GestureDetector(
+      onTap: () => _openResume(context, resume.url, resume.name),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.red.shade400),
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        padding: EdgeInsets.all(8.w),
+        child: Row(
+          children: [
+            // Extension badge
+            Container(
+              width: 50.w,
+              height: 50.w,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                resume.extension.replaceAll('.', '').toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+
+            // Name, size, date
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    resume.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "${(resume.size / 1024.0).toStringAsFixed(1)} kB - Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class JobApplicationList extends StatelessWidget {
   final List<JobApplication> jobApplications;

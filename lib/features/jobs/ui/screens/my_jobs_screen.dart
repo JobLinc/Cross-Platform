@@ -34,6 +34,7 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
                 items: [
                   "Saved",
                   "Applied",
+                  "Created",
                   "Job Applications",
                 ],
                 onItemSelected: labelClicked),
@@ -45,22 +46,27 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
                 return Center(child: Text("Save Jobs to see them here "));
               } else if (state is MyAppliedJobsEmpty) {
                 return Center(child: Text("Apply to Jobs to see them here "));
+              } else if (state is MyCreatedJobsEmpty) {
+                return Center(child: Text("Create Jobs to see them here "));
               } else if (state is MyJobApplicationsEmpty) {
-                return Center(
-                    child:
-                        Text("Apply to Jobs to see your Applications here "));
+                return Center(child:Text("Apply to Jobs to see your Applications here "));
               } else if (state is MySavedJobsLoaded) {
                 return JobList(
-                    key: ValueKey(state.savedJobs!.length),
-                    jobs: state.savedJobs!);
+                    key: ValueKey(state.savedJobs.length),
+                    jobs: state.savedJobs);
               } else if (state is MyAppliedJobsLoaded) {
                 return JobList(
-                    key: ValueKey(state.appliedJobs!.length),
-                    jobs: state.appliedJobs!);
+                    key: ValueKey(state.appliedJobs.length),
+                    jobs: state.appliedJobs);
+              } else if (state is MyCreatedJobsLoaded) {
+                return JobList(
+                    key: ValueKey(state.createdJobs.length),
+                    jobs: state.createdJobs,
+                    isCreated: true,);
               } else if (state is MyJobApplicationsLoaded) {
                 return JobApplicationList(
-                    key: ValueKey(state.jobApplications!.length),
-                    jobApplications: state.jobApplications!);
+                    key: ValueKey(state.jobApplications.length),
+                    jobApplications: state.jobApplications);
               } else {
                 return Center(child: Text("Something went wrong."));
               }
@@ -77,7 +83,9 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
         context.read<MyJobsCubit>().getAppliedJobs();
       } else if (label == "Job Applications") {
         context.read<MyJobsCubit>().getJobApplications();
-      } else if (label == "Archived") {}
+      } else if (label == "Created") {
+        context.read<MyJobsCubit>().getCreatedJobs();
+      }
     });
     return;
   }

@@ -28,7 +28,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
 
   String? _selectedResumeId;
-  String? _selectedResumeLocalPath;
+  //String? _selectedResumeLocalPath;
   List<Resume>? resumes;
 
   @override
@@ -76,7 +76,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
         print(_selectedResumeId);
         setState(() {
           _selectedResumeId = platformFile.name;
-          _selectedResumeLocalPath = localFile.path;
+          //_selectedResumeLocalPath = localFile.path;
         });
 
         context.read<JobListCubit>().uploadResume(file);
@@ -331,7 +331,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                         return;
                       }
                       final jobApplication = JobApplication(
-                        applicant: mockMainUser,
+                        applicant: mockMainApplicant,
                         job: widget.job,
                         resume: resumes!.firstWhere(((resume)=> resume.id==_selectedResumeId!)),
                         status: "JustApplied",
@@ -408,8 +408,8 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   }
 }
 
-Future<void> _clearStoredResume() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove("selected_resume_id");
-  await prefs.remove("selected_resume_path");
-}
+// Future<void> _clearStoredResume() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   await prefs.remove("selected_resume_id");
+//   await prefs.remove("selected_resume_path");
+// }
