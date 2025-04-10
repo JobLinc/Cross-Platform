@@ -8,17 +8,13 @@ import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubi
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
-import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
-import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
-
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/my_jobs_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
@@ -58,8 +54,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => HomeScreen());
       case Routes.profileScreen:
         return MaterialPageRoute(builder: (context) => ProfileScreen());
-      case Routes.chatScreen:
-        return MaterialPageRoute(builder: (context) => ChatScreen());
+      // case Routes.chatScreen:
+      //   return MaterialPageRoute(builder: (context) => ChatScreen(chat:mockChats[1]));
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
