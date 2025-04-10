@@ -41,7 +41,7 @@ class PostApiService {
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
-  }
+  } 
 
   // Future<bool> likePost(String postID) async {
   //   try {
