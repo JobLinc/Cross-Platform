@@ -21,18 +21,34 @@ class Chat {
   }){time = formatDynamicTime(sentDate);}
 
   factory Chat.fromJson(Map<String, dynamic> json) {
-    //print("converting");
-    return Chat(
-      chatId: json['chatId'],
-      chatName: json['chatName'],
-      chatPicture: json['chatPicture'] != null
-        ? List<String>.from(json['chatPicture'])
-        : null,
-      lastMessage: json['lastMessage'],
-      sentDate:  json['sentDate'] ,
-      unreadCount: json['unreadCount'],
-      isRead: json['isRead'],
-    );
+     // the placeholder path to look for
+  const placeholder = '/uploads/placeholder/profile.png';
+  // the URL you want to use instead
+  const defaultAvatarUrl = 'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg';
+
+  // grab the raw list (might be null)
+  final rawPics = json['chatPicture'] as List<dynamic>?;
+
+  // build a clean List<String>, replacing placeholder where needed
+  final pics = (rawPics ?? [])
+      .map((e) {
+        final s = e.toString();
+        if (s == placeholder) {
+          return defaultAvatarUrl;
+        }
+        return s;
+      })
+      .toList();
+
+  return Chat(
+    chatId: json['chatId'] as String,
+    chatName: json['chatName'] as String,
+    chatPicture: pics,                              // never null
+    lastMessage: json['lastMessage'] as String,
+    sentDate: DateTime.parse(json['sentDate'] as String),
+    unreadCount: json['unreadCount'] as int,
+    isRead: json['isRead'] as bool,
+  );
   }
 
   Map<String, dynamic> toJson() {
@@ -49,37 +65,7 @@ class Chat {
 }
 
 // Data model for a participant in a chat
-class Participant {
-  final String userId;
-  final String firstname;
-  final String lastname;
-  final String profilePicture;
 
-  Participant({
-    required this.userId,
-    required this.firstname,
-    required this.lastname,
-    required this.profilePicture,
-  });
-
-  factory Participant.fromJson(Map<String, dynamic> json) {
-    return Participant(
-      userId: json['userId'],
-      firstname: json['firstname'],
-      lastname: json['lastname'],
-      profilePicture: json['profilePicture'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'firstname': firstname,
-      'lastname': lastname,
-      'profilePicture': profilePicture,
-    };
-  }
-}
 
   String formatDynamicTime(DateTime dateTime) {
     DateTime now = DateTime.now();
@@ -109,7 +95,7 @@ class Participant {
 
 List<Chat> mockChats = [
   Chat(
-    chatId: "conv_001",
+    chatId: "chat_001",
     chatName: "اخويا الجيار في اللة",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQybOhACvhkP99hH4-8UVZyRs429BfgjPBiNA&s",],
@@ -119,7 +105,7 @@ List<Chat> mockChats = [
     isRead: true
   ),
   Chat(
-    chatId: "conv_002",
+    chatId: "chat_002",
     chatName: "عم احمد",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFhJVW-WJ9ShTQP5iQtnp_jqxbI5VB_Fm3NHgirqN_GXZ2wNDwxgq_s0E6MmL5uwhUj0o&usqp=CAU",],
@@ -129,7 +115,7 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   Chat(
-    chatId: "conv_003",
+    chatId: "chat_003",
     chatName: "ٍSakr ",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFinmoBS3C0r1jV9YOTvO6HFLcrDYYffSN-i7LJs6fAsJ24SV3-lpLKvTpp1WnCJWbUP4&usqp=CAU",],
@@ -139,7 +125,7 @@ List<Chat> mockChats = [
     isRead: true,
   ),
   Chat(
-    chatId: "conv_004",
+    chatId: "chat_004",
     chatName: "Ahmed Hesham",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsyI44s5kurKNs7i-ZSj0JlEGcBlCdAYGegg&s",],
@@ -149,7 +135,7 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   Chat(
-    chatId: "conv_005",
+    chatId: "chat_005",
     chatName: "Margot Robbie",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReFc97WTW0sr9jvt-3n9_01sJdimMpIL9lxpNJytt6kIeSbRHEjNxBQrZ8yHipEMdxyyw&usqp=CAU",],
@@ -159,7 +145,7 @@ List<Chat> mockChats = [
     isRead: true,
   ),
   Chat(
-    chatId: "conv_006",
+    chatId: "chat_006",
     chatName: "رفاعي الدسوقي",
     chatPicture:
         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxvaC8-Kta2gPWHD-yo9rX9bg_uCWVIkQRw&s",],
@@ -169,17 +155,17 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   // Chat(
-  //   chatId: "conv_007",
+  //   chatId: "chat_007",
   //   chatName: "Georgina",
   //   chatPicture:
   //        ["https://v.wpimg.pl/NWJkMGEyYTYrCTt0agJsI2hRby4sW2J1P0l3ZWpAfW8yXn9_ah8nOy8ZKDcqVyklPxssMDVXPjtlCj0uag9_eC4CPjcpGDd4LwYvIiFWfWR5Wi4hJ0pjYXlaL2pxHC1jZwkvJSZUfWd6D3glIUkvZXMKbzo",],
-  //   lastMessage: "Are you free later ",
+  //   lastMessage: "Georgina: Are you free later ",
   //   sentDate: DateTime.now().subtract(Duration(days: 2, hours: 9)),
   //   unreadCount: 0,
   //   isRead: true,
   //  ),
   Chat(
-    chatId: "conv_008",
+    chatId: "chat_008",
     chatName: "Henry Scott",
     chatPicture: null,
     lastMessage:"Thanks for the update!",
@@ -188,7 +174,7 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   Chat(
-    chatId: "conv_009",
+    chatId: "chat_009",
     chatName: "Isabella Green",
     chatPicture: null,
     lastMessage: "I’ll be there in 10 mins.",
@@ -197,7 +183,7 @@ List<Chat> mockChats = [
     isRead: true,
   ),
   Chat(
-    chatId: "conv_010",
+    chatId: "chat_010",
     chatName: "Jack Robinson",
     chatPicture: null,
     lastMessage: "Can you send me the document?",
@@ -206,7 +192,7 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   Chat(
-    chatId: "conv_011",
+    chatId: "chat_011",
     chatName: "Karen Lopez",
     chatPicture: null,
     lastMessage:  "Sure! Sending it now.",
@@ -215,7 +201,7 @@ List<Chat> mockChats = [
     isRead: true,
   ),
   Chat(
-    chatId: "conv_012",
+    chatId: "chat_012",
     chatName: "Isabella Blue",
     chatPicture: null,
     lastMessage:"I’ll be there in 10 mins.",
@@ -224,7 +210,7 @@ List<Chat> mockChats = [
     isRead: true,
   ),
   Chat(
-    chatId: "conv_010",
+    chatId: "chat_010",
     chatName: "David White",
     chatPicture: null,
     lastMessage: "Can you send me the document?",
@@ -233,7 +219,7 @@ List<Chat> mockChats = [
     isRead: false,
   ),
   Chat(
-    chatId: "conv_011",
+    chatId: "chat_011",
     chatName: "Karen kiro",
     chatPicture: null,
     lastMessage:  "Sure! Sending it now.",
