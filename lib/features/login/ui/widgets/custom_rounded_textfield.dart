@@ -7,6 +7,10 @@ class CustomRoundedTextFormField extends StatelessWidget {
       required TextEditingController controller,
       this.obscureText,
       this.labelText,
+      this.hintText,
+      this.hintStyle,
+      this.filled,
+      this.borderRadius,
       this.validator,
       this.keyboardType})
       : _controller = controller;
@@ -14,6 +18,10 @@ class CustomRoundedTextFormField extends StatelessWidget {
   final TextEditingController _controller;
 
   String? labelText;
+  String? hintText;
+  TextStyle? hintStyle;
+  BorderRadius? borderRadius;
+  bool? filled;
   bool? obscureText;
   FormFieldValidator<String>? validator;
   TextInputType? keyboardType;
@@ -24,20 +32,22 @@ class CustomRoundedTextFormField extends StatelessWidget {
       controller: _controller,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
+        hintText: hintText ?? "",
+        hintStyle: hintStyle,
         labelText: labelText ?? "",
         labelStyle: TextStyle(color: Colors.grey.shade500),
-        filled: true,
+        filled: filled ?? true,
         fillColor: const Color.fromARGB(255, 244, 251, 255),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: borderRadius ?? BorderRadius.circular(15),
           borderSide: BorderSide(color: Colors.grey.shade400),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: borderRadius ?? BorderRadius.circular(15),
           borderSide: BorderSide(color: Colors.grey.shade400),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: borderRadius ?? BorderRadius.circular(15),
           borderSide: BorderSide(color: Colors.grey.shade400),
         ),
       ),

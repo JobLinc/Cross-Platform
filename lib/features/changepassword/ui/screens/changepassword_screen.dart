@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
 
@@ -43,6 +44,15 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: _newPasswordController,
                 labelText: 'New Password',
                 obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a new password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
+                  return null;
+                },
               ),
               Expanded(flex: 1, child: SizedBox()),
               CustomRoundedTextFormField(
@@ -50,18 +60,28 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: _confirmPasswordController,
                 labelText: 'Confirm New Password',
                 obscureText: true,
+                validator: (value) {
+                  if (value != _newPasswordController.text) {
+                    return 'Passwords do not match';
+                  }
+
+                  return null;
+                },
               ),
               Expanded(flex: 10, child: const SizedBox()),
               BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
                 listener: (context, state) {
                   if (state is ChangePasswordSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text("Password changed successfully")),
+                    CustomSnackBar.show(
+                      context: context,
+                      message: "Password changed successfully",
+                      type: SnackBarType.success,
                     );
                   } else if (state is ChangePasswordFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
+                    CustomSnackBar.show(
+                      context: context,
+                      message: state.error,
+                      type: SnackBarType.error,
                     );
                   }
                 },
@@ -85,11 +105,10 @@ class ChangePasswordScreen extends StatelessWidget {
                                     _confirmPasswordController.text;
 
                                 if (newPassword != confirmPassword) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text("New passwords do not match"),
-                                    ),
+                                  CustomSnackBar.show(
+                                    context: context,
+                                    message: "New passwords do not match",
+                                    type: SnackBarType.error,
                                   );
                                   return;
                                 }

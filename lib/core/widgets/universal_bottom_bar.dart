@@ -6,7 +6,6 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 
 class UniversalBottomBar extends StatefulWidget {
   static final UniversalBottomBar _bar = UniversalBottomBar._constructor();
@@ -53,17 +52,17 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
               if (value == _selectedIndex) return;
               setState(() {
                 _selectedIndex = value;
+                if (value == 2) _selectedIndex = 0;
               });
               //TODO: Replace these routes with the actual screens routes when they are done and uncomment
-         switch (value) {
+              switch (value) {
                 case 0:
-                  Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder:(context)=>HomeScreen()));
-                      // MaterialPageRoute(builder:(context)=> Scaffold(
-                      //   appBar: universalAppBar(context, _selectedIndex),
-                      //   body: HomeScreen(),
-                      //   bottomNavigationBar: UniversalBottomBar(),
-                      // )));
+                  Navigator.pushReplacementNamed(context, Routes.homeScreen);
+                // MaterialPageRoute(builder:(context)=> Scaffold(
+                //   appBar: universalAppBar(context, _selectedIndex),
+                //   body: HomeScreen(),
+                //   bottomNavigationBar: UniversalBottomBar(),
+                // )));
                 case 1:
                   Navigator.pushReplacement(
                     context,
@@ -77,25 +76,15 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   );
                   break;
                 case 2:
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        appBar:  universalAppBar(context :context, selectedIndex: _selectedIndex),
-                        body:Center(
-                          child: Text("My Posts"),
-                        ), 
-                        bottomNavigationBar: UniversalBottomBar(),
-                      ),
-                    ),
-                  );
+                  Navigator.pushNamed(context, Routes.addPostScreen);
                   break;
                 case 3:
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Scaffold(
-                        appBar:  universalAppBar(context :context, selectedIndex: _selectedIndex),
+                        appBar: universalAppBar(
+                            context: context, selectedIndex: _selectedIndex),
                         body: Center(
                           child: Text("Notifications"),
                         ),
@@ -105,7 +94,7 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
                   );
                   break;
                 case 4:
-                  Navigator.pushReplacementNamed(context,Routes.jobListScreen);
+                  Navigator.pushReplacementNamed(context, Routes.jobListScreen);
                   break;
                 default:
                   throw UnimplementedError();
@@ -118,11 +107,12 @@ class _UniversalBottomBarState extends State<UniversalBottomBar> {
   }
 }
 
-void goToJobSearch(BuildContext context){
-  Navigator.pushNamed(context,Routes.jobSearchScreen);
+void goToJobSearch(BuildContext context) {
+  Navigator.pushNamed(context, Routes.jobSearchScreen);
   //Navigator.of(context).pushNamed(Routes.jobSearchScreen);
-  }
-void emptyFunction(){}
+}
+
+void emptyFunction() {}
 
 
 

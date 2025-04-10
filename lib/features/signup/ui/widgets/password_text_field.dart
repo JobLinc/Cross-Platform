@@ -18,6 +18,10 @@ class PasswordTextFormField extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return 'Please enter your password';
           }
+          // Password length validation
+          if (value.length < 6) {
+            return 'Password must be at least 6 characters long';
+          }
           return null;
         },
         controller: _passwordController);

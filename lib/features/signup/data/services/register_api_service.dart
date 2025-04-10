@@ -1,67 +1,49 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/signup/data/models/register_response_model.dart';
 import '../models/register_request_model.dart';
+import '../models/register_response_model.dart';
 
 class RegisterApiService {
   final Dio _dio;
 
   RegisterApiService(this._dio);
 
-  Future<RegisterResponse> register(
-      RegisterRequestModel registerRequestModel) async {
+  Future<RegisterResponse> register(RegisterRequestModel request) async {
     try {
       final response = await _dio.post(
         '/auth/register',
-        data: registerRequestModel.toJson(),
+        data: request.toJson(),
       );
-
       return RegisterResponse.fromJson(response.data);
     } on DioException catch (e) {
-      final errorMessage = _handleDioError(e);
-      throw Exception(errorMessage);
-    } catch (e) {
-      throw Exception('Unexpected error occurred');
+      // Throw the error message directly instead of wrapping in Exception
+      throw _handleDioError(e);
     }
   }
 
   String _handleDioError(DioException e) {
-    // No response: This is likely a network issue
-    if (e.response == null) {
-      return 'Network error! please try again';
+    if (e.response != null) {
+      // Try to extract the error message from the response
+      if (e.response?.data != null && e.response?.data['message'] != null) {
+        return e.response?.data['message'];
+      }
+
+      switch (e.response?.statusCode) {
+        case 400:
+          return 'Invalid registration data. Please check your input.';
+        case 409:
+          return 'This email is already registered.';
+        case 500:
+          return 'Internal server error. Please try again later.';
+        default:
+          return 'Server error (${e.response?.statusCode})';
+      }
+    } else if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout) {
+      return 'Connection timeout. Please check your internet connection.';
+    } else if (e.type == DioExceptionType.connectionError) {
+      return 'Network error. Please check your internet connection.';
     }
-
-    final statusCode = e.response?.statusCode;
-    final data = e.response?.data;
-
-    String backendMessage = '';
-
-    if (data is Map<String, dynamic>) {
-      backendMessage = data['message']?.toString() ?? '';
-    } else if (data is String) {
-      backendMessage = data;
-    }
-
-    switch (statusCode) {
-      case 400:
-        return backendMessage.isNotEmpty
-            ? backendMessage
-            : 'Invalid input data';
-      case 401:
-        return 'Unauthorized request';
-      case 403:
-        return 'Access forbidden';
-      case 404:
-        return 'Requested resource not found';
-      case 409:
-        return backendMessage.isNotEmpty
-            ? backendMessage
-            : 'User already exists';
-      case 500:
-        return 'Internal server error';
-      default:
-        return backendMessage.isNotEmpty
-            ? backendMessage
-            : 'Something went wrong. Please try again later.';
-    }
+    return 'An unexpected error occurred: ${e.message}';
   }
 }

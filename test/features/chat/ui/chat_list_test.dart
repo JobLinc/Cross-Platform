@@ -256,24 +256,24 @@ void main() {
   });
 
   testWidgets('Displays chat list when ChatListLoaded state is emitted', (WidgetTester tester) async {
-    final mockChats = [
-      Chat(
-        id: "1",
-        userID: "user1",
-        userName: "Alice",
-        userAvatar: null,
-        lastMessage: LastMessage(
-          senderID: "user1",
-          text: "Hello!",
-          timestamp: DateTime.now(),
-          messageType: "text",
-        ),
-        lastUpdate: DateTime.now(),
-        unreadCount: 2,
-        lastSender: "Alice",
-        isOnline: true,
-      ),
-    ];
+    // final mockChats = [
+    //   Chat(
+    //     id: "1",
+    //     userID: "user1",
+    //     userName: "Alice",
+    //     userAvatar: null,
+    //     lastMessage: LastMessage(
+    //       senderID: "user1",
+    //       text: "Hello!",
+    //       timestamp: DateTime.now(),
+    //       messageType: "text",
+    //     ),
+    //     lastUpdate: DateTime.now(),
+    //     unreadCount: 2,
+    //     lastSender: "Alice",
+    //     isOnline: true,
+    //   ),
+    // ];
 
     chatListCubit.emit(ChatListLoaded(chats: mockChats));
 

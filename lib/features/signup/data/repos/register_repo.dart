@@ -11,10 +11,15 @@ class RegisterRepo {
   Future<void> register(RegisterRequestModel req) async {
     final response = await _registerApiService.register(req);
     final AuthService authService = getIt<AuthService>();
+
+    // Pass all fields to saveAuthInfo
     await authService.saveAuthInfo(
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken,
-        userId: response.userId,
-        role: response.role);
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      userId: response.userId,
+      role: response.role,
+      email: response.email,
+      confirmed: response.confirmed,
+    );
   }
 }

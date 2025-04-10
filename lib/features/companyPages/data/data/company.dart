@@ -91,6 +91,15 @@ extension IndustryExtension on Industry {
         return "Software Development";
     }
   }
+
+  static Industry? fromDisplayName(String displayName) {
+    for (final value in Industry.values) {
+      if (value.displayName == displayName) {
+        return value;
+      }
+    }
+    return null; 
+  }
 }
 
 extension OrganizationSizeExtension on OrganizationSize {
@@ -116,6 +125,15 @@ extension OrganizationSizeExtension on OrganizationSize {
         return "10000+ employees";
     }
   }
+
+  static OrganizationSize? fromDisplayName(String displayName) {
+    for (final value in OrganizationSize.values) {
+      if (value.displayName == displayName) {
+        return value;
+      }
+    }
+    return null; 
+  }
 }
 
 extension OrganizationTypeExtension on OrganizationType {
@@ -137,11 +155,21 @@ extension OrganizationTypeExtension on OrganizationType {
         return "Privately Held";
     }
   }
+
+   static OrganizationType? fromDisplayName(String displayName) {
+    for (final value in OrganizationType.values) {
+      if (value.displayName == displayName) {
+        return value;
+      }
+    }
+    return null; 
+  }
 }
 
 class Company {
   final String name;
   final String profileUrl;
+  String? overview;
   String? website;
   String? tagline;
   String? logoUrl;
@@ -158,6 +186,7 @@ class Company {
     required this.profileUrl,
     this.website,
     this.tagline,
+    this.overview,
     required this.industry,
     required this.organizationSize,
     required this.organizationType,

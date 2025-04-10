@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/routing/routes.dart' show Routes;
 import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import '../screens/create_company.dart';
 
@@ -24,7 +25,7 @@ class CompanyMoreButton extends StatelessWidget {
         _showMoreActions(context);
       },
       child: const Icon(Icons.more_horiz_outlined,
-          color: Colors.black), // Add const
+          color: Colors.black), 
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(
           side: BorderSide(
@@ -113,7 +114,16 @@ class MoreActions extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (context) => getIt<CreateCompanyCubit>(),
+                    create: (context) => getIt<CreateCompanyCubit>(
+                      param1: (company) {
+                        // Navigation logic when the company is created
+                        Navigator.pushNamed(
+                          context,
+                          Routes.companyDashboard,
+                          arguments: company,
+                        );
+                      },
+                    ),
                     child: CreateCompanyPage(),
                   ),
                 ),
