@@ -10,6 +10,8 @@ class ColorsManager {
       Color(0xA1780000); // for unselected elements
   static const Color softRosewood =
       Color(0xFFA52A2A); // Secondary buttons, borders, accents
+  static const Color verySoftRosewood =
+      Color.fromARGB(183, 226, 97, 97); // Text selection color
   static const Color lightGray =
       Color(0xFFF4F4F4); // Backgrounds, cards, subtle UI elements
   static const Color softMutedSilver =

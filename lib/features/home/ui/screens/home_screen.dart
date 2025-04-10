@@ -1,18 +1,16 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
-import 'package:joblinc/features/home/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-import 'package:joblinc/features/home/ui/widgets/post_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -131,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: ListView.builder(
                     itemCount: state.posts.length > 0 ? state.posts.length : 30,
-                    itemBuilder: (context, index) => PostWidget(
+                    itemBuilder: (context, index) => Post(
                       data: state.posts.length > 0
                           ? state.posts[index]
                           : mockData,

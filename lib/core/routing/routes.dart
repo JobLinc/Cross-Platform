@@ -16,6 +16,7 @@ class Routes {
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
+  static const String addPostScreen = '/addPostScreen';
   static const String connectionListScreen = '/connectionListScreen';
   static const String companyDashboard = '/companyDashboard';
   static const String companyPagePosts = '/companyPagePosts';
