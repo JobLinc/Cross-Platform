@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 
 class UserHeader extends StatelessWidget {
@@ -23,22 +24,25 @@ class UserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      key: Key('post_header_container'),
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ProfileImage(imageURL: imageURL),
-        Expanded(
-          flex: 9,
-          child: UserInfo(
-            username: username,
-            headline: headline,
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, Routes.profileScreen),
+      child: Row(
+        key: Key('post_header_container'),
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ProfileImage(imageURL: imageURL),
+          Expanded(
+            flex: 9,
+            child: UserInfo(
+              username: username,
+              headline: headline,
+            ),
           ),
-        ),
-        Spacer(),
-        action ?? SizedBox()
-      ],
+          Spacer(),
+          action ?? SizedBox()
+        ],
+      ),
     );
   }
 }

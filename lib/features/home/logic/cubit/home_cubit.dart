@@ -21,7 +21,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomePostsLoading());
 
     try {
-      final response = await _postRepo.getFeed(amount);
+      final response = await _postRepo.getFeed();
       final user = await _postRepo.getUserInfo();
       emit(HomeLoaded(posts: response, user: user));
     } catch (e) {

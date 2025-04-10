@@ -17,9 +17,9 @@ class PostApiService {
     }
   }
 
-  Future<List<PostModel>> getFeed(int amount) async {
+  Future<List<PostModel>> getFeed(int? start, int? end) async {
     try {
-      final response = await _dio.get('/feed/$amount');
+      final response = await _dio.get('/post/feed/');
       List<PostModel> posts = List.empty();
 
       for (Map<String, dynamic> post in response.data['posts']) {
