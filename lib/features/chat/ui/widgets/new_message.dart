@@ -12,20 +12,20 @@ class NewMessage extends StatefulWidget {
 class _NewMessageState extends State<NewMessage> {
   final _messageController = TextEditingController();
 
-  void dispose() {
-    super.dispose();
-    _messageController.dispose();
-  }
+  // void dispose() {
+  //   super.dispose();
+  //   _messageController.dispose();
+  // }
 
-  _sendMessage(){
-    final enteredMessage = _messageController.text;
+  // _sendMessage(){
+  //   final enteredMessage = _messageController.text;
 
-    if (enteredMessage.isEmpty) {
-      return;
-    }
+  //   if (enteredMessage.isEmpty) {
+  //     return;
+  //   }
 
-    _messageController.clear();
-  }
+  //   _messageController.clear();
+  // }
 
    void _showAttachOptions(BuildContext context) {
     showModalBottomSheet(
@@ -97,7 +97,7 @@ class _NewMessageState extends State<NewMessage> {
           ),
 
           IconButton(onPressed: (){
-            _sendMessage();
+            //_sendMessage();
           }, icon: Icon(
             Icons.send,
             color: Colors.red
