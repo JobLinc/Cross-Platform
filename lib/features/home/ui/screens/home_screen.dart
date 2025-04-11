@@ -8,7 +8,7 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
-import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -112,10 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Semantics(
                 container: true,
                 label: 'home_body_postList',
-                child: ListView.builder(
-                  itemCount: state.posts.length,
-                  itemBuilder: (context, index) =>
-                      Post(data: state.posts[index]),
+                child: PostList(
+                  posts: state.posts,
                 ),
               ),
             ),
