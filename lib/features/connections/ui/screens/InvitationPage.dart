@@ -13,7 +13,6 @@ class InvitationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: UniversalBottomBar(),
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Invitations',

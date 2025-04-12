@@ -166,7 +166,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, Routes.otherProfileScreen,
+                                    arguments: profile);
+                              },
                               child: const Icon(Icons.more_horiz_outlined,
                                   color: Colors.black),
                               style: ElevatedButton.styleFrom(
@@ -240,7 +244,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Expanded(
                     child: Center(
                       child: Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        "${state.imagepath}",
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -368,7 +372,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Expanded(
                     child: Center(
                       child: Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        "${state.imagepath}",
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -513,15 +517,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   color: Colors.grey[200], // Soft color for the background
                   image: profile.coverPicture.isNotEmpty
                       ? DecorationImage(
-                          image: NetworkImage(
-                              "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}"),
+                          image: NetworkImage("${profile.coverPicture}"),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
                 child: profile.coverPicture.isNotEmpty
                     ? Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}",
+                        "${profile.coverPicture}",
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -565,6 +568,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               //   ),
               // );
               // Navigator.pushNamed(context, Routes.profilePictureUpdate,arguments : profile.profilePicture);
+              print(profile.profilePicture);
               BlocProvider.of<ProfileCubit>(context)
                   .updateprofilepicture(profile.profilePicture);
             },
@@ -586,7 +590,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: profile.profilePicture.isNotEmpty
                           ? ClipOval(
                               child: Image.network(
-                                "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.profilePicture}",
+                                "${profile.profilePicture}",
                                 fit: BoxFit.cover,
                                 width: 96.r,
                                 height: 96.r,

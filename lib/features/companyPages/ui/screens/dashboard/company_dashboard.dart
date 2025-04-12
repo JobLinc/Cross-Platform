@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/companyPages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
-
 
 class CompanyDashboard extends StatelessWidget {
   final Company company;
@@ -82,16 +82,8 @@ class CompanyDashboard extends StatelessWidget {
                   SizedBox(height: 16.h), // Add spacing between elements
                   Center(
                     child: TextButton(
-                      onPressed: () {
-                        // TODO: Implement Add Post functionality Fathy
-                      },
-                      child: Text(
-                        'Start a post',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: ColorsManager.crimsonRed,
-                        ),
-                      ),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, Routes.addPostScreen),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.w, vertical: 12.h),
@@ -99,6 +91,13 @@ class CompanyDashboard extends StatelessWidget {
                           side: BorderSide(
                             color: ColorsManager.crimsonRed,
                           ),
+                        ),
+                      ),
+                      child: Text(
+                        'Start a post',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: ColorsManager.crimsonRed,
                         ),
                       ),
                     ),

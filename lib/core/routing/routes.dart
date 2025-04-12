@@ -16,6 +16,7 @@ class Routes {
   static const String chatScreen = '/chatScreen';
   static const String onBoardingScreen = '/onBoardingScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
+  static const String addPostScreen = '/addPostScreen';
   static const String connectionListScreen = '/connectionListScreen';
   static const String companyDashboard = '/companyDashboard';
   static const String companyPagePosts = '/companyPagePosts';
@@ -30,4 +31,8 @@ class Routes {
   static const String addCertificationScreen = '/addCertificationScreen';
   static const String addExperienceScreen = '/addExperienceScreen';
   static const String addSkillScreen = '/addSkillScreen';
+  static const String otherImagesPreview = '/otherImagesPreview';
+  static const String otherProfileScreen = '/otherProfileScreen';
+
+  // We'll use the homeScreen route for the main container
 }

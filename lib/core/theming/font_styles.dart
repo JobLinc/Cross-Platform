@@ -1,8 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/theming/font_weight_helper.dart';
 
 class TextStyles {
+  // Theme-aware text styles that take BuildContext
+  static TextStyle font24Bold(BuildContext context) => TextStyle(
+        fontSize: 24.sp,
+        fontWeight: FontWeightHelper.bold,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font32Bold(BuildContext context) => TextStyle(
+        fontSize: 32.sp,
+        fontWeight: FontWeightHelper.bold,
+        color: ColorsManager.getPrimaryColor(context),
+      );
+
+  static TextStyle font13SemiBold(BuildContext context) => TextStyle(
+        fontSize: 13.sp,
+        fontWeight: FontWeightHelper.semiBold,
+        color: ColorsManager.getPrimaryColor(context),
+      );
+
+  static TextStyle font13Medium(BuildContext context) => TextStyle(
+        fontSize: 13.sp,
+        fontWeight: FontWeightHelper.medium,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font13Regular(BuildContext context) => TextStyle(
+        fontSize: 13.sp,
+        fontWeight: FontWeightHelper.regular,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font24PrimaryBold(BuildContext context) => TextStyle(
+        fontSize: 24.sp,
+        fontWeight: FontWeightHelper.bold,
+        color: ColorsManager.getPrimaryColor(context),
+      );
+
+  static TextStyle font16WhiteSemiBold = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: ColorsManager.warmWhite,
+  );
+
+  static TextStyle font13GrayRegular(BuildContext context) => TextStyle(
+        fontSize: 13.sp,
+        fontWeight: FontWeightHelper.regular,
+        color: ColorsManager.getTextSecondary(context),
+      );
+
+  static TextStyle font14Regular(BuildContext context) => TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeightHelper.regular,
+        color: ColorsManager.getTextSecondary(context),
+      );
+
+  static TextStyle font15Medium(BuildContext context) => TextStyle(
+        fontSize: 15.sp,
+        fontWeight: FontWeightHelper.medium,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font18Bold(BuildContext context) => TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeightHelper.bold,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font18SemiBold(BuildContext context) => TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeightHelper.semiBold,
+        color: ColorsManager.getTextPrimary(context),
+      );
+
+  static TextStyle font18WhiteMedium = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: ColorsManager.warmWhite,
+  );
+
+  // For backward compatibility, keep the old static styles
+  // but gradually migrate to using the theme-aware versions
   static TextStyle font24BlackBold = TextStyle(
     fontSize: 24.sp,
     fontWeight: FontWeight.bold,
@@ -37,18 +119,6 @@ class TextStyles {
     fontSize: 24.sp,
     fontWeight: FontWeight.bold,
     color: ColorsManager.crimsonRed,
-  );
-
-  static TextStyle font16WhiteSemiBold = TextStyle(
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w600,
-    color: ColorsManager.warmWhite,
-  );
-
-  static TextStyle font13GrayRegular = TextStyle(
-    fontSize: 13.sp,
-    fontWeight: FontWeight.w400,
-    color: ColorsManager.mutedSilver,
   );
 
   static TextStyle font12GrayRegular = TextStyle(
@@ -133,11 +203,5 @@ class TextStyles {
     fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     color: ColorsManager.darkBurgundy,
-  );
-
-  static TextStyle font18WhiteMedium = TextStyle(
-    fontSize: 18.sp,
-    fontWeight: FontWeight.w500,
-    color: ColorsManager.warmWhite,
   );
 }
