@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/dashboard/dashboard_appbar.dart';
+import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 
 class CompanyDashboard extends StatelessWidget {
   final Company company;

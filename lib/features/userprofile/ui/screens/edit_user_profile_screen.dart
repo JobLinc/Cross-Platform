@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/form/custom_text_field.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
 
@@ -259,24 +261,16 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                           SizedBox(height: 16.h),
 
                           // Country
-                          CustomRectangularTextFormField(
-                            key: Key('country_updateProfile_textField'),
-                            controller: countryController,
-                            labelText: 'Country/Region*',
-                            validator: (value) => value == null || value.isEmpty
-                                ? 'Country/Region is a required field.'
-                                : null,
-                            hintText: 'e.g. United States',
-                          ),
-                          SizedBox(height: 24),
+                          CountryTextFormField(
+                              key: Key('editUserProfile_country_textfield'),
+                              countryController: countryController),
+                          SizedBox(height: 15.h),
 
                           // City
-                          CustomRectangularTextFormField(
-                              key: Key('city_updateProfile_textField'),
-                              controller: cityController,
-                              labelText: 'City',
-                              hintText: 'e.g. New York'),
-                          SizedBox(height: 30.h),
+                          CityTextFormField(
+                              key: Key('editUserProfile_city_textfield'),
+                              cityController: cityController),
+                         SizedBox(height: 15),
 
                           // Biography Section
                           Text(
