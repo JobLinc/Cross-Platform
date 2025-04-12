@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
@@ -71,11 +72,13 @@ class AppRouter {
                   child: SignupScreen(),
                 ));
       case Routes.homeScreen:
+        // Main container handles all the main navigation now
         return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-                  create: (context) => getIt<HomeCubit>()..getUserInfo(),
-                  child: HomeScreen(),
-                ));
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<HomeCubit>(),
+            child: MainContainerScreen(),
+          ),
+        );
       case Routes.profileScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
@@ -117,17 +120,30 @@ class AppRouter {
                   child: ChatListScreen(),
                 ));
       case Routes.jobListScreen:
+        // This can be used for direct access, but main navigation is through MainContainerScreen
         return MaterialPageRoute(
             builder: (newContext) => BlocProvider(
                   create: (context) => getIt<JobListCubit>(),
-                  child: Scaffold(
-                    appBar: universalAppBar(
-                      context: newContext,
-                      selectedIndex: 4,
-                      searchBarFunction: () => goToJobSearch(newContext),
+                  child: SafeArea(
+                    child: Scaffold(
+                      appBar: universalAppBar(
+                        context: newContext,
+                        selectedIndex: 4,
+                        searchBarFunction: () => goToJobSearch(newContext),
+                      ),
+                      body: JobListScreen(),
+                      bottomNavigationBar: UniversalBottomBar(
+                        currentIndex: 4,
+                        onTap: (index) {
+                          if (index == 4) {
+                            Navigator.pushNamed(
+                                newContext, Routes.jobListScreen);
+                          } else {
+                            Navigator.pushNamed(newContext, Routes.homeScreen);
+                          }
+                        },
+                      ),
                     ),
-                    body: JobListScreen(),
-                    bottomNavigationBar: UniversalBottomBar(),
                   ),
                 ));
       case Routes.jobSearchScreen:
