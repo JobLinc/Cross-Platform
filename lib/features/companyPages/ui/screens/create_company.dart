@@ -12,7 +12,7 @@ import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textFie
 import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
-import '../../data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 import '../widgets/square_avatar.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/website_textField.dart';

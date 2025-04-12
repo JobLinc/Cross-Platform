@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
-import '../../data/data/company.dart';
 import '../widgets/scrollable_tabs.dart';
 
 class CompanyPageHome extends StatefulWidget {

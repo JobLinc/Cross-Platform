@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:flutter/material.dart';
-import '../../data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
 
 part 'create_company_state.dart';
 
