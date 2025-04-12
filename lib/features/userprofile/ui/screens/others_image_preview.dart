@@ -12,8 +12,7 @@ class FullScreenImagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullUrl =
-        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000$imagePath";
+    final fullUrl = "$imagePath";
 
     return Scaffold(
       appBar: AppBar(
