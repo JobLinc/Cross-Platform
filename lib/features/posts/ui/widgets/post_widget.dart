@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
@@ -14,7 +16,6 @@ class Post extends StatelessWidget {
   const Post({super.key, required this.data});
   final PostModel data;
 
-  @override
   Widget build(BuildContext context) {
     return BlocProvider<PostCubit>(
       create: (context) => getIt<PostCubit>(),
@@ -29,7 +30,7 @@ class Post extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
               "Error: ${state.error}",
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             )));
           }
         },
@@ -37,7 +38,7 @@ class Post extends StatelessWidget {
           key: Key('post_main_container'),
           padding: const EdgeInsets.only(top: 8),
           child: Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
+            color: ColorsManager.getCardColor(context),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: PostContent(data: data),
@@ -76,7 +77,8 @@ class PostContent extends StatelessWidget {
               },
               child: RichText(
                 text: TextSpan(
-                    style: TextStyle(color: ColorsManager.darkBurgundy),
+                    style: TextStyle(
+                        color: ColorsManager.getPrimaryColor(context)),
                     children: [
                       TextSpan(
                         text: data.isCompany ? '+ Follow' : '+ Linc',
@@ -99,7 +101,7 @@ class PostContent extends StatelessWidget {
         ),
         Divider(
           height: 0,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          color: ColorsManager.getTextSecondary(context),
         ),
         PostActionBar(),
       ],
@@ -119,6 +121,7 @@ class PostBody extends StatelessWidget {
       trimCollapsedText: "more",
       trimExpandedText: " show less",
       trimMode: TrimMode.Line,
+      style: TextStyle(color: ColorsManager.getTextPrimary(context)),
     );
   }
 }
@@ -146,10 +149,12 @@ class PostNumerics extends StatelessWidget {
           Icon(
             Icons.thumb_up,
             size: 15,
+            color: ColorsManager.getTextSecondary(context),
           ),
           Text(
             key: Key('post_numerics_likeCount'),
             ' ${likesCount.toString()}',
+            style: TextStyles.font13GrayRegular(context),
           ),
           Spacer(),
           (commentCount == 0)
@@ -157,13 +162,17 @@ class PostNumerics extends StatelessWidget {
               : Text(
                   key: Key('post_numerics_commentCount'),
                   '$commentCount comment${(commentCount == 1) ? ('') : ('s')}',
+                  style: TextStyles.font13GrayRegular(context),
                 ),
-          (repostCount == 0 || commentCount == 0) ? SizedBox() : Text(' • '),
+          (repostCount == 0 || commentCount == 0)
+              ? SizedBox()
+              : Text(' • ', style: TextStyles.font13GrayRegular(context)),
           (repostCount == 0)
               ? SizedBox()
               : Text(
                   key: Key('post_numerics_repostCount'),
                   '$repostCount repost${(repostCount == 1) ? ('') : ('s')}',
+                  style: TextStyles.font13GrayRegular(context),
                 ),
         ],
       ),
@@ -176,6 +185,8 @@ class PostActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = ColorsManager.getTextSecondary(context);
+
     return Padding(
       key: Key('post_actionaBar_container'),
       padding: const EdgeInsets.only(left: 15, right: 15),
@@ -187,7 +198,7 @@ class PostActionBar extends StatelessWidget {
           IconButton(
             key: Key('post_actionBar_like'),
             onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.thumb_up),
+            icon: Icon(Icons.thumb_up, color: iconColor),
           ),
           IconButton(
             key: Key('post_actionBar_comment'),
@@ -200,17 +211,17 @@ class PostActionBar extends StatelessWidget {
                     return CommentSection();
                   })
             },
-            icon: Icon(Icons.comment),
+            icon: Icon(Icons.comment, color: iconColor),
           ),
           IconButton(
             key: Key('post_actionBar_repost'),
             onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.loop),
+            icon: Icon(Icons.loop, color: iconColor),
           ),
           IconButton(
             key: Key('post_actionBar_share'),
             onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.send),
+            icon: Icon(Icons.send, color: iconColor),
           ),
         ],
       ),
