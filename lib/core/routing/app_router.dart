@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
@@ -22,6 +23,7 @@ import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -33,6 +35,8 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
@@ -71,7 +75,13 @@ class AppRouter {
                   child: SignupScreen(),
                 ));
       case Routes.homeScreen:
-        return MaterialPageRoute(builder: (context) => HomeScreen());
+        // Main container handles all the main navigation now
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<HomeCubit>(),
+            child: MainContainerScreen(),
+          ),
+        );
       case Routes.profileScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
@@ -130,17 +140,30 @@ class AppRouter {
                   child: ChatListScreen(),
                 ));
       case Routes.jobListScreen:
+        // This can be used for direct access, but main navigation is through MainContainerScreen
         return MaterialPageRoute(
             builder: (newContext) => BlocProvider(
                   create: (context) => getIt<JobListCubit>(),
-                  child: Scaffold(
-                    appBar: universalAppBar(
-                      context: newContext,
-                      selectedIndex: 4,
-                      searchBarFunction: () => goToJobSearch(newContext),
+                  child: SafeArea(
+                    child: Scaffold(
+                      appBar: universalAppBar(
+                        context: newContext,
+                        selectedIndex: 4,
+                        searchBarFunction: () => goToJobSearch(newContext),
+                      ),
+                      body: JobListScreen(),
+                      bottomNavigationBar: UniversalBottomBar(
+                        currentIndex: 4,
+                        onTap: (index) {
+                          if (index == 4) {
+                            Navigator.pushNamed(
+                                newContext, Routes.jobListScreen);
+                          } else {
+                            Navigator.pushNamed(newContext, Routes.homeScreen);
+                          }
+                        },
+                      ),
                     ),
-                    body: JobListScreen(),
-                    bottomNavigationBar: UniversalBottomBar(),
                   ),
                 ));
       case Routes.jobSearchScreen:
@@ -183,6 +206,14 @@ class AppRouter {
             ),
           );
         }
+
+      case Routes.addPostScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<AddPostCubit>(),
+            child: AddPostScreen(),
+          ),
+        );
 
       case Routes.connectionListScreen:
         return MaterialPageRoute(

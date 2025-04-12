@@ -44,6 +44,15 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: _newPasswordController,
                 labelText: 'New Password',
                 obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a new password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
+                  return null;
+                },
               ),
               Expanded(flex: 1, child: SizedBox()),
               CustomRoundedTextFormField(
@@ -51,6 +60,13 @@ class ChangePasswordScreen extends StatelessWidget {
                 controller: _confirmPasswordController,
                 labelText: 'Confirm New Password',
                 obscureText: true,
+                validator: (value) {
+                  if (value != _newPasswordController.text) {
+                    return 'Passwords do not match';
+                  }
+
+                  return null;
+                },
               ),
               Expanded(flex: 10, child: const SizedBox()),
               BlocConsumer<ChangePasswordCubit, ChangePasswordState>(

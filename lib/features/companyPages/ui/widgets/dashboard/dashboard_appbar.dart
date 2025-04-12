@@ -8,8 +8,7 @@ class DashboardAppbar extends StatefulWidget implements PreferredSizeWidget {
   final Company company;
   final String selectedValue;
   const DashboardAppbar(
-      {super.key, required this.company, this.selectedValue = "Dashboard"}
-    );
+      {super.key, required this.company, this.selectedValue = "Dashboard"});
 
   @override
   State<DashboardAppbar> createState() => _DashboardAppbarState();
@@ -135,9 +134,8 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                 padding: EdgeInsets.only(
                     left: 180.w), // Ensure flutter_screenutil is initialized
                 child: IconButton(
-                  onPressed: () {
-                    // TODO: Implement add post logic here Fathy
-                  },
+                  onPressed: () =>
+                      Navigator.pushNamed(context, Routes.addPostScreen),
                   icon: Icon(Icons.post_add_rounded),
                 ),
               ),

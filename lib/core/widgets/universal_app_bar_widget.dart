@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 
-AppBar universalAppBar({required BuildContext context, required int selectedIndex,Function searchBarFunction=emptyFunction}){
+AppBar universalAppBar({required BuildContext context, required int selectedIndex,VoidCallback? searchBarFunction  }){
 
     List<UniversalAppBarInput> mainScreens=[
       UniversalAppBarInput(
@@ -37,7 +37,7 @@ AppBar universalAppBar({required BuildContext context, required int selectedInde
         UniversalAppBarInput(
         searchKeyName: "jobList_search_textField",
         searchText: "search jobs",
-        searchOnPress:()=>searchBarFunction(),
+        searchOnPress:searchBarFunction ?? emptyFunction,
         searchOnTextChange: emptyFunction,
         searchTextController: SearchController(),
       ),

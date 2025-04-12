@@ -31,8 +31,10 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
-import 'package:joblinc/features/home/data/repos/post_repo.dart';
-import 'package:joblinc/features/home/data/services/post_api_service.dart';
+import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
+import 'package:joblinc/features/posts/data/services/comment_api_service.dart';
+import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
 import 'package:joblinc/features/jobs/data/services/job_api_service.dart';
@@ -40,6 +42,8 @@ import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -113,16 +117,28 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ForgetPasswordCubit>(
       () => ForgetPasswordCubit(repository: getIt<ForgetPasswordRepo>()));
-
+///////////////////////////////////////////////////////////////////////////
+  // Home
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
+///////////////////////////////////////////////////////////////////////////
   // Posts
   getIt.registerLazySingleton<PostApiService>(
       () => PostApiService(getIt<Dio>()));
 
+  getIt.registerLazySingleton<CommentApiService>(
+      () => CommentApiService(getIt<Dio>()));
+
   getIt
-      .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>()));
+      .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>(), getIt<UserProfileApiService>()));
 
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<PostRepo>()));
+  getIt.registerLazySingleton<CommentRepo>(
+      () => CommentRepo(getIt<CommentApiService>()));
 
+  getIt.registerFactory<PostCubit>(() => PostCubit(getIt<PostRepo>(),
+      getIt<CommentRepo>(), getIt<UserConnectionsRepository>()));
+
+  getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));
 
