@@ -219,26 +219,21 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
                   SizedBox(height: 25.h),
 
                   // Save Button
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 40.h,
-                      child: ElevatedButton(
-                        key: Key('profileAddSkill_save_button'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorsManager.crimsonRed,
-                        ),
-                        onPressed: saveSkill,
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 40.h,
+                    child: ElevatedButton(
+                      key: Key('profileAddSkill_save_button'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorsManager.crimsonRed,
+                      ),
+                      onPressed: saveSkill,
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

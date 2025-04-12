@@ -19,7 +19,10 @@ class UserProfileAddSection extends StatelessWidget {
             children: [
               IconButton(
                 icon: Icon(Icons.ios_share),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, Routes.addSkillScreen);
+                },
               ),
               Text(
                 'Add education',
@@ -42,7 +45,10 @@ class UserProfileAddSection extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, Routes.addSkillScreen);
+                  },
                 ),
                 Text(
                   'Add skills',
@@ -59,14 +65,18 @@ class UserProfileAddSection extends StatelessWidget {
           padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
           child: InkWell(
             onTap: () {
-              Navigator.pushReplacementNamed(context, Routes.addCertificationScreen);
+              Navigator.pushReplacementNamed(
+                  context, Routes.addCertificationScreen);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
                   icon: Icon(Icons.flag_rounded),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, Routes.addSkillScreen);
+                  },
                 ),
                 Text(
                   'Add licenses & certifications',
