@@ -178,9 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  myUser.profilePicture == ''
-                      ? 'https://placehold.co/400/png'
-                      : "${myUser.profilePicture}",
+                  myUser.profilePicture,
                 ),
               ),
             ),
