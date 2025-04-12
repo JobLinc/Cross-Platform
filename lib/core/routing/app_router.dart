@@ -37,13 +37,16 @@ import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/userprofile/ui/screens/others_image_preview.dart';
 import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 
@@ -93,7 +96,24 @@ class AppRouter {
             ),
           );
         }
-
+      case Routes.otherImagesPreview:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (context) => FullScreenImagePage(imagePath: arguments),
+          );
+        }
+      case Routes.otherProfileScreen:
+        if (arguments is UserProfile) {
+          return MaterialPageRoute(
+            builder: (context) => othersProfileScreen(profile: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Text("2ntr"),
+            ),
+          );
+        }
       case Routes.chatScreen:
         return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:

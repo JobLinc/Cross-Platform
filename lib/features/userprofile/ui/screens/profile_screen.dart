@@ -156,7 +156,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, Routes.otherProfileScreen,
+                                    arguments: profile);
+                              },
                               child: const Icon(Icons.more_horiz_outlined,
                                   color: Colors.black),
                               style: ElevatedButton.styleFrom(
