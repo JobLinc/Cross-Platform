@@ -104,8 +104,8 @@ class AppRouter {
           );
         }
 
-      case Routes.chatScreen:
-        return MaterialPageRoute(builder: (context) => ChatScreen());
+      // case Routes.chatScreen:
+      //   return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

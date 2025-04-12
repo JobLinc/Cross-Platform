@@ -1,20 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/chat/ui/widgets/chat_avatar.dart';
 
 class ChatCard extends StatelessWidget {
   final int? itemIndex;
   final Chat? chat;
-  final Function()? press;
+  final VoidCallback onTap;
+  final VoidCallback onLongPress;
+  final bool selectionMode;
+  final bool selected;
 
-  const ChatCard({super.key, this.itemIndex, this.chat, this.press});
+  const ChatCard({
+    super.key,
+    required this.itemIndex,
+    required this.chat,
+    required this.onTap,
+    required this.onLongPress,
+    this.selectionMode = false,
+    this.selected = false,
+  });
+
+
+
+//  Widget buildChatAvatar() {
+//     final pics = chat!.chatPicture! ;
+//     // fallback image if list is empty
+//     final defaultUrl =
+//         'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg';
+
+//     if (pics.length <= 2) {
+//       final url = pics.isNotEmpty ? pics.first : defaultUrl;
+//       return CircleAvatar(
+//         radius: 25.r,
+//         backgroundImage: NetworkImage(url),
+//       );
+//     }
+
+//     // more than 2: show first three, overlapped
+//     return SizedBox(
+//       width: 50.r,
+//       height: 50.r,
+//       child: Stack(
+//         children: [
+//           Positioned(
+//             left: 0,
+//             child: CircleAvatar(
+//               radius: 15.r,
+//               backgroundImage: NetworkImage(pics[0]),
+//             ),
+//           ),
+//           Positioned(
+//             left: 15.r,
+//             child: CircleAvatar(
+//               radius: 15.r,
+//               backgroundImage: NetworkImage(pics[1]),
+//             ),
+//           ),
+//           Positioned(
+//             left: 30.r,
+//             child: CircleAvatar(
+//               radius: 15.r,
+//               backgroundImage: NetworkImage(pics[2]),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      key:Key("chatList_openChat_card${chat!.chatId}"),
-      onTap: press,
+    return InkWell(
+      key: Key("chatList_openChat_card${chat!.chatId}"),
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
         child: Row(
@@ -22,31 +85,55 @@ class ChatCard extends StatelessWidget {
           crossAxisAlignment:
               CrossAxisAlignment.center, // Aligns everything centrally
           children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: NetworkImage(
-                    chat!.chatPicture != null ?
-                    chat!.chatPicture![0] : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
-                  ),
-                ),
-                if (true )
-                  Positioned(
-                    bottom: 2,
-                    right: 2,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+            if (selectionMode) ...[
+              Checkbox(
+                value: selected,
+                activeColor: Colors.red,
+                onChanged: (_) => onTap(),
+              ),
+            ] else ...[
+              Stack(
+                children: [
+                  // CircleAvatar(
+                  //   radius: 25,
+                  //   backgroundImage: NetworkImage(
+                  //     chat!.chatPicture != null
+                  //         ? chat!.chatPicture![0]
+                  //         : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
+                  //   ),
+                  // ),
+                  buildChatAvatar(chat!.chatPicture),
+                  if (true)
+                    Positioned(
+                      bottom: 2,
+                      right: 2,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
+                ],
+              ),
+              // if (chat.unreadCount > 0)
+              //   Positioned(
+              //     bottom: 2,
+              //     right: 2,
+              //     child: Container(
+              //       width: 10.r,
+              //       height: 10.r,
+              //       decoration: BoxDecoration(
+              //         color: Colors.green,
+              //         shape: BoxShape.circle,
+              //         border: Border.all(color: Colors.white, width: 2.w),
+              //       ),
+              //     ),
+              //   ),
+            ],
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -55,10 +142,14 @@ class ChatCard extends StatelessWidget {
                   Text(
                     chat?.chatName ?? "Unknown User",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 3),
                   Text(
-                    /*"${chat?.lastSender == 'You' ? 'You' : chat?.chatName}: */chat?.lastMessage ?? 'No messages',
+                    /*"${chat?.lastSender == 'You' ? 'You' : chat?.chatName}: */ chat
+                            ?.lastMessage ??
+                        'No messages',
                     style: TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -69,7 +160,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount > 0)
+                if (chat!.unreadCount > 0) 
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -111,8 +202,14 @@ class ChatCard extends StatelessWidget {
 
 class ChatList extends StatefulWidget {
   final List<Chat> chats;
-  const ChatList({super.key, required this.chats});
-
+  final bool selectionMode;
+  final Set<String>? selectedIds;
+  const ChatList({
+    super.key,
+    required this.chats,
+    this.selectionMode = false,
+    this.selectedIds,
+  });
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -120,6 +217,7 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   List<Chat> sortedChats = [];
+  //final List<Chat> chats;
 
   @override
   void initState() {
@@ -127,12 +225,10 @@ class _ChatListState extends State<ChatList> {
     sortChats();
   }
 
-
   void sortChats() {
     setState(() {
-      sortedChats = List.from(widget.chats); 
-      sortedChats.sort(
-          (a, b) => b.sentDate.compareTo(a.sentDate));
+      sortedChats = List.from(widget.chats);
+      sortedChats.sort((a, b) => b.sentDate.compareTo(a.sentDate));
     });
     // for (var convo in sortedChats) {
     //   print("${convo.userName} - ${convo.lastMessage.time}");
@@ -143,12 +239,44 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: sortedChats.length,
-        itemBuilder: (context, index) => ChatCard(
+        itemBuilder: (_, index) => ChatCard(
               itemIndex: index,
               chat: sortedChats[index],
-              press: () {
-                Navigator.pushNamed(context, Routes.chatScreen);
+              selectionMode: widget.selectionMode,
+              selected:
+                  widget.selectedIds?.contains(sortedChats[index].chatId) ??
+                      false,
+              onTap: () {
+                if (widget.selectionMode) {
+                  context
+                      .read<ChatListCubit>()
+                      .toggleSelection(sortedChats[index].chatId);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<ChatListCubit>(),
+                        child: ChatScreen(chat: sortedChats[index]),
+                      ),
+                    ),
+                  );
+                }
               },
+              onLongPress: () {
+                context
+                    .read<ChatListCubit>()
+                    .toggleSelection(sortedChats[index].chatId);
+              },
+              // {
+              //   Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (context) => BlocProvider<ChatListCubit>(
+              //               create: (context) => getIt<ChatListCubit>(),
+              //               child: ChatScreen(chat: sortedChats[index]))));
+              // },
             ));
   }
 }
+

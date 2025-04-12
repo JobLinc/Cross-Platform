@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
 // class Company{}
 // class SalaryRange{}
 // class Location{}
 
 class Job {
-  int? id;
+  String? id;
   String? title;
   String? industry;
   Company? company;
@@ -135,7 +133,7 @@ class Location {
 
 List<Job> mockAppliedJobs=[
     Job(
-    id:10,
+    id:'10',
     title: "Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdWorks", size: "200 employees"),
@@ -152,7 +150,7 @@ List<Job> mockAppliedJobs=[
 
 List<Job> mockSavedJobs=[
     Job(
-    id:9,
+    id:'9',
     title: "Communications Engineer",
     industry: "Technology",
     company: Company(name: "TechCorp", size: "500+ employees"),
@@ -169,7 +167,7 @@ List<Job> mockSavedJobs=[
 
 List<Job> mockJobs = [
   Job(
-    id: 1,
+    id: '1',
     title: "Software Engineer",
     industry: "Technology",
     company: Company(name: "InnovateTech", size: "1000+ employees"),
@@ -183,7 +181,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(hours: 1)),
   ),
   Job(
-    id: 2,
+    id: '2',
     title: "Digital Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdVantage", size: "300 employees"),
@@ -197,7 +195,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(hours: 2)),
   ),
   Job(
-    id: 3,
+    id: '3',
     title: "Mobile App Developer",
     industry: "Technology",
     company: Company(name: "AppWorks", size: "500+ employees"),
@@ -211,7 +209,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(hours: 3)),
   ),
   Job(
-    id: 4,
+    id: '4',
     title: "Graphic Designer",
     industry: "Design",
     company: Company(name: "CreativeHub", size: "150 employees"),
@@ -225,7 +223,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(days: 1, hours: 2)),
   ),
   Job(
-    id: 5,
+    id: '5',
     title: "Data Analyst",
     industry: "Finance",
     company: Company(name: "FinAnalytics", size: "800+ employees"),
@@ -239,7 +237,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(days: 1, hours: 5)),
   ),
   Job(
-    id: 6,
+    id: '6',
     title: "Human Resources Manager",
     industry: "Human Resources",
     company: Company(name: "PeopleFirst", size: "250 employees"),
@@ -253,7 +251,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(days: 2)),
   ),
   Job(
-    id: 7,
+    id: '7',
     title: "Product Manager",
     industry: "Technology",
     company: Company(name: "NextGen Products", size: "600+ employees"),
@@ -267,7 +265,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(days: 3, hours: 4)),
   ),
   Job(
-    id: 8,
+    id: '8',
     title: "Cybersecurity Analyst",
     industry: "Security",
     company: Company(name: "SecureNet", size: "400+ employees"),
@@ -281,7 +279,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now().subtract(Duration(days: 4, hours: 6)),
   ),
   Job(
-    id:9,
+    id:'9',
     title: "Communications Engineer",
     industry: "Technology",
     company: Company(name: "TechCorp", size: "500+ employees"),
@@ -295,7 +293,7 @@ List<Job> mockJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id:10,
+    id:'10',
     title: "Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "AdWorks", size: "200 employees"),

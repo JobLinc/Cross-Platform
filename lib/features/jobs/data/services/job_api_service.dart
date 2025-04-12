@@ -82,127 +82,216 @@ class JobApiService {
     }
   }
 
-  Future<Response> getSearchedJobs(String keyword, String? location,Filter? filter) async {
+
+
+  Future<Response> getCreatedJobs() async {
     if (0 == 1) {
       try {
-        final response = await _dio.get('/job/search',
-        data: { 'keyword': keyword,  'location':location });
+        final response = await _dio.get('/job/created');
         return response;
       } catch (e) {
         rethrow;
       }
     } else {
-    await Future.delayed(Duration(milliseconds: 300));
-
-    if (keyword.isEmpty || keyword == ""){
-      List<Job> emptyJobs =[];
-        final response = Response<dynamic>(
+      final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: emptyJobs.map((job) => job.toJson()).toList(),
+        data: mockCreatedJobs.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
       return response;
     }
+  }
 
-    // Convert keyword to lowercase for case-insensitive matching.
-    final lowerKeyword = keyword.toLowerCase();
-    // Only convert location to lowercase if it's not null.
-    final lowerLocation = (location ?? "").toLowerCase();
+  Future<Response> getSearchedFilteredJobs(
+      String keyword, String? location, Filter? filter) async {
+    if (0 == 1) {
+      try {
+        final response = await _dio.get('/job/search', data: {
+          'keyword': keyword,
+          'location': location,
+          'filter': filter!.toJson()
+        });
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
 
-    final searchedJobs = mockDBJobs.where((job) {
-      bool keywordMatches = false;
-      bool locationMatches = false;
-
-      // Check if any of the text fields contain the keyword.
-      if (job.title != null &&
-          job.title!.toLowerCase().contains(lowerKeyword)) {
-        keywordMatches = true;
-      } else if (job.industry != null &&
-          job.industry!.toLowerCase().contains(lowerKeyword)) {
-        keywordMatches = true;
-      } else if (job.company != null &&
-          job.company!.name != null &&
-          job.company!.name!.toLowerCase().contains(lowerKeyword)) {
-        keywordMatches = true;
-      } else if (job.keywords != null &&
-          job.keywords!.any((kw) => kw.toLowerCase().contains(lowerKeyword))) {
-        keywordMatches = true;
+      if (keyword.isEmpty || keyword == "") {
+        List<Job> emptyJobs = [];
+        final response = Response<dynamic>(
+          requestOptions: RequestOptions(path: ''),
+          data: emptyJobs.map((job) => job.toJson()).toList(),
+          statusCode: 200,
+          statusMessage: 'OK',
+        );
+        return response;
       }
 
-      // If location is null or empty, consider it as a match.
-      if (location == null || location.isEmpty) {
-        locationMatches = true;
-      } else if (job.location != null) {
-        if (job.location!.city != null &&
-            job.location!.city!.toLowerCase().contains(lowerLocation)) {
+      // Convert keyword to lowercase for case-insensitive matching.
+      final lowerKeyword = keyword.toLowerCase();
+      // Only convert location to lowercase if it's not null.
+      final lowerLocation = (location ?? "").toLowerCase();
+
+      final searchedJobs = mockDBJobs.where((job) {
+        bool keywordMatches = false;
+        bool locationMatches = false;
+
+        // Check if any of the text fields contain the keyword.
+        if (job.title != null &&
+            job.title!.toLowerCase().contains(lowerKeyword)) {
+          keywordMatches = true;
+        } else if (job.industry != null &&
+            job.industry!.toLowerCase().contains(lowerKeyword)) {
+          keywordMatches = true;
+        } else if (job.company != null &&
+            job.company!.name != null &&
+            job.company!.name!.toLowerCase().contains(lowerKeyword)) {
+          keywordMatches = true;
+        } else if (job.keywords != null &&
+            job.keywords!
+                .any((kw) => kw.toLowerCase().contains(lowerKeyword))) {
+          keywordMatches = true;
+        }
+
+        // If location is null or empty, consider it as a match.
+        if (location == null || location.isEmpty) {
           locationMatches = true;
-        } else if (job.location!.country != null &&
-            job.location!.country!.toLowerCase().contains(lowerLocation)) {
-          locationMatches = true;
+        } else if (job.location != null) {
+          if (job.location!.city != null &&
+              job.location!.city!.toLowerCase().contains(lowerLocation)) {
+            locationMatches = true;
+          } else if (job.location!.country != null &&
+              job.location!.country!.toLowerCase().contains(lowerLocation)) {
+            locationMatches = true;
+          }
+        }
+
+        // If keyword is empty, we match all jobs for that filter.
+        bool keywordCondition = keyword.isEmpty ? true : keywordMatches;
+        // Use the computed locationMatches value.
+        bool locationCondition = locationMatches;
+
+        return keywordCondition && locationCondition;
+      }).toList();
+
+      List<Job> filteredJobs = searchedJobs;
+
+      if (filter != null) {
+        // Experience filter: if filter.experienceFilter is non-empty,
+        // only keep jobs whose experienceLevel matches one of the filters.
+        if (filter.experienceFilter != null &&
+            filter.experienceFilter!.isNotEmpty) {
+          filteredJobs = filteredJobs.where((job) {
+            return job.experienceLevel != null &&
+                filter.experienceFilter!.any((exp) => job.experienceLevel!
+                    .toLowerCase()
+                    .contains(exp.toLowerCase()));
+          }).toList();
+        }
+
+        // Company filter: if filter.companyFilter is non-empty,
+        // only keep jobs whose company name matches one of the filters.
+        if (filter.companyFilter != null && filter.companyFilter!.isNotEmpty) {
+          filteredJobs = filteredJobs.where((job) {
+            return job.company != null &&
+                job.company!.name != null &&
+                filter.companyFilter!.any((comp) => job.company!.name!
+                    .toLowerCase()
+                    .contains(comp.toLowerCase()));
+          }).toList();
+        }
+
+        // Salary range filter: if minSalary is set, job.salaryRange.min should be >= filter.minSalary.
+        if (filter.minSalary != null && filter.minSalary! > 0) {
+          filteredJobs = filteredJobs.where((job) {
+            return job.salaryRange != null &&
+                job.salaryRange!.min != null &&
+                job.salaryRange!.min! >= filter.minSalary!;
+          }).toList();
+        }
+        // Similarly, if maxSalary is set, job.salaryRange.max should be <= filter.maxSalary.
+        if (filter.maxSalary != null && filter.maxSalary! > 0) {
+          filteredJobs = filteredJobs.where((job) {
+            return job.salaryRange != null &&
+                job.salaryRange!.max != null &&
+                job.salaryRange!.max! <= filter.maxSalary!;
+          }).toList();
         }
       }
 
-      // If keyword is empty, we match all jobs for that filter.
-      bool keywordCondition = keyword.isEmpty ? true : keywordMatches;
-      // Use the computed locationMatches value.
-      bool locationCondition = locationMatches;
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: filteredJobs.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
 
-      return keywordCondition && locationCondition;
-    }).toList();
-
-
-    List<Job> filteredJobs = searchedJobs;
-
-    if (filter != null) {
-      // Experience filter: if filter.experienceFilter is non-empty,
-      // only keep jobs whose experienceLevel matches one of the filters.
-      if (filter.experienceFilter != null && filter.experienceFilter!.isNotEmpty) {
-        filteredJobs = filteredJobs.where((job) {
-          return job.experienceLevel != null &&
-              filter.experienceFilter!.any((exp) =>
-                  job.experienceLevel!.toLowerCase().contains(exp.toLowerCase()));
-        }).toList();
-      }
-
-      // Company filter: if filter.companyFilter is non-empty,
-      // only keep jobs whose company name matches one of the filters.
-      if (filter.companyFilter != null && filter.companyFilter!.isNotEmpty) {
-        filteredJobs = filteredJobs.where((job) {
-          return job.company != null &&
-              job.company!.name != null &&
-              filter.companyFilter!.any((comp) =>
-                  job.company!.name!.toLowerCase().contains(comp.toLowerCase()));
-        }).toList();
-      }
-
-      // Salary range filter: if minSalary is set, job.salaryRange.min should be >= filter.minSalary.
-      if (filter.minSalary != null && filter.minSalary! > 0) {
-        filteredJobs = filteredJobs.where((job) {
-          return job.salaryRange != null &&
-              job.salaryRange!.min != null &&
-              job.salaryRange!.min! >= filter.minSalary!;
-        }).toList();
-      }
-      // Similarly, if maxSalary is set, job.salaryRange.max should be <= filter.maxSalary.
-      if (filter.maxSalary != null && filter.maxSalary! > 0) {
-        filteredJobs = filteredJobs.where((job) {
-          return job.salaryRange != null &&
-              job.salaryRange!.max != null &&
-              job.salaryRange!.max! <= filter.maxSalary!;
-        }).toList();
-      }
+      return response;
     }
-
-    final response = Response<dynamic>(
-      requestOptions: RequestOptions(path: ''),
-      data: filteredJobs.map((job) => job.toJson()).toList(),
-      statusCode: 200,
-      statusMessage: 'OK',
-    );
-
-    return response;
   }
+
+  Future<Response>getJobApplicants(String jobId) async{
+    if (0 == 1) {
+      try {
+        final response = await _dio.get('/job/$jobId/applicants');
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: mockJobApplicants.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      return response;
+    }
+  }
+
+    Future<Response>getJobApplicantById(String jobId,String applicantId) async{
+    if (0 == 1) {
+      try {
+        final response = await _dio.get('/job/$jobId/applicants/$applicantId');
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
+      JobApplication jobApplicant=mockJobApplicants.firstWhere((jobApp)=>(jobApp.job.id==jobId && jobApp.applicant.id==applicantId));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: jobApplicant.toJson(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      return response;
+    }
+  }
+
+  Future<Response> getJobApplications() async {
+    if (0 == 1) {
+      try {
+        final response = await _dio.get('/job/applications');
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: mockJobApplications.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      return response;
+    }
   }
 
   /// Retrieves all uploaded resume files from the server.
@@ -227,19 +316,34 @@ class JobApiService {
   }
 
   Future<Response> createJob(Job job) async {
-    try {
-      Map<String, dynamic> jobData = job.toJson();
-      final response = await _dio.post('/job/create', data: jobData);
+    if (0 == 1) {
+      try {
+        Map<String, dynamic> jobData = job.toJson();
+        final response = await _dio.post('/job/create', data: jobData);
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      await Future.delayed(Duration(milliseconds: 300));
+      mockCreatedJobs.add(job);
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: {'message','job created succesfully'},
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
       return response;
-    } catch (e) {
-      rethrow;
     }
   }
 
-  Future<void> saveJob(int jobId) async {
+
+
+
+  Future<void> saveJob(String jobId) async {
     if (0 == 1) {
       try {
-        await _dio.post('/jobs/$jobId/save');
+        await _dio.post('/job/$jobId/save');
       } catch (e) {
         rethrow;
       }
@@ -249,10 +353,10 @@ class JobApiService {
     }
   }
 
-  Future<void> unsaveJob(int jobId) async {
+  Future<void> unsaveJob(String jobId) async {
     if (0 == 1) {
       try {
-        await _dio.post('/jobs/$jobId/unsave');
+        await _dio.post('/job/$jobId/unsave');
       } catch (e) {
         rethrow;
       }
@@ -262,12 +366,12 @@ class JobApiService {
     }
   }
 
-  Future<Response> applyJob(int jobId, JobApplication jobApplication) async {
+  Future<Response> applyJob(String jobId, JobApplication jobApplication) async {
     if (0 == 1) {
       try {
         Map<String, dynamic> applicationData = jobApplication.toJson();
         final response =
-            await _dio.post('/jobs/$jobId/apply', data: applicationData);
+            await _dio.post('/job/$jobId/apply', data: applicationData);
         return response;
       } catch (e) {
         rethrow;
@@ -275,6 +379,7 @@ class JobApiService {
     } else {
       await Future.delayed(Duration(milliseconds: 500));
       mockAppliedJobs.add(jobApplication.job);
+      mockJobApplications.add(jobApplication);
       final response = Response(
         requestOptions: RequestOptions(path: ''),
         statusCode: 200,
@@ -284,6 +389,30 @@ class JobApiService {
       );
       print(response);
       return response;
+    }
+  }
+
+    Future<void> acceptJobApplication(String jobId ,String applicantId) async {
+    if(0==1){
+      try {
+        await _dio.post('/job/$jobId/applicants/$applicantId/accept');
+      } catch (e) {
+        rethrow;
+      }
+    }else {
+      mockJobApplicants.firstWhere((jobApp)=> jobApp.applicant.id==applicantId).status="Accepted";
+    }
+  }
+
+    Future<void> rejectJobApplication(String jobId ,String applicantId) async {
+    if(0==1){
+      try {
+        await _dio.post('/job/$jobId/applicants/$applicantId/accept');
+      } catch (e) {
+        rethrow;
+      }
+    }else {
+      mockJobApplicants.firstWhere((jobApp)=> jobApp.applicant.id==applicantId).status="Rejected";
     }
   }
 
@@ -335,7 +464,7 @@ class JobApiService {
 
 List<Job> mockDBJobs = [
   Job(
-    id: 1,
+    id: '1',
     title: "Senior Software Engineer",
     industry: "Technology",
     company: Company(name: "Innovatech Solutions", size: "500+ employees"),
@@ -349,7 +478,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 01),
   ),
   Job(
-    id: 2,
+    id: '2',
     title: "Digital Marketing Specialist",
     industry: "Marketing",
     company: Company(name: "CreativeAds", size: "150 employees"),
@@ -363,7 +492,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 02, 15),
   ),
   Job(
-    id: 3,
+    id: '3',
     title: "Product Manager",
     industry: "Management",
     company: Company(name: "Global Ventures", size: "1000+ employees"),
@@ -377,7 +506,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 05),
   ),
   Job(
-    id: 4,
+    id: '4',
     title: "Junior Frontend Developer",
     industry: "Technology",
     company: Company(name: "WebWorks", size: "50 employees"),
@@ -391,7 +520,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 10),
   ),
   Job(
-    id: 5,
+    id: '5',
     title: "Data Analyst",
     industry: "Analytics",
     company: Company(name: "DataCorp", size: "300 employees"),
@@ -405,7 +534,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 02, 28),
   ),
   Job(
-    id: 6,
+    id: '6',
     title: "UX/UI Designer",
     industry: "Design",
     company: Company(name: "DesignPro", size: "120 employees"),
@@ -419,7 +548,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 12),
   ),
   Job(
-    id: 7,
+    id: '7',
     title: "Business Analyst",
     industry: "Business",
     company: Company(name: "BizInsights", size: "400 employees"),
@@ -433,7 +562,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 03),
   ),
   Job(
-    id: 8,
+    id: '8',
     title: "Mobile App Developer",
     industry: "Technology",
     company: Company(name: "Appify", size: "250 employees"),
@@ -447,7 +576,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 08),
   ),
   Job(
-    id: 9,
+    id: '9',
     title: "HR Manager",
     industry: "Human Resources",
     company: Company(name: "PeopleFirst", size: "350 employees"),
@@ -461,7 +590,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 06),
   ),
   Job(
-    id: 10,
+    id: '10',
     title: "Financial Analyst",
     industry: "Finance",
     company: Company(name: "MoneyMatters", size: "600 employees"),
@@ -475,7 +604,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 11),
   ),
   Job(
-    id: 11,
+    id: '11',
     title: "UX Researcher",
     industry: "Design",
     company: Company(name: "Creative Minds", size: "80 employees"),
@@ -489,7 +618,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 15),
   ),
   Job(
-    id: 12,
+    id: '12',
     title: "DevOps Engineer",
     industry: "Technology",
     company: Company(name: "CloudOps", size: "300 employees"),
@@ -504,7 +633,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 16),
   ),
   Job(
-    id: 13,
+    id: '13',
     title: "Data Scientist",
     industry: "Analytics",
     company: Company(name: "Insight Analytics", size: "400 employees"),
@@ -518,7 +647,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 17),
   ),
   Job(
-    id: 14,
+    id: '14',
     title: "Graphic Designer",
     industry: "Design",
     company: Company(name: "PixelPerfect", size: "60 employees"),
@@ -532,7 +661,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 18),
   ),
   Job(
-    id: 15,
+    id: '15',
     title: "Backend Developer",
     industry: "Technology",
     company: Company(name: "SecureSoft", size: "250 employees"),
@@ -546,7 +675,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 19),
   ),
   Job(
-    id: 16,
+    id: '16',
     title: "Front End Developer",
     industry: "Technology",
     company: Company(name: "WebWizards", size: "180 employees"),
@@ -560,7 +689,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 20),
   ),
   Job(
-    id: 17,
+    id: '17',
     title: "Quality Assurance Engineer",
     industry: "Technology",
     company: Company(name: "TestRight", size: "120 employees"),
@@ -574,7 +703,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 21),
   ),
   Job(
-    id: 18,
+    id: '18',
     title: "Content Strategist",
     industry: "Marketing",
     company: Company(name: "BrandBoost", size: "90 employees"),
@@ -588,7 +717,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 22),
   ),
   Job(
-    id: 19,
+    id: '19',
     title: "Mobile Game Developer",
     industry: "Entertainment",
     company: Company(name: "FunGames Studio", size: "300 employees"),
@@ -602,7 +731,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 23),
   ),
   Job(
-    id: 20,
+    id: '20',
     title: "Operations Manager",
     industry: "Business",
     company: Company(name: "Optima Ops", size: "500 employees"),
@@ -616,7 +745,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 24),
   ),
   Job(
-    id: 21,
+    id: '21',
     title: "Customer Support Specialist",
     industry: "Customer Service",
     company: Company(name: "ServiceNow", size: "400 employees"),
@@ -630,7 +759,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 25),
   ),
   Job(
-    id: 22,
+    id: '22',
     title: "Project Coordinator",
     industry: "Management",
     company: Company(name: "PlanIt", size: "150 employees"),
@@ -644,7 +773,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 26),
   ),
   Job(
-    id: 23,
+    id: '23',
     title: "Digital Content Creator",
     industry: "Media",
     company: Company(name: "Streamline Media", size: "220 employees"),
@@ -658,7 +787,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 27),
   ),
   Job(
-    id: 24,
+    id: '24',
     title: "IT Support Technician",
     industry: "Technology",
     company: Company(name: "NetHelp", size: "300 employees"),
@@ -672,7 +801,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 28),
   ),
   Job(
-    id: 25,
+    id: '25',
     title: "Business Development Manager",
     industry: "Business",
     company: Company(name: "GrowthEdge", size: "350 employees"),
@@ -686,7 +815,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 29),
   ),
   Job(
-    id: 26,
+    id: '26',
     title: "Content Writer",
     industry: "Media",
     company: Company(name: "WriteNow", size: "80 employees"),
@@ -700,7 +829,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 30),
   ),
   Job(
-    id: 27,
+    id: '27',
     title: "Cybersecurity Analyst",
     industry: "Technology",
     company: Company(name: "SecureNet", size: "500+ employees"),
@@ -714,7 +843,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 01),
   ),
   Job(
-    id: 28,
+    id: '28',
     title: "E-commerce Manager",
     industry: "Retail",
     company: Company(name: "ShopSphere", size: "600 employees"),
@@ -728,7 +857,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 02),
   ),
   Job(
-    id: 29,
+    id: '29',
     title: "Machine Learning Engineer",
     industry: "Technology",
     company: Company(name: "AIMinds", size: "200 employees"),
@@ -742,7 +871,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 03),
   ),
   Job(
-    id: 30,
+    id: '30',
     title: "Operations Analyst",
     industry: "Business",
     company: Company(name: "OpsInsight", size: "150 employees"),
@@ -756,7 +885,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 04),
   ),
   Job(
-    id: 31,
+    id: '31',
     title: "Software Developer",
     industry: "Technology",
     company: Company(name: "GlobalTech", size: "300 employees"),
@@ -770,7 +899,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 32,
+    id: '32',
     title: "Data Analyst",
     industry: "Finance",
     company: Company(name: "FinAnalytics", size: "150 employees"),
@@ -784,7 +913,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 33,
+    id: '33',
     title: "Project Manager",
     industry: "Construction",
     company: Company(name: "BuildRight", size: "400 employees"),
@@ -798,7 +927,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 34,
+    id: '34',
     title: "Digital Marketing Manager",
     industry: "Marketing",
     company: Company(name: "CreativeEdge", size: "250 employees"),
@@ -812,7 +941,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 35,
+    id: '35',
     title: "UI/UX Designer",
     industry: "Design",
     company: Company(name: "DesignHive", size: "100 employees"),
@@ -826,7 +955,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 36,
+    id: '36',
     title: "Mobile App Developer",
     industry: "Technology",
     company: Company(name: "AppInnovate", size: "120 employees"),
@@ -840,7 +969,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 37,
+    id: '37',
     title: "Cloud Engineer",
     industry: "Technology",
     company: Company(name: "CloudNet", size: "350 employees"),
@@ -854,7 +983,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 38,
+    id: '38',
     title: "Quality Assurance Engineer",
     industry: "Technology",
     company: Company(name: "QualityFirst", size: "200 employees"),
@@ -868,7 +997,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 39,
+    id: '39',
     title: "Business Analyst",
     industry: "Consulting",
     company: Company(name: "ConsultCorp", size: "500 employees"),
@@ -882,7 +1011,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 40,
+    id: '40',
     title: "HR Manager",
     industry: "Human Resources",
     company: Company(name: "PeopleFirst", size: "150 employees"),
@@ -896,7 +1025,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 41,
+    id: '41',
     title: "Product Manager",
     industry: "Technology",
     company: Company(name: "InnovateNow", size: "350 employees"),
@@ -910,7 +1039,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 42,
+    id: '42',
     title: "UX Researcher",
     industry: "Design",
     company: Company(name: "UserFirst", size: "100 employees"),
@@ -924,7 +1053,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 43,
+    id: '43',
     title: "Digital Content Writer",
     industry: "Media",
     company: Company(name: "ContentKing", size: "80 employees"),
@@ -938,7 +1067,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 44,
+    id: '44',
     title: "Operations Manager",
     industry: "Logistics",
     company: Company(name: "LogiCorp", size: "400 employees"),
@@ -952,7 +1081,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 45,
+    id: '45',
     title: "Graphic Designer",
     industry: "Design",
     company: Company(name: "PixelPerfect", size: "120 employees"),
@@ -966,7 +1095,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 46,
+    id: '46',
     title: "Supply Chain Analyst",
     industry: "Logistics",
     company: Company(name: "SupplyWise", size: "200 employees"),
@@ -980,7 +1109,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 47,
+    id: '47',
     title: "Mobile Designer",
     industry: "Design",
     company: Company(name: "AppArt", size: "90 employees"),
@@ -994,7 +1123,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 48,
+    id: '48',
     title: "Cybersecurity Analyst",
     industry: "Security",
     company: Company(name: "SecureNet", size: "250 employees"),
@@ -1008,7 +1137,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 49,
+    id: '49',
     title: "Business Development Manager",
     industry: "Sales",
     company: Company(name: "GrowthHub", size: "300 employees"),
@@ -1022,7 +1151,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 50,
+    id: '50',
     title: "Customer Success Manager",
     industry: "Customer Service",
     company: Company(name: "ClientFirst", size: "180 employees"),
@@ -1036,7 +1165,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime.now(),
   ),
   Job(
-    id: 51,
+    id: '51',
     title: "Software Engineer",
     industry: "Technology",
     company: Company(name: "Microsoft", size: "10,000+ employees"),
@@ -1050,7 +1179,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 01),
   ),
   Job(
-    id: 52,
+    id: '52',
     title: "Data Scientist",
     industry: "Technology",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1064,7 +1193,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 02),
   ),
   Job(
-    id: 53,
+    id: '53',
     title: "UX Designer",
     industry: "Technology",
     company: Company(name: "Meta", size: "10,000+ employees"),
@@ -1078,7 +1207,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 03),
   ),
   Job(
-    id: 54,
+    id: '54',
     title: "Backend Engineer",
     industry: "Technology",
     company: Company(name: "Amazon", size: "10,000+ employees"),
@@ -1092,7 +1221,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 04),
   ),
   Job(
-    id: 55,
+    id: '55',
     title: "AI Researcher",
     industry: "Technology",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1106,7 +1235,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 05),
   ),
   Job(
-    id: 56,
+    id: '56',
     title: "Mobile Developer",
     industry: "Technology",
     company: Company(name: "Apple", size: "10,000+ employees"),
@@ -1120,7 +1249,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 06),
   ),
   Job(
-    id: 57,
+    id: '57',
     title: "Cybersecurity Analyst",
     industry: "Technology",
     company: Company(name: "Microsoft", size: "10,000+ employees"),
@@ -1134,7 +1263,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 07),
   ),
   Job(
-    id: 58,
+    id: '58',
     title: "Machine Learning Engineer",
     industry: "Technology",
     company: Company(name: "Meta", size: "10,000+ employees"),
@@ -1148,7 +1277,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 08),
   ),
   Job(
-    id: 59,
+    id: '59',
     title: "Frontend Developer",
     industry: "Technology",
     company: Company(name: "Amazon", size: "10,000+ employees"),
@@ -1162,7 +1291,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 09),
   ),
   Job(
-    id: 60,
+    id: '60',
     title: "Embedded Systems Engineer",
     industry: "Technology",
     company: Company(name: "Samsung", size: "10,000+ employees"),
@@ -1176,7 +1305,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 03, 10),
   ),
   Job(
-    id: 61,
+    id: '61',
     title: "Product Manager",
     industry: "Technology",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1190,7 +1319,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 01),
   ),
   Job(
-    id: 62,
+    id: '62',
     title: "Data Analyst",
     industry: "Analytics",
     company: Company(name: "Meta", size: "10,000+ employees"),
@@ -1204,7 +1333,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 02),
   ),
   Job(
-    id: 63,
+    id: '63',
     title: "Backend Developer",
     industry: "Software",
     company: Company(name: "Amazon", size: "10,000+ employees"),
@@ -1218,7 +1347,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 03),
   ),
   Job(
-    id: 64,
+    id: '64',
     title: "Frontend Developer",
     industry: "Software",
     company: Company(name: "Apple", size: "10,000+ employees"),
@@ -1232,7 +1361,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 04),
   ),
   Job(
-    id: 65,
+    id: '65',
     title: "DevOps Engineer",
     industry: "Technology",
     company: Company(name: "Microsoft", size: "10,000+ employees"),
@@ -1246,7 +1375,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 05),
   ),
   Job(
-    id: 66,
+    id: '66',
     title: "Software Tester",
     industry: "Quality Assurance",
     company: Company(name: "Samsung", size: "10,000+ employees"),
@@ -1260,7 +1389,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 06),
   ),
   Job(
-    id: 67,
+    id: '67',
     title: "Mobile App Developer",
     industry: "Software",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1274,7 +1403,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 07),
   ),
   Job(
-    id: 68,
+    id: '68',
     title: "Cloud Engineer",
     industry: "Technology",
     company: Company(name: "Amazon", size: "10,000+ employees"),
@@ -1288,7 +1417,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 08),
   ),
   Job(
-    id: 69,
+    id: '69',
     title: "Cybersecurity Specialist",
     industry: "Security",
     company: Company(name: "Microsoft", size: "10,000+ employees"),
@@ -1302,7 +1431,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 09),
   ),
   Job(
-    id: 70,
+    id: '70',
     title: "Machine Learning Engineer",
     industry: "Technology",
     company: Company(name: "Meta", size: "10,000+ employees"),
@@ -1316,7 +1445,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 10),
   ),
   Job(
-    id: 71,
+    id: '71',
     title: "Systems Architect",
     industry: "Technology",
     company: Company(name: "Apple", size: "10,000+ employees"),
@@ -1330,7 +1459,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 11),
   ),
   Job(
-    id: 72,
+    id: '72',
     title: "UI/UX Designer",
     industry: "Design",
     company: Company(name: "Samsung", size: "10,000+ employees"),
@@ -1344,7 +1473,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 12),
   ),
   Job(
-    id: 73,
+    id: '73',
     title: "QA Engineer",
     industry: "Quality Assurance",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1358,7 +1487,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 13),
   ),
   Job(
-    id: 74,
+    id: '74',
     title: "Network Engineer",
     industry: "Technology",
     company: Company(name: "Amazon", size: "10,000+ employees"),
@@ -1372,7 +1501,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 14),
   ),
   Job(
-    id: 75,
+    id: '75',
     title: "Database Administrator",
     industry: "IT",
     company: Company(name: "Microsoft", size: "10,000+ employees"),
@@ -1386,7 +1515,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 15),
   ),
   Job(
-    id: 76,
+    id: '76',
     title: "Technical Writer",
     industry: "Media",
     company: Company(name: "Meta", size: "10,000+ employees"),
@@ -1400,7 +1529,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 16),
   ),
   Job(
-    id: 77,
+    id: '77',
     title: "Full Stack Developer",
     industry: "Software",
     company: Company(name: "Apple", size: "10,000+ employees"),
@@ -1414,7 +1543,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 17),
   ),
   Job(
-    id: 78,
+    id: '78',
     title: "Business Analyst",
     industry: "Business",
     company: Company(name: "Samsung", size: "10,000+ employees"),
@@ -1428,7 +1557,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 18),
   ),
   Job(
-    id: 79,
+    id: '79',
     title: "Security Engineer",
     industry: "Security",
     company: Company(name: "Google", size: "10,000+ employees"),
@@ -1442,7 +1571,7 @@ List<Job> mockDBJobs = [
     createdAt: DateTime(2025, 04, 19),
   ),
   Job(
-    id: 80,
+    id: '80',
     title: "Mobile Game Developer",
     industry: "Gaming",
     company: Company(name: "Amazon", size: "10,000+ employees"),
