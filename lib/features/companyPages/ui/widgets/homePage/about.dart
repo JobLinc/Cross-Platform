@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 
 class CompanyHomeAbout extends StatelessWidget {
   final Company company;

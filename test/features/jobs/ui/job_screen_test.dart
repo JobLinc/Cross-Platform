@@ -29,7 +29,6 @@ void main() {
               Routes.jobListScreen: (context) => Scaffold(
                     appBar: universalAppBar(context: context, selectedIndex: 4,searchBarFunction: (){Navigator.pushNamed(context,Routes.jobSearchScreen);}),
                     body: JobListScreen(),
-                    bottomNavigationBar: UniversalBottomBar(),
                   ),
               Routes.jobSearchScreen: (context) => JobSearchScreen(),
             },

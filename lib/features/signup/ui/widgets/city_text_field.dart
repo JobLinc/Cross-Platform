@@ -42,33 +42,16 @@ class _CityTextFormFieldState extends State<CityTextFormField> {
     setState(() {
       _selectedCountry = cityChangedNotifier.value;
 
+      // Clear the city value when the country changes
+      widget._cityController.text = '';
+
       // Get cities for selected country from countries map
       _availableCities = [];
       if (_selectedCountry.isNotEmpty &&
           countries.containsKey(_selectedCountry)) {
         _availableCities = countries[_selectedCountry]!.toList()..sort();
-
-        // If this is Egypt and city is empty, set to Cairo
-        if (_selectedCountry == 'Egypt' &&
-            widget._cityController.text.isEmpty) {
-          // Find Cairo in the list, or use the first city if Cairo isn't available
-          final int cairoIndex = _availableCities.indexOf('Cairo');
-          if (cairoIndex >= 0) {
-            widget._cityController.text = 'Cairo';
-          } else {
-            widget._cityController.text = _availableCities.first;
-          }
-        }
-        // For other countries or when changing country, select the first city
-        else if (_selectedCountry != 'Egypt' ||
-            widget._cityController.text.isEmpty) {
-          if (_availableCities.isNotEmpty) {
-            widget._cityController.text = _availableCities.first;
-          }
-        }
       } else {
         _availableCities = ['Select a country first'];
-        widget._cityController.text = '';
       }
     });
   }

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/features/companyPages/data/data/models/createcompany_response.dart';
-import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companypages/data/data/models/createcompany_response.dart';
+import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 
@@ -41,12 +41,12 @@ void main() {
 
     final response = await createCompanyApiService.createCompany(
       'Test Company',
-        'test-company',
-        'Software Development',
-        '0-1 employees',
-        'privately held',
-        'overview',
-        'https://www.linkedin.com',
+      'test-company',
+      'Software Development',
+      '0-1 employees',
+      'privately held',
+      'overview',
+      'https://www.linkedin.com',
     );
 
     expect(response, isA<CreateCompanyResponse>());
