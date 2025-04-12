@@ -38,7 +38,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
               Text(
                 widget.company.name,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -77,7 +77,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   switch (newValue) {
                     case "Dashboard":
                       _selectedValue = "Dashboard";
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         Routes.companyDashboard,
                         arguments: widget.company,
@@ -86,7 +86,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                       break;
                     case "Page Posts":
                       _selectedValue = "Page Posts";
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         Routes.companyPagePosts,
                         arguments: widget.company,
@@ -98,7 +98,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                     //   break;
                     case "Feed":
                       _selectedValue = "Feed";
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         Routes.companyFeed,
                         arguments: widget.company,
@@ -132,10 +132,11 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    left: 180.w), // Ensure flutter_screenutil is initialized
+                    left:170.w 
+                  ), // Ensure flutter_screenutil is initialized
                 child: IconButton(
                   onPressed: () =>
-                      Navigator.pushNamed(context, Routes.addPostScreen),
+                      Navigator.pushReplacementNamed(context, Routes.addPostScreen),
                   icon: Icon(Icons.post_add_rounded),
                 ),
               ),
