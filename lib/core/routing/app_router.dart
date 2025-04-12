@@ -75,7 +75,7 @@ class AppRouter {
         // Main container handles all the main navigation now
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => getIt<HomeCubit>(),
+            create: (context) => getIt<HomeCubit>()..getFeed(),
             child: MainContainerScreen(),
           ),
         );
