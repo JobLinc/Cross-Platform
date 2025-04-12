@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 
@@ -92,6 +95,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updatecoverpicture(String imagepath) {
     emit(CoverPictureUpdating(imagepath));
   }
+
   // Future<void> updateProfilePicture(String imagePath) async {
   //   try {
   //     emit(ProfileUpdating());
@@ -103,4 +107,33 @@ class ProfileCubit extends Cubit<ProfileState> {
   //     emit(ProfileError('Failed to update profile picture: ${e.toString()}'));
   //   }
   // }
+
+   void addCertificate(Certification certificate) {
+    // emit(AddingCertificate(certificate));
+  }
+
+  // void removeCertificate(String certificateId) {
+  //   emit(RemoveCertificate(certificateId));
+  // }
+
+  // void updateCertificate(Certification certificate) {
+  //   emit(UpdateCertificate(certificate));
+  // }
+
+  void addSkill(Skill skill) {
+    // emit(AddSkill(skill));
+  }
+
+  void removeSkill(String skill) {
+    // emit(RemoveSkill(skill));
+  }
+
+  void addExperience(Experience experience) {
+    // emit(AddExperience(experience));
+  }
+
+  void removeExperience(String experienceId) {
+    // emit(RemoveExperience(experienceId));
+  }
+
 }

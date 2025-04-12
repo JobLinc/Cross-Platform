@@ -39,6 +39,8 @@ import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
@@ -272,6 +274,30 @@ class AppRouter {
             ),
           );
         }
+
+      case Routes.addCertificationScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddCertificateScreen(),
+          ),
+        );
+
+      // case Routes.addExperienceScreen:
+      //   return MaterialPageRoute(
+      //     builder: (context) => BlocProvider(
+      //       create: (context) => getIt<ProfileCubit>(),
+      //       child: UserAddExperienceScreen(),
+      //     ),
+      //   );
+
+      case Routes.addSkillScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddSkillScreen(),
+          ),
+        );
 
       default:
         return null;

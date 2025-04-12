@@ -27,4 +27,7 @@ class Routes {
   static const String changeUsernameScreen = '/changeUsernameScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String profilePictureUpdate = '/profilePictureUpdate';
+  static const String addCertificationScreen = '/addCertificationScreen';
+  static const String addExperienceScreen = '/addExperienceScreen';
+  static const String addSkillScreen = '/addSkillScreen';
 }

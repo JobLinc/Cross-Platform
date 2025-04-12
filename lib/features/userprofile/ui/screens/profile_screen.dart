@@ -9,6 +9,7 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -16,6 +17,15 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  void _addSection(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return const UserProfileAddSection();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileState>(
@@ -129,12 +139,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Flexible(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // Your action here
+                                  _addSection(context);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   side: BorderSide(
                                       color: ColorsManager
-                                          .darkBurgundy), // White border
+                                          .crimsonRed), // White border
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),

@@ -77,7 +77,6 @@ class UserProfileRepository {
     }
   }
 
-  /// Clears the cached profile data
   void clearCache() {
     _cachedProfile = null;
   }

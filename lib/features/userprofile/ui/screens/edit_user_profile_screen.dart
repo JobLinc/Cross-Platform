@@ -90,10 +90,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
             : null,
       );
 
-      // For debugging - log what we're sending to the API
       print('Updating profile with: ${updateData.toJson()}');
 
-      // Update profile
       context.read<ProfileCubit>().updateUserProfile(updateData);
     }
   }
