@@ -40,14 +40,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SnackBar(content: Text(state.message)),
           );
         }
-        // if (state is ProfilePictureUpdating) {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (_) => FullScreenImagePage(imagePath: state.imagepath),
-        //     ),
-        //   );
-        // }
+        
       },
       builder: (context, state) {
         if (state is ProfileLoading) {

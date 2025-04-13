@@ -123,6 +123,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         UserProfileUpdateModel picModel =
             UserProfileUpdateModel(firstName: firstname);
         updateUserProfile(picModel);
+        emit(CertificateAdded("Certificate Added"));
         print("hello I am out");
         // getUserProfile();
       } else {

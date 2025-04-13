@@ -168,13 +168,17 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
               ),
             );
           } else if (state is CertificateAdded) {
+            int count = 0;
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.profileScreen,
+              (route) => count++ >= 2,
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Certificate added successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
           }
         },
         builder: (context, state) {
