@@ -75,7 +75,7 @@ class UserProfileAddSection extends StatelessWidget {
                   icon: Icon(Icons.flag_rounded),
                   onPressed: () {
                     Navigator.pushReplacementNamed(
-                        context, Routes.addSkillScreen);
+                        context, Routes.addCertificationScreen);
                   },
                 ),
                 Text(

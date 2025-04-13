@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/service/add_service.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../models/user_profile_model.dart';
 import '../models/update_user_profile_model.dart';
@@ -11,12 +13,12 @@ class UserProfileRepository {
   final UserProfileApiService _apiService;
   final UpdateUserProfileApiService _updateApiService;
   final UploadApiService uploadApiService;
-
+  final addService addApiervice;
   // Optional in-memory cache
   UserProfile? _cachedProfile;
 
-  UserProfileRepository(
-      this._apiService, this._updateApiService, this.uploadApiService);
+  UserProfileRepository(this._apiService, this._updateApiService,
+      this.uploadApiService, this.addApiervice);
 
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
@@ -72,6 +74,14 @@ class UserProfileRepository {
   Future<Response> uploadCoverPicture(File imageFile) async {
     try {
       return await uploadApiService.uploadCoverPicture(imageFile);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> addCertification(Certification certification) async {
+    try {
+      return await addApiervice.addCertification(certification);
     } catch (e) {
       rethrow;
     }
