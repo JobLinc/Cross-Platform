@@ -11,6 +11,7 @@ import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -206,8 +207,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                         // Certificates section
                         if (profile.certifications.isNotEmpty) ...[
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 50.h),
                           UserCerificates(profile: profile),
+                        ],
+
+                        // Skills section
+                        if (profile.skills.isNotEmpty) ...[
+                          SizedBox(height: 50.h),
+                          UserSkills(profile: profile),
                         ],
                       ],
                     ),
