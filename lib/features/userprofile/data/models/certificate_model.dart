@@ -2,8 +2,8 @@ class Certification {
   final String certificationId;
   final String name;
   final String organization;
-  final int startYear;
-  final int? endYear;
+  final DateTime startYear;
+  final DateTime? endYear;
 
   Certification({
     required this.certificationId,

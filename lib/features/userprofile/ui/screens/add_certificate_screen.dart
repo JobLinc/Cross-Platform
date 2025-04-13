@@ -20,6 +20,10 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
   late TextEditingController issueDateController;
   late TextEditingController expirationDateController;
 
+  // Store actual DateTime objects for accurate parsing
+  DateTime? selectedIssueDate;
+  DateTime? selectedExpirationDate;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -42,8 +46,8 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
   }
 
   // Method to show month/year picker
-  Future<void> _selectYear(
-      BuildContext context, TextEditingController controller) async {
+  Future<void> _selectYear(BuildContext context,
+      TextEditingController controller, bool isIssueDate) async {
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -72,7 +76,14 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
 
     if (selectedDate != null) {
       setState(() {
-        // Format as "Month Year" (e.g., "March 2023")
+        // Store the actual selected date
+        if (isIssueDate) {
+          selectedIssueDate = selectedDate;
+        } else {
+          selectedExpirationDate = selectedDate;
+        }
+
+        // Format as "Month Year" (e.g., "March 2023") for display
         final monthName = _getMonthName(selectedDate.month);
         controller.text = "$monthName ${selectedDate.year}";
       });
@@ -100,27 +111,26 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
 
   void saveCertificate() {
     if (_formKey.currentState!.validate()) {
-      // Create certificate model with expected structure
-      final certificateData = {
-        "name": certificateNameController.text,
-        "organization": issuingOrganizationController.text,
-        "issueYear": int.parse(issueDateController.text),
-        "expirationYear": expirationDateController.text.isNotEmpty
-            ? int.parse(expirationDateController.text)
-            : null,
-      };
+      if (selectedIssueDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please select an issue date.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
 
       final Certification certificateToAdd = Certification(
         name: certificateNameController.text,
         organization: issuingOrganizationController.text,
-        startYear: int.parse(issueDateController.text),
-        endYear: expirationDateController.text.isNotEmpty
-            ? int.parse(expirationDateController.text)
-            : null,
-        certificationId: '', // Assuming this is auto-generated
+        startYear: selectedIssueDate!, 
+        endYear: selectedExpirationDate, 
+        certificationId: '', 
       );
 
-      print('Saving certificate with: $certificateData');
+      print(
+          'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
       Navigator.pop(context);
       context.read<ProfileCubit>().addCertificate(certificateToAdd);
     }
@@ -236,7 +246,8 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                     controller: issueDateController,
                     labelText: 'Issue Date*',
                     readOnly: true,
-                    onTap: () => _selectYear(context, issueDateController),
+                    onTap: () =>
+                        _selectYear(context, issueDateController, true),
                   ),
                   SizedBox(height: 16.h),
 
@@ -246,9 +257,10 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                     controller: expirationDateController,
                     labelText: 'Expiration Date',
                     readOnly: true,
-                    onTap: () => _selectYear(context, expirationDateController),
+                    onTap: () =>
+                        _selectYear(context, expirationDateController, false),
                   ),
-                  SizedBox(height: 250.h),
+                  SizedBox(height: 200.h),
 
                   // Save Button
                   SizedBox(
