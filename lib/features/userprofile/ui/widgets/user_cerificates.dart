@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 class UserCerificates extends StatelessWidget {
@@ -60,7 +61,7 @@ class UserCerificates extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Licenses & certifications',
+                'Licenses & Certifications',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -72,33 +73,71 @@ class UserCerificates extends StatelessWidget {
             itemBuilder: (context, index) {
               final cert = profile.certifications[index];
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.h),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 5.h), // Reduced from 8.h to 4.h
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 48.w,
-                      height: 48.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Icon(
-                        Icons.card_membership,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            cert.name,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          // Put name and delete icon in the same row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  cert.name,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: ColorsManager.darkBurgundy,
+                                  size: 20.r,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        title: Text('Delete Certificate'),
+                                        content: Text(
+                                            'Are you sure you want to delete "${cert.name}"?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(dialogContext).pop();
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              // Close dialog and delete certificate
+                                              Navigator.of(dialogContext).pop();
+                                              // TODO: Implement actual delete functionality (Radwan)
+                                            },
+                                            child: Text(
+                                              'Delete',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                padding: EdgeInsets.zero,
+                                constraints: BoxConstraints(),
+                                splashRadius: 20.r,
+                              ),
+                            ],
                           ),
                           SizedBox(height: 4.h),
                           Text(
@@ -115,6 +154,11 @@ class UserCerificates extends StatelessWidget {
                               fontSize: 14.sp,
                               color: Colors.grey[600],
                             ),
+                          ),
+                          Divider(
+                            color: Colors.grey[500],
+                            thickness: 1,
+                            height: 15.h, // Explicitly set height to control spacing
                           ),
                         ],
                       ),

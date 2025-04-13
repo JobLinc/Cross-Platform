@@ -79,10 +79,7 @@ class UserProfile {
               ?.map((exp) => Experience.fromJson(exp))
               .toList() ??
           [],
-      certifications: (json['certifications'] as List<dynamic>?)
-              ?.map((cert) => Certification.fromJson(cert))
-              .toList() ??
-          [],
+      certifications: _parseCertifications(json['certificates']),
       languages: (json['languages'] as List<dynamic>?)
               ?.map((lang) => Language.fromJson(lang))
               .toList() ??
@@ -90,6 +87,21 @@ class UserProfile {
       email: json['email'] ?? '',
     );
   }
+
+  static List<Certification> _parseCertifications(dynamic certificationsJson) {
+    if (certificationsJson == null) {
+      return [];
+    }
+
+    try {
+      List<dynamic> certList = certificationsJson as List<dynamic>;
+      return certList.map((cert) => Certification.fromJson(cert)).toList();
+    } catch (e) {
+      print('Error parsing certifications: $e');
+      return [];
+    }
+  }
+
   //TODO add PostModel.toJson() before uncommenting
   // Map<String, dynamic> toJson() {
   //   return {
@@ -180,8 +192,6 @@ class UserProfile {
 //     };
 //   }
 // }
-
-
 
 class Education {
   final String educationId;

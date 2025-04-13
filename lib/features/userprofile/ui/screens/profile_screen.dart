@@ -213,8 +213,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                         // Certificates section
                         if (profile.certifications.isNotEmpty) ...[
-                          SizedBox(height: 20.h),
-                          UserCerificates(profile: profile)
+                          SizedBox(height: 40.h),
+                          UserCerificates(profile: profile),
                         ],
                       ],
                     ),
