@@ -121,7 +121,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
       );
 
       print('Saving certificate with: $certificateData');
-
+      Navigator.pop(context);
       context.read<ProfileCubit>().addCertificate(certificateToAdd);
     }
   }
