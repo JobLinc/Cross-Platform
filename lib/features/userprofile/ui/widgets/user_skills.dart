@@ -16,6 +16,7 @@ class UserSkills extends StatelessWidget {
       "Proficient", 
       "Master"
     ];
+    // Fixed the index calculation - level is 1-5, array indices are 0-4
     return skillLevel[level - 1];
   }
 
@@ -39,8 +40,13 @@ class UserSkills extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profile.certifications.length,
+            // Fixed: using the correct collection length
+            itemCount: profile.skills.length,
             itemBuilder: (context, index) {
+              // Added safety check to prevent out of bounds error
+              if (index >= profile.skills.length) {
+                return SizedBox.shrink();
+              }
               final skill = profile.skills[index];
               return Padding(
                 padding: EdgeInsets.symmetric(
