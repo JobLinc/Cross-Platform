@@ -131,7 +131,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
 
       print(
           'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
-
+      Navigator.pop(context);
       context.read<ProfileCubit>().addCertificate(certificateToAdd);
     }
   }

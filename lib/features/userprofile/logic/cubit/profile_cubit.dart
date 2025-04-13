@@ -13,6 +13,7 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
+  late String firstname;
   final UserProfileRepository _profileRepository;
 
   ProfileCubit(this._profileRepository) : super(ProfileInitial());
@@ -21,6 +22,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       emit(ProfileLoading());
       final profile = await _profileRepository.getUserProfile();
+      firstname = profile.firstname;
       if (!isClosed) {
         emit(ProfileLoaded(profile));
       }
@@ -108,8 +110,24 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   }
   // }
 
-   void addCertificate(Certification certificate) {
-    // emit(AddingCertificate(certificate));
+  Future<void> addCertificate(Certification certification) async {
+    // UserProfileUpdateModel updateData =
+    //     UserProfileUpdateModel(profilePicture: imageFile.path);
+    try {
+      // Call the repository to upload the image
+      final response = await _profileRepository.addCertification(certification);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel picModel =
+            UserProfileUpdateModel(firstName: firstname);
+        updateUserProfile(picModel);
+        // getUserProfile();
+      } else {
+        emit(ProfileError('Failed to add certificate as it already exists'));
+      }
+    } catch (e) {
+      emit(ProfileError('Error: $e'));
+    }
   }
 
   // void removeCertificate(String certificateId) {
@@ -135,5 +153,4 @@ class ProfileCubit extends Cubit<ProfileState> {
   void removeExperience(String experienceId) {
     // emit(RemoveExperience(experienceId));
   }
-
 }
