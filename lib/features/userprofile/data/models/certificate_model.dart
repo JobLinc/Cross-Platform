@@ -27,8 +27,8 @@ class Certification {
     return {
       'name': name,
       'organization': organization,
-      'issueDate': startYear,
-      if (endYear != null) 'expirationDate': endYear,
+      'issueDate': startYear.toString(),
+      if (endYear != null) 'expirationDate': endYear.toString(),
     };
   }
 }

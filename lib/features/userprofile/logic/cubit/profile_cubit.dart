@@ -13,7 +13,7 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  late String firstname;
+  String firstname = "";
   final UserProfileRepository _profileRepository;
 
   ProfileCubit(this._profileRepository) : super(ProfileInitial());
@@ -115,18 +115,25 @@ class ProfileCubit extends Cubit<ProfileState> {
     //     UserProfileUpdateModel(profilePicture: imageFile.path);
     try {
       // Call the repository to upload the image
+      emit(ProfileUpdating("Profile Picture"));
       final response = await _profileRepository.addCertification(certification);
 
       if (response.statusCode == 200) {
+        print("hello I am inside");
         UserProfileUpdateModel picModel =
             UserProfileUpdateModel(firstName: firstname);
         updateUserProfile(picModel);
+        print("hello I am out");
         // getUserProfile();
       } else {
-        emit(ProfileError('Failed to add certificate as it already exists'));
+        if (!isClosed) {
+          emit(ProfileError('Failed to add certificate as it already exists'));
+        }
       }
     } catch (e) {
-      emit(ProfileError('Error: $e'));
+      if (!isClosed) {
+        emit(ProfileError('Error: $e'));
+      }
     }
   }
 

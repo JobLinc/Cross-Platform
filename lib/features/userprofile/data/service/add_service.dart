@@ -18,6 +18,10 @@ class addService {
 
   Future<Response> addCertification(Certification certification) async {
     try {
+      print("hello");
+      print(
+          "certification id is ${certification.certificationId},certification name is ${certification.name},certification issue is ${certification.startYear},certification id is ${certification.endYear}");
+      print(certification.toJson());
       Response response = await dio.post(
         '/user/certificate/add',
         data: certification.toJson(), // Convert to JSON string
