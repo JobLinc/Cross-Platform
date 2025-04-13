@@ -87,6 +87,27 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> deleteCertification(String certificationId) async {
+    try {
+      return await addApiervice.deleteCertification(certificationId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Certification>> getAllCertificates() async {
+    try {
+      final List<dynamic> rawList = await addApiervice.getAllCertificates();
+
+      // Safely cast each item to Map<String, dynamic>
+      return rawList
+          .map((item) => Certification.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Repository error: $e');
+    }
+  }
+
   void clearCache() {
     _cachedProfile = null;
   }
