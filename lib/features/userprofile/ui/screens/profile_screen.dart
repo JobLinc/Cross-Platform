@@ -10,6 +10,7 @@ import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -209,6 +210,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ),
                         ],
+
+                        // Certificates section
+                        if (profile.certifications.isNotEmpty) ...[
+                          SizedBox(height: 20.h),
+                          UserCerificates(profile: profile)
+                        ],
                       ],
                     ),
                   ),
@@ -293,7 +300,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -311,7 +318,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -421,7 +428,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -439,7 +446,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -655,3 +662,4 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
+
