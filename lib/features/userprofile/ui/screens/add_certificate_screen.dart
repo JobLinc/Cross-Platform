@@ -134,7 +134,6 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
       print(context.read<ProfileCubit>().firstname);
 
       context.read<ProfileCubit>().addCertificate(certificateToAdd);
-      Navigator.pop(context);
     }
   }
 
