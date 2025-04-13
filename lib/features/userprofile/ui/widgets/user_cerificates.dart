@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserCerificates extends StatelessWidget {
   const UserCerificates({super.key, required this.profile});
@@ -118,8 +121,11 @@ class UserCerificates extends StatelessWidget {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              // Close dialog and delete certificate
                                               Navigator.of(dialogContext).pop();
+                                              context
+                                                  .read<ProfileCubit>()
+                                                  .deleteCertificate(cert.name);
+                                              // Close dialog and delete certificate
                                               // TODO: Implement actual delete functionality (Radwan)
                                             },
                                             child: Text(
@@ -158,7 +164,8 @@ class UserCerificates extends StatelessWidget {
                           Divider(
                             color: Colors.grey[500],
                             thickness: 1,
-                            height: 15.h, // Explicitly set height to control spacing
+                            height: 15
+                                .h, // Explicitly set height to control spacing
                           ),
                         ],
                       ),

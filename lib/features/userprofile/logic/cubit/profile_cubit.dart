@@ -119,20 +119,55 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addCertification(certification);
 
       if (response.statusCode == 200) {
-        print("hello I am inside");
         UserProfileUpdateModel picModel =
             UserProfileUpdateModel(firstName: firstname);
         updateUserProfile(picModel);
         emit(CertificateAdded("Certificate Added"));
-        print("hello I am out");
         // getUserProfile();
       } else {
         if (!isClosed) {
+          print("hello I am out");
           emit(ProfileError('Failed to add certificate as it already exists'));
         }
       }
     } catch (e) {
       if (!isClosed) {
+        print("hello I am inside");
+        emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
+  Future<void> deleteCertificate(String name) async {
+    try {
+      print("hello");
+      emit(ProfileUpdating("Deleting Certificate"));
+      String certificationId;
+      final certificates = await _profileRepository.getAllCertificates();
+
+      certificationId =
+          certificates.firstWhere((cert) => cert.name == name).certificationId;
+
+      print(certificates);
+      print(certificationId);
+      final response =
+          await _profileRepository.deleteCertification(certificationId);
+
+      if (response.statusCode == 200) {
+        // Optionally update profile or UI after deletion
+        UserProfileUpdateModel picModel =
+            UserProfileUpdateModel(firstName: firstname);
+        updateUserProfile(picModel);
+        // getUserProfile();
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete certificate.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
         emit(ProfileError('Error: $e'));
       }
     }

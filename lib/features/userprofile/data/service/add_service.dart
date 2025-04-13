@@ -18,20 +18,42 @@ class addService {
 
   Future<Response> addCertification(Certification certification) async {
     try {
-      print("hello");
-      print(
-          "certification id is ${certification.certificationId},certification name is ${certification.name},certification issue is ${certification.startYear},certification id is ${certification.endYear}");
-      print(certification.toJson());
       Response response = await dio.post(
         '/user/certificate/add',
         data: certification.toJson(), // Convert to JSON string
       );
 
       // Handle successful response here if needed
-      print('Certification added successfully: ${response.data}');
       return response;
     } catch (e) {
       throw Exception('Failed to add certification: $e');
+    }
+  }
+
+  Future<Response> deleteCertification(String certificationId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/certificate/$certificationId',
+      );
+
+      // Handle successful response here if needed
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete certification: $e');
+    }
+  }
+
+  Future<List<dynamic>> getAllCertificates() async {
+    try {
+      final response = await dio.get('/user/certificate');
+
+      if (response.statusCode == 200) {
+        return response.data; // Should be a List<dynamic>
+      } else {
+        throw Exception('Failed to fetch certificates');
+      }
+    } catch (e) {
+      throw Exception('API error: $e');
     }
   }
 }
