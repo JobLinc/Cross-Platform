@@ -209,6 +209,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ),
                         ],
+
+                        // Certificates section
+                        if (profile.certifications.isNotEmpty) ...[
+                          SizedBox(height: 20.h),
+                          
+                        ],
                       ],
                     ),
                   ),
@@ -293,7 +299,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -311,7 +317,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -421,7 +427,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -439,7 +445,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -655,3 +661,4 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
+
