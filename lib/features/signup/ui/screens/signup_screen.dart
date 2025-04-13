@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/signup/data/models/register_request_model.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
+import 'package:joblinc/features/signup/logic/cubit/signup_state.dart';
 import 'package:joblinc/features/signup/ui/widgets/signup_step_one.dart';
 import 'package:joblinc/features/signup/ui/widgets/signup_step_two.dart';
 import 'package:joblinc/features/signup/ui/widgets/signup_step_three.dart';
@@ -54,15 +56,22 @@ class _SignupScreenState extends State<SignupScreen> {
     return BlocConsumer<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Signup success")),
+          CustomSnackBar.show(
+            context: context,
+            message: "Registration successful",
+            type: SnackBarType.success,
           );
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          // Navigate to email confirmation screen
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.emailConfirmationScreen,
+            arguments: emailController.text,
+          );
         } else if (state is RegisterFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(state.error,
-                    style: const TextStyle(color: Colors.red))),
+          CustomSnackBar.show(
+            context: context,
+            message: state.error,
+            type: SnackBarType.error,
           );
         }
       },

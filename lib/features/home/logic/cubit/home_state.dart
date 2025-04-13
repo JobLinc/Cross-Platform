@@ -7,9 +7,10 @@ final class HomeInitial extends HomeState {}
 
 final class HomePostsLoading extends HomeState {}
 
-final class HomePostsFetched extends HomeState {
+final class HomeLoaded extends HomeState {
+  final UserProfile user;
   final List<PostModel> posts;
-  HomePostsFetched(this.posts);
+  HomeLoaded({required this.posts, required this.user});
 }
 
 final class HomePostsFailure extends HomeState {

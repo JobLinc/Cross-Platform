@@ -27,10 +27,9 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Change Email addresses'),
-            subtitle: const Text(''),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // Handle tap
+              Navigator.pushNamed(context, Routes.changeEmailScreen);
             },
           ),
           ListTile(
@@ -44,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Change Username'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // Handle tap
+              Navigator.pushNamed(context, Routes.changeUsernameScreen);
             },
           ),
           ListTile(

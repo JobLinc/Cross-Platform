@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:joblinc/features/signup/data/models/register_request_model.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
+import 'package:joblinc/features/signup/logic/cubit/signup_state.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';

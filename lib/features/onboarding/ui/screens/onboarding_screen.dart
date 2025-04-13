@@ -60,8 +60,7 @@ class OnboardingScreen extends StatelessWidget {
                 text: "Continue with google",
                 backgroundColor: Colors.transparent,
                 icon: FontAwesomeIcons.g,
-                onPressed: () async {
-                  Navigator.pushReplacementNamed(context, Routes.homeScreen);
+                onPressed: ()  {
                 }),
             customDividerWithText(child: Text("OR")),
             customRoundedButton(

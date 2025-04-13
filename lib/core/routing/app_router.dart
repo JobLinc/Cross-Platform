@@ -2,32 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/screens/main_container_screen.dart';
+import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
+import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
+import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
+import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
+import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart'
+    show CompanyAnalytics;
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
-import 'package:joblinc/features/connections/ui/screens/connectionList.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
+import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
+import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
+import 'package:joblinc/features/jobs/ui/screens/my_jobs_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
+import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
+
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/userprofile/ui/screens/ImagePreview.dart';
+import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
+import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -50,11 +73,40 @@ class AppRouter {
                   child: SignupScreen(),
                 ));
       case Routes.homeScreen:
-        return MaterialPageRoute(builder: (context) => HomeScreen());
+        // Main container handles all the main navigation now
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<HomeCubit>(),
+            child: MainContainerScreen(),
+          ),
+        );
       case Routes.profileScreen:
-        return MaterialPageRoute(builder: (context) => ProfileScreen());
-      case Routes.chatScreen:
-        return MaterialPageRoute(builder: (context) => ChatScreen());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>()..getUserProfile(),
+            child: UserProfileScreen(),
+          ),
+        );
+
+      case Routes.editProfileScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>()..getUserProfile(),
+            child: EditUserProfileScreen(),
+          ),
+        );
+      case Routes.profilePictureUpdate:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<ProfileCubit>(),
+              child: FullScreenImagePage(imagePath: arguments),
+            ),
+          );
+        }
+
+      // case Routes.chatScreen:
+      //   return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -64,16 +116,58 @@ class AppRouter {
         );
       case Routes.chatListScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => getIt<ChatListCubit>(),
-            child: ChatListScreen(),
-          ),
-        );
-
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChatListCubit>(),
+                  child: ChatListScreen(),
+                ));
       case Routes.jobListScreen:
-        return MaterialPageRoute(builder: (context) => JobListScreen());
+        // This can be used for direct access, but main navigation is through MainContainerScreen
+        return MaterialPageRoute(
+            builder: (newContext) => BlocProvider(
+                  create: (context) => getIt<JobListCubit>(),
+                  child: SafeArea(
+                    child: Scaffold(
+                      appBar: universalAppBar(
+                        context: newContext,
+                        selectedIndex: 4,
+                        searchBarFunction: () => goToJobSearch(newContext),
+                      ),
+                      body: JobListScreen(),
+                      bottomNavigationBar: UniversalBottomBar(
+                        currentIndex: 4,
+                        onTap: (index) {
+                          if (index == 4) {
+                            Navigator.pushNamed(
+                                newContext, Routes.jobListScreen);
+                          } else {
+                            Navigator.pushNamed(newContext, Routes.homeScreen);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ));
       case Routes.jobSearchScreen:
-        return MaterialPageRoute(builder: (context) => JobSearchScreen());
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                create: (context) => getIt<JobListCubit>(),
+                child: JobSearchScreen()));
+      // case Routes.jobApplicationScreen:
+      //   return MaterialPageRoute(
+      //       builder: (context) => BlocProvider(
+      //           create: (context) => getIt<JobListCubit>(),
+      //           child: JobSearchScreen()));
+      // case Routes.jobDetailsScreen:
+      //   return MaterialPageRoute(
+      //       builder: (context) => BlocProvider(
+      //           create: (context) => getIt<JobListCubit>(),
+      //           child: JobDetailScreen(scrollController: null,)));
+      case Routes.myJobsScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<MyJobsCubit>(),
+                  child: MyJobsScreen(),
+                ));
       case Routes.premiumScreen:
         return MaterialPageRoute(builder: (context) => PremiumScreen());
       case Routes.companyListScreen:
@@ -95,6 +189,14 @@ class AppRouter {
           );
         }
 
+      case Routes.addPostScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<AddPostCubit>(),
+            child: AddPostScreen(),
+          ),
+        );
+
       case Routes.connectionListScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -110,6 +212,99 @@ class AppRouter {
             builder: (_) => BlocProvider(
                 create: (context) => getIt<ChangePasswordCubit>(),
                 child: ChangePasswordScreen()));
+
+      case Routes.companyDashboard:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyDashboard(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+      case Routes.companyPagePosts:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyPagePosts(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+      case Routes.companyAnalytics:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyAnalytics(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+      case Routes.companyFeed:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyFeed(company: arguments),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+      case Routes.changeEmailScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeEmailCubit>(),
+                  child: ChangeEmailScreen(),
+                ));
+
+      case Routes.changeUsernameScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => getIt<ChangeUsernameCubit>(),
+                  child: ChangeUsernameScreen(),
+                ));
+
+      case Routes.emailConfirmationScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EmailConfirmationCubit>()
+                ..resendConfirmationEmail(arguments),
+              child: EmailConfirmationScreen(email: arguments),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text(
+                    "Invalid arguments for EmailConfirmationScreen. Email is required."),
+              ),
+            ),
+          );
+        }
 
       default:
         return null;
