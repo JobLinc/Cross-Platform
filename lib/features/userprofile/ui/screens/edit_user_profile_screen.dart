@@ -268,9 +268,14 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
 
                           // City
                           CityTextFormField(
-                              key: Key('editUserProfile_city_textfield'),
-                              cityController: cityController),
-                         SizedBox(height: 15),
+                            key: Key('editUserProfile_city_textfield'),
+                            cityController: cityController,
+                            selectedCity: cityController.text.isNotEmpty
+                                ? cityController.text
+                                : profile.city,
+                          ),
+
+                          SizedBox(height: 15.h),
 
                           // Biography Section
                           Text(
