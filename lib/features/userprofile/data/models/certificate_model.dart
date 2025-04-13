@@ -15,21 +15,20 @@ class Certification {
 
   factory Certification.fromJson(Map<String, dynamic> json) {
     return Certification(
-      certificationId: json['certificationId'] ?? '',
+      certificationId: json['_id'] ?? '',
       name: json['name'] ?? '',
       organization: json['organization'] ?? '',
-      startYear: json['startYear'] ?? 0,
-      endYear: json['endYear'],
+      startYear: json['issueDate'] ?? 0,
+      endYear: json['expirationDate'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'certificationId': certificationId,
       'name': name,
       'organization': organization,
-      'startYear': startYear,
-      if (endYear != null) 'endYear': endYear,
+      'issueDate': startYear,
+      if (endYear != null) 'expirationDate': endYear,
     };
   }
 }
