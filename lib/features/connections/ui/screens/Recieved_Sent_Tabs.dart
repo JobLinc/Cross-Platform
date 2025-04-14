@@ -17,7 +17,6 @@ class InvitationsTabs extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        bottomNavigationBar: UniversalBottomBar(),
         appBar: AppBar(
           title: Text('Invitations',
               style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
