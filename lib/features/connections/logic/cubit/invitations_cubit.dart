@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
 import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';

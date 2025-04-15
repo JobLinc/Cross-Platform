@@ -6,6 +6,7 @@ import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
+import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -102,7 +103,7 @@ class _MainContainerScreenState extends State<MainContainerScreen>
           _buildKeepAliveScreen(
             BlocProvider(
               create: (context) => getIt<InvitationsCubit>(),
-              child: const InvitationPage(key: Key("connections home screen")),
+              child: const InvitationsTabs(key: Key("connections home screen")),
             ),
           ),
 

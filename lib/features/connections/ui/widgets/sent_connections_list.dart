@@ -1,35 +1,33 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
-import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 
-class InvitationsList extends StatelessWidget {
-  final List<UserConnection> invitations;
-  const InvitationsList({
+class SentConnectionsList extends StatelessWidget {
+  final List<UserConnection> sentInvitations;
+  const SentConnectionsList({
     Key? key,
-    required this.invitations,
+    required this.sentInvitations,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      //reverse: true,
-      itemCount: invitations.length,
+      itemCount: sentInvitations.length,
       itemBuilder: (context, index) {
-        final invitation = invitations[index];
+        final sent = sentInvitations[index];
 
         return Column(
           children: [
             Container(
               color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
-                key: Key("Invitations page Tile"),
+                key: Key("Sent Invitations Page Tile"),
                 onTap: () {
                   // TODO: Navigate to the user's profile
-                  print("Go to ${invitation.firstname}'s profile");
+                  print("Go to ${sent.firstname}'s profile");
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +39,7 @@ class InvitationsList extends StatelessWidget {
                             Alignment.topLeft, // Align avatar to top-left
                         child: CircleAvatar(
                           radius: 25.r, // Bigger avatar
-                          child: Text(invitation.firstname[0]), // First letter
+                          child: Text(sent.firstname[0]), // First letter
                         ),
                       ),
                     ),
@@ -51,74 +49,53 @@ class InvitationsList extends StatelessWidget {
                             CrossAxisAlignment.start, // Align text left
                         children: [
                           Text(
-                            invitation.firstname,
+                            "${sent.firstname} ${sent.lastname}",
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            invitation.headline,
+                            sent.headline,
                             style: TextStyle(
                                 fontSize: 18.sp, color: Colors.grey[600]),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            "${invitation.mutualConnections} mutual connections",
+                            "${sent.mutualConnections} mutual connections",
                             style: TextStyle(
                                 fontSize: 16.sp, color: Colors.grey[500]),
                           ),
-                          // Text(
-                          //   invitation.,
-                          //   style: TextStyle(
-                          //       fontSize: 14.sp, color: Colors.grey[500]),
-                          // ),
                         ],
                       ),
-                    ),
-                    ElevatedButton(
-                      key: Key("invitationslist_delete_button"),
-                      onPressed: () {
-                        BlocProvider.of<InvitationsCubit>(context)
-                            .handleInvitation(invitation, "Denied");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(
-                          side: BorderSide(
-                            color: Colors.black,
-                            width: 0.5,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size(10.w, 10.h),
-                      ),
-                      child: Icon(Icons.close,
-                          size: 22.sp, color: Colors.black), // Add const
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: 8.w),
                       child: ElevatedButton(
-                        key: Key("invitationslist_accept_button"),
+                        key: Key("sent_invitations_list_withdraw_button"),
                         onPressed: () {
-                          BlocProvider.of<InvitationsCubit>(context)
-                              .handleInvitation(invitation, "Accepted");
+                          BlocProvider.of<SentConnectionsCubit>(context)
+                              .withdrawclicked(sent.userId);
                         },
                         style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(50), // Circular border
                             side: BorderSide(
-                              color: ColorsManager.softDarkBurgundy,
+                              color: Colors.black, // Border color
                               width: 0.5,
                             ),
                           ),
-                          padding: const EdgeInsets.all(5),
-                          backgroundColor: Colors.white,
-                          foregroundColor: ColorsManager.softDarkBurgundy,
-                          fixedSize: Size(10.w, 10.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h), // Button padding
+                          backgroundColor: Colors.white, // White background
+                          foregroundColor: Colors.black, // Black text
                         ),
-                        child: Icon(Icons.check_outlined,
-                            size: 22.sp,
-                            color: ColorsManager.softDarkBurgundy), // Add const
+                        child: Text(
+                          "Withdraw",
+                          style: TextStyle(
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],

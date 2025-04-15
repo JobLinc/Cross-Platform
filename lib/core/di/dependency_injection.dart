@@ -18,6 +18,7 @@ import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.d
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
@@ -187,6 +188,8 @@ Future<void> setupGetIt() async {
       () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
 
   getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
+      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
   //User profile
