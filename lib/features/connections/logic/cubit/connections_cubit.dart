@@ -28,9 +28,9 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
             .map(
                 (item) => UserConnection.fromJson(item as Map<String, dynamic>))
             .toList();
-        connections = fetchedconnections;
+        connections = fetchedconnections.reversed.toList();
         if (!isClosed) {
-          emit(ConnectionsLoaded(fetchedconnections));
+          emit(ConnectionsLoaded(fetchedconnections.reversed.toList()));
         }
       } else {
         if (!isClosed) {
@@ -97,6 +97,4 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
     return data;
   }
-
-  
 }

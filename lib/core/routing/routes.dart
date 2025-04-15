@@ -24,6 +24,7 @@ class Routes {
   static const String companyFeed = '/companyFeed';
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
+  static const String invitationsTabs = '/InvitationsTabsScreen';
   static const String changeEmailScreen = '/changeEmailScreen';
   static const String changeUsernameScreen = '/changeUsernameScreen';
   static const String editProfileScreen = '/editProfileScreen';
