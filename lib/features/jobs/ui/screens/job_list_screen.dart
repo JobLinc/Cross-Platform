@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/custom_horizontal_pill_bar.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_creation_screem.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 
@@ -30,43 +31,39 @@ class _JobListScreenState extends State<JobListScreen> {
       children: [
         CustomHorizontalPillBar(
             changePillColor: false,
-            items: ["Preferences", "My Jobs", "Post a free job", "what"],
+            items: [ "My Jobs", "Post a free job",],
             onItemSelected: labelClicked),
-        Expanded(child: BlocBuilder<JobListCubit, JobListState>(
-                builder: (context, state) {
-              if (state is JobListLoading) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is JobListEmpty) {
-                return Center(child: Text("Save Jobs to see them here "));
-              } else if (state is JobListLoaded) {
-                return JobList(
-                    key: ValueKey(state.jobs!.length),
-                    jobs: state.jobs!);
-              } else {
-                return Center(child: Text("Something went wrong."));
-              }
-            })),
+        Expanded(child:
+            BlocBuilder<JobListCubit, JobListState>(builder: (context, state) {
+          if (state is JobListLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is JobListEmpty) {
+            return Center(child: Text("Save Jobs to see them here "));
+          } else if (state is JobListLoaded) {
+            return JobList(
+                key: ValueKey(state.jobs!.length), jobs: state.jobs!);
+          } else {
+            return Center(child: Text("Something went wrong."));
+          }
+        })),
       ],
     );
   }
 
-  labelClicked(String label){
-  if (label=="Preferences"){
-
+  labelClicked(String label) {
+    if (label == "My Jobs") {
+      Navigator.pushNamed(context, Routes.myJobsScreen);
+    } else if (label == "Post a free job") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                    create: (context) => getIt<JobListCubit>(),
+                    child: JobCreationScreen(),
+                  )));
+    }
+    return;
   }
-  else if (label == "My Jobs"){
-    Navigator.pushNamed(context, Routes.myJobsScreen);
-  }
-  else if(label == "Post a free job"){
-
-  }
-  return;
 }
-}
-
-
-
 
 emptyFunction(String needed) {}
-
-
