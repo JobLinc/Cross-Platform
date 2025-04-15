@@ -12,7 +12,9 @@ class CustomRectangularTextFormField extends StatefulWidget {
     this.maxLength,
     this.maxLines,
     this.initialValue,
-    this.prefixIcon
+    this.prefixIcon,
+    this.readOnly,
+    this.onTap, // Add onTap parameter
   });
 
   final TextEditingController controller;
@@ -24,7 +26,9 @@ class CustomRectangularTextFormField extends StatefulWidget {
   final int? maxLines;
   final String? initialValue;
   final Icon? prefixIcon;
-  
+  final bool? readOnly;
+  final VoidCallback? onTap; 
+
   @override
   _CustomRectangularTextFormFieldState createState() =>
       _CustomRectangularTextFormFieldState();
@@ -54,14 +58,17 @@ class _CustomRectangularTextFormFieldState
           maxLength: widget.maxLength,
           maxLines: widget.maxLines,
           initialValue: widget.initialValue,
-          cursorColor: const Color(0xFFD72638), 
+          cursorColor: const Color(0xFFD72638),
+          readOnly: widget.readOnly ?? false, // Ensure readOnly is respected
+          onTap: widget.onTap, // Pass onTap to TextFormField
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
             hintText: widget.hintText ?? "",
             filled: true,
             fillColor: Colors.white,
             border: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero, 
+              borderRadius: BorderRadius.zero,
               borderSide: BorderSide(color: Colors.grey),
             ),
             enabledBorder: const OutlineInputBorder(
@@ -69,16 +76,14 @@ class _CustomRectangularTextFormFieldState
               borderSide: BorderSide(color: Colors.grey),
             ),
             focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero, 
+              borderRadius: BorderRadius.zero,
               borderSide: BorderSide(color: Colors.grey),
             ),
             counterText: widget.maxLength != null
-                ? '${widget.controller.text.length}/${widget.maxLength}' 
+                ? '${widget.controller.text.length}/${widget.maxLength}'
                 : null,
-            counterStyle: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 16.sp
-            ),
+            counterStyle:
+                TextStyle(color: Colors.grey.shade600, fontSize: 16.sp),
             prefixIcon: widget.prefixIcon,
           ),
           validator: widget.validator,

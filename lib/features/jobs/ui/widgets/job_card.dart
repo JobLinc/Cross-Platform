@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
+import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_applicants_screen.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 
 class JobCard extends StatelessWidget {
@@ -85,8 +85,9 @@ class JobCard extends StatelessWidget {
 
 class JobList extends StatelessWidget {
   final List<Job> jobs;
+  final bool isCreated;
 
-  const JobList({super.key, required this.jobs});
+  const JobList({super.key, required this.jobs, this.isCreated = false});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +102,19 @@ class JobList extends StatelessWidget {
                 itemIndex: index,
                 job: jobs[index],
                 press: () {
-                  showJobDetails(context, jobs[index]);
+                  if (isCreated) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                                  create: (context) => getIt<MyJobsCubit>(),
+                                  child: JobApplicantsScreen(
+                                    job: jobs[index],
+                                  ),
+                                )));
+                  } else {
+                    showJobDetails(context, jobs[index]);
+                  }
                   //print("Tapped on: ${sortedChats[index].userName}");
                 },
               )),

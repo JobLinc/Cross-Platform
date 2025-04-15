@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/dashboard/dashboard_appbar.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CompanyPagePosts extends StatelessWidget {
@@ -15,7 +15,7 @@ class CompanyPagePosts extends StatelessWidget {
     return Scaffold(
       appBar: DashboardAppbar(
         company: company,
-        selectedValue: "Page Posts",  
+        selectedValue: "Page Posts",
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -40,7 +40,6 @@ class CompanyPagePosts extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   Row(
                     children: [
                       Flexible(
@@ -52,11 +51,9 @@ class CompanyPagePosts extends StatelessWidget {
                               fontSize: 16.sp,
                               color: Colors.grey[700],
                             ),
-                            softWrap:
-                                true, 
-                            overflow: TextOverflow
-                                .ellipsis, 
-                            maxLines: 2, 
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
                       ),

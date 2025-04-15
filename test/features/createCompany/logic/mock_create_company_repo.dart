@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockCreateCompanyRepo extends Mock implements CreateCompanyRepo {}

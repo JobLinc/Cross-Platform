@@ -1,9 +1,9 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
-import 'package:joblinc/features/companyPages/data/data/models/company_model.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/models/company_model.dart';
 
 class MockCompanyApiService extends Mock implements CompanyApiService {}
 
@@ -30,7 +30,8 @@ void main() {
   );
 
   group('getCurrentCompany', () {
-    test('should convert CompanyResponse to Company with proper enum mapping', () async {
+    test('should convert CompanyResponse to Company with proper enum mapping',
+        () async {
       // Arrange
       when(() => mockApiService.getCurrentCompany())
           .thenAnswer((_) async => mockApiResponse);
@@ -60,7 +61,7 @@ void main() {
         overview: 'Innovative tech company',
         website: 'https://techcorp.com',
       );
-      
+
       when(() => mockApiService.getCurrentCompany())
           .thenAnswer((_) async => invalidResponse);
 
@@ -84,7 +85,7 @@ void main() {
         website: '',
         profilePictureUrl: null,
       );
-      
+
       when(() => mockApiService.getCurrentCompany())
           .thenAnswer((_) async => minimalResponse);
 

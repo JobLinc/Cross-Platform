@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/company_more.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/follow_button.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/visit_company_website.dart';
+import 'package:joblinc/features/companypages/ui/widgets/company_more.dart';
+import 'package:joblinc/features/companypages/ui/widgets/follow_button.dart';
+import 'package:joblinc/features/companypages/ui/widgets/visit_company_website.dart';
 import '../widgets/square_avatar.dart';
 import '../../data/data/company.dart';
-
 
 class CompanyData extends StatelessWidget {
   final Company company;
@@ -74,7 +73,7 @@ class CompanyData extends StatelessWidget {
 
               // Company Details (Industry, Location, Followers, Size)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   spacing: 10.0.w,
@@ -121,8 +120,8 @@ class CompanyData extends StatelessWidget {
                         foregroundColor: Colors.white,
                         icon: Icons.open_in_new,
                         websiteUrl: company.website!,
-                        width: 160.w,
-                        fontSize: 13.sp,
+                        width: 150.w,
+                        fontSize: 11.sp,
                       ),
                     SizedBox(width: 10.w),
                     FollowButton(
@@ -130,11 +129,11 @@ class CompanyData extends StatelessWidget {
                       backgroundColor: Colors.white,
                       foregroundColor: Color(0xFFD72638),
                       borderColor: Color(0xFFD72638),
-                      width: 150.w,
+                      width: 130.w,
                       fontSize: 13.sp,
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.h),
                       child: CompanyMoreButton(),
                     ),
                   ],

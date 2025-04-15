@@ -61,7 +61,7 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
     emit(JobSearchLoading());
     try {
-      _jobs = await jobRepo.getSearchedJobs(keyword,location,filter);
+      _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter);
       if (_jobs.isEmpty) {
         emit(JobSearchEmpty());
       } else {
@@ -99,15 +99,15 @@ class JobListCubit extends Cubit<JobListState> {
     await jobRepo.uploadResume(resumeFile);
   }
 
-  unsaveJob(int jobId) async {
+  unsaveJob(String jobId) async {
     await jobRepo.unsaveJob(jobId);
   }
 
-  saveJob(int jobId) async {
+  saveJob(String jobId) async {
     await jobRepo.saveJob(jobId);
   }
 
-  applyJob(int jobId, JobApplication jobApplication) async {
+  applyJob(String jobId, JobApplication jobApplication) async {
     emit(JobApplicationSending());
     try {
       await jobRepo.applyJob(jobId, jobApplication);
@@ -117,6 +117,15 @@ class JobListCubit extends Cubit<JobListState> {
     }
   }
 
+  createJob(Job job) async{
+        emit(JobCreating());
+    try {
+      await jobRepo.createJob(job);
+      emit(JobCreated());
+    } catch (e) {
+      emit(JobCreationError(e.toString()));
+    }
+  }
 
   emitJobSearchInitial(){
     emit(JobSearchInitial());

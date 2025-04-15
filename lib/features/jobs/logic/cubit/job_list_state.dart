@@ -84,3 +84,11 @@ final class JobDetailsErrorLoading extends JobListState {
   JobDetailsErrorLoading(this.errorMessage);
 }
 
+
+final class JobCreating extends JobListState {}
+final class JobCreated extends JobListState {}
+final class JobCreationError extends JobListState {
+    final String errorMessage;
+  JobCreationError(this.errorMessage);
+}
+

@@ -24,10 +24,16 @@ class Routes {
   static const String companyFeed = '/companyFeed';
   static const String settingsScreen = '/settingsScreen';
   static const String changePasswordScreen = '/changePasswordScreen';
+  static const String invitationsTabs = '/InvitationsTabsScreen';
   static const String changeEmailScreen = '/changeEmailScreen';
   static const String changeUsernameScreen = '/changeUsernameScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String profilePictureUpdate = '/profilePictureUpdate';
+  static const String addCertificationScreen = '/addCertificationScreen';
+  static const String addExperienceScreen = '/addExperienceScreen';
+  static const String addSkillScreen = '/addSkillScreen';
+  static const String otherImagesPreview = '/otherImagesPreview';
+  static const String otherProfileScreen = '/otherProfileScreen';
 
   // We'll use the homeScreen route for the main container
 }

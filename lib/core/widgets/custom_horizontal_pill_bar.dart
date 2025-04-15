@@ -33,6 +33,7 @@ class _CustomHorizontalPillBarState extends State<CustomHorizontalPillBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       color: Colors.white70,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
