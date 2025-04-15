@@ -12,6 +12,7 @@ import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/notifications/ui/screens/notifications_screen.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 
@@ -114,9 +115,9 @@ class _MainContainerScreenState extends State<MainContainerScreen>
                 child: AddPostScreen()),
           ),
 
-          // Notifications tab
+          // Notifications tab - use the actual NotificationsScreen instead of placeholder
           _buildKeepAliveScreen(
-            _buildPlaceholderScreen("Notifications", 3),
+            const NotificationsScreen(),
           ),
 
           // Jobs tab
