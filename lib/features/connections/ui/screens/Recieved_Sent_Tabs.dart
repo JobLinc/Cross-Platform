@@ -17,18 +17,14 @@ class InvitationsTabs extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Invitations',
-              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
-          bottom: TabBar(
-            labelColor: ColorsManager.darkBurgundy,
-            unselectedLabelColor: Colors.black,
-            indicatorColor: ColorsManager.darkBurgundy,
-            tabs: [
-              Tab(text: "Received"),
-              Tab(text: "Sent"),
-            ],
-          ),
+        appBar: TabBar(
+          labelColor: ColorsManager.darkBurgundy,
+          unselectedLabelColor: Colors.black,
+          indicatorColor: ColorsManager.darkBurgundy,
+          tabs: [
+            Tab(text: "Received"),
+            Tab(text: "Sent"),
+          ],
         ),
         body: TabBarView(
           children: [

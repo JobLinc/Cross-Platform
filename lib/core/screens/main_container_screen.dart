@@ -139,7 +139,8 @@ class _MainContainerScreenState extends State<MainContainerScreen>
   // Helper to get the right AppBar for each tab
   PreferredSizeWidget? _getAppBarForIndex(int index, BuildContext context) {
     // Some tabs like HomeScreen have their own AppBar, return null for those
-    if (index == 0) return null; // HomeScreen has its own AppBar
+    if (index == 0 || index == 2)
+      return null; // HomeScreen has its own AppBar and Add Post tab has no AppBar
 
     // For Jobs tab, include search functionality
     if (index == 4) {
