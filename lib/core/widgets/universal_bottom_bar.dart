@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
-import 'package:joblinc/features/connections/ui/screens/InvitationPage.dart';
-import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
-import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 
 class UniversalBottomBar extends StatelessWidget {
