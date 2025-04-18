@@ -54,3 +54,4 @@ pubspec.lock
 devtools_options.yaml
 
 backend/
+pubspec.lock
