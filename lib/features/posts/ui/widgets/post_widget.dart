@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
@@ -203,15 +202,7 @@ class PostActionBar extends StatelessWidget {
           ),
           IconButton(
             key: Key('post_actionBar_comment'),
-            onPressed: () => {
-              showModalBottomSheet(
-                  showDragHandle: true,
-                  scrollControlDisabledMaxHeightRatio: 0.9,
-                  context: context,
-                  builder: (context) {
-                    return CommentSection();
-                  })
-            },
+            onPressed: () => {showCommentSectionBottomSheet(context)},
             icon: Icon(Icons.comment, color: iconColor),
           ),
           IconButton(

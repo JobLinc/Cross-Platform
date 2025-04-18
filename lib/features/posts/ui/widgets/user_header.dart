@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 
 class UserHeader extends StatelessWidget {
   //TODO add GestureDetector for the avatar + Info
@@ -31,6 +31,7 @@ class UserHeader extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, Routes.profileScreen),
       child: Row(
+        spacing: 8,
         key: Key('post_header_container'),
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,50 +86,6 @@ class UserInfo extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.imageURL});
-  final String imageURL;
-
-  @override
-  Widget build(BuildContext context) {
-    //TODO this needs revising
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: CircleAvatar(
-        backgroundColor: Colors.grey.shade200,
-        child: imageURL.isNotEmpty
-            ? ClipOval(
-                child: Image.network(
-                  imageURL,
-                  fit: BoxFit.fill,
-                  width: 96.r,
-                  height: 96.r,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.person,
-                      color: Colors.grey.shade400,
-                    );
-                  },
-                ),
-              )
-            : Icon(
-                Icons.person,
-                color: Colors.grey.shade400,
-              ),
-      ),
     );
   }
 }
