@@ -55,3 +55,6 @@ devtools_options.yaml
 
 backend/
 pubspec.lock
+pubspec.lock
+android/settings.gradle
+android/gradle/wrapper/gradle-wrapper.properties
