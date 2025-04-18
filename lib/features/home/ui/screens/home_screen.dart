@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
-import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
@@ -124,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: ColorsManager.getPrimaryColor(context),
                   onRefresh: () async {
                     // Call cubit to refresh the feed data
-                    await context.read<HomeCubit>().getUserInfo();
+                    await context.read<HomeCubit>().getFeed();
                   },
                   child: PostList(posts: state.posts),
                 ),
