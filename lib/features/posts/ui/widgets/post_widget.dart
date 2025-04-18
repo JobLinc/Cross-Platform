@@ -154,7 +154,7 @@ class PostNumerics extends StatelessWidget {
           ),
           Text(
             key: Key('post_numerics_likeCount'),
-            ' ${likesCount.toString()}',
+            ' $likesCount',
             style: TextStyles.font13GrayRegular(context),
           ),
           Spacer(),

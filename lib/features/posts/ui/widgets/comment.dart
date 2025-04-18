@@ -25,7 +25,8 @@ class Comment extends StatelessWidget {
           action: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 50, top: 3, bottom: 8),
+          padding: EdgeInsets.only(
+              left: data.isReply ? 20 : 0, top: 3.0, bottom: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

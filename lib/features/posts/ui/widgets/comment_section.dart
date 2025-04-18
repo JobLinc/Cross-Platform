@@ -38,8 +38,11 @@ class CommentSection extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                         itemCount: 20,
-                        itemBuilder: (context, index) => Comment(
-                              data: mockCommentData,
+                        itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.only(left: 50.0),
+                              child: Comment(
+                                data: mockCommentData,
+                              ),
                             )),
                   ),
                 ],
