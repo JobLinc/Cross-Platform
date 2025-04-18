@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
-
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 class addService {
   final Dio dio;
 
@@ -20,10 +20,9 @@ class addService {
     try {
       Response response = await dio.post(
         '/user/certificate/add',
-        data: certification.toJson(), // Convert to JSON string
+        data: certification.toJson(),
       );
 
-      // Handle successful response here if needed
       return response;
     } catch (e) {
       throw Exception('Failed to add certification: $e');
@@ -36,7 +35,6 @@ class addService {
         '/user/certificate/$certificationId',
       );
 
-      // Handle successful response here if needed
       return response;
     } catch (e) {
       throw Exception('Failed to delete certification: $e');
@@ -48,9 +46,58 @@ class addService {
       final response = await dio.get('/user/certificate');
 
       if (response.statusCode == 200) {
-        return response.data; // Should be a List<dynamic>
+        return response.data;
       } else {
         throw Exception('Failed to fetch certificates');
+      }
+    } catch (e) {
+      throw Exception('API error: $e');
+    }
+  }
+
+  Future<List<Certification>> fetchExperiences() async {
+    try {
+      final response = await dio.get('/user/experience');
+      List data = response.data;
+      return data.map((json) => Certification.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load experiences: $e');
+    }
+  }
+
+  Future<Response> addExperience(Experience experience) async {
+    try {
+      Response response = await dio.post(
+        '/user/experience/add',
+        data: experience.toJson(), 
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to add experience: $e');
+    }
+  }
+
+  Future<Response> deleteExperience(String experienceId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/experience/$experienceId',
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete experience: $e');
+    }
+  }
+
+  Future<List<dynamic>> getAllExperiences() async {
+    try {
+      final response = await dio.get('/user/experience');
+
+      if (response.statusCode == 200) {
+        return response.data; 
+      } else {
+        throw Exception('Failed to fetch experiences');
       }
     } catch (e) {
       throw Exception('API error: $e');

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
-//import 'package:joblinc/core/di/dependency_injection.dart';
-// import 'package:joblinc/core/routing/routes.dart' show Routes;
 
 class UserProfileAddSection extends StatelessWidget {
   const UserProfileAddSection({super.key});
@@ -14,24 +11,29 @@ class UserProfileAddSection extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 10.h, bottom: 2.h, left: 5.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(Icons.ios_share),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(
-                      context, Routes.addSkillScreen);
-                },
-              ),
-              Text(
-                'Add education',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          child: InkWell(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, Routes.addExperienceScreen);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.ios_share),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, Routes.addSkillScreen);
+                  },
                 ),
-              ),
-            ],
+                Text(
+                  'Add experience',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Padding(

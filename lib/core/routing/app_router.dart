@@ -47,6 +47,7 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
@@ -336,13 +337,13 @@ class AppRouter {
           ),
         );
 
-      // case Routes.addExperienceScreen:
-      //   return MaterialPageRoute(
-      //     builder: (context) => BlocProvider(
-      //       create: (context) => getIt<ProfileCubit>(),
-      //       child: UserAddExperienceScreen(),
-      //     ),
-      //   );
+      case Routes.addExperienceScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddExperienceScreen(),
+          ),
+        );
 
       case Routes.addSkillScreen:
         return MaterialPageRoute(

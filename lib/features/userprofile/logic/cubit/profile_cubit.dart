@@ -189,11 +189,59 @@ class ProfileCubit extends Cubit<ProfileState> {
     // emit(RemoveSkill(skill));
   }
 
-  void addExperience(Experience experience) {
-    // emit(AddExperience(experience));
+  void addExperience(Experience experience) async{
+    try {
+    emit(ProfilePictureUpdating("Adding experience"));
+    final response = await _profileRepository.addExperience(experience);
+
+    if (response.statusCode == 200) {
+      UserProfileUpdateModel experienceModel =
+          UserProfileUpdateModel(firstName: firstname);
+      updateUserProfile(experienceModel);
+      emit(ExperienceAdded("Experience Added"));
+
+    } else {
+      if (!isClosed) {
+        emit(ProfileError('Failed to add experience.'));
+      }
+    }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ProfileError('Error: $e'));
+      }
+    }
   }
 
-  void removeExperience(String experienceId) {
-    // emit(RemoveExperience(experienceId));
+  void deleteExperience(String position) async{
+    try {
+      print("hello");
+      emit(ProfileUpdating("Deleting Experience"));
+      String experienceId;
+      final experiences = await _profileRepository.getAllExperiences();
+
+      experienceId =
+          experiences.firstWhere((exp) => exp.position == position).experienceId;
+
+      print(experiences);
+      print(experienceId);
+      final response =
+          await _profileRepository.deleteExperience(experienceId);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel =
+            UserProfileUpdateModel(firstName: firstname);
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
   }
 }
