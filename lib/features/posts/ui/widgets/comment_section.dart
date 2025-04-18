@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/features/login/ui/widgets/custom_rounded_textfield.dart';
+import 'package:joblinc/features/posts/data/models/comment_model.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment.dart';
 
 class CommentSection extends StatelessWidget {
@@ -37,7 +38,9 @@ class CommentSection extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                         itemCount: 20,
-                        itemBuilder: (context, index) => Comment()),
+                        itemBuilder: (context, index) => Comment(
+                              data: mockCommentData,
+                            )),
                   ),
                 ],
               ),
@@ -45,7 +48,9 @@ class CommentSection extends StatelessWidget {
             Divider(
               height: 0,
             ),
-            CommentBottomBar()
+            CommentBottomBar(
+              commentController: _commentController,
+            )
           ],
         ),
       ),
@@ -54,10 +59,11 @@ class CommentSection extends StatelessWidget {
 }
 
 class CommentBottomBar extends StatelessWidget {
-  final TextEditingController _commentController = TextEditingController();
   CommentBottomBar({
     super.key,
+    required this.commentController,
   });
+  final TextEditingController commentController;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,7 @@ class CommentBottomBar extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: CustomRoundedTextFormField(
-              controller: _commentController,
+              controller: commentController,
               filled: false,
               borderRadius: BorderRadius.circular(40),
               hintText: "Add a comment...",
