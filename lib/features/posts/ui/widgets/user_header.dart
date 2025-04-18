@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 
@@ -95,8 +96,35 @@ class ProfileImage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: CircleAvatar(
-        key: Key('post_header_avatar'),
-        backgroundImage: NetworkImage(imageURL),
+        backgroundColor: Colors.grey.shade200,
+        child: imageURL.isNotEmpty
+            ? ClipOval(
+                child: Image.network(
+                  imageURL,
+                  fit: BoxFit.fill,
+                  width: 96.r,
+                  height: 96.r,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.person,
+                      color: Colors.grey.shade400,
+                    );
+                  },
+                ),
+              )
+            : Icon(
+                Icons.person,
+                color: Colors.grey.shade400,
+              ),
       ),
     );
   }
