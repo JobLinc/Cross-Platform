@@ -48,7 +48,7 @@ class PostModel {
   int repostCount;
 }
 
-PostModel mockData = PostModel(
+PostModel mockPostData = PostModel(
   postID: "1",
   senderID: "2",
   isCompany: false,
