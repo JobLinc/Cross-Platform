@@ -31,7 +31,7 @@ class Comment extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: [
-              Text('Sample text'),
+              Text(data.text),
               Row(
                 children: [
                   TextButton(

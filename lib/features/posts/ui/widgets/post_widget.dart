@@ -68,6 +68,7 @@ class PostContent extends StatelessWidget {
           imageURL: data.profilePictureURL,
           username: data.username,
           headline: data.headline,
+          senderID: data.senderID,
           action: Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: GestureDetector(
