@@ -10,10 +10,13 @@ class UserHeader extends StatelessWidget {
       required this.imageURL,
       required this.username,
       required this.headline,
+      required this.senderID,
       this.action});
 
   ///Profile Picture URL
   final String imageURL;
+
+  final String senderID;
 
   final String username;
 
