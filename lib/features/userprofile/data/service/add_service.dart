@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 class addService {
   final Dio dio;
 
@@ -104,4 +105,52 @@ class addService {
     }
   }
   
+  Future<List<Skill>> fetchSkills() async {
+    try {
+      final response = await dio.get('/user/skill');
+      List data = response.data;
+      return data.map((json) => Skill.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load experiences: $e');
+    }
+  }
+
+  Future<Response> addSkill(Skill skill) async {
+    try {
+      Response response = await dio.post(
+        '/user/skills/add',
+        data: skill.toJson(), 
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to add skill: $e');
+    }
+  }
+
+  Future<Response> deleteSkill(String skillId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/skills/$skillId',
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete skill: $e');
+    }
+  }
+
+  Future<List<dynamic>> getAllSkills() async {
+    try {
+      final response = await dio.get('/user/skills');
+
+      if (response.statusCode == 200) {
+        return response.data; 
+      } else {
+        throw Exception('Failed to fetch skills');
+      }
+    } catch (e) {
+      throw Exception('API error: $e');
+    }
+  }
 }

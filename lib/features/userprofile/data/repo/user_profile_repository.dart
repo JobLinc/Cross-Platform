@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../models/user_profile_model.dart';
@@ -131,6 +132,34 @@ class UserProfileRepository {
 
       return rawList
           .map((item) => Experience.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Repository error: $e');
+    }
+  }
+
+  Future<Response> addSkill(Skill skill) async {
+    try {
+      return await addApiService.addSkill(skill);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteSkill(String skillId) async {
+    try {
+      return await addApiService.deleteSkill(skillId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Skill>> getAllSkills() async {
+    try {
+      final List<dynamic> rawList = await addApiService.getAllExperiences();
+
+      return rawList
+          .map((item) => Skill.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
       throw Exception('Repository error: $e');
