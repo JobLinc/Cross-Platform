@@ -180,22 +180,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   emit(UpdateCertificate(certificate));
   // }
 
-  void addSkill(Skill skill) async{
+  void addSkill(Skill skill) async {
     try {
-    emit(ProfilePictureUpdating("Adding experience"));
-    final response = await _profileRepository.addSkill(skill);
+      emit(ProfileUpdating("Adding experience"));
+      final response = await _profileRepository.addSkill(skill);
 
-    if (response.statusCode == 200) {
-      UserProfileUpdateModel skillModel =
-          UserProfileUpdateModel(firstName: firstname);
-      updateUserProfile(skillModel);
-      emit(SkillAdded("Skill Added"));
-
-    } else {
-      if (!isClosed) {
-        emit(ProfileError('Failed to add skill.'));
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel skillModel =
+            UserProfileUpdateModel(firstName: firstname);
+        updateUserProfile(skillModel);
+        emit(SkillAdded("Skill Added"));
+      } else {
+        if (!isClosed) {
+          emit(ProfileError('Failed to add skill.'));
+        }
       }
-    }
     } catch (e) {
       if (!isClosed) {
         emit(ProfileError('Error: $e'));
@@ -207,22 +206,21 @@ class ProfileCubit extends Cubit<ProfileState> {
     // emit(RemoveSkill(skill));
   }
 
-  void addExperience(Experience experience) async{
+  void addExperience(Experience experience) async {
     try {
-    emit(ProfilePictureUpdating("Adding experience"));
-    final response = await _profileRepository.addExperience(experience);
+      emit(ProfilePictureUpdating("Adding experience"));
+      final response = await _profileRepository.addExperience(experience);
 
-    if (response.statusCode == 200) {
-      UserProfileUpdateModel experienceModel =
-          UserProfileUpdateModel(firstName: firstname);
-      updateUserProfile(experienceModel);
-      emit(ExperienceAdded("Experience Added"));
-
-    } else {
-      if (!isClosed) {
-        emit(ProfileError('Failed to add experience.'));
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel experienceModel =
+            UserProfileUpdateModel(firstName: firstname);
+        updateUserProfile(experienceModel);
+        emit(ExperienceAdded("Experience Added"));
+      } else {
+        if (!isClosed) {
+          emit(ProfileError('Failed to add experience.'));
+        }
       }
-    }
     } catch (e) {
       if (!isClosed) {
         emit(ProfileError('Error: $e'));
@@ -230,20 +228,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void deleteExperience(String position) async{
+  void deleteExperience(String position) async {
     try {
       print("hello");
       emit(ProfileUpdating("Deleting Experience"));
       String experienceId;
       final experiences = await _profileRepository.getAllExperiences();
 
-      experienceId =
-          experiences.firstWhere((exp) => exp.position == position).experienceId;
+      experienceId = experiences
+          .firstWhere((exp) => exp.position == position)
+          .experienceId;
 
       print(experiences);
       print(experienceId);
-      final response =
-          await _profileRepository.deleteExperience(experienceId);
+      final response = await _profileRepository.deleteExperience(experienceId);
 
       if (response.statusCode == 200) {
         UserProfileUpdateModel expModel =

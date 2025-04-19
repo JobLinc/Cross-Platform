@@ -99,13 +99,17 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
               ),
             );
           } else if (state is SkillAdded) {
+            int count = 0;
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.profileScreen,
+              (route) => count++ >= 2,
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Skill added successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
           }
         },
         builder: (context, state) {
