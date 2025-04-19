@@ -91,47 +91,32 @@ class UserProfileAddSection extends StatelessWidget {
             ),
           ),
         ),
-        // Padding(
-        //   padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
-        //   child: InkWell(
-        //     onTap: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => BlocProvider(
-        //             create: (context) => getIt<CreateCompanyCubit>(
-        //               param1: (company) {
-        //                 // Navigation logic when the company is created
-        //                 Navigator.pushNamed(
-        //                   context,
-        //                   Routes.companyDashboard,
-        //                   arguments: company,
-        //                 );
-        //               },
-        //             ),
-        //             child: CreateCompanyPage(),
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.start,
-        //       children: [
-        //         IconButton(
-        //           icon: Icon(Icons.add),
-        //           onPressed: () {},
-        //         ),
-        //         Text(
-        //           'Create a LinkedIn Page',
-        //           style: TextStyle(
-        //             fontSize: 16,
-        //             fontWeight: FontWeight.bold,
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
+        Padding(
+          padding: EdgeInsets.only(top:2, bottom: 2, left: 5),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, Routes.addResumeScreen);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, Routes.addResumeScreen);
+                  },
+                ),
+                Text(
+                  'Add resume',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
