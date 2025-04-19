@@ -140,7 +140,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> deleteCertificate(String name) async {
     try {
-      print("hello");
       emit(ProfileUpdating("Deleting Certificate"));
       String certificationId;
       final certificates = await _profileRepository.getAllCertificates();
@@ -181,8 +180,27 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   emit(UpdateCertificate(certificate));
   // }
 
-  void addSkill(Skill skill) {
-    // emit(AddSkill(skill));
+  void addSkill(Skill skill) async{
+    try {
+    emit(ProfilePictureUpdating("Adding experience"));
+    final response = await _profileRepository.addSkill(skill);
+
+    if (response.statusCode == 200) {
+      UserProfileUpdateModel skillModel =
+          UserProfileUpdateModel(firstName: firstname);
+      updateUserProfile(skillModel);
+      emit(SkillAdded("Skill Added"));
+
+    } else {
+      if (!isClosed) {
+        emit(ProfileError('Failed to add skill.'));
+      }
+    }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ProfileError('Error: $e'));
+      }
+    }
   }
 
   void removeSkill(String skill) {
