@@ -29,6 +29,7 @@ class Experience {
       }
       return null;
     }
+
     DateTime start = parseDate(json['startDate']) ?? DateTime.now();
     DateTime? end = parseDate(json['endDate']) ?? DateTime.now();
 
@@ -44,11 +45,11 @@ class Experience {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': experienceId,
       'position': position,
       'company': company,
-      'startDate': startDate.toIso8601String(),  // Convert to ISO 8601 string
-      if (endDate != null) 'endDate': endDate!.toIso8601String(),  // Convert to ISO 8601 string
+      'startDate': startDate.toIso8601String(), // Convert to ISO 8601 string
+      if (endDate != null)
+        'endDate': endDate!.toIso8601String(), // Convert to ISO 8601 string
       'description': description,
     };
   }
