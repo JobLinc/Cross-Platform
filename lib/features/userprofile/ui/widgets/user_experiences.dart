@@ -5,25 +5,25 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
-class UserCerificates extends StatelessWidget {
-  const UserCerificates({super.key, required this.profile});
+class UserExperiences extends StatelessWidget {
+  const UserExperiences({super.key, required this.profile});
   final UserProfile profile;
 
-  String _formatCertificateDates(dynamic startYear, dynamic endYear) {
+  String _formatExperienceDates(dynamic startDate, dynamic endDate) {
     String issuedText = "";
 
-    if (startYear is DateTime) {
-      issuedText = "Issued ${_getMonthName(startYear.month)} ${startYear.year}";
-    } else if (startYear is String) {
-      issuedText = "Issued $startYear";
+    if (startDate is DateTime) {
+      issuedText = "${_getMonthName(startDate.month)} ${startDate.year}";
+    } else if (startDate is String) {
+      issuedText = "$startDate";
     }
 
-    if (endYear != null) {
+    if (endDate != null) {
       String expiredText = "";
-      if (endYear is DateTime) {
-        expiredText = "Expired ${_getMonthName(endYear.month)} ${endYear.year}";
-      } else if (endYear is String) {
-        expiredText = "Expired $endYear";
+      if (endDate is DateTime) {
+        expiredText = "${_getMonthName(endDate.month)} ${endDate.year}";
+      } else if (endDate is String) {
+        expiredText = "$endDate";
       }
 
       return "$issuedText • $expiredText";
@@ -63,7 +63,7 @@ class UserCerificates extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Licenses & Certifications',
+                'Experiences',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -71,9 +71,9 @@ class UserCerificates extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profile.certifications.length,
+            itemCount: profile.experiences.length,
             itemBuilder: (context, index) {
-              final cert = profile.certifications[index];
+              final experience = profile.experiences[index];
               return Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: 5.h), // Reduced from 8.h to 4.h
@@ -84,13 +84,12 @@ class UserCerificates extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Put name and delete icon in the same row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: Text(
-                                  cert.name,
+                                  experience.position,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
@@ -103,14 +102,15 @@ class UserCerificates extends StatelessWidget {
                                   color: ColorsManager.darkBurgundy,
                                   size: 20.r,
                                 ),
-                                onPressed: () {
+                                onPressed:
+                                    () {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext dialogContext) {
                                       return AlertDialog(
-                                        title: Text('Delete Certificate'),
+                                        title: Text('Delete Experience'),
                                         content: Text(
-                                            'Are you sure you want to delete "${cert.name}"?'),
+                                            'Are you sure you want to delete "${experience.position}"?'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -123,8 +123,8 @@ class UserCerificates extends StatelessWidget {
                                               Navigator.of(dialogContext).pop();
                                               context
                                                   .read<ProfileCubit>()
-                                                  .deleteCertificate(cert.name);
-                                              // Close dialog and delete certificate
+                                                  .deleteExperience(experience.position);
+                                              // Close dialog and delete Experience
                                             },
                                             child: Text(
                                               'Delete',
@@ -145,15 +145,15 @@ class UserCerificates extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            cert.organization,
+                            experience.company,
                             style: TextStyle(
                               fontSize: 14.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            _formatCertificateDates(
-                                cert.startYear, cert.endYear),
+                            _formatExperienceDates(
+                                experience.startDate, experience.endDate),
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.grey[600],

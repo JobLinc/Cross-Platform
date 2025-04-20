@@ -4,67 +4,65 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
-import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
-class UserAddCertificateScreen extends StatefulWidget {
+class UserAddExperienceScreen extends StatefulWidget {
   @override
-  _UserAddCertificateScreenState createState() =>
-      _UserAddCertificateScreenState();
+  _UserAddExperienceScreenState createState() =>
+      _UserAddExperienceScreenState();
 }
 
-class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
-  // Form controllers
-  late TextEditingController certificateNameController;
-  late TextEditingController issuingOrganizationController;
-  late TextEditingController issueDateController;
-  late TextEditingController expirationDateController;
+class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
+  late TextEditingController experienceNameController;
+  late TextEditingController organizationController;
+  late TextEditingController startDateController;
+  late TextEditingController endDateController;
+  late TextEditingController descriptionController;
 
-  // Store actual DateTime objects for accurate parsing
-  DateTime? selectedIssueDate;
-  DateTime? selectedExpirationDate;
+  DateTime? selectedstartDate;
+  DateTime? selectedendDate;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    certificateNameController = TextEditingController();
-    issuingOrganizationController = TextEditingController();
-    issueDateController = TextEditingController();
-    expirationDateController = TextEditingController();
+    experienceNameController = TextEditingController();
+    organizationController = TextEditingController();
+    startDateController = TextEditingController();
+    endDateController = TextEditingController();
+    descriptionController = TextEditingController();
   }
 
   @override
   void dispose() {
-    certificateNameController.dispose();
-    issuingOrganizationController.dispose();
-    issueDateController.dispose();
-    expirationDateController.dispose();
+    experienceNameController.dispose();
+    organizationController.dispose();
+    startDateController.dispose();
+    endDateController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
-  // Method to show month/year picker
   Future<void> _selectYear(BuildContext context,
-      TextEditingController controller, bool isIssueDate) async {
+      TextEditingController controller, bool isstartDate) async {
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate:
-          DateTime.now().add(Duration(days: 365 * 10)), // Allow future dates
+      lastDate: DateTime.now().add(Duration(days: 365 * 10)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.black, 
-              onPrimary: Colors.white, 
-              onSurface: Colors.black, 
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor:
-                    Colors.black, 
+                foregroundColor: Colors.black,
               ),
             ),
           ),
@@ -75,10 +73,10 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
 
     if (selectedDate != null) {
       setState(() {
-        if (isIssueDate) {
-          selectedIssueDate = selectedDate;
+        if (isstartDate) {
+          selectedstartDate = selectedDate;
         } else {
-          selectedExpirationDate = selectedDate;
+          selectedendDate = selectedDate;
         }
 
         final monthName = _getMonthName(selectedDate.month);
@@ -105,31 +103,32 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
     return monthNames[month - 1];
   }
 
-  void saveCertificate() {
+  void saveExperience() {
     if (_formKey.currentState!.validate()) {
-      if (selectedIssueDate == null) {
+      if (selectedstartDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please select an issue date.'),
+            content: Text('Please select a start date.'),
             backgroundColor: Colors.red,
           ),
         );
         return;
       }
 
-      final Certification certificateToAdd = Certification(
-        name: certificateNameController.text,
-        organization: issuingOrganizationController.text,
-        startYear: selectedIssueDate!,
-        endYear: selectedExpirationDate,
-        certificationId: '',
+      final Experience experienceToAdd = Experience(
+        position: experienceNameController.text,
+        company: organizationController.text,
+        startDate: selectedstartDate!,
+        experienceId: '',
+        endDate: selectedendDate,
+        description: descriptionController.text,
       );
 
       print(
-          'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
+          'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
       print(context.read<ProfileCubit>().firstname);
 
-      context.read<ProfileCubit>().addCertificate(certificateToAdd);
+      context.read<ProfileCubit>().addExperience(experienceToAdd);
     }
   }
 
@@ -139,7 +138,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('Add Certificate'),
+        title: Text('Add Experience'),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -149,8 +148,8 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: saveCertificate,
-            tooltip: 'Save Certificate',
+            onPressed: saveExperience,
+            tooltip: 'Save Experience',
           )
         ],
       ),
@@ -163,7 +162,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                 backgroundColor: Colors.red,
               ),
             );
-          } else if (state is CertificateAdded) {
+          } else if (state is ExperienceAdded) {
             int count = 0;
             Navigator.of(context).pushNamedAndRemoveUntil(
               Routes.profileScreen,
@@ -171,7 +170,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Certificate added successfully!'),
+                content: Text('Experience added successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -192,7 +191,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Add license or certification',
+                      Text('Add experience',
                           style: TextStyle(
                             fontSize: 25.sp,
                             fontWeight: FontWeight.bold,
@@ -207,29 +206,25 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                       SizedBox(height: 20.h),
                     ],
                   ),
-
-                  // Certificate Name
                   CustomRectangularTextFormField(
-                    key: Key('profileAddCertificate_certificateName_textField'),
-                    controller: certificateNameController,
-                    labelText: 'Certificate Name*',
-                    hintText: 'Ex: Microsoft certified network associate ',
+                    key: Key('profileAddExperience_ExperienceName_textField'),
+                    controller: experienceNameController,
+                    labelText: 'position*',
+                    hintText: 'Ex: Junior AI Engineer ',
                     maxLength: 255,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Certificate Name is required.';
+                        return 'Experience name is required.';
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 16.h),
-
-                  // Issuing Organization
                   CustomRectangularTextFormField(
                     key: Key(
-                        'profileAddCertificate_issuingOrganization_textField'),
-                    controller: issuingOrganizationController,
-                    labelText: 'Issuing Organization*',
+                        'profileAddExperience_issuingOrganization_textField'),
+                    controller: organizationController,
+                    labelText: 'Company or organization*',
                     hintText: 'Ex: Microsoft',
                     maxLength: 250,
                     validator: (value) {
@@ -240,39 +235,47 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                     },
                   ),
                   SizedBox(height: 16.h),
-
-                  // Issue Date
                   CustomRectangularTextFormField(
-                    key: Key('profileAddCertificate_issueDate_textField'),
-                    controller: issueDateController,
-                    labelText: 'Issue Date*',
+                    key: Key('profileAddExperience_startDate_textField'),
+                    controller: startDateController,
+                    labelText: 'Start Date*',
                     readOnly: true,
                     onTap: () =>
-                        _selectYear(context, issueDateController, true),
+                        _selectYear(context, startDateController, true),
                   ),
                   SizedBox(height: 16.h),
-
-                  // Expiration Date
                   CustomRectangularTextFormField(
-                    key: Key('profileAddCertificate_expirationDate_textField'),
-                    controller: expirationDateController,
-                    labelText: 'Expiration Date',
+                    key: Key('profileAddExperience_endDate_textField'),
+                    controller: endDateController,
+                    labelText: 'End Date',
                     readOnly: true,
-                    onTap: () =>
-                        _selectYear(context, expirationDateController, false),
+                    onTap: () => _selectYear(context, endDateController, false),
                   ),
-                  SizedBox(height: 200.h),
-
-                  // Save Button
+                  SizedBox(height: 16.h),
+                  CustomRectangularTextFormField(
+                    key: Key('profileAddExperience_description_textField'),
+                    controller: descriptionController,
+                    labelText: 'Description*',
+                    hintText: 'Add a description of your job',
+                    maxLength: 1000,
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Description is required.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 40.h),
                   SizedBox(
                     width: double.infinity,
                     height: 40.h,
                     child: ElevatedButton(
-                      key: Key('profileAddCertificate_save_button'),
+                      key: Key('profileAddExperience_save_button'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorsManager.crimsonRed,
                       ),
-                      onPressed: saveCertificate,
+                      onPressed: saveExperience,
                       child: Text(
                         'Save',
                         style: TextStyle(
