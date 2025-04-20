@@ -7,17 +7,19 @@ import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
 import 'package:joblinc/features/changepassword/data/services/change_password_api_service.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changeusername/data/repos/change_username_repo.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
@@ -47,13 +49,14 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
+import 'package:joblinc/features/userprofile/data/service/add_service.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 
 final getIt = GetIt.instance;
 
@@ -64,9 +67,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api';
+  final baseUrl = /*Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api' */
+      /*'http://localhost:3000/api'; */
+      'https://joblinc.me:3000/api'; 
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -100,15 +104,6 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
 
-  getIt.registerLazySingleton<ChangePasswordApiService>(
-      () => ChangePasswordApiService(getIt<Dio>()));
-
-  getIt.registerLazySingleton<ChangePasswordRepo>(
-      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
-
-  getIt.registerFactory<ChangePasswordCubit>(
-      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
-
   getIt.registerLazySingleton<ForgetPasswordApiService>(
       () => ForgetPasswordApiService(getIt<Dio>()));
 
@@ -128,8 +123,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<CommentApiService>(
       () => CommentApiService(getIt<Dio>()));
 
-  getIt
-      .registerLazySingleton<PostRepo>(() => PostRepo(getIt<PostApiService>(), getIt<UserProfileApiService>()));
+  getIt.registerLazySingleton<PostRepo>(
+      () => PostRepo(getIt<PostApiService>(), getIt<UserProfileApiService>()));
 
   getIt.registerLazySingleton<CommentRepo>(
       () => CommentRepo(getIt<CommentApiService>()));
@@ -187,6 +182,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
+      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
   //User profile
   getIt.registerFactory<InvitationsCubit>(
@@ -199,10 +196,14 @@ Future<void> setupGetIt() async {
       () => UpdateUserProfileApiService(getIt<Dio>()));
   getIt.registerLazySingleton<UploadApiService>(
       () => UploadApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
   getIt.registerLazySingleton<UserProfileRepository>(() =>
-      UserProfileRepository(getIt<UserProfileApiService>(),
-          getIt<UpdateUserProfileApiService>(), getIt<UploadApiService>()));
+      UserProfileRepository(
+          getIt<UserProfileApiService>(),
+          getIt<UpdateUserProfileApiService>(),
+          getIt<UploadApiService>(),
+          getIt<addService>()));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));
@@ -223,6 +224,18 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ChangeEmailRepo>(
     () => ChangeEmailRepo(getIt<ChangeEmailApiService>()),
   );
+
+  getIt.registerFactory<ChangeEmailCubit>(
+      () => ChangeEmailCubit(getIt<ChangeEmailRepo>()));
+
+  getIt.registerLazySingleton<ChangePasswordApiService>(
+      () => ChangePasswordApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ChangePasswordRepo>(
+      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
+
+  getIt.registerFactory<ChangePasswordCubit>(
+      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
 
   getIt.registerFactory<ChangeUsernameRepo>(
     () => ChangeUsernameRepo(getIt<UpdateUserProfileApiService>()),

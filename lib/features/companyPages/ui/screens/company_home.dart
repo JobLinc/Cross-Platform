@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/homePage/about.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/homePage/posts.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
-import '../../data/data/company.dart';
 import '../widgets/scrollable_tabs.dart';
 
 class CompanyPageHome extends StatefulWidget {
@@ -38,15 +38,15 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
         backgroundColor: const Color(0xFFFAFAFA),
         title: Row(
           children: [
-              Expanded(
-                child: CustomSearchBar(
-                  keyName: 'company',
-                  text: widget.company.name,
-                  onPress: () {},
-                  onTextChange: (searched) {},
-                  controller: TextEditingController(),
-                ),
+            Expanded(
+              child: CustomSearchBar(
+                keyName: 'company',
+                text: widget.company.name,
+                onPress: () {},
+                onTextChange: (searched) {},
+                controller: TextEditingController(),
               ),
+            ),
           ],
         ),
       ),
@@ -54,10 +54,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CompanyData(company: widget.company), // Company details
-          ScrollableTabs(
-              tabController:
-                  _tabController
-                ), 
+          ScrollableTabs(tabController: _tabController),
           Expanded(
             child: TabBarView(
               controller: _tabController,

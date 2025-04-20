@@ -34,6 +34,74 @@ class CoverPictureUpdating extends ProfileState {
   CoverPictureUpdating(this.imagepath);
 }
 
+// TODO : Uncomment these states when implementing the respective features
+
+class AddingCertificate extends ProfileState {
+  final String message;
+
+  AddingCertificate(this.message);
+}
+
+class CertificateAdded extends ProfileState {
+  final String message;
+
+  CertificateAdded(this.message);
+}
+
+// class CertificateUpdated extends ProfileState {
+//   final String message;
+
+//   CertificateUpdated(this.message);
+// }
+
+// class CertificateDeleted extends ProfileState {
+//   final String message;
+
+//   CertificateDeleted(this.message);
+// }
+
+class AddingSkill extends ProfileState {
+  final String message;
+
+  AddingSkill(this.message);
+}
+
+class SkillAdded extends ProfileState {
+  final String message;
+
+  SkillAdded(this.message);
+}
+
+// class SkillUpdated extends ProfileState {
+//   final String message;
+
+//   SkillUpdated(this.message);
+// }
+
+// class SkillDeleted extends ProfileState {
+//   final String message;
+
+//   SkillDeleted(this.message);
+// }
+
+class ExperienceAdded extends ProfileState {
+  final String message;
+
+  ExperienceAdded(this.message);
+}
+
+// class ExperienceUpdated extends ProfileState {
+//   final String message;
+
+//   ExperienceUpdated(this.message);
+// }
+
+// class ExperienceDeleted extends ProfileState {
+//   final String message;
+
+//   ExperienceDeleted(this.message);
+// }
+
 class ProfileError extends ProfileState {
   final String message;
 

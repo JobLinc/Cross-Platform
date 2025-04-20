@@ -16,6 +16,7 @@ class InvitationsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      //reverse: true,
       itemCount: invitations.length,
       itemBuilder: (context, index) {
         final invitation = invitations[index];

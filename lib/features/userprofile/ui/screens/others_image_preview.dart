@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
-import 'package:joblinc/features/userprofile/ui/widgets/Pictureuploadingsheet.dart';
 
 class FullScreenImagePage extends StatelessWidget {
   final String
@@ -13,8 +12,7 @@ class FullScreenImagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullUrl =
-        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000$imagePath";
+    final fullUrl = "$imagePath";
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +28,7 @@ class FullScreenImagePage extends StatelessWidget {
           ),
           onPressed: () {
             // context.read<ProfileCubit>().getUserProfile();
-            BlocProvider.of<ProfileCubit>(context).getUserProfile();
+            Navigator.pop(context);
           },
         ),
       ),
@@ -60,32 +58,32 @@ class FullScreenImagePage extends StatelessWidget {
             ),
 
             // Footer with 2 Image Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        final profileCubit = context.read<ProfileCubit>();
+            //   Padding(
+            //     padding: const EdgeInsets.symmetric(vertical: 16.0),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: [
+            //         GestureDetector(
+            //             onTap: () {
+            //               final profileCubit = context.read<ProfileCubit>();
 
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (bottomSheetContext) =>
-                              ChooseCameraGallery(),
-                        );
-                      },
-                      child: Icon(Icons.abc_outlined)),
-                  GestureDetector(
-                    onTap: () {
-                      // Button 2 action
-                    },
-                    child: IconButton(
-                        onPressed: () {}, icon: Icon(Icons.abc_outlined)),
-                  ),
-                ],
-              ),
-            ),
+            //               showModalBottomSheet(
+            //                 context: context,
+            //                 builder: (bottomSheetContext) =>
+            //                     ChooseCameraGallery(),
+            //               );
+            //             },
+            //             child: Icon(Icons.abc_outlined)),
+            //         GestureDetector(
+            //           onTap: () {
+            //             // Button 2 action
+            //           },
+            //           child: IconButton(
+            //               onPressed: () {}, icon: Icon(Icons.abc_outlined)),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
           ],
         ),
       ),

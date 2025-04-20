@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundImage: NetworkImage(
                     myUser.profilePicture == ''
                         ? 'https://placehold.co/400/png'
-                        : "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${myUser.profilePicture}",
+                        : "${myUser.profilePicture}",
                   ),
                 ),
               ),
@@ -178,9 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  myUser.profilePicture == ''
-                      ? 'https://placehold.co/400/png'
-                      : "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${myUser.profilePicture}",
+                  myUser.profilePicture,
                 ),
               ),
             ),

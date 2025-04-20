@@ -9,6 +9,10 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -16,6 +20,15 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  void _addSection(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return const UserProfileAddSection();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileState>(
@@ -29,14 +42,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SnackBar(content: Text(state.message)),
           );
         }
-        // if (state is ProfilePictureUpdating) {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (_) => FullScreenImagePage(imagePath: state.imagepath),
-        //     ),
-        //   );
-        // }
+        
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -120,8 +126,64 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
 
                         // TODO: Connection status
-                        SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         _buildConnectionsInfo(profile),
+                        SizedBox(height: 8.h),
+                        //this row is the buttons row in the user profile home page
+                        Row(
+                          children: [
+                            Flexible(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _addSection(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                      color: ColorsManager
+                                          .crimsonRed), // White border
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 12),
+                                  backgroundColor:
+                                      Colors.white, // Set your own color here
+                                ),
+                                child: Center(
+                                  // This ensures the text is centered
+                                  child: Text(
+                                    'Add section',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: ColorsManager.darkBurgundy,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, Routes.otherProfileScreen,
+                                    arguments: profile);
+                              },
+                              child: const Icon(Icons.more_horiz_outlined,
+                                  color: Colors.black),
+                              style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(
+                                  side: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.all(5),
+                                backgroundColor: Color(0xFFFAFAFA),
+                                foregroundColor: Colors.black,
+                                fixedSize: Size(50.w, 50.h),
+                              ),
+                            ),
+                          ],
+                        ),
 
                         // Profile biography
                         SizedBox(height: 20.h),
@@ -142,6 +204,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ],
                             ),
                           ),
+                        ],
+
+                        // Experiences section
+                        if (profile.experiences.isNotEmpty) ...[
+                          SizedBox(height: 50.h),
+                          UserExperiences(profile: profile)
+                        ],
+
+                        // Certificates section
+                        if (profile.certifications.isNotEmpty) ...[
+                          UserCerificates(profile: profile),
+                        ],
+
+                        // Skills section
+                        if (profile.skills.isNotEmpty) ...[
+                          UserSkills(profile: profile),
                         ],
                       ],
                     ),
@@ -178,7 +256,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Expanded(
                     child: Center(
                       child: Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        "${state.imagepath}",
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -227,7 +305,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -245,7 +323,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadProfilePicture(image!);
+                                              .uploadProfilePicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -306,7 +384,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Expanded(
                     child: Center(
                       child: Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${state.imagepath}",
+                        "${state.imagepath}",
                         fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -355,7 +433,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           Navigator.pop(
                                               bottomSheetContext); // Close the bottom sheet
                                         },
@@ -373,7 +451,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           }
                                           context
                                               .read<ProfileCubit>()
-                                              .uploadCoverPicture(image!);
+                                              .uploadCoverPicture(image);
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
                                           // print(response.statusCode);
@@ -451,15 +529,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   color: Colors.grey[200], // Soft color for the background
                   image: profile.coverPicture.isNotEmpty
                       ? DecorationImage(
-                          image: NetworkImage(
-                              "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}"),
+                          image: NetworkImage("${profile.coverPicture}"),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
                 child: profile.coverPicture.isNotEmpty
                     ? Image.network(
-                        "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.coverPicture}",
+                        "${profile.coverPicture}",
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -486,8 +563,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
         // Profile image with edit button
         Positioned(
-          left: 20,
-          top: 100,
+          left: 20.w,
+          top: 100.h,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent, // Ensures hit testing works
             onTap: () {
@@ -503,6 +580,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               //   ),
               // );
               // Navigator.pushNamed(context, Routes.profilePictureUpdate,arguments : profile.profilePicture);
+              print(profile.profilePicture);
               BlocProvider.of<ProfileCubit>(context)
                   .updateprofilepicture(profile.profilePicture);
             },
@@ -524,7 +602,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: profile.profilePicture.isNotEmpty
                           ? ClipOval(
                               child: Image.network(
-                                "http://${Platform.isAndroid ? "10.0.2.2" : "localhost"}:3000${profile.profilePicture}",
+                                "${profile.profilePicture}",
                                 fit: BoxFit.cover,
                                 width: 96.r,
                                 height: 96.r,
@@ -589,3 +667,4 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
+

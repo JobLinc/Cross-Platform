@@ -1,3 +1,6 @@
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 
 class UserProfile {
@@ -18,7 +21,7 @@ class UserProfile {
   final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
-  final List<Experience> experience;
+  final List<Experience> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
 
@@ -40,7 +43,7 @@ class UserProfile {
     required this.recentPosts,
     required this.skills,
     required this.education,
-    required this.experience,
+    required this.experiences,
     required this.certifications,
     required this.languages,
   });
@@ -72,14 +75,11 @@ class UserProfile {
               ?.map((edu) => Education.fromJson(edu))
               .toList() ??
           [],
-      experience: (json['experience'] as List<dynamic>?)
+      experiences: (json['experiences'] as List<dynamic>?)
               ?.map((exp) => Experience.fromJson(exp))
               .toList() ??
           [],
-      certifications: (json['certifications'] as List<dynamic>?)
-              ?.map((cert) => Certification.fromJson(cert))
-              .toList() ??
-          [],
+      certifications: _parseCertifications(json['certificates']),
       languages: (json['languages'] as List<dynamic>?)
               ?.map((lang) => Language.fromJson(lang))
               .toList() ??
@@ -87,6 +87,21 @@ class UserProfile {
       email: json['email'] ?? '',
     );
   }
+
+  static List<Certification> _parseCertifications(dynamic certificationsJson) {
+    if (certificationsJson == null) {
+      return [];
+    }
+
+    try {
+      List<dynamic> certList = certificationsJson as List<dynamic>;
+      return certList.map((cert) => Certification.fromJson(cert)).toList();
+    } catch (e) {
+      print('Error parsing certifications: $e');
+      return [];
+    }
+  }
+
   //TODO add PostModel.toJson() before uncommenting
   // Map<String, dynamic> toJson() {
   //   return {
@@ -178,26 +193,6 @@ class UserProfile {
 //   }
 // }
 
-class Skill {
-  final String name;
-
-  Skill({
-    required this.name,
-  });
-
-  factory Skill.fromJson(Map<String, dynamic> json) {
-    return Skill(
-      name: json['name'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-    };
-  }
-}
-
 class Education {
   final String educationId;
   final String school;
@@ -232,82 +227,6 @@ class Education {
       'school': school,
       'degree': degree,
       'fieldOfStudy': fieldOfStudy,
-      'startYear': startYear,
-      if (endYear != null) 'endYear': endYear,
-    };
-  }
-}
-
-class Experience {
-  final String experienceId;
-  final String title;
-  final String company;
-  final int startYear;
-  final int? endYear;
-  final String description;
-
-  Experience({
-    required this.experienceId,
-    required this.title,
-    required this.company,
-    required this.startYear,
-    this.endYear,
-    required this.description,
-  });
-
-  factory Experience.fromJson(Map<String, dynamic> json) {
-    return Experience(
-      experienceId: json['experienceId'] ?? '',
-      title: json['title'] ?? '',
-      company: json['company'] ?? '',
-      startYear: json['startYear'] ?? 0,
-      endYear: json['endYear'],
-      description: json['description'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'experienceId': experienceId,
-      'title': title,
-      'company': company,
-      'startYear': startYear,
-      if (endYear != null) 'endYear': endYear,
-      'description': description,
-    };
-  }
-}
-
-class Certification {
-  final String certificationId;
-  final String name;
-  final String organization;
-  final int startYear;
-  final int? endYear;
-
-  Certification({
-    required this.certificationId,
-    required this.name,
-    required this.organization,
-    required this.startYear,
-    this.endYear,
-  });
-
-  factory Certification.fromJson(Map<String, dynamic> json) {
-    return Certification(
-      certificationId: json['certificationId'] ?? '',
-      name: json['name'] ?? '',
-      organization: json['organization'] ?? '',
-      startYear: json['startYear'] ?? 0,
-      endYear: json['endYear'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'certificationId': certificationId,
-      'name': name,
-      'organization': organization,
       'startYear': startYear,
       if (endYear != null) 'endYear': endYear,
     };

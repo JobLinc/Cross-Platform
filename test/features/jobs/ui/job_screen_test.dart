@@ -169,6 +169,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -250,7 +251,8 @@ void main() {
     createdAt: DateTime.now(),
   );
 
-  final mockJobs = [
+  List<Job> mockJobs = [
+    sampleJob
     //Job(id: 1, title: 'Flutter Developer', company: Company(name: 'Company A')),
     //Job(id: 2, title: 'Backend Engineer', company: Company(name: 'Company B')),
   ];
@@ -281,11 +283,11 @@ void main() {
           return MaterialApp(
             navigatorObservers: [mockObserver],
             routes: {
-              Routes.jobListScreen: (context) => BlocProvider<JobListCubit>(
-                    create: (_) => mockCubit,
-                    child: const Scaffold(
-                      body: JobListScreen(),
-                    ),
+              '/homeScreen': (context) =>
+                  const Scaffold(body: Text('Home Screen')),
+              Routes.jobListScreen: (context) => Scaffold(
+                    appBar: universalAppBar(context: context, selectedIndex: 4,searchBarFunction: (){Navigator.pushNamed(context,Routes.jobSearchScreen);}),
+                    body: JobListScreen(),
                   ),
               Routes.jobSearchScreen: (context) => const JobSearchScreen(),
             },

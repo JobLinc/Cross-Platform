@@ -5,12 +5,14 @@ import 'package:joblinc/core/helpers/countries.dart';
 import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 
 class CityTextFormField extends StatefulWidget {
-  const CityTextFormField({
+  CityTextFormField({
     super.key,
+    this.selectedCity,
     required TextEditingController cityController,
   }) : _cityController = cityController;
 
   final TextEditingController _cityController;
+  String? selectedCity;
 
   @override
   State<CityTextFormField> createState() => _CityTextFormFieldState();
@@ -18,17 +20,37 @@ class CityTextFormField extends StatefulWidget {
 
 class _CityTextFormFieldState extends State<CityTextFormField> {
   String _selectedCountry = '';
+  String? _selectedCity;
   List<String> _availableCities = [];
 
   @override
   void initState() {
     super.initState();
+    // Initialize the selected city if provided
+    if (widget.selectedCity != null && widget.selectedCity!.isNotEmpty) {
+      _selectedCity = widget.selectedCity;
+      widget._cityController.text = _selectedCity!;
+    } else {
+      _selectedCity = null;
+    }
+
     // Listen for country changes
     cityChangedNotifier.addListener(_updateCities);
 
     // Initialize cities if country is already selected
     if (cityChangedNotifier.value.isNotEmpty) {
+      // Save the current selectedCity before it gets reset in _updateCities
+      String? tempSelectedCity = _selectedCity;
       _updateCities();
+
+      // If we had a selectedCity, restore it and add to available cities if needed
+      if (tempSelectedCity != null && tempSelectedCity.isNotEmpty) {
+        if (!_availableCities.contains(tempSelectedCity)) {
+          _availableCities.insert(0, tempSelectedCity);
+        }
+        _selectedCity = tempSelectedCity;
+        widget._cityController.text = tempSelectedCity;
+      }
     }
   }
 
@@ -42,33 +64,17 @@ class _CityTextFormFieldState extends State<CityTextFormField> {
     setState(() {
       _selectedCountry = cityChangedNotifier.value;
 
+      // Reset the selected city and clear the city controller
+      _selectedCity = null;
+      widget._cityController.text = '';
+
       // Get cities for selected country from countries map
       _availableCities = [];
       if (_selectedCountry.isNotEmpty &&
           countries.containsKey(_selectedCountry)) {
         _availableCities = countries[_selectedCountry]!.toList()..sort();
-
-        // If this is Egypt and city is empty, set to Cairo
-        if (_selectedCountry == 'Egypt' &&
-            widget._cityController.text.isEmpty) {
-          // Find Cairo in the list, or use the first city if Cairo isn't available
-          final int cairoIndex = _availableCities.indexOf('Cairo');
-          if (cairoIndex >= 0) {
-            widget._cityController.text = 'Cairo';
-          } else {
-            widget._cityController.text = _availableCities.first;
-          }
-        }
-        // For other countries or when changing country, select the first city
-        else if (_selectedCountry != 'Egypt' ||
-            widget._cityController.text.isEmpty) {
-          if (_availableCities.isNotEmpty) {
-            widget._cityController.text = _availableCities.first;
-          }
-        }
       } else {
         _availableCities = ['Select a country first'];
-        widget._cityController.text = '';
       }
     });
   }
@@ -90,9 +96,8 @@ class _CityTextFormFieldState extends State<CityTextFormField> {
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 24,
       ),
-      value: widget._cityController.text.isNotEmpty
-          ? widget._cityController.text
-          : null,
+      value:
+          _selectedCity, // Ensure _selectedCity is used as the dropdown value
       decoration: const InputDecoration(
         labelText: 'City',
         isDense: true,
@@ -103,7 +108,7 @@ class _CityTextFormFieldState extends State<CityTextFormField> {
       ),
       items: _availableCities.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
-          value: value,
+          value: value, // Correctly set the value for each item
           child: Text(value),
         );
       }).toList(),
@@ -114,11 +119,10 @@ class _CityTextFormFieldState extends State<CityTextFormField> {
         return null;
       },
       onChanged: (String? newValue) {
-        if (newValue != null) {
-          setState(() {
-            widget._cityController.text = newValue;
-          });
-        }
+        setState(() {
+          _selectedCity = newValue; // Update _selectedCity
+          widget._cityController.text = newValue ?? ''; // Sync with controller
+        });
       },
     );
   }
