@@ -19,7 +19,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getSavedJobs() async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getSavedJobs();
+      _jobs = await jobRepo.getSavedJobs()!;
       if (_jobs.isEmpty) {
         emit(MySavedJobsEmpty());
       } else {
@@ -33,7 +33,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getAppliedJobs() async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getAppliedJobs();
+      _jobs = await jobRepo.getAppliedJobs()!;
       if (_jobs.isEmpty) {
         emit(MyAppliedJobsEmpty());
       } else {
@@ -47,7 +47,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getCreatedJobs() async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getCreatedJobs();
+      _jobs = await jobRepo.getCreatedJobs()!;
       if (_jobs.isEmpty) {
         emit(MyCreatedJobsEmpty());
       } else {
@@ -61,7 +61,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getJobApplications() async {
     emit(MyJobsLoading());
     try {
-      _jobApplications = await jobRepo.getJobApplications();
+      _jobApplications = await jobRepo.getJobApplications()!;
       if (_jobApplications.isEmpty) {
         emit(MyJobApplicationsEmpty());
       } else {
@@ -75,7 +75,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getJobApplicants(String jobId) async {
     emit(MyJobsLoading());
     try {
-      _jobApplicants = await jobRepo.getJobApplicants(jobId);
+      _jobApplicants = await jobRepo.getJobApplicants(jobId)!;
       if (_jobApplicants.isEmpty) {
         emit(MyJobApplicantsEmpty());
       } else {
@@ -89,7 +89,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getJobApplicantById(String jobId, String applicantId) async {
     emit(MyJobApplicantLoading());
     try {
-      _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId);
+      _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId)!;
       if (_jobApplicant == null ) {
         emit(MyJobApplicantsEmpty());
       } else {
