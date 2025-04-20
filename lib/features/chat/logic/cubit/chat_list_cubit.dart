@@ -11,15 +11,20 @@ class ChatListCubit extends Cubit<ChatListState> {
   final ChatRepo chatRepo;
   List<Chat> _chats =[];
   ChatDetail? _chatDetail;
-  final Set<String> _selectedIds = {};
+  final Set<String> selectedIds = {};
 
   ChatListCubit(this.chatRepo) : super(ChatListInitial());
 
+  set chats(List<Chat> chats) {
+    _chats = chats;
+    emit(ChatListLoaded(chats: _chats));
+  }
+
   Future<void> getAllChats() async{
     emit(ChatListLoading());
-    _selectedIds.clear();
+    selectedIds.clear();
     try {
-      _chats=await chatRepo.getAllChats();
+      _chats=await chatRepo.getAllChats()!;
       if (_chats.isEmpty){
         emit(ChatListEmpty());
       } else{
@@ -76,16 +81,16 @@ class ChatListCubit extends Cubit<ChatListState> {
 
 
   void toggleSelection(String chatId) {
-    if (_selectedIds.contains(chatId)) {
-      _selectedIds.remove(chatId);
+    if (selectedIds.contains(chatId)) {
+      selectedIds.remove(chatId);
     } else {
-      _selectedIds.add(chatId);
+      selectedIds.add(chatId);
     }
 
-    if (_selectedIds.isNotEmpty) {
+    if (selectedIds.isNotEmpty) {
       emit(ChatListSelected(
         chats: _chats,
-        selectedIds: Set.from(_selectedIds),
+        selectedIds: Set.from(selectedIds),
       ));
     } else {
       emit(ChatListLoaded(chats: _chats));
@@ -94,35 +99,35 @@ class ChatListCubit extends Cubit<ChatListState> {
 
   /// Exit selection mode
   void clearSelection() {
-    _selectedIds.clear();
+    selectedIds.clear();
     emit(ChatListLoaded(chats: _chats));
   }
 
 
   /// Marks selected chats read/unread based on [markRead]
   Future<void> markReadOrUnreadSelected(bool markRead) async {
-    for (var id in _selectedIds) {
+    for (var id in selectedIds) {
       await chatRepo.markReadOrUnread(id);
     }
-    _selectedIds.clear();
+    selectedIds.clear();
     await getAllChats();
   }
 
   /// Deletes selected chats
   Future<void> deleteSelected() async {
-    for (var id in _selectedIds) {
+    for (var id in selectedIds) {
       await chatRepo.deleteChat(id);
     }
-    _selectedIds.clear();
+    selectedIds.clear();
     await getAllChats();
   }
 
   /// Archives selected chats
   Future<void> archiveSelected() async {
-    for (var id in _selectedIds) {
+    for (var id in selectedIds) {
       await chatRepo.archiveChat(id);
     }
-    _selectedIds.clear();
+    selectedIds.clear();
     await getAllChats();
   }
 
