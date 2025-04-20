@@ -41,17 +41,17 @@ class ChatApiService {
       } catch (e) {
         throw Exception("Failed to fetch chat details: $e");
       }
-   // } else {
-      //ChatDetail mockChatDetail = mockChatDetails
-      //     .firstWhere((chatDetail) => chatDetail.chatId == chatId);
-      // final response = Response<dynamic>(
-      //   requestOptions: RequestOptions(path: ''),
-      //   data: mockChatDetail.toJson(),
-      //   statusCode: 200,
-      //   statusMessage: 'OK',
-      // );
-      // return response;
-    //}
+  //  } else {
+  //     ChatDetail mockChatDetail = mockChatDetails
+  //         .firstWhere((chatDetail) => chatDetail.chatId == chatId);
+  //     final response = Response<dynamic>(
+  //       requestOptions: RequestOptions(path: ''),
+  //       data: mockChatDetail.toJson(),
+  //       statusCode: 200,
+  //       statusMessage: 'OK',
+  //     );
+  //     return response;
+  //   }
   }
   
 

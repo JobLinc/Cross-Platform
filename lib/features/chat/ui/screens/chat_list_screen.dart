@@ -15,7 +15,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  List<Chat>? chats ;
+  List<Chat>? chats;
   bool? isSearching = false;
   bool filter = false;
   final searchTextController = TextEditingController();
@@ -31,17 +31,18 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return BlocBuilder<ChatListCubit, ChatListState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100.h),
-            child: chatListAppBar(context),
-          ),
+          // appBar: PreferredSize(
+          //   preferredSize: Size.fromHeight(100.h),
+          //   child: chatListAppBar(context),
+          //),
+          appBar: chatListAppBar(context),
           body: SafeArea(
-            child: Column(children: [
-              SizedBox(height: 10.h),
-              Expanded(child: buildBody(state)),
-            ]
-        
-                ),
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                Expanded(child: buildBody(state)),
+              ],
+            ),
           ),
           bottomNavigationBar: state is ChatListSelected
               ? buildSelectionActions(context, state)
@@ -51,31 +52,129 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-  AppBar chatListAppBar(BuildContext context) {
-    final state = context.watch<ChatListCubit>().state;
-    if (state is ChatListSelected) {
-      // Selection mode AppBar
-      return AppBar(
-        backgroundColor: Colors.red,
-        leading: IconButton(
-          icon: Icon(Icons.close, size: 24.sp),
-          onPressed: () => context.read<ChatListCubit>().clearSelection(),
-        ),
-        title: Text(
-          "${state.selectedIds.length} selected",
-          style: TextStyle(fontSize: 18.sp),
-        ),
-      );
-    }
+  // AppBar chatListAppBar(BuildContext context) {
+  //   final state = context.watch<ChatListCubit>().state;
+  //   if (state is ChatListSelected) {
+  //     // Selection mode AppBar
+  //     return AppBar(
+  //       backgroundColor: Colors.red,
+  //       leading: IconButton(
+  //         icon: Icon(Icons.close, size: 24.sp),
+  //         onPressed: () => context.read<ChatListCubit>().clearSelection(),
+  //       ),
+  //       title: Text(
+  //         "${state.selectedIds.length} selected",
+  //         style: TextStyle(fontSize: 18.sp),
+  //       ),
+  //     );
+  //   }
+  //   return AppBar(
+  //     backgroundColor: const Color.fromARGB(255, 255, 68, 68),
+  //     elevation: 0,
+  //     automaticallyImplyLeading: false,
+  //     toolbarHeight: kToolbarHeight + 40.h,
+  //     flexibleSpace: SafeArea(
+  //       child: SizedBox(
+  //         height: kToolbarHeight + 40.h,
+  //         child: Padding(
+  //           padding: EdgeInsets.symmetric(horizontal: 10.w),
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Row(
+  //                 children: [
+  //                   IconButton(
+  //                     onPressed: () {
+  //                       Navigator.pop(context);
+  //                     },
+  //                     icon: Icon(Icons.arrow_back,
+  //                         size: 24.sp, color: Colors.white),
+  //                   ),
+  //                   Expanded(
+  //                     child: CustomSearchBar(
+  //                         keyName: "chatList_search_textField",
+  //                         text: "search messages",
+  //                         onPress: () {} /*startSearch*/,
+  //                         onTextChange: searchChats /*addSearchedToSearchedList*/,
+  //                         controller: searchTextController),
+  //                   ),
+  //                   IconButton(
+  //                     key: Key("chatList_filter_iconButton"),
+  //                     onPressed: () {
+  //                       setState(() {
+  //                         filter = !filter;
+  //                       });
+  //                       context.read<ChatListCubit>().filteredChats(filter);
+  //                       //filterUnreadChats(filter);
+  //                     },
+  //                     icon: Icon(Icons.filter_list, color: Colors.white),
+  //                   ),
+  //                   MoreOptionsButton(),
+  //                 ],
+  //               ),
+  //               if (searchTextController.text.isEmpty)
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Text(
+  //                       "Recent Conversations",
+  //                       style: TextStyle(
+  //                           fontSize: 14.sp,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: Colors.white),
+  //                     ),
+  //                     TextButton(
+  //                       onPressed: () {},
+  //                       child: Text(
+  //                         "View All",
+  //                         style:
+  //                             TextStyle(fontSize: 12.sp, color: Colors.white70),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  PreferredSizeWidget chatListAppBar(BuildContext context) {
+  final state = context.watch<ChatListCubit>().state;
+
+  // Selection mode AppBar
+  if (state is ChatListSelected) {
     return AppBar(
+      backgroundColor: Colors.red,
+      leading: IconButton(
+        icon: Icon(Icons.close, size: 24.sp),
+        onPressed: () => context.read<ChatListCubit>().clearSelection(),
+      ),
+      title: Text(
+        "${state.selectedIds.length} selected",
+        style: TextStyle(fontSize: 18.sp),
+      ),
+    );
+  }
+
+  final bool showRecentLabel = searchTextController.text.isEmpty;
+  final double extraHeight = showRecentLabel ? 100.h : 0;
+
+  return PreferredSize(
+    preferredSize: Size.fromHeight(kToolbarHeight + extraHeight + 20.h), // Adjusted height
+    child: AppBar(
       backgroundColor: const Color.fromARGB(255, 255, 68, 68),
       elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Row(
                 children: [
@@ -83,58 +182,62 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.arrow_back,
-                        size: 24.sp, color: Colors.white),
+                    icon: Icon(Icons.arrow_back, size: 24.sp, color: Colors.white),
                   ),
                   Expanded(
                     child: CustomSearchBar(
-                        keyName: "chatList_search_textField",
-                        text: "search messages",
-                        onPress: () {} /*startSearch*/,
-                        onTextChange: searchChats /*addSearchedToSearchedList*/,
-                        controller: searchTextController),
+                      keyName: "chatList_search_textField",
+                      text: "search messages",
+                      onPress: () {},
+                      onTextChange: searchChats,
+                      controller: searchTextController,
+                    ),
                   ),
                   IconButton(
-                    key: Key("chatList_filter_iconButton"),
+                    key: const Key("chatList_filter_iconButton"),
                     onPressed: () {
                       setState(() {
                         filter = !filter;
                       });
                       context.read<ChatListCubit>().filteredChats(filter);
-                      //filterUnreadChats(filter);
                     },
-                    icon: Icon(Icons.filter_list, color: Colors.white),
+                    icon: const Icon(Icons.filter_list, color: Colors.white),
                   ),
-                  MoreOptionsButton(),
+                  const MoreOptionsButton(),
                 ],
               ),
-              if (searchTextController.text.isEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Recent Conversations",
-                      style: TextStyle(
+              if (showRecentLabel)
+                Padding(
+                  padding: EdgeInsets.only(top: 4.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Recent Conversations",
+                        style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "View All",
-                        style:
-                            TextStyle(fontSize: 12.sp, color: Colors.white70),
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "View All",
+                          style: TextStyle(fontSize: 12.sp, color: Colors.white70),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget buildBody(ChatListState state) {
     if (state is ChatListLoading) {
@@ -144,7 +247,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       return Center(child: Text('No conversations yet'));
     }
     if (state is ChatListSelected) {
-      chats=state.chats;
+      chats = state.chats;
       return ChatList(
         chats: state.chats,
         selectionMode: true,
@@ -152,7 +255,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       );
     }
     if (state is ChatListLoaded) {
-      chats=state.chats;
+      chats = state.chats;
       return ChatList(chats: state.chats);
     }
     if (state is ChatListSearch) {
@@ -164,10 +267,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
           key: ValueKey(state.filteredChats.length),
           chats: state.filteredChats);
     }
-    if (chats != null){
-      return ChatList(
-        chats:chats!
-      );
+    if (chats != null) {
+      return ChatList(chats: chats!);
     }
     return Center(child: Text('Something went wrong'));
   }
@@ -223,7 +324,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       }
     });
   }
-
+}
   // void filterUnreadChats(bool filter) {
   //   context.read<ChatListCubit>().filteredChats(filter);
   // }
@@ -257,7 +358,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
   //     });
   //   }
   // }
-}
 
   // void stopSearching() {
   //   clearSearch();
