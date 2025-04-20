@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
@@ -8,6 +7,7 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
+import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
@@ -67,6 +67,7 @@ class PostContent extends StatelessWidget {
           imageURL: data.profilePictureURL,
           username: data.username,
           headline: data.headline,
+          senderID: data.senderID,
           action: Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: GestureDetector(
@@ -108,50 +109,19 @@ class PostContent extends StatelessWidget {
   }
 }
 
-class PostBody extends StatefulWidget {
+class PostBody extends StatelessWidget {
   const PostBody({super.key, required this.text});
   final String text;
 
   @override
-  State<PostBody> createState() => _PostBodyState();
-}
-
-class _PostBodyState extends State<PostBody> {
-  bool _expandText = false;
-
-  @override
   Widget build(BuildContext context) {
-    //? might improve the UI for the 'more' used at the end of the paragraph
-    return Wrap(
-      key: Key('post_body_container'),
-      children: [
-        Text(
-          key: Key('post_body_text'),
-          widget.text,
-          maxLines: (_expandText) ? (null) : (3),
-          overflow: (_expandText) ? (null) : (TextOverflow.ellipsis),
-          softWrap: true,
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp),
-        ),
-        _expandText
-            ? SizedBox()
-            : GestureDetector(
-                key: Key('post_body_showMoreButton'),
-                onTap: () {
-                  setState(() {
-                    _expandText = true;
-                  });
-                },
-                child: Text(
-                  'more',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold,
-                    color: ColorsManager.getTextPrimary(context),
-                  ),
-                ),
-              )
-      ],
+    return ReadMoreText(
+      text,
+      trimLines: 3,
+      trimCollapsedText: "more",
+      trimExpandedText: " show less",
+      trimMode: TrimMode.Line,
+      style: TextStyle(color: ColorsManager.getTextPrimary(context)),
     );
   }
 }
@@ -183,7 +153,7 @@ class PostNumerics extends StatelessWidget {
           ),
           Text(
             key: Key('post_numerics_likeCount'),
-            ' ${likesCount.toString()}',
+            ' $likesCount',
             style: TextStyles.font13GrayRegular(context),
           ),
           Spacer(),
@@ -232,15 +202,7 @@ class PostActionBar extends StatelessWidget {
           ),
           IconButton(
             key: Key('post_actionBar_comment'),
-            onPressed: () => {
-              showModalBottomSheet(
-                  showDragHandle: true,
-                  scrollControlDisabledMaxHeightRatio: 0.9,
-                  context: context,
-                  builder: (context) {
-                    return CommentSection();
-                  })
-            },
+            onPressed: () => {showCommentSectionBottomSheet(context)},
             icon: Icon(Icons.comment, color: iconColor),
           ),
           IconButton(
@@ -260,7 +222,7 @@ class PostActionBar extends StatelessWidget {
 }
 
 class PostAttachments extends StatelessWidget {
-  final List<String> attachmentURLs;
+  final List<dynamic> attachmentURLs;
 
   const PostAttachments({super.key, required this.attachmentURLs});
 
