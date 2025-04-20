@@ -94,7 +94,7 @@ void main() {
           .pump(const Duration(milliseconds: 500)); // Animates the SnackBar
 
       // Assert
-      expect(find.text('login success'), findsOneWidget);
+      expect(find.text('Login successful'), findsOneWidget);
     });
 
     testWidgets('shows error SnackBar on LoginFailure',

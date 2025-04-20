@@ -7,6 +7,7 @@ import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
 import 'package:joblinc/features/changepassword/data/services/change_password_api_service.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -102,15 +103,6 @@ Future<void> setupGetIt() async {
       () => RegisterRepo(getIt<RegisterApiService>()));
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
-
-  getIt.registerLazySingleton<ChangePasswordApiService>(
-      () => ChangePasswordApiService(getIt<Dio>()));
-
-  getIt.registerLazySingleton<ChangePasswordRepo>(
-      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
-
-  getIt.registerFactory<ChangePasswordCubit>(
-      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
 
   getIt.registerLazySingleton<ForgetPasswordApiService>(
       () => ForgetPasswordApiService(getIt<Dio>()));
@@ -232,6 +224,18 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ChangeEmailRepo>(
     () => ChangeEmailRepo(getIt<ChangeEmailApiService>()),
   );
+
+  getIt.registerFactory<ChangeEmailCubit>(
+      () => ChangeEmailCubit(getIt<ChangeEmailRepo>()));
+
+  getIt.registerLazySingleton<ChangePasswordApiService>(
+      () => ChangePasswordApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ChangePasswordRepo>(
+      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
+
+  getIt.registerFactory<ChangePasswordCubit>(
+      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
 
   getIt.registerFactory<ChangeUsernameRepo>(
     () => ChangeUsernameRepo(getIt<UpdateUserProfileApiService>()),
