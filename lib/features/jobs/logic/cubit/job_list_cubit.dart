@@ -17,7 +17,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getAllJobs() async {
     emit(JobListLoading());
     try {
-      _jobs = await jobRepo.getAllJobs();
+      _jobs = await jobRepo.getAllJobs()!;
       if (_jobs.isEmpty) {
         emit(JobListEmpty());
       } else {
@@ -31,7 +31,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getSavedJobs() async{
     emit(JobSavedLoading());
     try {
-      _jobs=await jobRepo.getSavedJobs();
+      _jobs=await jobRepo.getSavedJobs()!;
       if (_jobs.isEmpty){
         emit(JobSavedEmpty());
       } else{
@@ -46,7 +46,7 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getAppliedJobs() async{
     emit(JobAppliedLoading());
     try {
-      _jobs=await jobRepo.getAppliedJobs();
+      _jobs=await jobRepo.getAppliedJobs()!;
       if (_jobs.isEmpty){
         emit(JobAppliedEmpty());
       } else{
@@ -61,7 +61,7 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
     emit(JobSearchLoading());
     try {
-      _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter);
+      _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter)!;
       if (_jobs.isEmpty) {
         emit(JobSearchEmpty());
       } else {
@@ -76,8 +76,8 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {
-      List<Job> savedJobs = await jobRepo.getSavedJobs();
-      List<Job> appliedJobs = await jobRepo.getAppliedJobs();
+      List<Job> savedJobs = await jobRepo.getSavedJobs()!;
+      List<Job> appliedJobs = await jobRepo.getAppliedJobs()!;
       emit(JobDetailsLoaded(savedJobs: savedJobs, appliedJobs: appliedJobs));
     } catch (e) {
       emit(JobDetailsErrorLoading(e.toString()));
@@ -87,7 +87,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getAllResumes() async {
     emit(JobResumesLoading());
     try {
-      List<Resume> resumes = await jobRepo.getAllResumes();
+      List<Resume> resumes = await jobRepo.getAllResumes()!;
       emit(JobResumesLoaded(resumes: resumes));
     } catch (e) {
       emit(JobResumesErrorLoading(e.toString()));

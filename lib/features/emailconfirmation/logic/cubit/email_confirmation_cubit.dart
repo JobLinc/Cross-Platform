@@ -64,13 +64,5 @@ class EmailConfirmationCubit extends Cubit<EmailConfirmationState> {
     }
   }
 
-  Future<void> checkEmailConfirmationStatus(String userId) async {
-    emit(EmailConfirmationLoading());
-    try {
-      final isConfirmed = await _repo.checkEmailConfirmationStatus(userId);
-      emit(EmailConfirmationStatusChecked(isConfirmed));
-    } catch (e) {
-      emit(EmailConfirmationFailure(e.toString()));
-    }
-  }
+
 }

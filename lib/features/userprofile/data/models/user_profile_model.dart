@@ -21,7 +21,7 @@ class UserProfile {
   final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
-  final List<Experience> experience;
+  final List<Experience> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
 
@@ -43,7 +43,7 @@ class UserProfile {
     required this.recentPosts,
     required this.skills,
     required this.education,
-    required this.experience,
+    required this.experiences,
     required this.certifications,
     required this.languages,
   });
@@ -75,7 +75,7 @@ class UserProfile {
               ?.map((edu) => Education.fromJson(edu))
               .toList() ??
           [],
-      experience: (json['experience'] as List<dynamic>?)
+      experiences: (json['experiences'] as List<dynamic>?)
               ?.map((exp) => Experience.fromJson(exp))
               .toList() ??
           [],

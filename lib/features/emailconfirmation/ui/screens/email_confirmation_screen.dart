@@ -183,7 +183,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                         ),
                       ],
                     ),
-                    Spacer(),
+                    // Spacer(),
                     SizedBox(
                       width: double.infinity,
                       child: customRoundedButton(
