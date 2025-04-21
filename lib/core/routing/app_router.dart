@@ -5,6 +5,7 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/adminpanel/ui/screens/admin_panel.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -43,7 +44,6 @@ import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
@@ -350,6 +350,11 @@ class AppRouter {
             create: (context) => getIt<ProfileCubit>(),
             child: UserAddSkillScreen(),
           ),
+        );
+
+      case Routes.adminPanel:
+        return MaterialPageRoute(
+          builder: (context) => AdminPanel(),
         );
 
       default:
