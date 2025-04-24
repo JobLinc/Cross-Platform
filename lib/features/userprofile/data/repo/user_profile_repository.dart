@@ -73,10 +73,28 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> deleteProfilePicture() async {
+    try {
+      return await uploadApiService.deleteProfilePicture();
+    } catch (e) {
+      print('Repository error deleting profile picture: $e');
+      rethrow;
+    }
+  }
+
   Future<Response> uploadCoverPicture(File imageFile) async {
     try {
       return await uploadApiService.uploadCoverPicture(imageFile);
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteCoverPicture() async {
+    try {
+      return await uploadApiService.deleteCoverPicture();
+    } catch (e) {
+      print('Repository error deleting cover picture: $e');
       rethrow;
     }
   }

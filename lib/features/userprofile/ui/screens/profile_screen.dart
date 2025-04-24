@@ -42,7 +42,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             SnackBar(content: Text(state.message)),
           );
         }
-        
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -343,7 +342,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             // Button 2 action
                           },
                           child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<ProfileCubit>()
+                                    .deleteProfilePicture();
+                              },
                               icon: Icon(
                                 Icons.delete,
                                 color: ColorsManager.darkBurgundy,
@@ -471,7 +474,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             // Button 2 action
                           },
                           child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<ProfileCubit>()
+                                    .deleteCoverPicture();
+                              },
                               icon: Icon(
                                 Icons.delete,
                                 color: ColorsManager.darkBurgundy,
@@ -667,4 +674,3 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
-

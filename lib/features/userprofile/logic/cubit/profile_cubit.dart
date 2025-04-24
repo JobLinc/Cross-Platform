@@ -69,6 +69,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> deleteProfilePicture() async {
+    // emit(RemoveSkill(skill));
+    try {
+      emit(ProfileUpdating("Deleting profile picture"));
+      final response = await _profileRepository.deleteProfilePicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
   Future<void> uploadCoverPicture(File imageFile) async {
     // UserProfileUpdateModel updateData =
     //     UserProfileUpdateModel(profilePicture: imageFile.path);
@@ -87,6 +109,27 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } catch (e) {
       emit(ProfileError('Error: $e'));
+    }
+  }
+
+  Future<void> deleteCoverPicture() async {
+    try {
+      emit(ProfileUpdating("Deleting cover picture"));
+      final response = await _profileRepository.deleteCoverPicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete cover picture.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting cover picture");
+        emit(ProfileError('Error: $e'));
+      }
     }
   }
 

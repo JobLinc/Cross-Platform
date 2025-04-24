@@ -67,10 +67,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = Platform.isAndroid
+  final baseUrl =/* Platform.isAndroid
       ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api';
-  //'https://joblinc.me:3000/api';
+      : 'http://localhost:3000/api';*/
+  'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
