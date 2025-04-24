@@ -71,23 +71,21 @@ class othersProfileScreen extends StatelessWidget {
                       Flexible(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Your action here
                             Navigator.pushNamed(context, Routes.chatScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             side: BorderSide(
                                 color:
-                                    ColorsManager.darkBurgundy), // White border
+                                    ColorsManager.darkBurgundy), 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 24, vertical: 12),
                             backgroundColor:
-                                Colors.white, // Set your own color here
+                                Colors.white, 
                           ),
                           child: Center(
-                            // This ensures the text is centered
                             child: Text(
                               'Message',
                               style: TextStyle(

@@ -29,7 +29,6 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers
     certificateNameController = TextEditingController();
     issuingOrganizationController = TextEditingController();
     issueDateController = TextEditingController();
@@ -58,14 +57,14 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.black, // Header background color
-              onPrimary: Colors.white, // Header text color
-              onSurface: Colors.black, // Body text color
+              primary: Colors.black, 
+              onPrimary: Colors.white, 
+              onSurface: Colors.black, 
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    Colors.black, // Button text color for "OK" and "Cancel"
+                    Colors.black, 
               ),
             ),
           ),
@@ -76,21 +75,18 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
 
     if (selectedDate != null) {
       setState(() {
-        // Store the actual selected date
         if (isIssueDate) {
           selectedIssueDate = selectedDate;
         } else {
           selectedExpirationDate = selectedDate;
         }
 
-        // Format as "Month Year" (e.g., "March 2023") for display
         final monthName = _getMonthName(selectedDate.month);
         controller.text = "$monthName ${selectedDate.year}";
       });
     }
   }
 
-  // Helper method to get the month name
   String _getMonthName(int month) {
     const monthNames = [
       "January",

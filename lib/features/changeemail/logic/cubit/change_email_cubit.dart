@@ -14,7 +14,7 @@ class ChangeEmailCubit extends Cubit<ChangeEmailState> {
 
     try {
       // Call repository to update email
-      final response = await _changeEmailRepo.updateEmail(newEmail);
+      await _changeEmailRepo.updateEmail(newEmail);
 
       // Update the auth info with the new email and set confirmed to false
       final AuthService authService = getIt<AuthService>();

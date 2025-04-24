@@ -76,6 +76,67 @@ class Resume {
   }
 }
 
+
+
+class Applicant {
+  String id;
+  String firstname;
+  String lastname;
+  String username;
+  String email;
+  String country;
+  String city;
+  String phoneNumber;
+
+  Applicant({
+    required this.id,
+    required this.firstname,
+    required this.lastname,
+    required this.username,
+    required this.email,
+    required this.country,
+    required this.city,
+    required this.phoneNumber,
+  });
+
+   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstname': firstname,
+      'lastname': lastname,
+      'username': username,
+      'email': email,
+      'country': country,
+      'city': city,
+      'phoneNumber': phoneNumber,
+    };
+  }
+
+  factory Applicant.fromJson(Map<String, dynamic> json) {
+    return Applicant(
+      id: json['id'] as String,
+      firstname: json['firstname'] as String,
+      lastname: json['lastname'] as String,
+      username: json['username'] as String,
+      email: json['email'] as String,
+      country: json['country'] as String,
+      city: json['city'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+    );
+  }
+}
+
+Applicant mockMainApplicant = Applicant(
+  id: "user_001",
+  firstname: "abdelrahman",
+  lastname: "sameh",
+  username: "abdelrahman388",
+  email: "abdelrahmansameh092@gmail.com",
+  country: "USA",
+  city: "New York",
+  phoneNumber: "+1234567890",
+);
+
 List<Resume> mockResumes = [
   Resume(
     id: 'resume1',
@@ -270,62 +331,3 @@ List<JobApplication> mockJobApplicants = [
 //   status: 'Pending',
 //   createdAt: DateTime.now(),
 // );
-
-class Applicant {
-  String id;
-  String firstname;
-  String lastname;
-  String username;
-  String email;
-  String country;
-  String city;
-  String phoneNumber;
-
-  Applicant({
-    required this.id,
-    required this.firstname,
-    required this.lastname,
-    required this.username,
-    required this.email,
-    required this.country,
-    required this.city,
-    required this.phoneNumber,
-  });
-
-   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'firstname': firstname,
-      'lastname': lastname,
-      'username': username,
-      'email': email,
-      'country': country,
-      'city': city,
-      'phoneNumber': phoneNumber,
-    };
-  }
-
-  factory Applicant.fromJson(Map<String, dynamic> json) {
-    return Applicant(
-      id: json['id'] as String,
-      firstname: json['firstname'] as String,
-      lastname: json['lastname'] as String,
-      username: json['username'] as String,
-      email: json['email'] as String,
-      country: json['country'] as String,
-      city: json['city'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-    );
-  }
-}
-
-Applicant mockMainApplicant = Applicant(
-  id: "user_001",
-  firstname: "abdelrahman",
-  lastname: "sameh",
-  username: "abdelrahman388",
-  email: "abdelrahmansameh092@gmail.com",
-  country: "USA",
-  city: "New York",
-  phoneNumber: "+1234567890",
-);
