@@ -38,7 +38,6 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
     //       widget.jobApplication.applicant.id,
     //     );
     context.read<MyJobsCubit>().emitMyJobApplicantLoaded(widget.jobApplication);
-
   }
 
   @override
@@ -101,182 +100,59 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is MyJobApplicantLoaded) {
                   status = state.jobApplicant.status;
-                  jobApp =state.jobApplicant;
-                  print(status);
-                  if (status == "Pending" || status == "Viewed") {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await context.read<MyJobsCubit>().acceptJobApplication(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                              context.read<MyJobsCubit>().getJobApplicantById(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            child: Text("Accept" ,style: TextStyle(color: ColorsManager.getTextPrimary(context),),)
-                          ),
-                        ),
-                        SizedBox(width: 100.w,),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await context.read<MyJobsCubit>().rejectJobApplication(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                              context.read<MyJobsCubit>().getJobApplicantById(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                            child: Text("Reject",style: TextStyle(color: ColorsManager.getTextPrimary(context),),),
-                          ),
-                        ),
-                      ],
-                    );
-                  } else if (status == "Rejected") {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.red, width: 2),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Applicant has been Rejected",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else if (status == "Accepted") {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.green, width: 2),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Applicant has been Accepted",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return const Center(child: Text("Something went wrong"));
-                  }
-                } else {
-                  if (status == "Pending" || status == "Viewed") {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await context.read<MyJobsCubit>().acceptJobApplication(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                              await context.read<MyJobsCubit>().getJobApplicantById(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            child: Text("Accept" ,style: TextStyle(color: ColorsManager.getTextPrimary(context),),)
-                          ),
-                        ),
-                        SizedBox(width: 100.w,),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await context.read<MyJobsCubit>().rejectJobApplication(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                              await context.read<MyJobsCubit>().getJobApplicantById(
-                                    jobApp.job.id!,
-                                    jobApp.applicant.id,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                            child: Text("Reject",style: TextStyle(color: ColorsManager.getTextPrimary(context),),),
-                          ),
-                        ),
-                      ],
-                    );
-                  } else if (status == "Rejected") {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.red, width: 2),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Applicant has been Rejected",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else if (status == "Accepted") {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Container(
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.green, width: 2),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Applicant has been Accepted",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return const Center(child: Text("Something went wrong"));
-                  }
                 }
+                switch (status) {
+                  case 'Pending':
+                  case 'Viewed':
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => context
+                                .read<MyJobsCubit>()
+                                .acceptJobApplication(
+                                    widget.jobApplication.job.id!,
+                                    widget.jobApplication.applicant.id),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green),
+                            child: Text(
+                              'Accept',
+                              style: TextStyle(
+                                color: ColorsManager.getTextPrimary(context),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 25.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => context
+                                .read<MyJobsCubit>()
+                                .rejectJobApplication(
+                                    widget.jobApplication.job.id!,
+                                    widget.jobApplication.applicant.id),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            child: Text(
+                              'Reject',
+                              style: TextStyle(
+                                color: ColorsManager.getTextPrimary(context),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  case 'Accepted':
+                    return _buildStatusBanner(
+                        "Applicant has been Accepted", Colors.green);
+                  case 'Rejected':
+                    return _buildStatusBanner(
+                        "Applicant has been Rejected", Colors.red);
+                  default:
+                    return SizedBox();
+                }
+                
               },
             )
           ],
@@ -300,6 +176,28 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
         const SnackBar(content: Text("Could not open resume.")),
       );
     }
+  }
+
+  Widget _buildStatusBanner(String text, Color borderColor) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: borderColor, width: 2),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: borderColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 16.sp,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildResumeCard(BuildContext context, Resume resume) {
@@ -365,7 +263,249 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
 }
 
 
-// class JobApplicantList extends StatelessWidget {
+
+class JobApplicantList extends StatelessWidget {
+  final List<JobApplication> jobApplications;
+
+  const JobApplicantList({
+    Key? key,
+    required this.jobApplications,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white70,
+      child: ListView.builder(
+        itemCount: jobApplications.length,
+        itemBuilder: (context, index) {
+          final jobApp = jobApplications[index];
+          return BlocProvider(
+              create: (context) => getIt<MyJobsCubit>(),
+              child: JobApplicantCard(
+                jobApplication: jobApp,
+              ));
+        },
+      ),
+    );
+  }
+}
+//   setState(() {
+                //     status = state.jobApplicant.status;
+                //     jobApp = state.jobApplicant;
+                //   });
+                //   print(status);
+                //   if (status == "Pending" || status == "Viewed") {
+                //     return Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Expanded(
+                //           child: ElevatedButton(
+                //               onPressed: () async {
+                //                 await context
+                //                     .read<MyJobsCubit>()
+                //                     .acceptJobApplication(
+                //                       jobApp.job.id!,
+                //                       jobApp.applicant.id,
+                //                     );
+                //                 context.read<MyJobsCubit>().getJobApplicantById(
+                //                       jobApp.job.id!,
+                //                       jobApp.applicant.id,
+                //                     );
+                //               },
+                //               style: ElevatedButton.styleFrom(
+                //                   backgroundColor: Colors.green),
+                //               child: Text(
+                //                 "Accept",
+                //                 style: TextStyle(
+                //                   color: ColorsManager.getTextPrimary(context),
+                //                 ),
+                //               )),
+                //         ),
+                //         SizedBox(
+                //           width: 100.w,
+                //         ),
+                //         Expanded(
+                //           child: ElevatedButton(
+                //             onPressed: () async {
+                //               await context
+                //                   .read<MyJobsCubit>()
+                //                   .rejectJobApplication(
+                //                     jobApp.job.id!,
+                //                     jobApp.applicant.id,
+                //                   );
+                //               context.read<MyJobsCubit>().getJobApplicantById(
+                //                     jobApp.job.id!,
+                //                     jobApp.applicant.id,
+                //                   );
+                //             },
+                //             style: ElevatedButton.styleFrom(
+                //                 backgroundColor: Colors.red),
+                //             child: Text(
+                //               "Reject",
+                //               style: TextStyle(
+                //                 color: ColorsManager.getTextPrimary(context),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ],
+                //     );
+                //   } else if (status == "Rejected") {
+                //     return SizedBox(
+                //       width: double.infinity,
+                //       child: Container(
+                //         padding: EdgeInsets.all(8.w),
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           border: Border.all(color: Colors.red, width: 2),
+                //           borderRadius: BorderRadius.circular(12.r),
+                //         ),
+                //         child: Center(
+                //           child: Text(
+                //             "Applicant has been Rejected",
+                //             style: TextStyle(
+                //               color: Colors.red,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 16.sp,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   } else if (status == "Accepted") {
+                //     return SizedBox(
+                //       width: double.infinity,
+                //       child: Container(
+                //         padding: EdgeInsets.all(8.w),
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           border: Border.all(color: Colors.green, width: 2),
+                //           borderRadius: BorderRadius.circular(12.r),
+                //         ),
+                //         child: Center(
+                //           child: Text(
+                //             "Applicant has been Accepted",
+                //             style: TextStyle(
+                //               color: Colors.green,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 16.sp,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   } else {
+                //     return const Center(child: Text("Something went wrong"));
+                //   }
+                // } else {
+                //   if (status == "Pending" || status == "Viewed") {
+                //     return Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Expanded(
+                //           child: ElevatedButton(
+                //               onPressed: () async {
+                //                 await context
+                //                     .read<MyJobsCubit>()
+                //                     .acceptJobApplication(
+                //                       jobApp.job.id!,
+                //                       jobApp.applicant.id,
+                //                     );
+                //                 await context
+                //                     .read<MyJobsCubit>()
+                //                     .getJobApplicantById(
+                //                       jobApp.job.id!,
+                //                       jobApp.applicant.id,
+                //                     );
+                //               },
+                //               style: ElevatedButton.styleFrom(
+                //                   backgroundColor: Colors.green),
+                //               child: Text(
+                //                 "Accept",
+                // style: TextStyle(
+                //   color: ColorsManager.getTextPrimary(context),
+                // ),
+                //               )),
+                //         ),
+                //         SizedBox(
+                //           width: 100.w,
+                //         ),
+                //         Expanded(
+                //           child: ElevatedButton(
+                //             onPressed: () async {
+                //               await context
+                //                   .read<MyJobsCubit>()
+                //                   .rejectJobApplication(
+                //                     jobApp.job.id!,
+                //                     jobApp.applicant.id,
+                //                   );
+                //               await context
+                //                   .read<MyJobsCubit>()
+                //                   .getJobApplicantById(
+                //                     jobApp.job.id!,
+                //                     jobApp.applicant.id,
+                //                   );
+                //             },
+                //             style: ElevatedButton.styleFrom(
+                //                 backgroundColor: Colors.red),
+                //             child: Text(
+                //               "Reject",
+                //               style: TextStyle(
+                //                 color: ColorsManager.getTextPrimary(context),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ],
+                //     );
+                //   } else if (status == "Rejected") {
+                //     return SizedBox(
+                //       width: double.infinity,
+                //       child: Container(
+                //         padding: EdgeInsets.all(8.w),
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           border: Border.all(color: Colors.red, width: 2),
+                //           borderRadius: BorderRadius.circular(12.r),
+                //         ),
+                //         child: Center(
+                //           child: Text(
+                //             "Applicant has been Rejected",
+                //             style: TextStyle(
+                //               color: Colors.red,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 16.sp,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   } else if (status == "Accepted") {
+                //     return SizedBox(
+                //       width: double.infinity,
+                //       child: Container(
+                //         padding: EdgeInsets.all(8.w),
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           border: Border.all(color: Colors.green, width: 2),
+                //           borderRadius: BorderRadius.circular(12.r),
+                //         ),
+                //         child: Center(
+                //           child: Text(
+                //             "Applicant has been Accepted",
+                //             style: TextStyle(
+                //               color: Colors.green,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 16.sp,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     );
+                //   } else {
+                //     return const Center(child: Text("Something went wrong"));
+                //   }// class JobApplicantList extends StatelessWidget {
 //   final List<JobApplication> jobApplications;
 
 //   const JobApplicantList({
@@ -389,18 +529,6 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
 //     );
 //   }
 // }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import 'dart:io';
 // import 'package:flutter/material.dart';
@@ -832,30 +960,3 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
 //     );
 //   }
 // }
-
-class JobApplicantList extends StatelessWidget {
-  final List<JobApplication> jobApplications;
-
-  const JobApplicantList({
-    Key? key,
-    required this.jobApplications,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white70,
-      child: ListView.builder(
-        itemCount: jobApplications.length,
-        itemBuilder: (context, index) {
-          final jobApp = jobApplications[index];
-          return BlocProvider(
-              create: (context) => getIt<MyJobsCubit>(),
-              child: JobApplicantCard(
-                jobApplication: jobApp,
-              ));
-        },
-      ),
-    );
-  }
-}

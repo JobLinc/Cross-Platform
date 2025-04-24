@@ -8,7 +8,7 @@ class JobApiService {
   final Dio _dio;
 
   JobApiService(this._dio);
-  final bool apiEndPointWorking = false;
+  final bool apiEndPointWorking = true;
 
   /// Retrieves certain jobs.
   Future<Response> getCompanyNames() async {
@@ -33,25 +33,7 @@ class JobApiService {
   }
 
   /// Retrieves all available jobs.
-  // Future<Response> getAllJobs() async {
-  //   if (apiEndPointWorking) {
-  //     try {
-  //       final response = await _dio.get('/job/all');
-  //       return response;
-  //     } catch (e) {
-  //       rethrow;
-  //     }
-  //   } else {
-  //     await Future.delayed(Duration(seconds: 1));
-  //     final response = Response<dynamic>(
-  //       requestOptions: RequestOptions(path: ''),
-  //       data:[] ,//mockJobs.map((job) => job.toJson()).toList(),
-  //       statusCode: 200,
-  //       statusMessage: 'OK',
-  //     );
-  //     return response;
-  //   }
-  // }
+ 
 
   Future<Response> getAllJobs({Map<String, dynamic>? queryParams}) async {
     if (apiEndPointWorking) {
@@ -60,6 +42,7 @@ class JobApiService {
         '/jobs',
         queryParameters: queryParams,
       );
+      print(queryParams);
       print(response);
       return response;
     } else {
@@ -138,8 +121,6 @@ class JobApiService {
     }
   }
 
-  
-
   Future<Response> getJobApplicants(String jobId) async {
     if (apiEndPointWorking) {
       try {
@@ -170,7 +151,8 @@ class JobApiService {
       }
     } else {
       await Future.delayed(Duration(milliseconds: 300));
-      JobApplication jobApplicant=jobApplicants.firstWhere((jobApp)=>(jobApp.job.id==jobId && jobApp.applicant.id==applicantId));
+      JobApplication jobApplicant = jobApplicants.firstWhere((jobApp) =>
+          (jobApp.job.id == jobId && jobApp.applicant.id == applicantId));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
         data: jobApplicant.toJson(),
@@ -193,7 +175,9 @@ class JobApiService {
       await Future.delayed(Duration(milliseconds: 300));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data:jobApplications.map((job) => job.toJson()).toList(), //mockJobApplications.map((job) => job.toJson()).toList(),
+        data: jobApplications
+            .map((job) => job.toJson())
+            .toList(), //mockJobApplications.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -306,19 +290,29 @@ class JobApiService {
         rethrow;
       }
     } else {
-      jobApplicants.firstWhere((jobApp)=> jobApp.applicant.id==applicantId).status="Accepted";
+      jobApplicants
+          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+          .status = "Accepted";
+      print(jobApplicants
+          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+          .status);
     }
   }
 
   Future<void> rejectJobApplication(String jobId, String applicantId) async {
     if (apiEndPointWorking) {
       try {
-        await _dio.post('/job/$jobId/applicants/$applicantId/accept');
+        await _dio.post('/job/$jobId/applicants/$applicantId/reject');
       } catch (e) {
         rethrow;
       }
     } else {
-      jobApplicants.firstWhere((jobApp)=> jobApp.applicant.id==applicantId).status="Rejected";
+      jobApplicants
+          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+          .status = "Rejected";
+      print(jobApplicants
+          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+          .status);
     }
   }
 
@@ -368,9 +362,6 @@ class JobApiService {
   }
 }
 
-
-
-
 List<JobApplication> jobApplications = [
   JobApplication(
     applicant: mockMainApplicant,
@@ -386,7 +377,8 @@ List<JobApplication> jobApplications = [
         overview: "A leading provider of innovative tech solutions.",
         urlSlug: "innovatech-solutions",
         size: "500+ employees",
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+        logo:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
         followers: 1200,
       ),
       description: "Lead development of scalable software solutions.",
@@ -449,7 +441,8 @@ List<JobApplication> jobApplicants = [
         overview: "Experts in creative digital marketing.",
         urlSlug: "creativeads",
         size: "150 employees",
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+        logo:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
         followers: 800,
       ),
       description: "Develop and manage digital marketing campaigns.",
@@ -507,7 +500,8 @@ List<JobApplication> jobApplicants = [
         overview: "Experts in creative digital marketing.",
         urlSlug: "creativeads",
         size: "150 employees",
-        logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+        logo:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
         followers: 800,
       ),
       description: "Develop and manage digital marketing campaigns.",
@@ -560,7 +554,8 @@ final createdJobs = [
       overview: "Experts in creative digital marketing.",
       urlSlug: "creativeads",
       size: "150 employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 800,
     ),
     description: "Develop and manage digital marketing campaigns.",
@@ -601,7 +596,8 @@ final appliedJobs = [
       overview: "A leading provider of innovative tech solutions.",
       urlSlug: "innovatech-solutions",
       size: "500+ employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 1200,
     ),
     description: "Lead development of scalable software solutions.",
@@ -642,7 +638,8 @@ final savedJobs = [
       overview: "A leading provider of innovative tech solutions.",
       urlSlug: "innovatech-solutions",
       size: "500+ employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 1200,
     ),
     description: "Lead development of scalable software solutions.",
@@ -681,7 +678,8 @@ final jobs = [
       overview: "A leading provider of innovative tech solutions.",
       urlSlug: "innovatech-solutions",
       size: "500+ employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 1200,
     ),
     description: "Lead development of scalable software solutions.",
@@ -717,7 +715,8 @@ final jobs = [
       overview: "Experts in creative digital marketing.",
       urlSlug: "creativeads",
       size: "150 employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 800,
     ),
     description: "Develop and manage digital marketing campaigns.",
@@ -753,7 +752,8 @@ final jobs = [
       overview: "Managing global ventures and business strategies.",
       urlSlug: "global-ventures",
       size: "1000+ employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 3000,
     ),
     description: "Oversee product lifecycle and strategy.",
@@ -789,7 +789,8 @@ final jobs = [
       overview: "Web development agency specializing in frontend work.",
       urlSlug: "webworks",
       size: "50 employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 400,
     ),
     description: "Build responsive web interfaces with React.",
@@ -825,7 +826,8 @@ final jobs = [
       overview: "Data analytics firm helping businesses thrive.",
       urlSlug: "datacorp",
       size: "300 employees",
-      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+      logo:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
       followers: 950,
     ),
     description: "Analyze datasets and produce actionable insights.",
@@ -850,7 +852,25 @@ final jobs = [
     createdAt: DateTime(2025, 02, 28),
   ),
 ];
-
+ // Future<Response> getAllJobs() async {
+  //   if (apiEndPointWorking) {
+  //     try {
+  //       final response = await _dio.get('/job/all');
+  //       return response;
+  //     } catch (e) {
+  //       rethrow;
+  //     }
+  //   } else {
+  //     await Future.delayed(Duration(seconds: 1));
+  //     final response = Response<dynamic>(
+  //       requestOptions: RequestOptions(path: ''),
+  //       data:[] ,//mockJobs.map((job) => job.toJson()).toList(),
+  //       statusCode: 200,
+  //       statusMessage: 'OK',
+  //     );
+  //     return response;
+  //   }
+  // }
 // Future<Response> getSearchedFilteredJobs(
   //     String keyword, String? location, Filter? filter) async {
   //   if (apiEndPointWorking) {

@@ -100,12 +100,14 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  acceptJobApplication(String jobId, String aaplicantId) async {
-    await jobRepo.acceptJobApplication(jobId, aaplicantId);
+  acceptJobApplication(String jobId, String applicantId) async {
+    await jobRepo.acceptJobApplication(jobId, applicantId);
+    await getJobApplicantById(jobId, applicantId);
   }
 
-  rejectJobApplication(String jobId, String aaplicantId) async {
-    await jobRepo.rejectJobApplication(jobId, aaplicantId);
+  rejectJobApplication(String jobId, String applicantId) async {
+    await jobRepo.rejectJobApplication(jobId, applicantId);
+    await getJobApplicantById(jobId, applicantId);
   }
 
   emitMyJobApplicantLoaded(JobApplication jobApplicant){
