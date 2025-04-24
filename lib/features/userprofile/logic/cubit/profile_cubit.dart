@@ -119,8 +119,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addCertification(certification);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel picModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
         emit(CertificateAdded("Certificate Added"));
         // getUserProfile();
@@ -154,8 +153,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       if (response.statusCode == 200) {
         // Optionally update profile or UI after deletion
-        UserProfileUpdateModel picModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
         // getUserProfile();
       } else {
@@ -186,8 +184,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addSkill(skill);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel skillModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel skillModel = UserProfileUpdateModel();
         updateUserProfile(skillModel);
         emit(SkillAdded("Skill Added"));
       } else {
@@ -212,8 +209,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addExperience(experience);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel experienceModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
         updateUserProfile(experienceModel);
         emit(ExperienceAdded("Experience Added"));
       } else {
@@ -244,8 +240,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.deleteExperience(experienceId);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel expModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
         updateUserProfile(expModel);
       } else {
         if (!isClosed) {
