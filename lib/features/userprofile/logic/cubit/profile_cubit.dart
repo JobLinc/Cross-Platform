@@ -199,8 +199,26 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removeSkill(String skill) {
+  void removeSkill(String skillid) async {
     // emit(RemoveSkill(skill));
+    try {
+      emit(ProfileUpdating("Deleting skill"));
+      final response = await _profileRepository.deleteSkill(skillid);
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
   }
 
   void addExperience(Experience experience) async {

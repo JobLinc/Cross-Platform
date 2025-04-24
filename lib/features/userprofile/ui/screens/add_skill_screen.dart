@@ -57,10 +57,8 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
       final level = skillLevels.indexOf(selectedSkillLevel!) + 1;
 
       // Create skill model
-      final Skill skillToAdd = Skill(
-        name: skillNameController.text,
-        level: level,
-      );
+      final Skill skillToAdd =
+          Skill(name: skillNameController.text, level: level, id: "");
 
       print('Saving skill with: ${skillToAdd.toJson()}');
 
