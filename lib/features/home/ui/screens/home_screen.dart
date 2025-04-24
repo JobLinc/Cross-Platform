@@ -59,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(
-                    myUser.profilePicture == ''
+                    (myUser.profilePicture == null || myUser.profilePicture == '')
                         ? 'https://placehold.co/400/png'
-                        : "${myUser.profilePicture}",
+                        : myUser.profilePicture!,
                   ),
                 ),
               ),
@@ -157,18 +157,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
               accountName: Text(
-                '${myUser.firstname} ${myUser.lastname}',
+                '${myUser.firstname ?? ''} ${myUser.lastname ?? ''}',
                 style:
                     TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               accountEmail: Text(
-                myUser.email,
+                myUser.email ?? '',
                 style:
                     TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  myUser.profilePicture,
+                  (myUser.profilePicture == null || myUser.profilePicture == '')
+                      ? 'https://placehold.co/400/png'
+                      : myUser.profilePicture!,
                 ),
               ),
             ),
