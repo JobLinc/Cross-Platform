@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 
@@ -22,6 +23,14 @@ class UserConnectionsRepository {
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
       throw Exception('Error mapping invitations: $e');
+    }
+  }
+  Future<Response> changeConnectionStatus(String userId, String status) async {
+    try {
+      return await _apiService.changeConnectionStatus(userId, status);
+    } catch (e) {
+      print('Repository error changing connection status: $e');
+      rethrow;
     }
   }
 }
