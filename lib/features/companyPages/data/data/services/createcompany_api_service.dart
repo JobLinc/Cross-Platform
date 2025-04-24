@@ -61,11 +61,9 @@ class CreateCompanyApiService {
       return CreateCompanyResponse.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response != null && e.response!.data is Map) {
-        final errorResponse = {
-          "message": _handleDioError(e),
-          "errorCode": e.response!.statusCode,
-        };
-        print(errorResponse);
+        final message = _handleDioError(e);
+        print('API Error Message: $message');
+        throw Exception(message); // <-- Throw only the message
       }
       rethrow;
     } catch (e) {

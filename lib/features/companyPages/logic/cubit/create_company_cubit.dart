@@ -46,10 +46,16 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
           website: companyToAdd.website!);
       mockCompanies.add(companyToAdd);
 
-      onCompanyCreated(companyToAdd);
       emit(CreateCompanySuccess());
+      onCompanyCreated(companyToAdd);
     } catch (e) {
-      emit(CreateCompanyFailure(e.toString()));
+      if (!isClosed) {
+        final errorMsg = e is Exception
+            ? e.toString().replaceFirst('Exception:', '').trim()
+            : 'Unknown error';
+        print('CreateCompanyFailure: $errorMsg');
+        emit(CreateCompanyFailure(errorMsg));
+      }
     }
   }
 }
