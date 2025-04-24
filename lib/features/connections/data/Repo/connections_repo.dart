@@ -1,6 +1,5 @@
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
-import 'package:joblinc/features/connections/data/models/pendingconnectionsdemomodel.dart';
 
 class UserConnectionsRepository {
   final UserConnectionsApiService _apiService;
@@ -17,10 +16,10 @@ class UserConnectionsRepository {
     }
   }
 
-  Future<List<PendingInvitation>> getInvitations() async {
+  Future<List<UserConnection>> getInvitations() async {
     try {
       final data = await _apiService.getInvitations();
-      return data.map((json) => PendingInvitation.fromJson(json)).toList();
+      return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
       throw Exception('Error mapping invitations: $e');
     }
