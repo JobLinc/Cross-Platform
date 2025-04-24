@@ -63,15 +63,15 @@ class ConnectionsListView extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          // connection.time_of_connections != null
-                          //     ? Text(
-                          //         "Connected on: ${DateFormat.yMMMd().format(connection.time_of_connections!)}",
-                          //         style: TextStyle(
-                          //             fontSize: 18.sp, color: Colors.grey[600]),
-                          //         maxLines: 2,
-                          //         overflow: TextOverflow.ellipsis,
-                          //       )
-                          //     : SizedBox.shrink(),
+                          connection.time_of_connections != null
+                              ? Text(
+                                  "Connected on: ${DateFormat.yMMMd().format(connection.time_of_connections!)}",
+                                  style: TextStyle(
+                                      fontSize: 18.sp, color: Colors.grey[600]),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox.shrink(),
                           // BlocProvider.of<ConnectionsCubit>(context)
                           //         .connectedOnappear
                           //     ? Text(
