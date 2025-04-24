@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/data/models/pendingconnectionsdemomodel.dart';
@@ -8,10 +10,10 @@ import 'package:joblinc/features/connections/data/models/pendingconnectionsdemom
 part 'connections_state.dart';
 
 class ConnectionsCubit extends Cubit<ConnectionsState> {
-  //final UserConnectionsRepository connectionsRepository;
-  final MockConnectionApiService apiService;
+  final UserConnectionsRepository connectionsRepository;
+  //final MockConnectionApiService apiService;
 
-  ConnectionsCubit(this.apiService) : super(ConnectionsInitial());
+  ConnectionsCubit(this.connectionsRepository) : super(ConnectionsInitial());
   late List<UserConnection> connections;
   bool recentlyAddedSelected = true;
   bool firstNameSelected = false;
@@ -21,22 +23,25 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     emit(ConnectionsInitial());
 
     try {
-      final response = await apiService.getConnections();
-
-      if (response.statusCode == 200) {
-        final fetchedconnections = (response.data as List)
-            .map(
-                (item) => UserConnection.fromJson(item as Map<String, dynamic>))
-            .toList();
-        connections = fetchedconnections.reversed.toList();
-        if (!isClosed) {
-          emit(ConnectionsLoaded(fetchedconnections.reversed.toList()));
-        }
-      } else {
-        if (!isClosed) {
-          emit(ConnectionsError("Failed to load connections"));
-        }
+      final response = await connectionsRepository.getConnections();
+      if (!isClosed) {
+        emit(ConnectionsLoaded(response));
+        connections = response;
       }
+      // if (response.statusCode == 200) {
+      //   final fetchedconnections = (response.data as List)
+      //       .map(
+      //           (item) => UserConnection.fromJson(item as Map<String, dynamic>))
+      //       .toList();
+      //   connections = fetchedconnections.reversed.toList();
+      //   if (!isClosed) {
+      //     emit(ConnectionsLoaded(fetchedconnections.reversed.toList()));
+      //   }
+      // } else {
+      //   if (!isClosed) {
+      //     emit(ConnectionsError("Failed to load connections"));
+      //   }
+      // }
     } catch (error) {
       if (!isClosed) {
         emit(ConnectionsError("An error occurred: $error"));
@@ -44,9 +49,31 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
   }
 
-  void removeConnection(UserConnection connection) {
-    apiService.removeConnection(connection.userId);
-    fetchConnections();
+  void removeConnection(UserConnection connection, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.changeConnectionStatus(
+          connection.userId, "Canceled");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection removed succefully ",
+            type: SnackBarType.success);
+        fetchConnections();
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection removal failed ",
+            type: SnackBarType.error);
+        fetchConnections();
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't remove connection",
+            type: SnackBarType.error);
+      }
+    }
   }
 
   void Searchclicked() {
