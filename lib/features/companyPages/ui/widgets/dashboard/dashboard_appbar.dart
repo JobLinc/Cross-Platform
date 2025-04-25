@@ -84,12 +84,12 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                       );
 
                       break;
-                    case "Page Posts":
-                      _selectedValue = "Page Posts";
+                    case "Company Profile":
+                      _selectedValue = "Company Profile";
                       Navigator.pushReplacementNamed(
                         context,
-                        Routes.companyPagePosts,
-                        arguments: widget.company,
+                        Routes.companyPageHome,
+                        arguments: {'company': widget.company, 'isAdmin': true}
                       );
 
                       break;
@@ -107,9 +107,13 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                     // case "Inbox":
                     //   Navigator.pushNamed(context, Routes.inboxPage);
                     //   break;
-                    // case "Edit Page":
-                    //   Navigator.pushNamed(context, Routes.editPage);
-                    //   break;
+                    case "Edit Page":
+                      Navigator.pushNamed(
+                        context, 
+                        Routes.companyEdit,
+                        arguments: widget.company,
+                      );
+                      break;
                     // case "Jobs":
                     //   Navigator.pushNamed(context, Routes.jobsPage);
                     //   break;
@@ -117,7 +121,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                 },
                 items: <String>[
                   'Dashboard',
-                  'Page Posts',
+                  'Company Profile',
                   'Analytics',
                   'Feed',
                   'Inbox',
@@ -130,16 +134,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   );
                 }).toList(),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left:170.w 
-                  ), // Ensure flutter_screenutil is initialized
-                child: IconButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, Routes.addPostScreen),
-                  icon: Icon(Icons.post_add_rounded),
-                ),
-              ),
+              
             ],
           ),
         ],

@@ -57,6 +57,8 @@ import 'package:joblinc/features/userprofile/data/service/update_user_profile_ap
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/update_company_api_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -87,6 +89,14 @@ Future<void> setupGetIt() async {
   dio.interceptors.add(AuthInterceptor(getIt<AuthService>(), dio));
 
   getIt.registerLazySingleton<Dio>(() => dio);
+
+  // Register UpdateCompanyApiService
+  getIt.registerLazySingleton<UpdateCompanyApiService>(
+      () => UpdateCompanyApiService(getIt<Dio>()));
+
+  // Register UpdateCompanyRepo
+  getIt.registerLazySingleton<UpdateCompanyRepo>(
+      () => UpdateCompanyRepo(getIt<UpdateCompanyApiService>()));
 
   getIt.registerLazySingleton<LoginApiService>(
       () => LoginApiService(getIt<Dio>()));

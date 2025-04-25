@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
+import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
@@ -8,7 +9,9 @@ import '../widgets/scrollable_tabs.dart';
 
 class CompanyPageHome extends StatefulWidget {
   final Company company;
-  const CompanyPageHome({required this.company, super.key});
+  final bool isAdmin;
+  const CompanyPageHome(
+      {required this.company, this.isAdmin = false, super.key});
 
   @override
   _CompanyPageHomeState createState() => _CompanyPageHomeState();
@@ -34,26 +37,32 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFAFAFA),
-        title: Row(
-          children: [
-            Expanded(
-              child: CustomSearchBar(
-                keyName: 'company',
-                text: widget.company.name,
-                onPress: () {},
-                onTextChange: (searched) {},
-                controller: TextEditingController(),
+      appBar: widget.isAdmin
+          ? DashboardAppbar(
+              company: widget.company,
+              selectedValue: "Company Profile",
+            )
+          : AppBar(
+              backgroundColor: const Color(0xFFFAFAFA),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: CustomSearchBar(
+                      keyName: 'company',
+                      text: widget.company.name,
+                      onPress: () {},
+                      onTextChange: (searched) {},
+                      controller: TextEditingController(),
+                    ),
+                  ),
+                ],
               ),
+              elevation: 0,
             ),
-          ],
-        ),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CompanyData(company: widget.company), // Company details
+          CompanyData(company: widget.company, isAdmin: widget.isAdmin,), // Company details
           ScrollableTabs(tabController: _tabController),
           Expanded(
             child: TabBarView(

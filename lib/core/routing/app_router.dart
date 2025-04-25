@@ -14,10 +14,12 @@ import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
@@ -43,7 +45,6 @@ import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
@@ -203,6 +204,13 @@ class AppRouter {
           return MaterialPageRoute(
             builder: (context) => CompanyPageHome(company: arguments),
           );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyPageHome(
+              company: arguments['company'],
+              isAdmin: arguments['isAdmin'] ?? false,
+            ),
+          );
         } else {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -292,6 +300,33 @@ class AppRouter {
             builder: (context) => Scaffold(
               body: Center(
                 child: Text("Invalid arguments for CompanyDashboard"),
+              ),
+            ),
+          );
+        }
+
+      case Routes.companyEdit:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (_) => EditCompanyCubit(
+                  getIt()), // Pass your UpdateCompanyRepo instance here
+              child: CompanyPageEditScreen(company: arguments),
+            ),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (_) => EditCompanyCubit(
+                  getIt()), // Pass your UpdateCompanyRepo instance here
+              child: CompanyPageEditScreen(company: arguments['company']),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyEdit"),
               ),
             ),
           );

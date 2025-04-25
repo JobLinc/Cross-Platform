@@ -19,6 +19,9 @@ class CompanyApiService {
       );
       return CompanyResponse.fromJson(response.data);
     } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        print('Unauthorized: Please check your authentication token.');
+      }
       throw _handleDioError(e);
     }
   }

@@ -129,31 +129,32 @@ class CreateCompanyPage extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      if (!isTestEnvironment)
-                        Image(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
-                          width: double.infinity,
-                          height: 90.h,
-                        ),
-                      if (!isTestEnvironment)
-                        Padding(
-                          padding: EdgeInsets.only(top: 50.h, left: 17.w),
-                          child: SquareAvatar(
-                            imageUrl:
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
-                            size: 80,
-                          ),
-                        ),
+                      // if (!isTestEnvironment)
+                      //   Image(
+                      //     fit: BoxFit.cover,
+                      //     image: NetworkImage(
+                      //         "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
+                      //     width: double.infinity,
+                      //     height: 90.h,
+                      //   ),
+                      // if (!isTestEnvironment)
+                      //   Padding(
+                      //     padding: EdgeInsets.only(top: 50.h, left: 17.w),
+                      //     child: SquareAvatar(
+                      //       imageUrl:
+                      //           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
+                      //       size: 80,
+                      //     ),
+                      //   ),
                       Row(
                         children: [
+                          // Padding(
+                          //   padding: EdgeInsets.only(top: 85.h, left: 60.h),
+                          //   child: EditButton(),
+                          // ),
                           Padding(
-                            padding: EdgeInsets.only(top: 85.h, left: 60.h),
-                            child: EditButton(),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 90.h, left: 75.h),
+                            // Changed padding after removing cover photo and logo
+                            padding: EdgeInsets.only(top: 20.h, left: 25.h),
                             child: Text(
                               "* Indicates required",
                               style: TextStyle(
