@@ -344,4 +344,20 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
+
+  ///////////////////////////////////OTHERS//////////////////////////
+  Future<void> getPublicUserProfile(String userId) async {
+    try {
+      emit(ProfileLoading());
+      final profile = await _profileRepository.getPublicUserProfile(userId);
+      firstname = profile.firstname;
+      if (!isClosed) {
+        emit(ProfileLoaded(profile));
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ProfileError('Failed to load public profile: ${e.toString()}'));
+      }
+    }
+  }
 }

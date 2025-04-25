@@ -6,8 +6,9 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserResumes extends StatelessWidget {
-  const UserResumes({super.key, required this.profile});
+  const UserResumes({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
+  final bool isuser;
 
   String _formatFileSize(int sizeInBytes) {
     if (sizeInBytes >= 1024 * 1024) {
@@ -79,49 +80,53 @@ class UserResumes extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: ColorsManager.darkBurgundy,
-                                  size: 20.r,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Delete Resume'),
-                                        content: Text(
-                                            'Are you sure you want to delete "${resume.name}"?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .deleteresume(resume.id);
-                                            },
-                                            child: Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                              if (isuser) ...[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: ColorsManager.darkBurgundy,
+                                    size: 20.r,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Delete Resume'),
+                                          content: Text(
+                                              'Are you sure you want to delete "${resume.name}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              },
+                                              child: Text('Cancel'),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                splashRadius: 20.r,
-                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .deleteresume(resume.id);
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  splashRadius: 20.r,
+                                ),
+                              ]
                             ],
                           ),
                           SizedBox(height: 4.h),

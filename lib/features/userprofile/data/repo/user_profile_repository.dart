@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
+import 'package:joblinc/features/userprofile/data/service/others_api_service.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../models/user_profile_model.dart';
 import '../models/update_user_profile_model.dart';
@@ -17,11 +17,12 @@ class UserProfileRepository {
   final UpdateUserProfileApiService _updateApiService;
   final UploadApiService uploadApiService;
   final addService addApiService;
+  final OthersApiService othersApiService;
   // Optional in-memory cache
   UserProfile? _cachedProfile;
 
   UserProfileRepository(this._apiService, this._updateApiService,
-      this.uploadApiService, this.addApiService);
+      this.uploadApiService, this.addApiService,this.othersApiService);
 
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
@@ -204,6 +205,15 @@ class UserProfileRepository {
     } catch (e) {
       print("error ${e.toString()}");
       throw Exception('Failed to delete resume. Please try again later.');
+    }
+  }
+
+  /////////////////////////////////Others//////////////////////////////////////
+  Future<UserProfile> getPublicUserProfile(String userId) async {
+    try {
+      return await othersApiService.getPublicUserProfile(userId);
+    } catch (e) {
+      throw Exception('Failed to fetch public user profile: $e');
     }
   }
 }

@@ -31,6 +31,8 @@ class ConnectionsListView extends StatelessWidget {
                 onTap: () {
                   //todo:go to the profile of the user
                   print("go to ${connection.firstname} profile");
+                  Navigator.pushNamed(context, Routes.otherProfileScreen,
+                      arguments: connection.userId);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

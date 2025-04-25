@@ -50,6 +50,7 @@ import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
+import 'package:joblinc/features/userprofile/data/service/others_api_service.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
@@ -191,6 +192,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<UserProfileApiService>(
       () => UserProfileApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<OthersApiService>(
+      () => OthersApiService(getIt<Dio>()));
 
   getIt.registerLazySingleton<UpdateUserProfileApiService>(
       () => UpdateUserProfileApiService(getIt<Dio>()));
@@ -203,7 +206,8 @@ Future<void> setupGetIt() async {
           getIt<UserProfileApiService>(),
           getIt<UpdateUserProfileApiService>(),
           getIt<UploadApiService>(),
-          getIt<addService>()));
+          getIt<addService>(),
+          getIt<OthersApiService>()));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));

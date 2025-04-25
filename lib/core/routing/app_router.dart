@@ -44,7 +44,6 @@ import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
-
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
@@ -118,17 +117,21 @@ class AppRouter {
           );
         }
       case Routes.otherProfileScreen:
-        if (arguments is UserProfile) {
+        if (arguments is String) {
           return MaterialPageRoute(
-            builder: (context) => othersProfileScreen(profile: arguments),
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<ProfileCubit>(),
+              child: OthersProfileScreen(userId: arguments),
+            ),
           );
         } else {
           return MaterialPageRoute(
-            builder: (context) => Scaffold(
-              body: Text("2ntr"),
+            builder: (context) => const Scaffold(
+              body: Center(child: Text("2ntr")),
             ),
           );
         }
+
       // case Routes.chatScreen:
       //   return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:

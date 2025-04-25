@@ -8,6 +8,7 @@ class UserProfile {
   final String userId;
   final String firstname;
   final String lastname;
+  final String username;
   final String email;
   final String headline;
   final String profilePicture;
@@ -49,6 +50,7 @@ class UserProfile {
     required this.certifications,
     required this.languages,
     required this.resumes,
+    required this.username,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -92,6 +94,7 @@ class UserProfile {
               ?.map((resume) => Resume.fromJson(resume))
               .toList() ??
           [],
+      username: json['username'] ?? '',
     );
   }
 
