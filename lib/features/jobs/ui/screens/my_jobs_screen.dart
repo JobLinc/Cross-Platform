@@ -53,7 +53,8 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
               } else if (state is MySavedJobsLoaded) {
                 return JobList(
                     key: ValueKey(state.savedJobs.length),
-                    jobs: state.savedJobs);
+                    jobs: state.savedJobs,
+                    savedPage: true,);
               } else if (state is MyAppliedJobsLoaded) {
                 return JobList(
                     key: ValueKey(state.appliedJobs.length),
