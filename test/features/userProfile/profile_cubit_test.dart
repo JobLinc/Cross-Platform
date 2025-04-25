@@ -65,6 +65,7 @@ void main() {
     experiences: [],
     certifications: [],
     languages: [],
+    resumes:[],
   );
 
   group('ProfileCubit Tests', () {

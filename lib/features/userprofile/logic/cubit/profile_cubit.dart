@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -69,6 +71,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> deleteProfilePicture() async {
+    // emit(RemoveSkill(skill));
+    try {
+      emit(ProfileUpdating("Deleting profile picture"));
+      final response = await _profileRepository.deleteProfilePicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
   Future<void> uploadCoverPicture(File imageFile) async {
     // UserProfileUpdateModel updateData =
     //     UserProfileUpdateModel(profilePicture: imageFile.path);
@@ -87,6 +111,27 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } catch (e) {
       emit(ProfileError('Error: $e'));
+    }
+  }
+
+  Future<void> deleteCoverPicture() async {
+    try {
+      emit(ProfileUpdating("Deleting cover picture"));
+      final response = await _profileRepository.deleteCoverPicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete cover picture.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting cover picture");
+        emit(ProfileError('Error: $e'));
+      }
     }
   }
 
@@ -137,17 +182,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> deleteCertificate(String name) async {
+  Future<void> deleteCertificate(String certificationId) async {
     try {
-      emit(ProfileUpdating("Deleting Certificate"));
-      String certificationId;
-      final certificates = await _profileRepository.getAllCertificates();
-
-      certificationId =
-          certificates.firstWhere((cert) => cert.name == name).certificationId;
-
-      print(certificates);
-      print(certificationId);
       final response =
           await _profileRepository.deleteCertification(certificationId);
 
@@ -246,20 +282,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       print("hello");
       emit(ProfileUpdating("Deleting Experience"));
-      String experienceId;
-      final experiences = await _profileRepository.getAllExperiences();
 
-      experienceId = experiences
-          .firstWhere((exp) => exp.position == position)
-          .experienceId;
-
-      print(experiences);
-      print(experienceId);
-      final response = await _profileRepository.deleteExperience(experienceId);
+      final response = await _profileRepository.deleteExperience(position);
 
       if (response.statusCode == 200) {
         UserProfileUpdateModel expModel = UserProfileUpdateModel();
-        updateUserProfile(expModel);
+        await updateUserProfile(expModel);
       } else {
         if (!isClosed) {
           print("Failed deletion logic triggered");
@@ -270,6 +298,49 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (!isClosed) {
         print("Exception caught while deleting");
         emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
+  Future<void> uploadResume(File file) async {
+    try {
+      emit(ProfileUpdating("Uploading resume"));
+      final response = await _profileRepository.uploadResume(file);
+      print('Resume uploaded successfully: ${response.data}');
+      if (response.statusCode == 200) {
+        emit(ResumeAdded("Resume added succefully"));
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+
+        await updateUserProfile(expModel);
+      } else {
+        emit(ResumeFailed("Resume adding failed"));
+      }
+      // You can optionally handle the response here, e.g., update the UI or state
+    } catch (e) {
+      emit(ResumeFailed("Resume adding failed"));
+      print('Error in cubit while uploading resume: $e');
+      // You can optionally emit an error state or handle the error gracefully
+    }
+  }
+
+  Future<void> deleteresume(String resumeid) async {
+    try {
+      emit(ProfileUpdating("Deleting skill"));
+      final response = await _profileRepository.deleteResume(resumeid);
+      if (response.statusCode == 200) {
+        emit(ResumeAdded("Resume deleted succefully"));
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        await updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ResumeFailed('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting ${e.toString()}");
+        emit(ResumeFailed('Error: $e'));
       }
     }
   }

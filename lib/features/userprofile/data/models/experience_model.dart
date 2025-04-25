@@ -34,7 +34,7 @@ class Experience {
     DateTime? end = parseDate(json['endDate']) ?? DateTime.now();
 
     return Experience(
-      experienceId: json['_id'] ?? '',
+      experienceId: json['id'] ?? '',
       position: json['position'] ?? '',
       company: json['company'] ?? '',
       startDate: start,

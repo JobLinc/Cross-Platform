@@ -180,8 +180,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<UserConnectionsRepository>(
       () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
 
-  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
-       getIt<UserConnectionsRepository>()));
+  getIt.registerFactory<ConnectionsCubit>(
+      () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
   getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
