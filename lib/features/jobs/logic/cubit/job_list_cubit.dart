@@ -116,7 +116,7 @@ class JobListCubit extends Cubit<JobListState> {
     await jobRepo.saveJob(jobId);
   }
 
-  applyJob(String jobId, JobApplication jobApplication) async {
+  applyJob(String jobId, Map<String,dynamic> jobApplication) async {
     emit(JobApplicationSending());
     try {
       await jobRepo.applyJob(jobId, jobApplication);

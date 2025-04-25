@@ -125,7 +125,7 @@ class JobRepo {
     //return Job.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<void>? applyJob(String jobId, JobApplication jobApplication) async {
+  Future<void>? applyJob(String jobId, Map<String,dynamic> jobApplication) async {
     //final response =
     await _jobApiService.applyJob(jobId, jobApplication);
     //return Job.fromJson(response as Map<String, dynamic>);
