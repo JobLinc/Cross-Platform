@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
@@ -33,7 +34,6 @@ class JobApiService {
   }
 
   /// Retrieves all available jobs.
- 
 
   Future<Response> getAllJobs({Map<String, dynamic>? queryParams}) async {
     if (apiEndPointWorking) {
@@ -103,29 +103,29 @@ class JobApiService {
     }
   }
 
-  Future<Response> getCreatedJobs() async {
-    if (apiEndPointWorking) {
-      try {
-        final response = await _dio.get('/job/created');
-        return response;
-      } catch (e) {
-        rethrow;
-      }
-    } else {
-      final response = Response<dynamic>(
-        requestOptions: RequestOptions(path: ''),
-        data: createdJobs.map((job) => job.toJson()).toList(),
-        statusCode: 200,
-        statusMessage: 'OK',
-      );
-      return response;
-    }
-  }
+  // Future<Response> getCreatedJobs() async {
+  //   if (apiEndPointWorking) {
+  //     try {
+  //       final response = await _dio.get('/job/created');
+  //       return response;
+  //     } catch (e) {
+  //       rethrow;
+  //     }
+  //   } else {
+  //     final response = Response<dynamic>(
+  //       requestOptions: RequestOptions(path: ''),
+  //       data: createdJobs.map((job) => job.toJson()).toList(),
+  //       statusCode: 200,
+  //       statusMessage: 'OK',
+  //     );
+  //     return response;
+  //   }
+  // }
 
   Future<Response> getJobApplicants(String jobId) async {
     if (apiEndPointWorking) {
       try {
-        final response = await _dio.get('/job/$jobId/applicants');
+        final response = await _dio.get('/jobs/$jobId/job-applications');
         return response;
       } catch (e) {
         rethrow;
@@ -134,7 +134,7 @@ class JobApiService {
       await Future.delayed(Duration(milliseconds: 300));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: jobApplicants.map((job) => job.toJson()).toList(),
+        data: [], //jobApplicants.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -152,11 +152,11 @@ class JobApiService {
       }
     } else {
       await Future.delayed(Duration(milliseconds: 300));
-      JobApplication jobApplicant = jobApplicants.firstWhere((jobApp) =>
-          (jobApp.job.id == jobId && jobApp.applicant.id == applicantId));
+      // JobApplication jobApplicant = jobApplicants.firstWhere((jobApp) =>
+      //     (jobApp.job.id == jobId && jobApp.applicant.id == applicantId));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: jobApplicant.toJson(),
+        data: [], //jobApplicant.toJson(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -167,7 +167,7 @@ class JobApiService {
   Future<Response> getJobApplications() async {
     if (apiEndPointWorking) {
       try {
-        final response = await _dio.get('/job/applications');
+        final response = await _dio.get('/jobs/my-job-applications');
         return response;
       } catch (e) {
         rethrow;
@@ -176,9 +176,9 @@ class JobApiService {
       await Future.delayed(Duration(milliseconds: 300));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: jobApplications
-            .map((job) => job.toJson())
-            .toList(), //mockJobApplications.map((job) => job.toJson()).toList(),
+        data: [], //jobApplications
+        //.map((job) => job.toJson())
+        //.toList(), //mockJobApplications.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -199,7 +199,7 @@ class JobApiService {
       await Future.delayed(Duration(milliseconds: 300));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: mockResumes.map((job) => job.toJson()).toList(),
+        data: [], //mockResumes.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -257,29 +257,31 @@ class JobApiService {
     }
   }
 
-  Future<Response> applyJob(String jobId, Map<String,dynamic> jobApplication) async {
+  Future<void> applyJob(
+      String jobId, Map<String, dynamic> jobApplication) async {
     if (apiEndPointWorking) {
       try {
         //Map<String, dynamic> applicationData = jobApplication.toJson();
-        final response =
-            await _dio.post('/job/$jobId/apply', data: jobApplication);
-        return response;
+        print("api applying");
+        // final response =
+            await _dio.post('/jobs/$jobId/apply', data: jobApplication);
+        // return response;
       } catch (e) {
         rethrow;
       }
     } else {
-      await Future.delayed(Duration(milliseconds: 500));
-      //appliedJobs.add(jobApplication.job);
-      //jobApplications.add(jobApplication);
-      final response = Response(
-        requestOptions: RequestOptions(path: ''),
-        statusCode: 200,
-        data: {
-          'message': 'applied to saved locally',
-        },
-      );
-      print(response);
-      return response;
+      // await Future.delayed(Duration(milliseconds: 500));
+      // //appliedJobs.add(jobApplication.job);
+      // //jobApplications.add(jobApplication);
+      // final response = Response(
+      //   requestOptions: RequestOptions(path: ''),
+      //   statusCode: 200,
+      //   data: {
+      //     'message': 'applied to saved locally',
+      //   },
+      // );
+      // print(response);
+      // return response;
     }
   }
 
@@ -291,12 +293,12 @@ class JobApiService {
         rethrow;
       }
     } else {
-      jobApplicants
-          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
-          .status = "Accepted";
-      print(jobApplicants
-          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
-          .status);
+      // jobApplicants
+      //     .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+      //     .status = "Accepted";
+      // print(jobApplicants
+      //     .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+      //     .status);
     }
   }
 
@@ -308,236 +310,268 @@ class JobApiService {
         rethrow;
       }
     } else {
-      jobApplicants
-          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
-          .status = "Rejected";
-      print(jobApplicants
-          .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
-          .status);
+      // jobApplicants
+      //     .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+      //     .status = "Rejected";
+      // print(jobApplicants
+      //     .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
+      //     .status);
     }
   }
 
-  Future<Response> uploadResume(File resumeFile) async {
+  MediaType getMediaType(File file) {
+    final extension = file.path.split('.').last.toLowerCase();
+
+    switch (extension) {
+      case 'pdf':
+        return MediaType('application', 'pdf');
+       case 'doc':
+    case 'docx':
+      return MediaType('application', 'msword');  // MIME type for Word documents
+    default:
+      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+    }
+  }
+
+  Future<void> uploadResume(File resumeFile) async {
     if (apiEndPointWorking) {
-      final String fileName =
-          resumeFile.path.split(Platform.pathSeparator).last;
-      FormData formData = FormData.fromMap({
-        'file':
-            await MultipartFile.fromFile(resumeFile.path, filename: fileName),
-      });
-      return await _dio.post('user/resume/upload', data: formData);
+      // final String fileName =
+      //     resumeFile.path.split(Platform.pathSeparator).last;
+      // FormData formData = FormData.fromMap({
+      //   'file':
+      //       await MultipartFile.fromFile(resumeFile.path, filename: fileName),
+      // });
+      // return await _dio.post('/user/resume/upload', data: formData);
+
+      try {
+        final fileName = resumeFile.path.split('/').last;
+        print(" this is the media type ${getMediaType(resumeFile).toString()}");
+        final formData = FormData.fromMap({
+          'file': await MultipartFile.fromFile(
+            resumeFile.path,
+            filename: fileName,
+            contentType: getMediaType(resumeFile),
+          ),
+        });
+
+        await _dio.post('/user/resume/upload', data: formData);
+        // return response;
+      } catch (e) {
+        print('Error uploading resume: $e');
+        rethrow;
+      }
     } else {
-      final String fileName =
-          resumeFile.path.split(Platform.pathSeparator).last;
-      final String fileExtension = fileName.split('.').last;
-      final int fileSize = await resumeFile.length(); // Get file size in bytes
-      final String resumeId =
-          DateTime.now().millisecondsSinceEpoch.toString(); // Unique ID
-      final DateTime currentDate = DateTime.now();
+      // final String fileName =
+      //     resumeFile.path.split(Platform.pathSeparator).last;
+      // // final String fileExtension = fileName.split('.').last;
+      // final int fileSize = await resumeFile.length(); // Get file size in bytes
+      // final String resumeId =
+      //     DateTime.now().millisecondsSinceEpoch.toString(); // Unique ID
+      // final DateTime currentDate = DateTime.now();
 
-      mockResumes.add(Resume(
-        id: resumeId,
-        name: fileName,
-        extension: fileExtension,
-        url: resumeFile.path, // Storing local file path as 'url'
-        size: fileSize,
-        date: currentDate,
-      ));
+      // mockResumes.add(Resume(
+      //   id: resumeId,
+      //   name: fileName,
+      //   extension: fileExtension,
+      //   url: resumeFile.path, // Storing local file path as 'url'
+      //   size: fileSize,
+      //   date: currentDate,
+      // ));
 
-      final response = Response(
-        requestOptions: RequestOptions(path: ''),
-        statusCode: 200,
-        data: {
-          'message': 'Resume saved locally',
+      // final response = Response(
+      //   requestOptions: RequestOptions(path: ''),
+      //   statusCode: 200,
+      //   data: {
+      //     'message': 'Resume saved locally',
           // 'resumeId': resumeId,
           // 'fileName': fileName,
           // 'fileExtension': fileExtension,
           // 'fileSize': fileSize,
           // 'date': currentDate.toIso8601String(),
-        },
-      );
+      //   },
+      // );
 
-      print(response);
-      return response;
+      // print(response);
+      // return response;
     }
   }
 }
 
-List<JobApplication> jobApplications = [
-  JobApplication(
-    applicant: mockMainApplicant,
-    job: Job(
-      id: '1',
-      title: "Senior Software Engineer",
-      industry: "Technology",
-      company: Company(
-        id: 'c1',
-        name: "Innovatech Solutions",
-        tagline: "Innovate the future",
-        industry: "Technology",
-        overview: "A leading provider of innovative tech solutions.",
-        urlSlug: "innovatech-solutions",
-        size: "500+ employees",
-        logo:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
-        followers: 1200,
-      ),
-      description: "Lead development of scalable software solutions.",
-      workplace: "Hybrid",
-      type: "Full-time",
-      experienceLevel: "Senior-Level",
-      salaryRange: SalaryRange(
-        id: 'sr1',
-        min: 110000,
-        max: 150000,
-        currency: "USD",
-      ),
-      location: Location(
-        id: 'l1',
-        address: "123 Market St",
-        city: "San Francisco",
-        country: "USA",
-      ),
-      keywords: ["Java", "Kotlin", "Cloud"],
-      skills: ["Java", "Kotlin", "Cloud"],
-      accepting: true,
-      createdAt: DateTime(2025, 03, 01),
-    ),
-    resume: Resume(
-      id: 'r1',
-      url: 'https://example.com/resume1.pdf',
-      date: DateTime.now(),
-      size: 500,
-      name: 'jane_Resume',
-      extension: 'pdf',
-    ),
-    status: 'Pending',
-    createdAt: DateTime.now(),
-  ),
-];
+// List<JobApplication> jobApplications = [
+//   JobApplication(
+//     applicant: mockMainApplicant,
+//     job: Job(
+//       id: '1',
+//       title: "Senior Software Engineer",
+//       industry: "Technology",
+//       company: Company(
+//         id: 'c1',
+//         name: "Innovatech Solutions",
+//         tagline: "Innovate the future",
+//         industry: "Technology",
+//         overview: "A leading provider of innovative tech solutions.",
+//         urlSlug: "innovatech-solutions",
+//         size: "500+ employees",
+//         logo:
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+//         followers: 1200,
+//       ),
+//       description: "Lead development of scalable software solutions.",
+//       workplace: "Hybrid",
+//       type: "Full-time",
+//       experienceLevel: "Senior-Level",
+//       salaryRange: SalaryRange(
+//         id: 'sr1',
+//         min: 110000,
+//         max: 150000,
+//         currency: "USD",
+//       ),
+//       location: Location(
+//         id: 'l1',
+//         address: "123 Market St",
+//         city: "San Francisco",
+//         country: "USA",
+//       ),
+//       keywords: ["Java", "Kotlin", "Cloud"],
+//       skills: ["Java", "Kotlin", "Cloud"],
+//       accepting: true,
+//       createdAt: DateTime(2025, 03, 01),
+//     ),
+//     resume: Resume(
+//       id: 'r1',
+//       url: 'https://example.com/resume1.pdf',
+//       date: DateTime.now(),
+//       size: 500,
+//       name: 'jane_Resume',
+//       extension: 'pdf',
+//     ),
+//     status: 'Pending',
+//     createdAt: DateTime.now(),
+//   ),
+// ];
 
-////////////////////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////////////////
 
-List<JobApplication> jobApplicants = [
-  JobApplication(
-    applicant: Applicant(
-      id: "user_010",
-      firstname: "jane",
-      lastname: "doe",
-      username: "jenny22",
-      email: "janeDoe@gmail.com",
-      country: "USA",
-      city: "New York",
-      phoneNumber: "+3214567890",
-    ),
-    job: Job(
-      id: '2',
-      title: "Digital Marketing Specialist",
-      industry: "Marketing",
-      company: Company(
-        id: 'c2',
-        name: "CreativeAds",
-        tagline: "Creativity Meets Strategy",
-        industry: "Marketing",
-        overview: "Experts in creative digital marketing.",
-        urlSlug: "creativeads",
-        size: "150 employees",
-        logo:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
-        followers: 800,
-      ),
-      description: "Develop and manage digital marketing campaigns.",
-      workplace: "Remote",
-      type: "Contract",
-      experienceLevel: "Mid-Level",
-      salaryRange: SalaryRange(
-        id: 'sr2',
-        min: 55000,
-        max: 75000,
-        currency: "USD",
-      ),
-      location: Location(
-        id: 'l2',
-        address: "456 Madison Ave",
-        city: "New York",
-        country: "USA",
-      ),
-      keywords: ["SEO", "Social Media", "Analytics"],
-      skills: ["SEO", "Social Media", "Analytics"],
-      accepting: true,
-      createdAt: DateTime(2025, 02, 15),
-    ),
-    resume: Resume(
-      id: 'r1',
-      url: 'https://example.com/resume1.pdf',
-      date: DateTime.now(),
-      size: 500,
-      name: 'jane_Resume',
-      extension: 'pdf',
-    ),
-    status: 'Pending',
-    createdAt: DateTime.now(),
-  ),
-  JobApplication(
-    applicant: Applicant(
-      id: "user_009",
-      firstname: "john",
-      lastname: "doe",
-      username: "johnny22",
-      email: "johnDoe@gmail.com",
-      country: "USA",
-      city: "New York",
-      phoneNumber: "+1234567890",
-    ),
-    job: Job(
-      id: '2',
-      title: "Digital Marketing Specialist",
-      industry: "Marketing",
-      company: Company(
-        id: 'c2',
-        name: "CreativeAds",
-        tagline: "Creativity Meets Strategy",
-        industry: "Marketing",
-        overview: "Experts in creative digital marketing.",
-        urlSlug: "creativeads",
-        size: "150 employees",
-        logo:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
-        followers: 800,
-      ),
-      description: "Develop and manage digital marketing campaigns.",
-      workplace: "Remote",
-      type: "Contract",
-      experienceLevel: "Mid-Level",
-      salaryRange: SalaryRange(
-        id: 'sr2',
-        min: 55000,
-        max: 75000,
-        currency: "USD",
-      ),
-      location: Location(
-        id: 'l2',
-        address: "456 Madison Ave",
-        city: "New York",
-        country: "USA",
-      ),
-      keywords: ["SEO", "Social Media", "Analytics"],
-      skills: ["SEO", "Social Media", "Analytics"],
-      accepting: true,
-      createdAt: DateTime(2025, 02, 15),
-    ),
-    resume: Resume(
-      id: 'r1',
-      url: 'https://example.com/resume1.pdf',
-      date: DateTime.now(),
-      size: 500,
-      name: 'john_Resume',
-      extension: 'pdf',
-    ),
-    status: 'Pending',
-    createdAt: DateTime.now(),
-  ),
-];
+// List<JobApplication> jobApplicants = [
+//   JobApplication(
+//     applicant: Applicant(
+//       id: "user_010",
+//       firstname: "jane",
+//       lastname: "doe",
+//       username: "jenny22",
+//       email: "janeDoe@gmail.com",
+//       country: "USA",
+//       city: "New York",
+//       phoneNumber: "+3214567890",
+//     ),
+//     job: Job(
+//       id: '2',
+//       title: "Digital Marketing Specialist",
+//       industry: "Marketing",
+//       company: Company(
+//         id: 'c2',
+//         name: "CreativeAds",
+//         tagline: "Creativity Meets Strategy",
+//         industry: "Marketing",
+//         overview: "Experts in creative digital marketing.",
+//         urlSlug: "creativeads",
+//         size: "150 employees",
+//         logo:
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+//         followers: 800,
+//       ),
+//       description: "Develop and manage digital marketing campaigns.",
+//       workplace: "Remote",
+//       type: "Contract",
+//       experienceLevel: "Mid-Level",
+//       salaryRange: SalaryRange(
+//         id: 'sr2',
+//         min: 55000,
+//         max: 75000,
+//         currency: "USD",
+//       ),
+//       location: Location(
+//         id: 'l2',
+//         address: "456 Madison Ave",
+//         city: "New York",
+//         country: "USA",
+//       ),
+//       keywords: ["SEO", "Social Media", "Analytics"],
+//       skills: ["SEO", "Social Media", "Analytics"],
+//       accepting: true,
+//       createdAt: DateTime(2025, 02, 15),
+//     ),
+//     resume: Resume(
+//       id: 'r1',
+//       url: 'https://example.com/resume1.pdf',
+//       date: DateTime.now(),
+//       size: 500,
+//       name: 'jane_Resume',
+//       extension: 'pdf',
+//     ),
+//     status: 'Pending',
+//     createdAt: DateTime.now(),
+//   ),
+//   JobApplication(
+//     applicant: Applicant(
+//       id: "user_009",
+//       firstname: "john",
+//       lastname: "doe",
+//       username: "johnny22",
+//       email: "johnDoe@gmail.com",
+//       country: "USA",
+//       city: "New York",
+//       phoneNumber: "+1234567890",
+//     ),
+//     job: Job(
+//       id: '2',
+//       title: "Digital Marketing Specialist",
+//       industry: "Marketing",
+//       company: Company(
+//         id: 'c2',
+//         name: "CreativeAds",
+//         tagline: "Creativity Meets Strategy",
+//         industry: "Marketing",
+//         overview: "Experts in creative digital marketing.",
+//         urlSlug: "creativeads",
+//         size: "150 employees",
+//         logo:
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3jclFVhqRJqcwDXAx4YTy156le-necmYFA&s",
+//         followers: 800,
+//       ),
+//       description: "Develop and manage digital marketing campaigns.",
+//       workplace: "Remote",
+//       type: "Contract",
+//       experienceLevel: "Mid-Level",
+//       salaryRange: SalaryRange(
+//         id: 'sr2',
+//         min: 55000,
+//         max: 75000,
+//         currency: "USD",
+//       ),
+//       location: Location(
+//         id: 'l2',
+//         address: "456 Madison Ave",
+//         city: "New York",
+//         country: "USA",
+//       ),
+//       keywords: ["SEO", "Social Media", "Analytics"],
+//       skills: ["SEO", "Social Media", "Analytics"],
+//       accepting: true,
+//       createdAt: DateTime(2025, 02, 15),
+//     ),
+//     resume: Resume(
+//       id: 'r1',
+//       url: 'https://example.com/resume1.pdf',
+//       date: DateTime.now(),
+//       size: 500,
+//       name: 'john_Resume',
+//       extension: 'pdf',
+//     ),
+//     status: 'Pending',
+//     createdAt: DateTime.now(),
+//   ),
+// ];
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 

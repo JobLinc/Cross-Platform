@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
@@ -85,9 +86,9 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {
-      List<Job> savedJobs = await jobRepo.getSavedJobs()!;
+      //List<Job> savedJobs = await jobRepo.getSavedJobs()!;
       List<Job> appliedJobs = await jobRepo.getAppliedJobs()!;
-      emit(JobDetailsLoaded(savedJobs: savedJobs, appliedJobs: appliedJobs));
+      emit(JobDetailsLoaded(savedJobs: [], appliedJobs: appliedJobs));
     } catch (e) {
       emit(JobDetailsErrorLoading(e.toString()));
     }
@@ -105,7 +106,13 @@ class JobListCubit extends Cubit<JobListState> {
   
 
   uploadResume(File resumeFile) async {
-    await jobRepo.uploadResume(resumeFile);
+    emit(JobResumeUploading());
+    try {
+      await jobRepo.uploadResume(resumeFile);
+      emit(JobResumeUploaded());
+    } catch (e) {
+      emit(JobResumeErrorUploading(e.toString()));
+    }
   }
 
   unsaveJob(String jobId) async {
