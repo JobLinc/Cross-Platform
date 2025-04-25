@@ -5,34 +5,23 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
-class UserExperiences extends StatelessWidget {
-  const UserExperiences({super.key, required this.profile});
+class UserResumes extends StatelessWidget {
+  const UserResumes({super.key, required this.profile});
   final UserProfile profile;
 
-  String _formatExperienceDates(dynamic startDate, dynamic endDate) {
-    String issuedText = "";
-
-    if (startDate is DateTime) {
-      issuedText = "${_getMonthName(startDate.month)} ${startDate.year}";
-    } else if (startDate is String) {
-      issuedText = "$startDate";
+  String _formatFileSize(int sizeInBytes) {
+    if (sizeInBytes >= 1024 * 1024) {
+      return "${(sizeInBytes / (1024 * 1024)).toStringAsFixed(2)} MB";
+    } else if (sizeInBytes >= 1024) {
+      return "${(sizeInBytes / 1024).toStringAsFixed(2)} KB";
     }
-
-    if (endDate != null) {
-      String expiredText = "";
-      if (endDate is DateTime) {
-        expiredText = "${_getMonthName(endDate.month)} ${endDate.year}";
-      } else if (endDate is String) {
-        expiredText = "$endDate";
-      }
-
-      return "$issuedText • $expiredText";
-    }
-
-    return issuedText;
+    return "$sizeInBytes B";
   }
 
-// Helper method to get month name
+  String _formatDate(DateTime date) {
+    return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+  }
+
   String _getMonthName(int month) {
     const monthNames = [
       "Jan",
@@ -59,24 +48,18 @@ class UserExperiences extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Experiences',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ],
+          Text(
+            'Uploaded Resumes',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profile.experiences.length,
+            itemCount: profile.resumes.length,
             itemBuilder: (context, index) {
-              final experience = profile.experiences[index];
+              final resume = profile.resumes[index];
               return Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5.h), // Reduced from 8.h to 4.h
+                padding: EdgeInsets.symmetric(horizontal: 5.h),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -89,7 +72,7 @@ class UserExperiences extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  experience.position,
+                                  resume.name,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
@@ -107,9 +90,9 @@ class UserExperiences extends StatelessWidget {
                                     context: context,
                                     builder: (BuildContext dialogContext) {
                                       return AlertDialog(
-                                        title: Text('Delete Experience'),
+                                        title: Text('Delete Resume'),
                                         content: Text(
-                                            'Are you sure you want to delete "${experience.position}"?'),
+                                            'Are you sure you want to delete "${resume.name}"?'),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -119,13 +102,10 @@ class UserExperiences extends StatelessWidget {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              print(experience.experienceId);
                                               Navigator.of(dialogContext).pop();
                                               context
                                                   .read<ProfileCubit>()
-                                                  .deleteExperience(
-                                                      experience.experienceId);
-                                              // Close dialog and delete Experience
+                                                  .deleteresume(resume.id);
                                             },
                                             child: Text(
                                               'Delete',
@@ -146,15 +126,14 @@ class UserExperiences extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            experience.company,
+                            _formatFileSize(resume.size),
                             style: TextStyle(
                               fontSize: 14.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            _formatExperienceDates(
-                                experience.startDate, experience.endDate),
+                            "Uploaded ${_formatDate(resume.createdAt)}",
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.grey[600],
@@ -163,8 +142,7 @@ class UserExperiences extends StatelessWidget {
                           Divider(
                             color: Colors.grey[500],
                             thickness: 1,
-                            height: 15
-                                .h, // Explicitly set height to control spacing
+                            height: 15.h,
                           ),
                         ],
                       ),

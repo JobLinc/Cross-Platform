@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
@@ -12,6 +13,7 @@ import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart
 import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -21,10 +23,15 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   void _addSection(BuildContext context) {
+    final profileCubit = context.read<ProfileCubit>();
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return const UserProfileAddSection();
+        return BlocProvider.value(
+          value: profileCubit,
+          child: const UserProfileAddSection(),
+        );
       },
     );
   }
@@ -41,6 +48,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
+        } else if (state is ResumeAdded) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is ResumeFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
         }
       },
       builder: (context, state) {
@@ -219,6 +236,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         // Skills section
                         if (profile.skills.isNotEmpty) ...[
                           UserSkills(profile: profile),
+                        ],
+                        if (profile.resumes.isNotEmpty) ...[
+                          UserResumes(profile: profile),
                         ],
                       ],
                     ),
