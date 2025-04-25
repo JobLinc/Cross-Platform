@@ -89,9 +89,11 @@ class AuthService {
     await _storage.delete(key: _confirmedKey);
     isLoggedInUser = false;
   }
+
   Future<void> updateEmail(String email) async {
     await _storage.write(key: _emailKey, value: email);
   }
+
   Future<void> updateConfirmationStatus(bool confirmed) async {
     await _storage.write(key: _confirmedKey, value: confirmed.toString());
   }
@@ -108,7 +110,7 @@ class AuthService {
       final requestBody = {
         'refreshToken': refreshToken,
         'userId': userId,
-        'companyId': "680b900501da69e5b7ab7f76",
+        'companyId': "680b93b301da69e5b7ab7fa6",
       };
 
       final response =
