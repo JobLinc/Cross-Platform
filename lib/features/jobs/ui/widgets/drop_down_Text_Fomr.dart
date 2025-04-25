@@ -157,7 +157,7 @@ class CurrencyDropDownTextFormField extends StatelessWidget {
 
 List<List<String>> allLists=[
   ["Freshman","Junior","MidLevel","Senior"],
-  ["Full-time","Part-time","Contract","Internship","Volunteer","Temporary"],
+  ["Full-time","Part-time","Contract","Internship","Temporary","Volunteer"],
   ["Remote","Onsite","Hybrid"],
 ];
 
