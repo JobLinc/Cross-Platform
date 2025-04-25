@@ -96,14 +96,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                     // case "Analytics":
                     //   Navigator.pushNamed(context, Routes.analytics);
                     //   break;
-                    case "Feed":
-                      _selectedValue = "Feed";
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.companyFeed,
-                        arguments: widget.company,
-                      );
-                      break;
+                    
                     // case "Inbox":
                     //   Navigator.pushNamed(context, Routes.inboxPage);
                     //   break;
@@ -123,7 +116,6 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   'Dashboard',
                   'Company Profile',
                   'Analytics',
-                  'Feed',
                   'Inbox',
                   'Edit Page',
                   'Jobs',

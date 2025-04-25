@@ -182,34 +182,46 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           // --- My Companies Section ---
-          FutureBuilder<Company>(
+          FutureBuilder<List<Company>>(
             future: CompanyRepositoryImpl(
               CompanyApiService(getIt<Dio>()),
-            ).getCurrentCompany(),
+            ).getCurrentCompanies(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(
                   leading: const Icon(Icons.business),
-                  title: const Text('Loading company...'),
+                  title: const Text('Loading companies...'),
                 );
               } else if (snapshot.hasError) {
                 return ListTile(
                   leading: const Icon(Icons.business),
-                  title: const Text('Failed to load company'),
+                  title: const Text('Failed to load companies'),
                   subtitle: Text('${snapshot.error}'),
                 );
-              } else if (snapshot.hasData) {
-                final company = snapshot.data!;
-                return ListTile(
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                final companies = snapshot.data!;
+                if (companies.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return ExpansionTile(
                   leading: const Icon(Icons.business),
-                  title: Text(company.name),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.companyPageHome,
-                      arguments: {'company': company, 'isAdmin': true},
-                    );
-                  },
+                  title: const Text('My Companies'),
+                  children: companies
+                      .map((company) => ListTile(
+                            leading: const Icon(Icons.apartment),
+                            title: Text(company.name),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.companyPageHome,
+                                arguments: {
+                                  'company': company,
+                                  'isAdmin': true
+                                },
+                              );
+                            },
+                          ))
+                      .toList(),
                 );
               } else {
                 return SizedBox.shrink();

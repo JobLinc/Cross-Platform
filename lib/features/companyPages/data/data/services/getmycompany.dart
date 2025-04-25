@@ -1,14 +1,26 @@
 import 'package:dio/dio.dart';
-import '../models/company_model.dart';
+import '../models/getmycompany_response.dart';
 
 class CompanyApiService {
   final Dio dio;
 
   CompanyApiService(this.dio);
 
-  Future<CompanyResponse> getCurrentCompany() async {
+  Future<CompanyListResponse> getCurrentCompanies() async {
     try {
-      final response = await dio.get('/companies/me');
+      final response = await dio.get('/user/companies',
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ));
+      print('''
+        === Received Response ===
+        Status: ${response.statusCode} ${response.statusMessage}
+        Headers: ${response.headers}
+        Data: ${response.data}
+        ''');
 
       if (response.statusCode != 200) {
         throw Exception('Request failed with status ${response.statusCode}');
@@ -18,10 +30,10 @@ class CompanyApiService {
         throw Exception('Response data is null');
       }
 
-      try {
-        return CompanyResponse.fromJson(response.data as Map<String, dynamic>);
-      } on FormatException catch (e) {
-        throw Exception('Invalid data format: ${e.message}');
+      if (response.data is List) {
+        return CompanyListResponse.fromJson(response.data as List<dynamic>);
+      } else {
+        throw Exception('Expected a list of companies from API');
       }
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');

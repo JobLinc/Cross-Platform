@@ -9,6 +9,9 @@ class CompanyResponse {
   final String overview;
   final String website;
   final String? profilePictureUrl;
+  final int? followers;
+  final int? employees;
+  final String? createdAt;
 
   CompanyResponse({
     required this.id,
@@ -20,6 +23,9 @@ class CompanyResponse {
     required this.type,
     required this.overview,
     required this.website,
+    this.followers,
+    this.employees,
+    this.createdAt,
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {
@@ -32,6 +38,28 @@ class CompanyResponse {
       type: json['type'],
       overview: json['overview'],
       website: json['website'],
+      profilePictureUrl: json['profilePictureUrl'],
+      followers: json['followers'],
+      employees: json['employees'],
+      createdAt: json['createdAt'],
+    );
+  }
+}
+
+class CompanyListResponse {
+  final List<CompanyResponse> companies;
+  final int count;
+
+  CompanyListResponse({
+    required this.companies,
+    required this.count,
+  });
+
+  factory CompanyListResponse.fromJson(List<dynamic> jsonList) {
+    final companies = jsonList.map((e) => CompanyResponse.fromJson(e)).toList();
+    return CompanyListResponse(
+      companies: companies,
+      count: companies.length,
     );
   }
 }

@@ -110,7 +110,7 @@ class AuthService {
       final requestBody = {
         'refreshToken': refreshToken,
         'userId': userId,
-        'companyId': "680b93b301da69e5b7ab7fa6",
+        'companyId': "680ba591f0b1b85b6ba352b3",
       };
 
       final response =
