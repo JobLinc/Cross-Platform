@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
@@ -29,6 +31,8 @@ class ConnectionsListView extends StatelessWidget {
                 onTap: () {
                   //todo:go to the profile of the user
                   print("go to ${connection.firstname} profile");
+                  Navigator.pushNamed(context, Routes.otherProfileScreen,
+                      arguments: connection.userId);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,9 +41,9 @@ class ConnectionsListView extends StatelessWidget {
                       padding: EdgeInsets.all(10),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: CircleAvatar(
+                        child: ProfileImage(
+                          imageURL: connection.profilePicture,
                           radius: 25.r,
-                          child: Text(connection.firstname[0]),
                         ),
                       ),
                     ),
@@ -61,6 +65,15 @@ class ConnectionsListView extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          connection.time_of_connections != null
+                              ? Text(
+                                  "Connected on: ${DateFormat.yMMMd().format(connection.time_of_connections!)}",
+                                  style: TextStyle(
+                                      fontSize: 18.sp, color: Colors.grey[600]),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : SizedBox.shrink(),
                           // BlocProvider.of<ConnectionsCubit>(context)
                           //         .connectedOnappear
                           //     ? Text(
@@ -106,7 +119,8 @@ class ConnectionsListView extends StatelessWidget {
                                       onTap: () {
                                         context
                                             .read<ConnectionsCubit>()
-                                            .removeConnection(connection);
+                                            .removeConnection(
+                                                connection, context);
                                         Navigator.pop(context);
                                       },
                                     );

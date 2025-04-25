@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserSkills extends StatelessWidget {
-  const UserSkills({super.key, required this.profile});
+  const UserSkills({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
+  final bool isuser;
 
 // Helper method to get month name
   String _getSkillLevel(int level) {
     const skillLevel = [
       "Novice",
-      "Apprentice", 
-      "Competent", 
-      "Proficient", 
+      "Apprentice",
+      "Competent",
+      "Proficient",
       "Master"
     ];
     // Fixed the index calculation - level is 1-5, array indices are 0-4
@@ -71,48 +74,55 @@ class UserSkills extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: ColorsManager.darkBurgundy,
-                                  size: 20.r,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Delete Certificate'),
-                                        content: Text(
-                                            'Are you sure you want to delete "${skill.name}"?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              // Close dialog and delete certificate
-                                              Navigator.of(dialogContext).pop();
-                                              // TODO: Implement actual delete functionality (Radwan)
-                                            },
-                                            child: Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                              if (isuser) ...[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: ColorsManager.darkBurgundy,
+                                    size: 20.r,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Delete Certificate'),
+                                          content: Text(
+                                              'Are you sure you want to delete "${skill.name}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              },
+                                              child: Text('Cancel'),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                splashRadius: 20.r,
-                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                // Close dialog and delete certificate
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .removeSkill(skill.id);
+                                                // TODO: Implement actual delete functionality (Radwan)
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  splashRadius: 20.r,
+                                ),
+                              ]
                             ],
                           ),
                           SizedBox(height: 4.h),
@@ -126,7 +136,8 @@ class UserSkills extends StatelessWidget {
                           Divider(
                             color: Colors.grey[500],
                             thickness: 1,
-                            height: 15.h, // Explicitly set height to control spacing
+                            height: 15
+                                .h, // Explicitly set height to control spacing
                           ),
                         ],
                       ),

@@ -26,7 +26,7 @@ import 'package:joblinc/features/emailconfirmation/data/services/email_confirmat
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
-import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 
@@ -51,6 +51,7 @@ import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
+import 'package:joblinc/features/userprofile/data/service/others_api_service.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
@@ -73,7 +74,7 @@ Future<void> setupGetIt() async {
   final baseUrl = Platform.isAndroid
       ? 'http://10.0.2.2:3000/api'
       : 'http://localhost:3000/api';
-  // 'https://joblinc.me:3000/api';
+  //'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -193,8 +194,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<UserConnectionsRepository>(
       () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
 
-  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
-      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<ConnectionsCubit>(
+      () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
   getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
@@ -204,6 +205,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<UserProfileApiService>(
       () => UserProfileApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<OthersApiService>(
+      () => OthersApiService(getIt<Dio>()));
 
   getIt.registerLazySingleton<UpdateUserProfileApiService>(
       () => UpdateUserProfileApiService(getIt<Dio>()));
@@ -216,7 +219,8 @@ Future<void> setupGetIt() async {
           getIt<UserProfileApiService>(),
           getIt<UpdateUserProfileApiService>(),
           getIt<UploadApiService>(),
-          getIt<addService>()));
+          getIt<addService>(),
+          getIt<OthersApiService>()));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));
