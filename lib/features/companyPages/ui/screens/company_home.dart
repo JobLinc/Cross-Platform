@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
 import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
@@ -9,9 +11,9 @@ import '../widgets/scrollable_tabs.dart';
 
 class CompanyPageHome extends StatefulWidget {
   final Company company;
+  final AuthService authService = getIt<AuthService>();
   final bool isAdmin;
-  const CompanyPageHome(
-      {required this.company, this.isAdmin = false, super.key});
+  CompanyPageHome({required this.company, this.isAdmin = false, super.key});
 
   @override
   _CompanyPageHomeState createState() => _CompanyPageHomeState();
@@ -25,11 +27,15 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    if (widget.isAdmin) {
+      widget.authService.refreshToken(companyId: widget.company.id);
+    }
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    widget.authService.refreshToken();
     super.dispose();
   }
 
@@ -62,7 +68,10 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CompanyData(company: widget.company, isAdmin: widget.isAdmin,), // Company details
+          CompanyData(
+            company: widget.company,
+            isAdmin: widget.isAdmin,
+          ), // Company details
           ScrollableTabs(tabController: _tabController),
           Expanded(
             child: TabBarView(

@@ -257,12 +257,12 @@ class JobApiService {
     }
   }
 
-  Future<Response> applyJob(String jobId, JobApplication jobApplication) async {
+  Future<Response> applyJob(String jobId, Map<String, dynamic> jobApplication) async {
     if (apiEndPointWorking) {
       try {
-        Map<String, dynamic> applicationData = jobApplication.toJson();
+        // Map<String, dynamic> applicationData = jobApplication.toJson();
         final response =
-            await _dio.post('/job/$jobId/apply', data: applicationData);
+            await _dio.post('/job/$jobId/apply', data: jobApplication);
         return response;
       } catch (e) {
         rethrow;

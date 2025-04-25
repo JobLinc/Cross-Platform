@@ -50,8 +50,11 @@ class CreateCompanyPage extends StatelessWidget {
               // Navigate to the Company Dashboard
               Navigator.pushNamed(
                 context,
-                Routes.companyDashboard,
-                arguments: company,
+                Routes.companyPageHome,
+                arguments: {
+                  'company': company,
+                  'isAdmin': true,
+                },
               );
             },
           ),
@@ -61,15 +64,14 @@ class CreateCompanyPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Company created successfully!'),
-                backgroundColor: Colors.green,  
+                backgroundColor: Colors.green,
               ),
             );
           } else if (state is CreateCompanyFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text('Failed to create company: ${state.error}'),
-                  backgroundColor: Colors.red
-                ),
+                  backgroundColor: Colors.red),
             );
           }
         },

@@ -77,7 +77,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   switch (newValue) {
                     case "Dashboard":
                       _selectedValue = "Dashboard";
-                      Navigator.pushReplacementNamed(
+                      Navigator.pushNamed(
                         context,
                         Routes.companyDashboard,
                         arguments: widget.company,

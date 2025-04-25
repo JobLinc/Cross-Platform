@@ -202,19 +202,13 @@ class AppRouter {
       case Routes.companyPageHome:
         if (arguments is Company) {
           return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => getIt<EditCompanyCubit>(),
-              child: CompanyPageHome(company: arguments),
-            ),
+            builder: (context) => CompanyPageHome(company: arguments),
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => getIt<EditCompanyCubit>(),
-              child: CompanyPageHome(
-                company: arguments['company'],
-                isAdmin: arguments['isAdmin'] ?? false,
-              ),
+            builder: (context) => CompanyPageHome(
+              company: arguments['company'],
+              isAdmin: arguments['isAdmin'] ?? false,
             ),
           );
         } else {
@@ -296,36 +290,20 @@ class AppRouter {
           );
         }
 
-      case Routes.companyFeed:
-        if (arguments is Company) {
-          return MaterialPageRoute(
-            builder: (context) => CompanyFeed(company: arguments),
-          );
-        } else {
-          return MaterialPageRoute(
-            builder: (context) => Scaffold(
-              body: Center(
-                child: Text("Invalid arguments for CompanyDashboard"),
-              ),
-            ),
-          );
-        }
-
       case Routes.companyEdit:
         if (arguments is Company) {
           return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (_) => EditCompanyCubit(
-                  getIt()), // Pass your UpdateCompanyRepo instance here
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
               child: CompanyPageEditScreen(company: arguments),
             ),
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (_) => EditCompanyCubit(
-                  getIt()), // Pass your UpdateCompanyRepo instance here
-              child: CompanyPageEditScreen(company: arguments['company']),
+            builder: (context) => CompanyPageEditScreen(
+              company: arguments['company'],
+
+              // You can also pass isAdmin if needed: isAdmin: arguments['isAdmin'] ?? false,
             ),
           );
         } else {

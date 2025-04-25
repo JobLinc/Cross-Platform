@@ -1,6 +1,5 @@
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
-import '../models/getmycompany_response.dart';
 
 abstract class CompanyRepository {
   Future<List<Company>> getCurrentCompanies();
@@ -29,6 +28,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
           overview: companyResponse.overview,
           website: companyResponse.website,
           logoUrl: companyResponse.profilePictureUrl,
+          id: companyResponse.id
         );
       }).toList();
       return companies;

@@ -168,6 +168,7 @@ extension OrganizationTypeExtension on OrganizationType {
 
 class Company {
   final String name;
+  String? id;
   final String profileUrl;
   String? overview;
   String? website;
@@ -183,6 +184,7 @@ class Company {
 
   Company({
     required this.name,
+    this.id,
     required this.profileUrl,
     this.website,
     this.tagline,
