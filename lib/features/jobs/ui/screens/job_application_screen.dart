@@ -147,7 +147,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Apply to ${widget.job.company?.name ?? ''}"),
+          title: Text("Apply to ${widget.job.company.name ?? ''}"),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
@@ -353,7 +353,10 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                       );
                       context
                           .read<JobListCubit>()
-                          .applyJob(widget.job.id!, jobApplication);
+                          .applyJob(widget.job.id, {
+                            "phoner": phoneNumber,
+                            "resumeId": _selectedResumeId,
+                          });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorsManager.getPrimaryColor(context),
