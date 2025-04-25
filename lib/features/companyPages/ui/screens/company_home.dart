@@ -79,7 +79,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
               children: [
                 Center(child: Text("Home")),
                 CompanyHomeAbout(company: widget.company),
-                CompanyHomePosts(),
+                CompanyHomePosts(companyId: widget.company.id!),
                 Center(child: Text("Jobs")),
                 Center(child: Text("People")),
               ],

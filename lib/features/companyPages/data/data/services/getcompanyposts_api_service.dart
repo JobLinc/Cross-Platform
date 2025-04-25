@@ -3,13 +3,14 @@ import 'package:joblinc/features/posts/data/models/post_model.dart';
 
 class GetCompanyPostsApiService {
   final Dio dio;
+  final String companyId;
 
-  GetCompanyPostsApiService(this.dio);
+  GetCompanyPostsApiService(this.companyId, this.dio);
 
   Future<List<PostModel>> getMyCompanyPosts() async {
     try {
       final response = await dio.get(
-        '/post/my-posts',
+        '/post/$companyId/posts',
         options: Options(
           headers: {
             'Content-Type': 'application/json',

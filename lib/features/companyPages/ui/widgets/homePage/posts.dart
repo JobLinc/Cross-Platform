@@ -9,13 +9,14 @@ import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 
 class CompanyHomePosts extends StatelessWidget {
-  const CompanyHomePosts({super.key});
+  final String companyId;
+  const CompanyHomePosts({required this.companyId, super.key});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<PostModel>>(
       future: GetCompanyPostsRepo(
-        GetCompanyPostsApiService(getIt<Dio>()),
+        GetCompanyPostsApiService(companyId, getIt<Dio>()),
       ).getMyCompanyPosts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
