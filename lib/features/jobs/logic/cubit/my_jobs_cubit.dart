@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
@@ -11,8 +12,8 @@ class MyJobsCubit extends Cubit<MyJobsState> {
 
   List<Job> _jobs = [];
   List<JobApplication> _jobApplications = [];
-  List<JobApplication> _jobApplicants = [];
-  JobApplication? _jobApplicant;
+  List<JobApplicant> _jobApplicants = [];
+  JobApplicant? _jobApplicant;
 
   MyJobsCubit(this.jobRepo) : super(MyJobsInitial());
 
@@ -44,10 +45,10 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  Future<void> getCreatedJobs() async {
+  Future<void> getCreatedJobs(String userId) async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getCreatedJobs()!;
+      _jobs = await jobRepo.getAllJobs(queryParams: {"employer.id":userId})!;
       if (_jobs.isEmpty) {
         emit(MyCreatedJobsEmpty());
       } else {
@@ -110,7 +111,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     await getJobApplicantById(jobId, applicantId);
   }
 
-  emitMyJobApplicantLoaded(JobApplication jobApplicant){
+  emitMyJobApplicantLoaded(JobApplicant jobApplicant){
         emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
   }
 }
