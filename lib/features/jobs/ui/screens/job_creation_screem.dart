@@ -98,7 +98,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
             .toList(),
       };
 
-      print("Job Created: ${jobReq['experienceLevel']}");
+      print("Job Created: ${jobReq['experienceLevel']},${jobReq['workplace']},${jobReq['type']},${jobReq['salaryRange']},${jobReq['location']},${jobReq['skills']}");
       // // Here, you could call an API or Bloc to create the job.
       // // For this example, we'll just print the job details.
       context.read<JobListCubit>().createJob(jobReq:jobReq);

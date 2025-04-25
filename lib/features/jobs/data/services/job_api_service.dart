@@ -61,7 +61,8 @@ class JobApiService {
   Future<Response> getAppliedJobs() async {
     if (apiEndPointWorking) {
       try {
-        final response = await _dio.get('/job/applied');
+        final response = await _dio.get('/jobs/my-job-applications');
+        print(response.data);
         return response;
       } catch (e) {
         rethrow;
@@ -103,7 +104,7 @@ class JobApiService {
   }
 
   Future<Response> getCreatedJobs() async {
-    if (0 == 1) {
+    if (apiEndPointWorking) {
       try {
         final response = await _dio.get('/job/created');
         return response;
@@ -256,20 +257,20 @@ class JobApiService {
     }
   }
 
-  Future<Response> applyJob(String jobId, JobApplication jobApplication) async {
+  Future<Response> applyJob(String jobId, Map<String,dynamic> jobApplication) async {
     if (apiEndPointWorking) {
       try {
-        Map<String, dynamic> applicationData = jobApplication.toJson();
+        //Map<String, dynamic> applicationData = jobApplication.toJson();
         final response =
-            await _dio.post('/job/$jobId/apply', data: applicationData);
+            await _dio.post('/job/$jobId/apply', data: jobApplication);
         return response;
       } catch (e) {
         rethrow;
       }
     } else {
       await Future.delayed(Duration(milliseconds: 500));
-      appliedJobs.add(jobApplication.job);
-      jobApplications.add(jobApplication);
+      //appliedJobs.add(jobApplication.job);
+      //jobApplications.add(jobApplication);
       final response = Response(
         requestOptions: RequestOptions(path: ''),
         statusCode: 200,
