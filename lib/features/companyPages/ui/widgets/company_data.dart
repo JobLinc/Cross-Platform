@@ -71,56 +71,55 @@ class CompanyData extends StatelessWidget {
                   left: 17.w,
                   child: GestureDetector(
                     onTap: () {
-                                                    showModalBottomSheet(
-                                context: context,
-                                builder: (bottomSheetContext) => Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ListTile(
-                                        leading: Icon(Icons.camera_alt),
-                                        title: Text("Take a photo"),
-                                        onTap: () async {
-                                          File? image =
-                                              await pickImage("camera");
-                                          // Do something when Tile 1 is tapped
-                                          print("Tile 1 tapped");
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (bottomSheetContext) => Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.camera_alt),
+                                title: Text("Take a photo"),
+                                onTap: () async {
+                                  File? image = await pickImage("camera");
+                                  // Do something when Tile 1 is tapped
+                                  print("Tile 1 tapped");
 
-                                          if (image == null) {
-                                            return;
-                                          }
-                                          context
-                                              .read<EditCompanyCubit>()
-                                              .uploadCompanyLogo(image);
-                                          Navigator.pop(
-                                              bottomSheetContext); // Close the bottom sheet
-                                        },
-                                      ),
-                                      ListTile(
-                                        leading: Icon(Icons.photo_library),
-                                        title: Text("Upload from photos"),
-                                        onTap: () async {
-                                          File? image =
-                                              await pickImage("gallery");
-                                          // Do something when Tile 2 is tapped
-                                          print("Tile 2 tapped");
-                                          if (image == null) {
-                                            return;
-                                          }
-                                          context.read<EditCompanyCubit>()
-                                              .uploadCompanyLogo(image);
-                                          // Response response = await getIt<UserProfileRepository>()
-                                          //     .uploadProfilePicture(image!);
-                                          // print(response.statusCode);
-                                          Navigator.pop(
-                                              bottomSheetContext); // Close the bottom sheet
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                                  if (image == null) {
+                                    return;
+                                  }
+                                  context
+                                      .read<EditCompanyCubit>()
+                                      .uploadCompanyLogo(image);
+                                  Navigator.pop(
+                                      bottomSheetContext); // Close the bottom sheet
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.photo_library),
+                                title: Text("Upload from photos"),
+                                onTap: () async {
+                                  File? image = await pickImage("gallery");
+                                  // Do something when Tile 2 is tapped
+                                  print("Tile 2 tapped");
+                                  if (image == null) {
+                                    return;
+                                  }
+                                  context
+                                      .read<EditCompanyCubit>()
+                                      .uploadCompanyLogo(image);
+                                  // Response response = await getIt<UserProfileRepository>()
+                                  //     .uploadProfilePicture(image!);
+                                  // print(response.statusCode);
+                                  Navigator.pop(
+                                      bottomSheetContext); // Close the bottom sheet
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     },
                     child: SquareAvatar(
                       imageUrl: company.logoUrl ??

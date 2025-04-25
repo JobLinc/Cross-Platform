@@ -202,13 +202,19 @@ class AppRouter {
       case Routes.companyPageHome:
         if (arguments is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyPageHome(company: arguments),
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyPageHome(company: arguments),
+            ),
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyPageHome(
-              company: arguments['company'],
-              isAdmin: arguments['isAdmin'] ?? false,
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyPageHome(
+                company: arguments['company'],
+                isAdmin: arguments['isAdmin'] ?? false,
+              ),
             ),
           );
         } else {
