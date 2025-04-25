@@ -123,7 +123,8 @@ class UserCerificates extends StatelessWidget {
                                               Navigator.of(dialogContext).pop();
                                               context
                                                   .read<ProfileCubit>()
-                                                  .deleteCertificate(cert.name);
+                                                  .deleteCertificate(
+                                                      cert.certificationId);
                                               // Close dialog and delete certificate
                                             },
                                             child: Text(

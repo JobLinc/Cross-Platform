@@ -49,6 +49,7 @@ void main() {
       experiences: [experience],
       certifications: [],
       languages: [],
+      resumes: [],
     );
 
     await tester.pumpWidget(

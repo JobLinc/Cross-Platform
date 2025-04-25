@@ -35,8 +35,10 @@ class ConnectionPage extends StatelessWidget {
           ),
         );
       } else if (state is ConnectionsError) {
-        return Center(
-          child: Text(state.error),
+        return Scaffold(
+          body: Center(
+            child: Text(state.error),
+          ),
         );
       } else if (state is ConnectionsLoaded) {
         return ConnectionList(

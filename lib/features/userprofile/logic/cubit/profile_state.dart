@@ -89,7 +89,16 @@ class ExperienceAdded extends ProfileState {
 
   ExperienceAdded(this.message);
 }
+class ResumeAdded extends ProfileState {
+  final String message;
 
+  ResumeAdded(this.message);
+}
+class ResumeFailed extends ProfileState {
+  final String message;
+
+  ResumeFailed(this.message);
+}
 // class ExperienceUpdated extends ProfileState {
 //   final String message;
 
