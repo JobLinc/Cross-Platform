@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
@@ -29,7 +31,9 @@ class InvitationsList extends StatelessWidget {
                 key: Key("Invitations page Tile"),
                 onTap: () {
                   // TODO: Navigate to the user's profile
-                  print("Go to ${invitation.firstname}'s profile");
+                  //print("Go to ${invitation.firstname}'s profile");
+                  Navigator.pushNamed(context, Routes.otherProfileScreen,
+                      arguments: invitation.userId);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,13 +41,12 @@ class InvitationsList extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Align(
-                        alignment:
-                            Alignment.topLeft, // Align avatar to top-left
-                        child: CircleAvatar(
-                          radius: 25.r, // Bigger avatar
-                          child: Text(invitation.firstname[0]), // First letter
-                        ),
-                      ),
+                          alignment:
+                              Alignment.topLeft, // Align avatar to top-left
+                          child: ProfileImage(
+                            imageURL: invitation.profilePicture,
+                            radius: 25.r,
+                          )),
                     ),
                     Expanded(
                       child: Column(
@@ -78,8 +81,12 @@ class InvitationsList extends StatelessWidget {
                     ElevatedButton(
                       key: Key("invitationslist_delete_button"),
                       onPressed: () {
-                        BlocProvider.of<InvitationsCubit>(context)
-                            .handleInvitation(invitation, "Denied");
+                        // BlocProvider.of<InvitationsCubit>(context)
+                        //     .handleInvitation(invitation, "Denied");
+                        context
+                            .read<InvitationsCubit>()
+                            .respondToConnectionInvitation(
+                                invitation, "Rejected", context);
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(
@@ -101,8 +108,12 @@ class InvitationsList extends StatelessWidget {
                       child: ElevatedButton(
                         key: Key("invitationslist_accept_button"),
                         onPressed: () {
-                          BlocProvider.of<InvitationsCubit>(context)
-                              .handleInvitation(invitation, "Accepted");
+                          // BlocProvider.of<InvitationsCubit>(context)
+                          //     .handleInvitation(invitation, "Accepted");
+                          context
+                              .read<InvitationsCubit>()
+                              .respondToConnectionInvitation(
+                                  invitation, "Accepted", context);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: CircleBorder(

@@ -207,8 +207,10 @@ MediaType getMediaType(File file) {
   switch (extension) {
     case 'pdf':
       return MediaType('application', 'pdf');
+    case 'doc':
+    case 'docx':
+      return MediaType('application', 'msword');  // MIME type for Word documents
     default:
-      return MediaType(
-          'application', 'octet-stream'); // Fallback for unsupported types
+      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
   }
-}
+} 

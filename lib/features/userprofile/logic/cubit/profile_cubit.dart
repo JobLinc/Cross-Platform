@@ -347,10 +347,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ///////////////////////////////////OTHERS//////////////////////////
   Future<void> getPublicUserProfile(String userId) async {
+    emit(ProfileLoading());
     try {
-      emit(ProfileLoading());
       final profile = await _profileRepository.getPublicUserProfile(userId);
-      firstname = profile.firstname;
       if (!isClosed) {
         emit(ProfileLoaded(profile));
       }

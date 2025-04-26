@@ -25,11 +25,30 @@ class UserConnectionsRepository {
       throw Exception('Error mapping invitations: $e');
     }
   }
+
+  Future<List<UserConnection>> getSentInvitations() async {
+    try {
+      final data = await _apiService.getSentInvitations();
+      return data.map((json) => UserConnection.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Error mapping sent invitations: $e');
+    }
+  }
+
   Future<Response> changeConnectionStatus(String userId, String status) async {
     try {
       return await _apiService.changeConnectionStatus(userId, status);
     } catch (e) {
       print('Repository error changing connection status: $e');
+      rethrow;
+    }
+  }
+
+  Future<Response> respondToConnection(String userId, String status) async {
+    try {
+      return await _apiService.respondToConnection(userId, status);
+    } catch (e) {
+      print('Repository error responding to connection: $e');
       rethrow;
     }
   }

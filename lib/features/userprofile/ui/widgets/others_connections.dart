@@ -29,7 +29,7 @@ class othersConnections extends StatelessWidget {
         ],
       ),
       onTap: () {
-        Navigator.pushNamed(context, Routes.connectionListScreen);
+        //Navigator.pushNamed(context, Routes.connectionListScreen);
       },
     );
   }

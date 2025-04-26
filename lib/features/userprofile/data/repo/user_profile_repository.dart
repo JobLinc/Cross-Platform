@@ -22,7 +22,7 @@ class UserProfileRepository {
   UserProfile? _cachedProfile;
 
   UserProfileRepository(this._apiService, this._updateApiService,
-      this.uploadApiService, this.addApiService,this.othersApiService);
+      this.uploadApiService, this.addApiService, this.othersApiService);
 
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
@@ -213,6 +213,7 @@ class UserProfileRepository {
     try {
       return await othersApiService.getPublicUserProfile(userId);
     } catch (e) {
+      print(e.toString());
       throw Exception('Failed to fetch public user profile: $e');
     }
   }
