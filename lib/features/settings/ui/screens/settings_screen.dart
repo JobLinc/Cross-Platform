@@ -17,6 +17,29 @@ class SettingsScreen extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
             child: Text(
+              'Privacy',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('Account Visibility'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text('Blocked Accounts'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              Navigator.pushNamed(context, Routes.blockedAccountsScreen);
+            },
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+            child: Text(
               'Account access',
               style: TextStyle(
                 fontSize: 16,

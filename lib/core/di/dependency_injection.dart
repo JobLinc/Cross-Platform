@@ -5,6 +5,9 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/blockedaccounts/data/repos/blocked_account_repo.dart';
+import 'package:joblinc/features/blockedaccounts/data/services/blocked_accounts_service.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
 import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
@@ -241,4 +244,14 @@ Future<void> setupGetIt() async {
     () => ChangeUsernameCubit(getIt<ChangeUsernameRepo>()),
   );
   //User profile
+
+  // Blocked Accounts
+  getIt.registerLazySingleton<BlockedAccountsService>(
+      () => BlockedAccountsService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<BlockedAccountRepo>(
+      () => BlockedAccountRepo(getIt.get<BlockedAccountsService>()));
+
+  getIt.registerFactory<BlockedAccountsCubit>(
+      () => BlockedAccountsCubit(getIt.get<BlockedAccountRepo>()));
 }
