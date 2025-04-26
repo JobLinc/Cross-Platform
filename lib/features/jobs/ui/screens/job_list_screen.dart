@@ -18,11 +18,13 @@ class JobListScreen extends StatefulWidget {
 class _JobListScreenState extends State<JobListScreen> {
   late List<Job> searchedJobs;
   bool? isSearching = false;
+  Map <String,dynamic>? queryParams = {};
   final searchTextController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    context.read<JobListCubit>().getAllJobs();
+    print("getting jobs");
+    context.read<JobListCubit>().getAllJobs(queryParams: queryParams);
   }
 
   @override
@@ -38,7 +40,7 @@ class _JobListScreenState extends State<JobListScreen> {
           if (state is JobListLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is JobListEmpty) {
-            return Center(child: Text("Save Jobs to see them here "));
+            return Center(child: Text("No jobs here "));
           } else if (state is JobListLoaded) {
             return JobList(
                 key: ValueKey(state.jobs!.length), jobs: state.jobs!);

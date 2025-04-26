@@ -19,7 +19,7 @@ class OverviewTextFormField extends StatelessWidget {
         maxLength: 2000,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return null; 
+            return "Overview of the company is required."; 
           }
           return null;
         });

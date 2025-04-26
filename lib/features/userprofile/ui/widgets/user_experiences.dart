@@ -102,8 +102,7 @@ class UserExperiences extends StatelessWidget {
                                   color: ColorsManager.darkBurgundy,
                                   size: 20.r,
                                 ),
-                                onPressed:
-                                    () {
+                                onPressed: () {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext dialogContext) {
@@ -120,10 +119,12 @@ class UserExperiences extends StatelessWidget {
                                           ),
                                           TextButton(
                                             onPressed: () {
+                                              print(experience.experienceId);
                                               Navigator.of(dialogContext).pop();
                                               context
                                                   .read<ProfileCubit>()
-                                                  .deleteExperience(experience.position);
+                                                  .deleteExperience(
+                                                      experience.experienceId);
                                               // Close dialog and delete Experience
                                             },
                                             child: Text(
