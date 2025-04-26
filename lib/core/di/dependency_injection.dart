@@ -196,12 +196,12 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ConnectionsCubit>(
       () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
-  getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
-      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<SentConnectionsCubit>(
+      () => SentConnectionsCubit(getIt<UserConnectionsRepository>()));
 
   //User profile
   getIt.registerFactory<InvitationsCubit>(
-      () => InvitationsCubit(MockConnectionApiService()));
+      () => InvitationsCubit(getIt<UserConnectionsRepository>()));
 
   getIt.registerLazySingleton<UserProfileApiService>(
       () => UserProfileApiService(getIt<Dio>()));
@@ -214,13 +214,14 @@ Future<void> setupGetIt() async {
       () => UploadApiService(getIt<Dio>()));
   getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<UserProfileRepository>(() =>
-      UserProfileRepository(
-          getIt<UserProfileApiService>(),
-          getIt<UpdateUserProfileApiService>(),
-          getIt<UploadApiService>(),
-          getIt<addService>(),
-          getIt<OthersApiService>()));
+  getIt
+      .registerLazySingleton<UserProfileRepository>(() => UserProfileRepository(
+            getIt<UserProfileApiService>(),
+            getIt<UpdateUserProfileApiService>(),
+            getIt<UploadApiService>(),
+            getIt<addService>(),
+            getIt<OthersApiService>(),
+          ));
 
   getIt.registerFactory<ProfileCubit>(
       () => ProfileCubit(getIt<UserProfileRepository>()));

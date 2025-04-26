@@ -7,6 +7,9 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class OthersProfileScreen extends StatefulWidget {
   final String userId;
@@ -40,7 +43,8 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                 children: [
                   otherProfileCoverImages(profile: profile),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
+                    padding:
+                        EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -50,7 +54,8 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             Expanded(
                               child: Text(
                                 '${profile.firstname} ${profile.lastname}',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
                               ),
                             ),
                           ],
@@ -70,10 +75,12 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             Flexible(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, Routes.chatScreen);
+                                  // Navigator.pushNamed(
+                                  //     context, Routes.chatScreen);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  side: BorderSide(color: ColorsManager.darkBurgundy),
+                                  side: BorderSide(
+                                      color: ColorsManager.darkBurgundy),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -82,14 +89,14 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                                   backgroundColor: Colors.white,
                                 ),
                                 child: Center(
-                                  child: Text(
-                                    'Message',
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: ColorsManager.darkBurgundy,
-                                    ),
+                                    child: Text(
+                                  _getMessageBasedOnConnectionStatus(
+                                      profile.connectionStatus),
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: ColorsManager.darkBurgundy,
                                   ),
-                                ),
+                                )),
                               ),
                             ),
                             ElevatedButton(
@@ -120,12 +127,36 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('About',
-                                    style: Theme.of(context).textTheme.titleLarge),
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge),
                                 SizedBox(height: 8.h),
                                 Text(profile.biography),
                               ],
                             ),
                           ),
+                        if (profile.experiences.isNotEmpty) ...[
+                          SizedBox(height: 50.h),
+                          UserExperiences(
+                            profile: profile,
+                            isuser: false,
+                          )
+                        ],
+
+                        // Certificates section
+                        if (profile.certifications.isNotEmpty) ...[
+                          UserCerificates(
+                            profile: profile,
+                            isuser: false,
+                          ),
+                        ],
+
+                        // Skills section
+                        if (profile.skills.isNotEmpty) ...[
+                          UserSkills(
+                            profile: profile,
+                            isuser: false,
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -140,5 +171,20 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
         },
       ),
     );
+  }
+}
+
+String _getMessageBasedOnConnectionStatus(String connectionStatus) {
+  switch (connectionStatus) {
+    case 'Connected':
+      return 'Message';
+    case 'Pending':
+      return 'Pending Request';
+    case 'Blocked':
+      return 'Blocked';
+    case 'NotConnected':
+      return 'Connect Now';
+    default:
+      return 'Message'; // Default case if none of the above matches
   }
 }
