@@ -24,4 +24,20 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginFailure(e.toString()));
     }
   }
+
+  Future<void> loginWithGoogle() async {
+    emit(LoginLoading());
+    try {
+      final loginResponse = await _loginRepo.loginWithGoogle();
+
+      if (!loginResponse.confirmed) {
+        emit(LoginEmailNotConfirmed(loginResponse.email));
+        return;
+      }
+
+      emit(LoginSuccess());
+    } catch (e) {
+      emit(LoginFailure(e.toString()));
+    }
+  }
 }

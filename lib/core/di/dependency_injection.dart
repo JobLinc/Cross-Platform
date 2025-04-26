@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -33,6 +34,9 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
+import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
+import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
 import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/data/services/comment_api_service.dart';
@@ -67,10 +71,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = /*Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api' */
-      /*'http://localhost:3000/api'; */
-      'https://joblinc.me:3000/api'; 
+  final baseUrl = Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api' :
+      'http://localhost:3000/api';
+     // 'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -245,4 +249,17 @@ Future<void> setupGetIt() async {
     () => ChangeUsernameCubit(getIt<ChangeUsernameRepo>()),
   );
   //User profile
+
+  // Notifications
+  getIt.registerFactory<NotificationApiService>(
+    () => NotificationApiService(getIt<Dio>()),
+  );
+
+  getIt.registerFactory<NotificationRepo>(
+    () => NotificationRepo(getIt<NotificationApiService>()),
+  );
+
+  getIt.registerFactory<NotificationCubit>(
+    () => NotificationCubit(getIt<NotificationRepo>()),
+  );
 }

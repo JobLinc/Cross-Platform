@@ -30,8 +30,14 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'emits [LoginLoading, LoginSuccess] when login succeeds',
       build: () {
-        when(() => mockLoginRepo.login(any(), any()))
-            .thenAnswer((_) async => LoginResponseModel(accessToken: "token", refreshToken: "refreshToken", userId: "userId", role: 1, confirmed: true, email: "email"));
+        when(() => mockLoginRepo.login(any(), any())).thenAnswer((_) async =>
+            LoginResponseModel(
+                accessToken: "token",
+                refreshToken: "refreshToken",
+                userId: "userId",
+                role: 1,
+                confirmed: true,
+                email: "email"));
         return loginCubit;
       },
       act: (cubit) => cubit.login('test@example.com', 'password123'),
@@ -44,7 +50,6 @@ void main() {
             .called(1);
       },
     );
-
 
     blocTest<LoginCubit, LoginState>(
       'emits [LoginLoading, LoginFailure] when login fails',

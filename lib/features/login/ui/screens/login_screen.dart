@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           icon: FontAwesomeIcons.g,
                           onPressed: () {
-                         
+                         context.read<LoginCubit>().loginWithGoogle();
                           }),
                     ),
                     const SizedBox(height: 20),

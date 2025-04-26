@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1026201483663",
+    "project_id": "joblinc-a7f4e",
+    "storage_bucket": "joblinc-a7f4e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026201483663:android:5e8f8b8635004adff2f3fa",
+        "android_client_info": {
+          "package_name": "com.example.joblinc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026201483663-au9jsqfhef997u6h1gtvaq0iklckllel.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.joblinc",
+            "certificate_hash": "b62b4efc7943a783a5b86166bfcca3614574e310"
+          }
+        },
+        {
+          "client_id": "1026201483663-9g1k1avpkm7jjajm200uvgt8h8tob6tp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDgt4mWxwr-QonyqoOghm5OtjAHQ5LWvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026201483663-9g1k1avpkm7jjajm200uvgt8h8tob6tp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1026201483663-n90hdlhusnb3chtm482er8ts91k2b5j2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ahmedmohsen.joblinc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
