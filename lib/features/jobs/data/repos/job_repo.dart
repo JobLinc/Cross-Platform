@@ -50,9 +50,12 @@ class JobRepo {
   /// Returns a Future that resolves to a list of jobs the user has applied to.
   Future<List<Job>>? getAppliedJobs() async {
     final response = await _jobApiService.getAppliedJobs();
+    print(response.data[0]['job']);
     final List<JobApplication> jobApplications = (response.data as List)
         .map((jobJson) => JobApplication.fromJson(jobJson as Map<String, dynamic>))
         .toList();
+
+    print("jobApplications: ${jobApplications[0].id}");
 
     //List<Job> jobs = jobApplications.map((app) => app.job).toList();
     final jobs=jobApplications.map((app) => app.job).toList();

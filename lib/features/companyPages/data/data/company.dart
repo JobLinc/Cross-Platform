@@ -203,7 +203,6 @@ class Company {
 List<Company> mockCompanies = [
   Company(
     name: "Microsoft",
-    id: "1",
     profileUrl: "joblinc.com/microsoft",
     industry: Industry.softwareDevelopment,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -220,7 +219,6 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Google",
-    id: "2",
     profileUrl: "joblinc.com/google",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -252,7 +250,6 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Amazon",
-    id: "3",
     profileUrl: "joblinc.com/amazon",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -268,7 +265,6 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Tesla",
-    id: "4",
     profileUrl: "joblinc.com/tesla",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -284,7 +280,6 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Netflix",
-    id: "5",
     profileUrl: "joblinc.com/netflix",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -300,7 +295,6 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Uber",
-    id: "6",
     profileUrl: "joblinc.com/uber",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,

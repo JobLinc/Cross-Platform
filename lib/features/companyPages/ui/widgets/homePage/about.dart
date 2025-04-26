@@ -15,7 +15,7 @@ class CompanyHomeAbout extends StatelessWidget {
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8.h),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -35,7 +35,7 @@ class CompanyHomeAbout extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.0),
           _buildInfoColumn('Website', company.website!),
           _buildInfoColumn('Industry', company.industry.displayName),
           _buildInfoColumn(
@@ -48,7 +48,7 @@ class CompanyHomeAbout extends StatelessWidget {
 
   Widget _buildInfoColumn(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -58,7 +58,7 @@ class CompanyHomeAbout extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 4.0),
           Text(
             value,
             style: TextStyle(

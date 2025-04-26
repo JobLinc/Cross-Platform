@@ -53,7 +53,7 @@ class SearchFilter {
 
     if (location != null && location!.trim().isNotEmpty) {
       //params['locations.address'] = location!.trim();
-      params['search_location'] = location!.trim();
+      params['locations.city[in]'] = location!.trim();
       //params['locations.country'] = location!.trim();
     }
 
