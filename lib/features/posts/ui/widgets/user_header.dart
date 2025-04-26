@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 
 class UserHeader extends StatelessWidget {
   //TODO add GestureDetector for the avatar + Info
@@ -9,10 +10,13 @@ class UserHeader extends StatelessWidget {
       required this.imageURL,
       required this.username,
       required this.headline,
+      required this.senderID,
       this.action});
 
   ///Profile Picture URL
   final String imageURL;
+
+  final String senderID;
 
   final String username;
 
@@ -27,6 +31,7 @@ class UserHeader extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, Routes.profileScreen),
       child: Row(
+        spacing: 8,
         key: Key('post_header_container'),
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -81,23 +86,6 @@ class UserInfo extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.imageURL});
-  final String imageURL;
-
-  @override
-  Widget build(BuildContext context) {
-    //TODO this needs revising
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: CircleAvatar(
-        key: Key('post_header_avatar'),
-        backgroundImage: NetworkImage(imageURL),
-      ),
     );
   }
 }

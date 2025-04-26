@@ -46,20 +46,6 @@ class EmailConfirmationApiService {
     }
   }
 
-  /// Checks if the user's email is confirmed
-  /// Note: This is not directly available in the backend but we can derive it from login response
-  Future<bool> checkEmailConfirmationStatus(String userId) async {
-    try {
-      // Since the backend doesn't have a direct endpoint for this,
-      // we'll need to use the user profile or other endpoint to check this
-      // For now, we'll return a placeholder response
-      return true;
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    } catch (e) {
-      throw 'Something went wrong. Please try again.';
-    }
-  }
 
   /// Error handler that extracts the backend message or returns a default error
   String _handleDioError(DioException e) {

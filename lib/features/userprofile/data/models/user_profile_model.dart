@@ -1,5 +1,6 @@
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/resume_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 
@@ -21,9 +22,10 @@ class UserProfile {
   final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
-  final List<Experience> experience;
+  final List<Experience> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
+  final List<Resume> resumes;
 
   UserProfile({
     required this.userId,
@@ -43,9 +45,10 @@ class UserProfile {
     required this.recentPosts,
     required this.skills,
     required this.education,
-    required this.experience,
+    required this.experiences,
     required this.certifications,
     required this.languages,
+    required this.resumes,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -75,7 +78,7 @@ class UserProfile {
               ?.map((edu) => Education.fromJson(edu))
               .toList() ??
           [],
-      experience: (json['experience'] as List<dynamic>?)
+      experiences: (json['experiences'] as List<dynamic>?)
               ?.map((exp) => Experience.fromJson(exp))
               .toList() ??
           [],
@@ -85,6 +88,10 @@ class UserProfile {
               .toList() ??
           [],
       email: json['email'] ?? '',
+      resumes: (json['resumes'] as List<dynamic>?)
+              ?.map((resume) => Resume.fromJson(resume))
+              .toList() ??
+          [],
     );
   }
 

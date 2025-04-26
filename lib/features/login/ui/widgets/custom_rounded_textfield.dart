@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CustomRoundedTextFormField extends StatelessWidget {
-  CustomRoundedTextFormField(
-      {super.key,
-      required TextEditingController controller,
-      this.obscureText,
-      this.labelText,
-      this.hintText,
-      this.hintStyle,
-      this.filled,
-      this.borderRadius,
-      this.validator,
-      this.keyboardType})
-      : _controller = controller;
+  CustomRoundedTextFormField({
+    super.key,
+    required TextEditingController controller,
+    this.obscureText,
+    this.labelText,
+    this.hintText,
+    this.hintStyle,
+    this.filled,
+    this.borderRadius,
+    this.validator,
+    this.keyboardType,
+    this.autofocus,
+  }) : _controller = controller;
 
   final TextEditingController _controller;
 
@@ -23,12 +24,14 @@ class CustomRoundedTextFormField extends StatelessWidget {
   BorderRadius? borderRadius;
   bool? filled;
   bool? obscureText;
+  bool? autofocus;
   FormFieldValidator<String>? validator;
   TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: autofocus ?? false,
       controller: _controller,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 
 class ResumeCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class ResumeCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade300,
-          width: isSelected ? 2.0 : 1.0,
+          width: isSelected ? 1.0 : 1.0,
         ),
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -40,7 +41,7 @@ class ResumeCard extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.red.shade400,
+                color: ColorsManager.getPrimaryColor(context),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(8.0),
                   bottomLeft: Radius.circular(8.0),
@@ -95,7 +96,7 @@ class ResumeCard extends StatelessWidget {
             child: Text(
               isSelected ? "UNSELECT" : "SELECT",
               style: TextStyle(
-                color: isSelected ? Colors.blue : Colors.red[400],
+                color: isSelected ? Colors.blue : ColorsManager.getPrimaryColor(context),
                 fontWeight: FontWeight.bold,
               ),
             ),

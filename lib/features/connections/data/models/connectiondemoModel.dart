@@ -81,6 +81,7 @@ class UserConnection {
   final String profilePicture;
   final String connectionStatus;
   final int mutualConnections;
+  final DateTime? time_of_connections;
 
   UserConnection({
     required this.userId,
@@ -90,6 +91,7 @@ class UserConnection {
     required this.profilePicture,
     required this.connectionStatus,
     required this.mutualConnections,
+    this.time_of_connections,
   });
 
   factory UserConnection.fromJson(Map<String, dynamic> json) {
@@ -97,10 +99,12 @@ class UserConnection {
       userId: json["userId"],
       firstname: json["firstname"],
       lastname: json["lastname"],
-      headline: json["headline"],
-      profilePicture: json["profilePicture"],
-      connectionStatus: json["connectionStatus"],
+      headline: json["headline"] ?? "",
+      profilePicture: json["profilePicture"] ??
+          "https://res.cloudinary.com/dufshbyse/image/upload/v1744210597/placeholder/placeholder/profile.png",
+      connectionStatus: json["connectionStatus"] ?? "Connected",
       mutualConnections: json["mutualConnections"],
+      time_of_connections: json["time"],
     );
   }
   Map<String, dynamic> toJson() {

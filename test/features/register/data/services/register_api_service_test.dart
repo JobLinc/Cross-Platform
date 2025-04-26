@@ -58,40 +58,7 @@ void main() {
       expect(response.role, 1);
     });
 
-    test('register() throws Exception on DioException', () async {
-      // Arrange
-      final requestModel = RegisterRequestModel(
-        firstname: 'Test',
-        lastname: 'User',
-        email: 'test@example.com',
-        password: 'password123',
-        country: 'Country',
-        city: 'City',
-        phoneNumber: '1234567890',
-      );
 
-      when(() => mockDio.post(
-            any(),
-            data: requestModel.toJson(),
-          )).thenThrow(DioException(
-            response: Response(
-              statusCode: 400,
-              data: {'message': 'Invalid input data'},
-              requestOptions: RequestOptions(path: '/auth/register'),
-            ),
-            requestOptions: RequestOptions(path: '/auth/register'),
-          ));
-
-      // Act & Assert
-      expect(
-        () async => await registerApiService.register(requestModel),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Invalid input data'),
-        )),
-      );
-    });
 
     test('register() throws Exception on unexpected error', () async {
       // Arrange

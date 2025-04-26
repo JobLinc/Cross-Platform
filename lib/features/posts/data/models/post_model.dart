@@ -14,28 +14,26 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    final bool companyPost;
-    if (json['userId'] == null) {
-      companyPost = true;
-    } else {
-      companyPost = false;
-    }
-
+    final bool companyPost = (json['userId'] == null);
+    print(json);
     return PostModel(
-      postID: json['postId'],
-      senderID: companyPost ? (json['compamyId']) : (json['userId']),
+      postID: json['postId'] ?? '',
+      senderID:
+          companyPost ? (json['companyId'] ?? '') : (json['userId'] ?? ''),
       isCompany: companyPost,
       username: companyPost
-          ? json['companyName']
-          : '${json['firstname']} ${json['lastname']}',
-      headline: json['headline'],
-      profilePictureURL:
-          companyPost ? json['companyLogo'] : json['profilePicture'],
-      text: json['text'],
-      attachmentURLs: json['attachments'],
-      commentCount: json['comments'],
-      likeCount: json['likes'],
-      repostCount: json['reposts'],
+          ? (json['companyName'] ?? '')
+          : '${json['firstname'] ?? ''} ${json['lastname'] ?? ''}',
+      headline: json['headline'] ?? '',
+      profilePictureURL: companyPost
+          ? (json['companyLogo'] ?? '')
+          : (json['profilePicture'] ?? 'https://placehold.co/400/png'),
+      text: json['text'] ?? '',
+      attachmentURLs:
+          (json['mediaUrl'] as List<dynamic>?)?.cast<String>() ?? [],
+      commentCount: json['comments'] ?? 0,
+      likeCount: json['likes'] ?? 0,
+      repostCount: json['reposts'] ?? 0,
     );
   }
 
@@ -46,13 +44,13 @@ class PostModel {
   final String headline;
   final String profilePictureURL;
   final String text;
-  List<String> attachmentURLs;
+  List<dynamic> attachmentURLs;
   int commentCount;
   int likeCount;
   int repostCount;
 }
 
-PostModel mockData = PostModel(
+PostModel mockPostData = PostModel(
   postID: "1",
   senderID: "2",
   isCompany: false,

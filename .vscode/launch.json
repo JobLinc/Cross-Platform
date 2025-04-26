@@ -14,12 +14,14 @@
       "name": "Cross-Platform (profile mode)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
       "flutterMode": "profile"
     },
     {
       "name": "Cross-Platform (release mode)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
       "flutterMode": "release"
     }
   ]

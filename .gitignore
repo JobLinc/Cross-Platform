@@ -40,7 +40,7 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/.cxx/Debug
+/android/app/.cxx
 /android/app/debug
 /android/app/profile
 /android/app/release
@@ -54,3 +54,7 @@ pubspec.lock
 devtools_options.yaml
 
 backend/
+pubspec.lock
+pubspec.lock
+android/settings.gradle
+android/gradle/wrapper/gradle-wrapper.properties

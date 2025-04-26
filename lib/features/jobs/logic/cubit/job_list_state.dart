@@ -1,7 +1,7 @@
 part of 'job_list_cubit.dart';
 
-@immutable
-sealed class JobListState {}
+//@immutable
+abstract class JobListState {}
 
 final class JobListInitial extends JobListState {}
 final class JobListLoading extends JobListState {}

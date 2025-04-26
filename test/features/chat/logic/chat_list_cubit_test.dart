@@ -1,278 +1,224 @@
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mocktail/mocktail.dart';
-// import 'package:bloc_test/bloc_test.dart';
-// import 'package:joblinc/features/chat/data/models/chat_model.dart';
-// import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
-// import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-
-// class MockChatRepo extends Mock implements ChatRepo {}
-
-// void main() {
-//   late ChatListCubit chatListCubit;
-//   late MockChatRepo mockChatRepo;
-  
-//   setUp(() {
-//     mockChatRepo = MockChatRepo();
-//     chatListCubit = ChatListCubit(mockChatRepo);
-//   });
-
-//   tearDown(() {
-//     chatListCubit.close();
-//   });
-
-//   final chat1 = Chat(
-//     id: "conv_001",
-//     userID: "user1",
-//     userName: "Alice",
-//     userAvatar: null,
-//     lastMessage: LastMessage(
-//       senderID: "user1",
-//       text: "Hello",
-//       timestamp: DateTime.now(),
-//       messageType: "text",
-//     ),
-//     lastUpdate: DateTime.now(),
-//     unreadCount: 1,
-//     lastSender: "Alice",
-//     isOnline: true,
-//   );
-
-//   final chat2 = Chat(
-//     id: "conv_002",
-//     userID: "user2",
-//     userName: "Bob",
-//     userAvatar: null,
-//     lastMessage: LastMessage(
-//       senderID: "user2",
-//       text: "Hey!",
-//       timestamp: DateTime.now(),
-//       messageType: "text",
-//     ),
-//     lastUpdate: DateTime.now(),
-//     unreadCount: 0,
-//     lastSender: "Bob",
-//     isOnline: false,
-//   );
-
-//   final List<Chat> chatList = [chat1, chat2];
-
-//   group('ChatListCubit Tests', () {
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits [ChatListLoading, ChatListLoaded] when getAllChats is called and succeeds',
-//       build: () {
-//         when(() => mockChatRepo.getAllChats()).thenAnswer((_) async => chatList);
-//         return chatListCubit;
-//       },
-//       act: (cubit) => cubit.getAllChats(),
-//       expect: () => [
-//         ChatListLoading(),
-//         ChatListLoaded(chats: chatList),
-//       ],
-//     );
-
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits [ChatListLoading, ChatListEmpty] when getAllChats returns an empty list',
-//       build: () {
-//         when(() => mockChatRepo.getAllChats()).thenAnswer((_) async => []);
-//         return chatListCubit;
-//       },
-//       act: (cubit) => cubit.getAllChats(),
-//       expect: () => [
-//         ChatListLoading(),
-//         ChatListEmpty(),
-//       ],
-//     );
-
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits ChatListSearch when searchChats is called with a valid query',
-//       build: () {
-//         chatListCubit.emit(ChatListLoaded(chats: chatList));
-//         return chatListCubit;
-//       },
-//       act: (cubit) => cubit.searchChats("Alice"),
-//       expect: () => [
-//         ChatListSearch([chat1]),
-//       ],
-//     );
-
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits ChatListEmpty when searchChats finds no match',
-//       build: () {
-//         chatListCubit.emit(ChatListLoaded(chats: chatList));
-//         return chatListCubit;
-//       },
-//       act: (cubit) => cubit.searchChats("Charlie"),
-//       expect: () => [
-//         ChatListEmpty(),
-//       ],
-//     );
-
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits ChatListFilter when filtering unread messages',
-//       build: () {
-//         chatListCubit.emit(ChatListLoaded(chats: chatList));
-//         return chatListCubit;
-//       },
-//       act: (cubit) => cubit.filteredChats(true),
-//       expect: () => [
-//         ChatListFilter([chat1]),
-//       ],
-//     );
-
-//     blocTest<ChatListCubit, ChatListState>(
-//       'emits ChatListNewChat and ChatListLoaded when addNewChat is called',
-//       build: () => chatListCubit,
-//       act: (cubit) => cubit.addNewChat(chat1),
-//       expect: () => [
-//         ChatListNewChat(chat1),
-//         ChatListLoaded(chats: [chat1]),
-//       ],
-//     );
-//   });
-// }
-
-
-// void main() {
-//   late ChatListCubit chatListCubit;
-//   late MockChatRepo mockChatRepo;
-
-//   setUp(() {
-//     mockChatRepo = MockChatRepo();
-//     chatListCubit = ChatListCubit(mockChatRepo);
-//   });
-
-//   blocTest<ChatListCubit, ChatListState>(
-//     'emits [ChatListLoading, ChatListLoaded] when getAllChats() is called and returns data',
-//     build: () {
-//     when(mockChatRepo.getAllChats() as Function()).thenAnswer((_) async => Future.value(mockChats));
-//       return chatListCubit;
-//     },
-//     act: (cubit) => cubit.getAllChats(),
-//     expect: () => [ChatListLoading(), ChatListLoaded(chats: mockChats)],
-//   );
-
-//   blocTest<ChatListCubit, ChatListState>(
-//     'emits [ChatListLoading, ChatListEmpty] when getAllChats() returns an empty list',
-//     build: () {
-//       when(mockChatRepo.getAllChats() as Function()).thenAnswer((_) async => []);
-//       return chatListCubit;
-//     },
-//     act: (cubit) => cubit.getAllChats(),
-//     expect: () => [ChatListLoading(), ChatListEmpty()],
-//   );
-// }
-
-
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
-import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-//import 'package:mocktail/mocktail.dart';
+import 'package:mockito/mockito.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
+import 'package:joblinc/features/chat/data/models/message_model.dart';
+
+// A manual mock of ChatRepo
 class MockChatRepo extends Mock implements ChatRepo {}
-@GenerateMocks([ChatRepo])
+
 void main() {
-  late MockChatRepo mockChatRepo;
-  late ChatListCubit chatListCubit;
-  WidgetsFlutterBinding.ensureInitialized();
+  group('ChatListCubit', () {
+    late ChatListCubit cubit;
+    late MockChatRepo mockRepo;
+    final testChats = [
+      Chat(
+        chatId: 'c1',
+        chatName: 'Alice',
+        chatPicture: ['pic1.png'],
+        lastMessage: 'Hi',
+        sentDate: DateTime.now(),
+        unreadCount: 0,
+        isRead: true,
+      ),
+      Chat(
+        chatId: 'c2',
+        chatName: 'Bob',
+        chatPicture: [],
+        lastMessage: 'Hello',
+        sentDate: DateTime.now(),
+        unreadCount: 2,
+        isRead: false,
+      ),
+    ];
+    final testDetail = ChatDetail(
+      chatType: 'group',
+      participants: [],
+      messages: [
+        Message(
+          messageId: 'm1',
+          type: 'text',
+          content: MessageContent(text: 'Hello'),
+          sentDate: DateTime.now(),
+          senderId: 'c1',
+        ),
+      ],
+    );
 
-  setUp(() {
-    mockChatRepo = MockChatRepo();
-    chatListCubit = ChatListCubit(mockChatRepo);
-    when(mockChatRepo.getAllChats()).thenAnswer((_) async => []);
-  });
+    setUp(() {
+      mockRepo = MockChatRepo();
+      cubit = ChatListCubit(mockRepo);
+    });
 
-  tearDown(() {
-    chatListCubit.close();
-  });
+    tearDown(() {
+      cubit.close();
+    });
 
-  group('ChatListCubit Tests', () {
-    // final mockChats = [
-    //   Chat(
-    //     id: "1",
-    //     userID: "user1",
-    //     userName: "Alice",
-    //     userAvatar: null,
-    //     lastMessage: LastMessage(
-    //       senderID: "user1",
-    //       text: "Hello!",
-    //       timestamp: DateTime.now(),
-    //       messageType: "text",
-    //     ),
-    //     lastUpdate: DateTime.now(),
-    //     unreadCount: 2,
-    //     lastSender: "Alice",
-    //     isOnline: true,
-    //   ),
-    // ];
+    test('initial state is ChatListInitial', () {
+      expect(cubit.state, isA<ChatListInitial>());
+    });
 
     blocTest<ChatListCubit, ChatListState>(
-      'emits [ChatListLoading, ChatListLoaded] when getAllChats is successful',
+      'getAllChats emits [Loading, Loaded] on non-empty repo result',
       build: () {
-        when(mockChatRepo.getAllChats()).thenAnswer((_) async => mockChats);
-        return chatListCubit;
+        when(mockRepo.getAllChats()).thenAnswer((_) async => testChats);
+        return cubit;
       },
-      act: (cubit) => cubit.getAllChats(),
+      act: (c) => c.getAllChats(),
       expect: () => [
-        ChatListLoading(),
-        ChatListLoaded(chats: mockChats),
+        isA<ChatListLoading>(),
+        isA<ChatListLoaded>(),
+      ],
+      verify: (_) {
+        verify(mockRepo.getAllChats()).called(1);
+      },
+    );
+
+    blocTest<ChatListCubit, ChatListState>(
+      'getAllChats emits [Loading, Empty] on empty repo result',
+      build: () {
+        when(mockRepo.getAllChats()).thenAnswer((_) async => []);
+        return cubit;
+      },
+      act: (c) => c.getAllChats(),
+      expect: () => [
+        isA<ChatListLoading>(),
+        isA<ChatListEmpty>(),
       ],
     );
 
     blocTest<ChatListCubit, ChatListState>(
-      'emits [ChatListLoading, ChatListEmpty] when getAllChats returns empty list',
+      'getChatDetails emits [DetailLoading, DetailLoaded]',
       build: () {
-        when(mockChatRepo.getAllChats()).thenAnswer((_) async => []);
-        return chatListCubit;
+        when(mockRepo.getChatDetails('c1')).thenAnswer((_) async => testDetail);
+        return cubit;
       },
-      act: (cubit) => cubit.getAllChats(),
+      act: (c) => c.getChatDetails('c1'),
       expect: () => [
-        ChatListLoading(),
-        ChatListEmpty(),
+        isA<ChatDetailLoading>(),
+        isA<ChatDetailLoaded>(),
+        //ChatDetailLoaded(chatDetail: testDetail),
+      ],
+      verify: (_) {
+        verify(mockRepo.getChatDetails('c1')).called(1);
+      },
+    );
+
+    blocTest<ChatListCubit, ChatListState>(
+      'searchChats filters correctly and emits ChatListSearch',
+      build: () {
+        // preload chats
+        cubit
+          ..emit(ChatListLoaded(chats: testChats))
+          ..chats = testChats; // hack: set internal cache
+        return cubit;
+      },
+      act: (c) => c.searchChats('bob'),
+      expect: () => [
+        isA<ChatListSearch>().having(
+          (s) => (s as ChatListSearch).searchChats.first.chatName,
+          'filtered chats',
+          'Bob',
+        ),
       ],
     );
 
     blocTest<ChatListCubit, ChatListState>(
-      'emits [ChatListLoading, ChatListErrorLoading] when getAllChats fails',
+      'filteredChats(true) emits ChatListFilter with only unread',
       build: () {
-        when(mockChatRepo.getAllChats()).thenThrow(Exception("Failed to load"));
-        return chatListCubit;
+        cubit
+          ..emit(ChatListLoaded(chats: testChats))
+          ..chats = testChats;
+        return cubit;
       },
-      act: (cubit) => cubit.getAllChats(),
+      act: (c) => c.filteredChats(true),
       expect: () => [
-        ChatListLoading(),
-        isA<ChatListErrorLoading>(),
+        isA<ChatListFilter>().having(
+          (s) => (s).filteredChats.length,
+          'only one unread',
+          1,
+        ),
       ],
     );
 
     blocTest<ChatListCubit, ChatListState>(
-      'emits [ChatListSearch] when searchChats is called',
+      'toggleSelection and clearSelection work',
       build: () {
-        return chatListCubit;
+        cubit
+          ..emit(ChatListLoaded(chats: testChats))
+          ..chats = testChats;
+        return cubit;
       },
-      act: (cubit) {
-        cubit.emit(ChatListLoaded(chats: mockChats));
-        cubit.searchChats("Alice");
+      act: (c) {
+        c.toggleSelection('c2');
+        c.clearSelection();
       },
       expect: () => [
-        ChatListSearch(mockChats),
+        isA<ChatListSelected>().having(
+          (s) => (s as ChatListSelected).selectedIds.contains('c2'),
+          'selected c2',
+          isTrue,
+        ),
+        isA<ChatListLoaded>(),
+      ],
+    );
+
+    // blocTest<ChatListCubit, ChatListState>(
+    //   'addNewChat emits new chat events then reloads',
+    //   build: () {
+    //     return cubit;
+    //   },
+    //   act: (c) => c.addNewChat(testChats.first),
+    //   expect: () => [
+    //     ChatListNewChat(testChats.first),
+    //     isA<ChatListLoaded>(),
+    //   ],
+    // );
+
+    blocTest<ChatListCubit, ChatListState>(
+      'markReadOrUnreadSelected calls repo and reloads',
+      build: () {
+        when(mockRepo.markReadOrUnread('c2')).thenAnswer((_) async {});
+        when(mockRepo.getAllChats()).thenAnswer((_) async => testChats);
+        cubit.selectedIds.add('c2');
+        return cubit;
+      },
+      act: (c) => c.markReadOrUnreadSelected(true),
+      expect: () => [
+        isA<ChatListLoading>(),
+        isA<ChatListLoaded>(),
       ],
     );
 
     blocTest<ChatListCubit, ChatListState>(
-      'emits [ChatListFilter] when filteredChats is called',
+      'deleteSelected calls repo and reloads',
       build: () {
-        return chatListCubit;
+        when(mockRepo.deleteChat('c2')).thenAnswer((_) async {});
+        when(mockRepo.getAllChats()).thenAnswer((_) async => []);
+        cubit.selectedIds.add('c2');
+        return cubit;
       },
-      act: (cubit) {
-        cubit.emit(ChatListLoaded(chats: mockChats));
-        cubit.filteredChats(true);
-      },
+      act: (c) => c.deleteSelected(),
       expect: () => [
-        ChatListFilter(mockChats),
+        isA<ChatListLoading>(),
+        isA<ChatListEmpty>(),
+      ],
+    );
+
+    blocTest<ChatListCubit, ChatListState>(
+      'archiveSelected calls repo and reloads',
+      build: () {
+        when(mockRepo.archiveChat('c2')).thenAnswer((_) async {});
+        when(mockRepo.getAllChats()).thenAnswer((_) async => testChats);
+        cubit.selectedIds.add('c2');
+        return cubit;
+      },
+      act: (c) => c.archiveSelected(),
+      expect: () => [
+        isA<ChatListLoading>(),
+        isA<ChatListLoaded>(),
       ],
     );
   });

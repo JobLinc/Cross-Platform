@@ -95,7 +95,7 @@ class _MainContainerScreenState extends State<MainContainerScreen>
           // Home tab
           _buildKeepAliveScreen(
             BlocProvider(
-              create: (context) => getIt<HomeCubit>()..getUserInfo(),
+              create: (context) => getIt<HomeCubit>()..getFeed(),
               child: const HomeScreen(),
             ),
           ),

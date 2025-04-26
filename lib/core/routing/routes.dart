@@ -32,6 +32,7 @@ class Routes {
   static const String addCertificationScreen = '/addCertificationScreen';
   static const String addExperienceScreen = '/addExperienceScreen';
   static const String addSkillScreen = '/addSkillScreen';
+  static const String addResumeScreen = '/addResumeScreen';
   static const String otherImagesPreview = '/otherImagesPreview';
   static const String otherProfileScreen = '/otherProfileScreen';
   static const String blockedAccountsScreen = '/blockedAccountsScreen';

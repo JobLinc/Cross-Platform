@@ -5,23 +5,32 @@ import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
-import 'package:meta/meta.dart';
 
 part 'job_list_state.dart';
 
 class JobListCubit extends Cubit<JobListState> {
   final JobRepo jobRepo;
   List<Job> _jobs = [];
+  List<Map<String,dynamic>> companyNames=[];
   JobListCubit(this.jobRepo) : super(JobListInitial());
 
-  Future<void> getAllJobs() async {
-    emit(JobListLoading());
+    Future<void> getCompanyNames() async {
     try {
-      _jobs = await jobRepo.getAllJobs();
+      companyNames = await jobRepo.getCompanyNames()!;
+    } catch (e) {
+      emit(JobListErrorLoading(e.toString()));
+    }
+  }
+
+  Future<void> getAllJobs({bool isSearch= false,Map<String,dynamic>? queryParams}) async {
+    isSearch ? emit(JobSearchLoading()): emit(JobListLoading()) ;
+    try {
+      print("cubit requesting");
+      _jobs = await jobRepo.getAllJobs(queryParams: queryParams)!;
       if (_jobs.isEmpty) {
-        emit(JobListEmpty());
+        isSearch ? emit(JobSearchEmpty()): emit(JobListEmpty());
       } else {
-        emit(JobListLoaded(jobs: _jobs));
+        isSearch ? emit(JobSearchLoaded(searchedJobs: _jobs)): emit(JobListLoaded(jobs: _jobs));
       }
     } catch (e) {
       emit(JobListErrorLoading(e.toString()));
@@ -31,7 +40,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getSavedJobs() async{
     emit(JobSavedLoading());
     try {
-      _jobs=await jobRepo.getSavedJobs();
+      _jobs=await jobRepo.getSavedJobs()!;
       if (_jobs.isEmpty){
         emit(JobSavedEmpty());
       } else{
@@ -46,7 +55,7 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getAppliedJobs() async{
     emit(JobAppliedLoading());
     try {
-      _jobs=await jobRepo.getAppliedJobs();
+      _jobs=await jobRepo.getAppliedJobs()!;
       if (_jobs.isEmpty){
         emit(JobAppliedEmpty());
       } else{
@@ -58,26 +67,26 @@ class JobListCubit extends Cubit<JobListState> {
   }
 
 
-    Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
-    emit(JobSearchLoading());
-    try {
-      _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter);
-      if (_jobs.isEmpty) {
-        emit(JobSearchEmpty());
-      } else {
-        emit(JobSearchLoaded(searchedJobs: _jobs));
-      }
-    } catch (e) {
-      emit(JobListErrorLoading(e.toString()));
-    }
-  }
+  //   Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
+  //   emit(JobSearchLoading());
+  //   try {
+  //     _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter)!;
+  //     if (_jobs.isEmpty) {
+  //       emit(JobSearchEmpty());
+  //     } else {
+  //       emit(JobSearchLoaded(searchedJobs: _jobs));
+  //     }
+  //   } catch (e) {
+  //     emit(JobListErrorLoading(e.toString()));
+  //   }
+  // }
 
 
     Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {
-      List<Job> savedJobs = await jobRepo.getSavedJobs();
-      List<Job> appliedJobs = await jobRepo.getAppliedJobs();
+      List<Job> savedJobs = await jobRepo.getSavedJobs()!;
+      List<Job> appliedJobs = await jobRepo.getAppliedJobs()!;
       emit(JobDetailsLoaded(savedJobs: savedJobs, appliedJobs: appliedJobs));
     } catch (e) {
       emit(JobDetailsErrorLoading(e.toString()));
@@ -87,7 +96,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getAllResumes() async {
     emit(JobResumesLoading());
     try {
-      List<Resume> resumes = await jobRepo.getAllResumes();
+      List<Resume> resumes = await jobRepo.getAllResumes()!;
       emit(JobResumesLoaded(resumes: resumes));
     } catch (e) {
       emit(JobResumesErrorLoading(e.toString()));
@@ -117,10 +126,10 @@ class JobListCubit extends Cubit<JobListState> {
     }
   }
 
-  createJob(Job job) async{
+  createJob({required Map<String,dynamic> jobReq}) async{
         emit(JobCreating());
     try {
-      await jobRepo.createJob(job);
+      await jobRepo.createJob(jobReq:jobReq);
       emit(JobCreated());
     } catch (e) {
       emit(JobCreationError(e.toString()));

@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../models/user_profile_model.dart';
@@ -13,12 +16,12 @@ class UserProfileRepository {
   final UserProfileApiService _apiService;
   final UpdateUserProfileApiService _updateApiService;
   final UploadApiService uploadApiService;
-  final addService addApiervice;
+  final addService addApiService;
   // Optional in-memory cache
   UserProfile? _cachedProfile;
 
   UserProfileRepository(this._apiService, this._updateApiService,
-      this.uploadApiService, this.addApiervice);
+      this.uploadApiService, this.addApiService);
 
   /// Gets the user profile from the API or cache if available and not expired
   Future<UserProfile> getUserProfile({bool forceRefresh = false}) async {
@@ -71,6 +74,15 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> deleteProfilePicture() async {
+    try {
+      return await uploadApiService.deleteProfilePicture();
+    } catch (e) {
+      print('Repository error deleting profile picture: $e');
+      rethrow;
+    }
+  }
+
   Future<Response> uploadCoverPicture(File imageFile) async {
     try {
       return await uploadApiService.uploadCoverPicture(imageFile);
@@ -79,9 +91,18 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> deleteCoverPicture() async {
+    try {
+      return await uploadApiService.deleteCoverPicture();
+    } catch (e) {
+      print('Repository error deleting cover picture: $e');
+      rethrow;
+    }
+  }
+
   Future<Response> addCertification(Certification certification) async {
     try {
-      return await addApiervice.addCertification(certification);
+      return await addApiService.addCertification(certification);
     } catch (e) {
       rethrow;
     }
@@ -89,7 +110,7 @@ class UserProfileRepository {
 
   Future<Response> deleteCertification(String certificationId) async {
     try {
-      return await addApiervice.deleteCertification(certificationId);
+      return await addApiService.deleteCertification(certificationId);
     } catch (e) {
       rethrow;
     }
@@ -97,7 +118,7 @@ class UserProfileRepository {
 
   Future<List<Certification>> getAllCertificates() async {
     try {
-      final List<dynamic> rawList = await addApiervice.getAllCertificates();
+      final List<dynamic> rawList = await addApiService.getAllCertificates();
 
       // Safely cast each item to Map<String, dynamic>
       return rawList
@@ -108,7 +129,81 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> addExperience(Experience experience) async {
+    try {
+      return await addApiService.addExperience(experience);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteExperience(String experienceId) async {
+    try {
+      return await addApiService.deleteExperience(experienceId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Experience>> getAllExperiences() async {
+    try {
+      final List<dynamic> rawList = await addApiService.getAllExperiences();
+
+      return rawList
+          .map((item) => Experience.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Repository error: $e');
+    }
+  }
+
+  Future<Response> addSkill(Skill skill) async {
+    try {
+      return await addApiService.addSkill(skill);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteSkill(String skillId) async {
+    try {
+      return await addApiService.deleteSkill(skillId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Skill>> getAllSkills() async {
+    try {
+      final List<dynamic> rawList = await addApiService.getAllExperiences();
+
+      return rawList
+          .map((item) => Skill.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw Exception('Repository error: $e');
+    }
+  }
+
   void clearCache() {
     _cachedProfile = null;
+  }
+
+  Future<Response> uploadResume(File file) async {
+    try {
+      return await addApiService.uploadResume(file);
+    } catch (e) {
+      print("Repository error: $e ");
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteResume(String resumeid) async {
+    try {
+      return await addApiService.deleteUserResume(resumeid);
+    } catch (e) {
+      print("error ${e.toString()}");
+      throw Exception('Failed to delete resume. Please try again later.');
+    }
   }
 }

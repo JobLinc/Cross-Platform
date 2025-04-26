@@ -10,6 +10,7 @@ import 'package:joblinc/features/blockedaccounts/data/services/blocked_accounts_
 import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
+import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changepassword/data/repos/change_password_repo.dart';
 import 'package:joblinc/features/changepassword/data/services/change_password_api_service.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -27,7 +28,7 @@ import 'package:joblinc/features/emailconfirmation/data/services/email_confirmat
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
-import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 
@@ -69,10 +70,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = /*Platform.isAndroid
+  final baseUrl = Platform.isAndroid
       ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api';*/
-      'https://joblinc.me:3000/api';
+      : 'http://localhost:3000/api';
+  //'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -105,15 +106,6 @@ Future<void> setupGetIt() async {
       () => RegisterRepo(getIt<RegisterApiService>()));
   getIt.registerFactory<RegisterCubit>(
       () => RegisterCubit(getIt<RegisterRepo>()));
-
-  getIt.registerLazySingleton<ChangePasswordApiService>(
-      () => ChangePasswordApiService(getIt<Dio>()));
-
-  getIt.registerLazySingleton<ChangePasswordRepo>(
-      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
-
-  getIt.registerFactory<ChangePasswordCubit>(
-      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
 
   getIt.registerLazySingleton<ForgetPasswordApiService>(
       () => ForgetPasswordApiService(getIt<Dio>()));
@@ -191,8 +183,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<UserConnectionsRepository>(
       () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
 
-  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
-      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<ConnectionsCubit>(
+      () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
   getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
@@ -235,6 +227,18 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<ChangeEmailRepo>(
     () => ChangeEmailRepo(getIt<ChangeEmailApiService>()),
   );
+
+  getIt.registerFactory<ChangeEmailCubit>(
+      () => ChangeEmailCubit(getIt<ChangeEmailRepo>()));
+
+  getIt.registerLazySingleton<ChangePasswordApiService>(
+      () => ChangePasswordApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ChangePasswordRepo>(
+      () => ChangePasswordRepo(getIt<ChangePasswordApiService>()));
+
+  getIt.registerFactory<ChangePasswordCubit>(
+      () => ChangePasswordCubit(getIt<ChangePasswordRepo>()));
 
   getIt.registerFactory<ChangeUsernameRepo>(
     () => ChangeUsernameRepo(getIt<UpdateUserProfileApiService>()),

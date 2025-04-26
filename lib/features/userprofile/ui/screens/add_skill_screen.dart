@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
-import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
@@ -58,10 +57,8 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
       final level = skillLevels.indexOf(selectedSkillLevel!) + 1;
 
       // Create skill model
-      final Skill skillToAdd = Skill(
-        name: skillNameController.text,
-        level: level,
-      );
+      final Skill skillToAdd =
+          Skill(name: skillNameController.text, level: level, id: "");
 
       print('Saving skill with: ${skillToAdd.toJson()}');
 
@@ -100,13 +97,17 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
               ),
             );
           } else if (state is SkillAdded) {
+            int count = 0;
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.profileScreen,
+              (route) => count++ >= 2,
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Skill added successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
           }
         },
         builder: (context, state) {
