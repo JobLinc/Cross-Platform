@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/features/companyPages/data/data/models/company_id.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
@@ -435,6 +436,11 @@ class JobCard extends StatelessWidget {
 
     // decide which “owner” we have
     final hasCompany = job.company != null;
+    // if(hasCompany)
+    // {
+    //   MyCompanyIds.instance.companyIds.contains(job.company!.id);
+    //   isCreated= true;
+    // }
     final ownerName = hasCompany
         ? job.company!.name
         : "${job.employer!.firstname} ${job.employer!.lastname}";
@@ -470,7 +476,7 @@ return FutureBuilder<String?>(
       final userId = snap.data ?? '';
       final hasCompany = job.company != null;
       final ownerId   = hasCompany ? job.company!.id : job.employer!.id;
-      final isCreated = !hasCompany && ownerId == userId;
+      final isCreated = !hasCompany && ownerId == userId || hasCompany && MyCompanyIds.instance.companyIds.contains(job.company!.id) ;
     return GestureDetector(
       key: Key("jobs_openJob_card${job.id}"),
       onTap: (){
