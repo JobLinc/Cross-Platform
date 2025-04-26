@@ -174,6 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           ListTile(
+            leading: Icon(Icons.dashboard),
+            title: Text('Admin Dashboard'),
+            onTap: () => Navigator.pushNamed(context, Routes.adminPanel),
+          ),
+          ListTile(
             leading: const Icon(Icons.connect_without_contact_rounded),
             title: const Text('View my connections'),
             onTap: () {
