@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -61,12 +62,19 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   }
 
   Future<void> _pickResumeFile() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.any);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+      allowMultiple: false,
+      );
     if (result != null && result.files.isNotEmpty) {
       final platformFile = result.files.first;
       if (platformFile.path != null) {
         final file = File(platformFile.path!);
 
+        await context.read<JobListCubit>().uploadResume(file);
+
+        await context.read<JobListCubit>().getAllResumes();
         // Get the app documents directory
         final directory = await getApplicationDocumentsDirectory();
         final localPath = '${directory.path}/${platformFile.name}';
@@ -84,8 +92,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
           //_selectedResumeLocalPath = localFile.path;
         });
 
-        context.read<JobListCubit>().uploadResume(file);
-        context.read<JobListCubit>().getAllResumes();
       }
     }
   }
@@ -121,7 +127,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   Text("Sending application..."),
                 ],
               ),
-              duration: Duration(minutes: 1),
+              duration: Duration(seconds: 30),
             ),
           );
         }
@@ -147,7 +153,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Apply to ${widget.job.company.name ?? ''}"),
+          title: Text("Apply to ${widget.job.title ?? ""}"),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
@@ -215,7 +221,12 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
               ),
               BlocBuilder<JobListCubit, JobListState>(
                 builder: (context, state) {
-                  if (state is JobResumesLoading) {
+                if (state is JobResumeUploading) {
+                    return  Column(children: [
+                      Center(child: CircularProgressIndicator(color: ColorsManager.crimsonRed,)),
+                      Center(child: Text("Uploading Resume",style: TextStyle(color:ColorsManager.crimsonRed ),),)
+                    ],);
+                  }else if (state is JobResumesLoading) {
                     return CircularProgressIndicator();
                   } else if (state is JobResumesLoaded) {
                     resumes = state.resumes!;
@@ -343,18 +354,18 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                         );
                         return;
                       }
-                      final jobApplication = JobApplication(
-                        applicant: mockMainApplicant,
-                        job: widget.job,
-                        resume: resumes!.firstWhere(
-                            ((resume) => resume.id == _selectedResumeId!)),
-                        status: "JustApplied",
-                        createdAt: DateTime.now(),
-                      );
+                      // final jobApplication = JobApplication(
+                      //   applicant: mockMainApplicant,
+                      //   job: widget.job,
+                      //   resume: resumes!.firstWhere(
+                      //       ((resume) => resume.id == _selectedResumeId!)),
+                      //   status: "JustApplied",
+                      //   createdAt: DateTime.now(),
+                      // );
                       context
                           .read<JobListCubit>()
                           .applyJob(widget.job.id, {
-                            "phoner": phoneNumber,
+                            "phone": phoneNumber,
                             "resumeId": _selectedResumeId,
                           });
                     },
