@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_creation_screem.dart';
 
 class CompanyDashboard extends StatelessWidget {
   final Company company;
@@ -57,7 +61,7 @@ class CompanyDashboard extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 90.w),
                     child: Center(
                       child: Text(
-                        "Your page doesn't have any posts from the last 90 days",
+                        "Manage your page’s organic and paid content",
                         style: TextStyle(
                           fontSize: 20.sp,
                         ),
@@ -117,7 +121,7 @@ class CompanyDashboard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Join conversations",
+                    "Post a job",
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
@@ -125,7 +129,7 @@ class CompanyDashboard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "Build brand awareness and community by engaging with recent conversations",
+                    "Post a job in minutes and reach qualified candidates you can’t find anywhere else.",
                     style: TextStyle(
                       fontSize: 15.sp,
                       color: Colors.grey[700],
@@ -144,7 +148,7 @@ class CompanyDashboard extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 90.w),
                     child: Center(
                       child: Text(
-                        "Your feed is empty",
+                        "Post a job to reach the right candidates",
                         style: TextStyle(
                           fontSize: 20.sp,
                         ),
@@ -155,25 +159,25 @@ class CompanyDashboard extends StatelessWidget {
                   SizedBox(height: 10.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 90.w),
-                    child: Center(
-                      child: Text(
-                        "Follow other pages in your industry to get new content inspiration",
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          color: Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 16.h), // Add spacing between elements
                   Center(
                     child: TextButton(
                       onPressed: () {
-                        // TODO: Add functionality to follow other pages
+                        //TODO: Navigate to the add post screen
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                      create: (context) =>
+                                          getIt<JobListCubit>(),
+                                      child: JobCreationScreen(),
+                                    )
+                                  )
+                                );
                       },
                       child: Text(
-                        'Add pages to follow',
+                        'Post a job',
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: ColorsManager.crimsonRed,

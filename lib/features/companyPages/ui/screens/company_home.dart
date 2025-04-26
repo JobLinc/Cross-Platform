@@ -5,6 +5,7 @@ import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
 import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/company_jobs.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../widgets/scrollable_tabs.dart';
@@ -80,7 +81,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
                 Center(child: Text("Home")),
                 CompanyHomeAbout(company: widget.company),
                 CompanyHomePosts(companyId: widget.company.id!),
-                Center(child: Text("Jobs")),
+                CompanyHomeJobs(companyId: widget.company.id!),
                 Center(child: Text("People")),
               ],
             ),

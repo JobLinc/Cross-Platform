@@ -61,6 +61,7 @@ class JobApiService {
   Future<Response> getAppliedJobs() async {
     if (apiEndPointWorking) {
       try {
+        print("api requesting ya abdelrahman ya sameh");
         final response = await _dio.get('/jobs/my-job-applications');
         print(response.data);
         return response;
