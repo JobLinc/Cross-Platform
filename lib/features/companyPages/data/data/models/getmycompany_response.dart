@@ -1,4 +1,3 @@
-// models/company_response.dart
 class CompanyResponse {
   final String id;
   final String name;
@@ -63,3 +62,4 @@ class CompanyListResponse {
     );
   }
 }
+

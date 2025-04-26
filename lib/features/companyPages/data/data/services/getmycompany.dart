@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../models/getmycompany_response.dart';
+import '../models/company_id.dart';
 
 class CompanyApiService {
   final Dio dio;
@@ -31,6 +32,15 @@ class CompanyApiService {
       }
 
       if (response.data is List) {
+        final ids = (response.data as List)
+            .map((json) => CompanyResponse.fromJson(json as Map<String, dynamic>).id)
+            .toList();
+        MyCompanyIds.instance.setCompanyIds(ids);
+        print('''
+          === Company IDs ===
+          ''');
+        print(MyCompanyIds.instance.companyIds);
+
         return CompanyListResponse.fromJson(response.data as List<dynamic>);
       } else {
         throw Exception('Expected a list of companies from API');
