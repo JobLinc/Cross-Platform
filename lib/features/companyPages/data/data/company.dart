@@ -98,7 +98,7 @@ extension IndustryExtension on Industry {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
@@ -132,7 +132,7 @@ extension OrganizationSizeExtension on OrganizationSize {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
@@ -156,13 +156,13 @@ extension OrganizationTypeExtension on OrganizationType {
     }
   }
 
-   static OrganizationType? fromDisplayName(String displayName) {
+  static OrganizationType? fromDisplayName(String displayName) {
     for (final value in OrganizationType.values) {
       if (value.displayName == displayName) {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
@@ -176,6 +176,8 @@ class Company {
   String? logoUrl;
   String? coverUrl;
   String? location;
+  String? country;
+  String? city;
   Industry industry;
   OrganizationSize organizationSize;
   OrganizationType organizationType;
@@ -189,6 +191,8 @@ class Company {
     this.website,
     this.tagline,
     this.overview,
+    this.country,
+    this.city,
     required this.industry,
     required this.organizationSize,
     required this.organizationType,

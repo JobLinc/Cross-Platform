@@ -13,6 +13,8 @@ import 'package:joblinc/features/companypages/ui/widgets/form/organizationSize_c
 import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/website_textField.dart';
+import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 
 class CompanyPageEditScreen extends StatefulWidget {
   final Company company;
@@ -30,6 +32,8 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
   late TextEditingController websiteController;
   late TextEditingController jobLincUrlController;
   late TextEditingController overviewController;
+  late TextEditingController cityController;
+  late TextEditingController countryController;
   late Industry selectedIndustry;
   late OrganizationSize selectedOrgSize;
   late OrganizationType selectedOrgType;
@@ -41,6 +45,8 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
     websiteController = TextEditingController();
     jobLincUrlController = TextEditingController();
     overviewController = TextEditingController();
+    cityController = TextEditingController();
+    countryController = TextEditingController();
 
     // Initialize dropdown values from company or use defaults
     selectedIndustry = widget.company.industry;
@@ -54,6 +60,8 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
     websiteController.dispose();
     jobLincUrlController.dispose();
     overviewController.dispose();
+    cityController.dispose();
+    countryController.dispose();
     super.dispose();
   }
 
@@ -85,6 +93,8 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
       websiteController.text = widget.company.website ?? '';
       jobLincUrlController.text = widget.company.profileUrl;
       overviewController.text = widget.company.overview!;
+      cityController.text = widget.company.city ?? '';
+      countryController.text = widget.company.country ?? '';
 
       _formInitialized = true;
     }
@@ -167,6 +177,22 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
                         },
                       ),
                       // Add other fields here
+
+                      // Country
+                      SizedBox(height: 20.h),
+                      CountryTextFormField(
+                          key: Key('editUserProfile_country_textfield'),
+                          countryController: countryController),
+                      SizedBox(height: 15.h),
+
+                      // City
+                      CityTextFormField(
+                        key: Key('editUserProfile_city_textfield'),
+                        cityController: cityController,
+                        selectedCity: cityController.text.isNotEmpty
+                            ? cityController.text
+                            : widget.company.city,
+                      ),
                       SizedBox(height: 80.h), // Extra space for the button
                     ],
                   ),
@@ -206,8 +232,4 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
       },
     );
   }
-}
-
-extension on EditCompanySuccess {
-  get company => null;
 }

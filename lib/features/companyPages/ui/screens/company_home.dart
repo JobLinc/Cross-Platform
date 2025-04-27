@@ -49,17 +49,19 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
       appBar: widget.isAdmin
           ? DashboardAppbar(
               leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new, size: 24.sp),
-        onPressed: () => Navigator.pushReplacementNamed(context, Routes.homeScreen),
-      ),
+                icon: Icon(Icons.arrow_back_ios_new, size: 24.sp),
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, Routes.homeScreen),
+              ),
               company: widget.company,
               selectedValue: "Company Profile",
             )
           : AppBar(
               leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, size: 24.sp),
-        onPressed: () => Navigator.pushReplacementNamed(context, Routes.homeScreen),
-      ),
+                icon: Icon(Icons.arrow_back_ios, size: 24.sp),
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, Routes.homeScreen),
+              ),
               backgroundColor: const Color(0xFFFAFAFA),
               title: Row(
                 children: [
@@ -91,7 +93,8 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
                 Center(child: Text("Home")),
                 CompanyHomeAbout(company: widget.company),
                 CompanyHomePosts(companyId: widget.company.id!),
-                CompanyHomeJobs(companyId: widget.company.id!),
+                CompanyHomeJobs(
+                    companyId: widget.company.id!, isAdmin: widget.isAdmin),
                 Center(child: Text("People")),
               ],
             ),
