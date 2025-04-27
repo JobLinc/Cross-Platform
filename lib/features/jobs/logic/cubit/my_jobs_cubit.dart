@@ -48,7 +48,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   Future<void> getCreatedJobs(String userId) async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getAllJobs(queryParams: {"employer.id":userId})!;
+      _jobs = await jobRepo.getAllJobs(queryParams: {"employer.id": userId})!;
       if (_jobs.isEmpty) {
         emit(MyCreatedJobsEmpty());
       } else {
@@ -91,12 +91,27 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     emit(MyJobApplicantLoading());
     try {
       _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId)!;
-      if (_jobApplicant == null ) {
+      if (_jobApplicant == null) {
         emit(MyJobApplicantsEmpty());
       } else {
         emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
       }
     } catch (e) {
+      emit(MyJobsErrorLoading(e.toString()));
+    }
+  }
+
+  Future<void> changeJobApplicationStatus(String jobId, String jobApplicationId,
+      Map<String, dynamic> status) async {
+    emit(MyJobApplicantLoading());
+    try {
+      _jobApplicant = await jobRepo.changeJobApplicationStatus(jobId, jobApplicationId, status);
+            if (_jobApplicant == null) {
+        emit(MyJobApplicantsEmpty());
+      } else {
+        emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
+      }
+    } on Exception catch (e) {
       emit(MyJobsErrorLoading(e.toString()));
     }
   }
@@ -111,7 +126,8 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     await getJobApplicantById(jobId, applicantId);
   }
 
-  emitMyJobApplicantLoaded(JobApplicant jobApplicant){
-        emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
+  emitMyJobApplicantLoaded(JobApplicant jobApplicant) {
+    changeJobApplicationStatus(jobApplicant.job, jobApplicant.id, {"status": "Viewed"});
+    //emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
   }
 }

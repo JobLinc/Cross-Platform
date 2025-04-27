@@ -13,22 +13,18 @@ import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubi
 import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
-import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
-
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
@@ -44,8 +40,6 @@ import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
-import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';

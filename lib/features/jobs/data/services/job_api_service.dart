@@ -235,7 +235,7 @@ class JobApiService {
   Future<void> saveJob(String jobId) async {
     if (apiEndPointWorking) {
       try {
-        await _dio.post('/job/$jobId/save');
+        await _dio.post('user/saved-jobs', data: {"jobId":jobId});
       } catch (e) {
         rethrow;
       }
@@ -248,7 +248,7 @@ class JobApiService {
   Future<void> unsaveJob(String jobId) async {
     if (apiEndPointWorking) {
       try {
-        await _dio.post('/job/$jobId/unsave');
+        await _dio.delete('user/saved-jobs/$jobId');
       } catch (e) {
         rethrow;
       }
@@ -263,7 +263,7 @@ class JobApiService {
     if (apiEndPointWorking) {
       try {
         //Map<String, dynamic> applicationData = jobApplication.toJson();
-        print("api applying");
+        //print("api applying");
         // final response =
             await _dio.post('/jobs/$jobId/apply', data: jobApplication);
         // return response;
@@ -286,6 +286,28 @@ class JobApiService {
     }
   }
 
+
+  Future<Response> changeJobApplicationStatus(String jobId, String jobApplicantionId,Map<String,dynamic> status) async {
+    if (apiEndPointWorking) {
+      try {
+        print("changing job application status");
+        final response =await _dio.patch('/jobs/$jobId/job-applications/$jobApplicantionId',data: status);
+        print(response.data);
+        return response;
+      } catch (e) {
+        rethrow;
+      }
+    } else { 
+       final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 200,
+        data: {
+          'message': 'application accepted',
+        },
+      );
+      return response;
+    }
+  }
   Future<void> acceptJobApplication(String jobId, String applicantId) async {
     if (apiEndPointWorking) {
       try {
@@ -311,6 +333,8 @@ class JobApiService {
         rethrow;
       }
     } else {
+
+      
       // jobApplicants
       //     .firstWhere((jobApp) => jobApp.applicant.id == applicantId)
       //     .status = "Rejected";

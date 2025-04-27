@@ -51,11 +51,12 @@ class JobRepo {
   Future<List<Job>>? getAppliedJobs() async {
     final response = await _jobApiService.getAppliedJobs();
     final List<JobApplication> jobApplications = (response.data as List)
-        .map((jobJson) => JobApplication.fromJson(jobJson as Map<String, dynamic>))
+        .map((jobJson) =>
+            JobApplication.fromJson(jobJson as Map<String, dynamic>))
         .toList();
 
     //List<Job> jobs = jobApplications.map((app) => app.job).toList();
-    final jobs=jobApplications.map((app) => app.job).toList();
+    final jobs = jobApplications.map((app) => app.job).toList();
     return jobs;
   }
 
@@ -113,9 +114,9 @@ class JobRepo {
     return resumes;
   }
 
-  Future<void>? createJob({required Map<String,dynamic> jobReq}) async {
+  Future<void>? createJob({required Map<String, dynamic> jobReq}) async {
     //final response =
-    await _jobApiService.createJob(jobReq:jobReq);
+    await _jobApiService.createJob(jobReq: jobReq);
     //return Job.fromJson(response as Map<String, dynamic>);
   }
 
@@ -129,7 +130,17 @@ class JobRepo {
     //return Job.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<void>? applyJob(String jobId, Map<String,dynamic> jobApplication) async {
+  Future<JobApplicant>? changeJobApplicationStatus(
+      String jobId, String applicantId, Map<String, dynamic> status) async {
+    final response = await _jobApiService.changeJobApplicationStatus(
+        jobId, applicantId, status);
+    final JobApplicant jobApplicant =
+        JobApplicant.fromJson(response.data as Map<String, dynamic>);
+    return jobApplicant;
+  }
+
+  Future<void>? applyJob(
+      String jobId, Map<String, dynamic> jobApplication) async {
     //final response =
     await _jobApiService.applyJob(jobId, jobApplication);
     //return Job.fromJson(response as Map<String, dynamic>);

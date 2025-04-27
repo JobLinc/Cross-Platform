@@ -23,6 +23,7 @@ class JobApplicationCard extends StatelessWidget {
     final localPath = '${directory.path}/$resumeName';
     final file = File(localPath);
 
+
     if (await file.exists()) {
       await OpenFile.open(localPath);
     } else if (await canLaunchUrl(Uri.parse(resumeUrl))) {
@@ -39,6 +40,9 @@ class JobApplicationCard extends StatelessWidget {
     final job = jobApplication.job;
     final resume = jobApplication.resume;
     final dateStr = DateFormat.yMMMd().format(jobApplication.createdAt);
+    final hasCompany = job.company != null;
+    final employerName   = hasCompany ? job.company!.name : "${job.employer!.firstname}  ${job.employer!.lastname}";
+    print(jobApplication.status);
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
@@ -65,7 +69,7 @@ class JobApplicationCard extends StatelessWidget {
 
           // 2) Company & Industry
           Text(
-            "${job.company?.name ?? ""} • ${job.industry ?? ""}",
+            "${employerName ?? ""} • ${job.industry ?? ""}",
             style: TextStyle(
               fontSize: 16.sp,
               color: Colors.grey[800],
@@ -185,14 +189,14 @@ class JobApplicationCard extends StatelessWidget {
   }
 
   Color _statusColor(String status) {
-    switch (status.toLowerCase()) {
-      case "pending":
+    switch (status) {
+      case "Pending":
         return Colors.orange;
-      case "reviewd":
+      case "Viewed":
         return Colors.blue;
-      case "approved":
+      case "Accepted":
         return Colors.green;
-      case "rejected":
+      case "Rejected":
         return Colors.red;
       default:
         return Colors.grey;
