@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:open_file/open_file.dart';
@@ -106,33 +107,38 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await context.read<MyJobsCubit>().acceptJobApplication(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                            context.read<MyJobsCubit>().getJobApplicantById(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                          child: const Text("Accept"),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await context.read<MyJobsCubit>().acceptJobApplication(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                              context.read<MyJobsCubit>().getJobApplicantById(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                            child: Text("Accept" ,style: TextStyle(color: ColorsManager.getTextPrimary(context),),)
+                          ),
                         ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            await context.read<MyJobsCubit>().rejectJobApplication(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                            context.read<MyJobsCubit>().getJobApplicantById(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                          child: const Text("Reject"),
+                        SizedBox(width: 100.w,),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await context.read<MyJobsCubit>().rejectJobApplication(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                              context.read<MyJobsCubit>().getJobApplicantById(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            child: Text("Reject",style: TextStyle(color: ColorsManager.getTextPrimary(context),),),
+                          ),
                         ),
                       ],
                     );
@@ -188,33 +194,38 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await context.read<MyJobsCubit>().acceptJobApplication(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                            await context.read<MyJobsCubit>().getJobApplicantById(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                          child: const Text("Accept"),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await context.read<MyJobsCubit>().acceptJobApplication(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                              await context.read<MyJobsCubit>().getJobApplicantById(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                            child: Text("Accept" ,style: TextStyle(color: ColorsManager.getTextPrimary(context),),)
+                          ),
                         ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            await context.read<MyJobsCubit>().rejectJobApplication(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                            await context.read<MyJobsCubit>().getJobApplicantById(
-                                  jobApp.job.id!,
-                                  jobApp.applicant.id,
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                          child: const Text("Reject"),
+                        SizedBox(width: 100.w,),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await context.read<MyJobsCubit>().rejectJobApplication(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                              await context.read<MyJobsCubit>().getJobApplicantById(
+                                    jobApp.job.id!,
+                                    jobApp.applicant.id,
+                                  );
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                            child: Text("Reject",style: TextStyle(color: ColorsManager.getTextPrimary(context),),),
+                          ),
                         ),
                       ],
                     );

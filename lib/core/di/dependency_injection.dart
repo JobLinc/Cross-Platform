@@ -5,6 +5,11 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/accountvisibility/data/repos/account_visibility_repo.dart';
+import 'package:joblinc/features/accountvisibility/data/services/account_visibility_service.dart';
+import 'package:joblinc/features/blockedaccounts/data/repos/blocked_account_repo.dart';
+import 'package:joblinc/features/blockedaccounts/data/services/blocked_accounts_service.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
@@ -25,7 +30,7 @@ import 'package:joblinc/features/emailconfirmation/data/services/email_confirmat
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
-import 'package:joblinc/features/connections/data/Repo/UserConnections.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 
@@ -67,10 +72,11 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = /*Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api' */
-      /*'http://localhost:3000/api'; */
-      'https://joblinc.me:3000/api'; 
+  final baseUrl =
+      // Platform.isAndroid
+      // ? 'http://10.0.2.2:3000/api'
+      // : 'http://localhost:3000/api';
+      'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -180,8 +186,8 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<UserConnectionsRepository>(
       () => UserConnectionsRepository(getIt<UserConnectionsApiService>()));
 
-  getIt.registerFactory<ConnectionsCubit>(() => ConnectionsCubit(
-      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
+  getIt.registerFactory<ConnectionsCubit>(
+      () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
   getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
       MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
 
@@ -245,4 +251,21 @@ Future<void> setupGetIt() async {
     () => ChangeUsernameCubit(getIt<ChangeUsernameRepo>()),
   );
   //User profile
+
+  // Blocked Accounts
+  getIt.registerLazySingleton<BlockedAccountsService>(
+      () => BlockedAccountsService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<BlockedAccountRepo>(
+      () => BlockedAccountRepo(getIt.get<BlockedAccountsService>()));
+
+  getIt.registerFactory<BlockedAccountsCubit>(
+      () => BlockedAccountsCubit(getIt.get<BlockedAccountRepo>()));
+
+  // Account Visibility
+  getIt.registerLazySingleton<AccountVisibilityService>(
+      () => AccountVisibilityService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<AccountVisibilityRepo>(
+      () => AccountVisibilityRepo(getIt.get<AccountVisibilityService>()));
 }

@@ -1,5 +1,6 @@
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/resume_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 
@@ -24,6 +25,7 @@ class UserProfile {
   final List<Experience> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
+  final List<Resume> resumes;
 
   UserProfile({
     required this.userId,
@@ -46,6 +48,7 @@ class UserProfile {
     required this.experiences,
     required this.certifications,
     required this.languages,
+    required this.resumes,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -85,6 +88,10 @@ class UserProfile {
               .toList() ??
           [],
       email: json['email'] ?? '',
+      resumes: (json['resumes'] as List<dynamic>?)
+              ?.map((resume) => Resume.fromJson(resume))
+              .toList() ??
+          [],
     );
   }
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -73,10 +74,28 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> deleteProfilePicture() async {
+    try {
+      return await uploadApiService.deleteProfilePicture();
+    } catch (e) {
+      print('Repository error deleting profile picture: $e');
+      rethrow;
+    }
+  }
+
   Future<Response> uploadCoverPicture(File imageFile) async {
     try {
       return await uploadApiService.uploadCoverPicture(imageFile);
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteCoverPicture() async {
+    try {
+      return await uploadApiService.deleteCoverPicture();
+    } catch (e) {
+      print('Repository error deleting cover picture: $e');
       rethrow;
     }
   }
@@ -168,5 +187,23 @@ class UserProfileRepository {
 
   void clearCache() {
     _cachedProfile = null;
+  }
+
+  Future<Response> uploadResume(File file) async {
+    try {
+      return await addApiService.uploadResume(file);
+    } catch (e) {
+      print("Repository error: $e ");
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteResume(String resumeid) async {
+    try {
+      return await addApiService.deleteUserResume(resumeid);
+    } catch (e) {
+      print("error ${e.toString()}");
+      throw Exception('Failed to delete resume. Please try again later.');
+    }
   }
 }

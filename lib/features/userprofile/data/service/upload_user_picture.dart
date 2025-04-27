@@ -57,6 +57,24 @@ class UploadApiService {
       throw Exception('Error uploading file: $e');
     }
   }
+  Future<Response> deleteProfilePicture() async {
+    try {
+      final response = await dio.delete('/user/edit/profile-picture');
+      return response;
+    } catch (e) {
+      print('Error deleting profile picture: $e');
+      rethrow;
+    }
+  }
+  Future<Response> deleteCoverPicture() async {
+    try {
+      final response = await dio.delete('/user/edit/cover-picture');
+      return response;
+    } catch (e) {
+      print('Error deleting cover picture: $e');
+      rethrow;
+    }
+  }
 }
 
 MediaType getMediaType(File file) {
