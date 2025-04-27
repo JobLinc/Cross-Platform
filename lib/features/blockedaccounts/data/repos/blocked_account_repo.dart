@@ -8,4 +8,9 @@ class BlockedAccountRepo {
   Future<List<BlockedAccountModel>> getBlockedUsers() async {
     return await blockedAccountsService.getBlockedUsers();
   }
+
+  Future<void> unBlockUser(String userId) async {
+    return await blockedAccountsService.changeConnectionStatus(
+        userId, ConnectionStatus.unblocked);
+  }
 }

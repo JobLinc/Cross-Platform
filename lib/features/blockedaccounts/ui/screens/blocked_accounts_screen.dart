@@ -33,7 +33,7 @@ class BlockedAccountsScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text('Blocked Accounts'),
             ),
-            body: (state.blockedAccounts.length > 0)
+            body: (state.blockedAccounts.isNotEmpty)
                 ? ListView.builder(
                     itemCount: state.blockedAccounts.length,
                     itemBuilder: (context, index) {
@@ -45,7 +45,12 @@ class BlockedAccountsScreen extends StatelessWidget {
                         subtitle: Text(
                             '${blockedAccount.mutualConnections} mutual connections'),
                         trailing: TextButton(
-                            onPressed: () {}, child: Text('Unblock')),
+                            onPressed: () {
+                              context
+                                  .read<BlockedAccountsCubit>()
+                                  .unblockUser(blockedAccount.userId);
+                            },
+                            child: Text('Unblock')),
                       );
                     })
                 : Center(

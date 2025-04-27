@@ -19,4 +19,13 @@ class BlockedAccountsCubit extends Cubit<BlockedAccountsState> {
       emit(BlockedAccountsFailure(e.toString()));
     }
   }
+
+  Future<void> unblockUser(String userId) async {
+    try {
+      await blockedAccountRepo.unBlockUser(userId);
+      getBlockedUsers();
+    } catch (e) {
+      emit(BlockedAccountsFailure(e.toString()));
+    }
+  }
 }
