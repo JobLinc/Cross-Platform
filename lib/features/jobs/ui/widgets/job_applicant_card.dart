@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
-import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,7 +44,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side: const BorderSide(color: Colors.red, width: 2),
+        side: BorderSide(color: ColorsManager.getPrimaryColor(context), width: 2),
       ),
       elevation: 5,
       shadowColor: Colors.redAccent,
@@ -112,7 +110,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                             onPressed: () => context
                                 .read<MyJobsCubit>()
                                 .changeJobApplicationStatus(
-                                    widget.jobApplicant.job!,
+                                    widget.jobApplicant.job,
                                     widget.jobApplicant.id,
                                     {"status":"Accepted"}
                                     ),
@@ -132,7 +130,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                             onPressed: () => context
                                 .read<MyJobsCubit>()
                                 .changeJobApplicationStatus(
-                                    widget.jobApplicant.job!,
+                                    widget.jobApplicant.job,
                                     widget.jobApplicant.id,
                                     {"status":"Rejected"}
                                     ),
@@ -211,7 +209,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.red.shade400),
+          border: Border.all(color: ColorsManager.getPrimaryColor(context)),
           borderRadius: BorderRadius.circular(8.r),
         ),
         padding: EdgeInsets.all(8.w),

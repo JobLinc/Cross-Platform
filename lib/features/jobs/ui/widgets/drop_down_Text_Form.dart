@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:joblinc/core/helpers/countries.dart';
 
 class DropDownTextFormField extends StatelessWidget {
   final String fieldName;

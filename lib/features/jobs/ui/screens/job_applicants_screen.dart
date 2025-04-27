@@ -18,7 +18,7 @@ class _JobApplicantsScreenState extends State<JobApplicantsScreen> {
   void initState() {
     super.initState();
     // Call getJobApplicants with the job id
-    context.read<MyJobsCubit>().getJobApplicants(widget.job.id!);
+    context.read<MyJobsCubit>().getJobApplicants(widget.job.id);
   }
 
   @override

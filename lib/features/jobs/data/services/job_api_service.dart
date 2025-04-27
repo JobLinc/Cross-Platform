@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 
 class JobApiService {
   final Dio _dio;
@@ -17,7 +15,7 @@ class JobApiService {
       final response = await _dio.get('/companies', queryParameters: {
         'fields': ['name']
       });
-      print(response);
+      //print(response);
       return response;
     } catch (e) {
       rethrow;
@@ -37,13 +35,13 @@ class JobApiService {
 
   Future<Response> getAllJobs({Map<String, dynamic>? queryParams}) async {
     if (apiEndPointWorking) {
-      print("api requesting");
+      //print("api requesting");
       final response = await _dio.get(
         '/jobs',
         queryParameters: queryParams,
       );
-      print(queryParams);
-      print(response);
+      //print(queryParams);
+      //print(response);
       return response;
     } else {
       // Mock fallback
@@ -61,9 +59,9 @@ class JobApiService {
   Future<Response> getAppliedJobs() async {
     if (apiEndPointWorking) {
       try {
-        print("api requesting ya abdelrahman ya sameh");
+        //print("api requesting ya abdelrahman ya sameh");
         final response = await _dio.get('/jobs/my-job-applications');
-        print(response.data);
+        //print(response.data);
         return response;
       } catch (e) {
         rethrow;
@@ -86,7 +84,7 @@ class JobApiService {
   Future<Response> getSavedJobs() async {
     if (apiEndPointWorking) {
       try {
-        final response = await _dio.get('/job/saved');
+        final response = await _dio.get('/user/saved-jobs');
         return response;
       } catch (e) {
         rethrow;
@@ -212,9 +210,9 @@ class JobApiService {
     if (apiEndPointWorking) {
       try {
         //Map<String, dynamic> jobData = job.toJson();
-        print("creating job");
+        //print("creating job");
         final response = await _dio.post('/jobs', data: jobReq);
-        print(response);
+        //print(response);
         return response;
       } catch (e) {
         rethrow;
@@ -235,7 +233,7 @@ class JobApiService {
   Future<void> saveJob(String jobId) async {
     if (apiEndPointWorking) {
       try {
-        await _dio.post('user/saved-jobs', data: {"jobId":jobId});
+        await _dio.post('/user/saved-jobs', data: {"jobId":jobId});
       } catch (e) {
         rethrow;
       }
@@ -248,7 +246,7 @@ class JobApiService {
   Future<void> unsaveJob(String jobId) async {
     if (apiEndPointWorking) {
       try {
-        await _dio.delete('user/saved-jobs/$jobId');
+        await _dio.delete('/user/saved-jobs/$jobId');
       } catch (e) {
         rethrow;
       }
@@ -266,16 +264,17 @@ class JobApiService {
         //print("api applying");
         final response =
             await _dio.post('/jobs/$jobId/apply', data: jobApplication);
-        print("response${response.data}");
+        //print("response${response.data}");
         return response;
       } on DioException catch (e) {
         // print("Error ${e.res}" );
         // rethrow;
-
+      print('Request failed without response: ${e.message}');
       if (e.response != null) {
       final errorData = e.response!.data;
+      print(errorData);
       final errorMessage = errorData['message'] ?? 'Something went wrong';
-      print('Error: $errorMessage');
+      //print('Error: $errorMessage');
       throw Exception(errorMessage);
     } else {
       print('Request failed without response: ${e.message}');
@@ -293,7 +292,7 @@ class JobApiService {
           'message': 'applied to saved locally',
         },
       );
-      print(response);
+      //print(response);
       return response;
     }
   }
@@ -302,9 +301,9 @@ class JobApiService {
   Future<Response> changeJobApplicationStatus(String jobId, String jobApplicantionId,Map<String,dynamic> status) async {
     if (apiEndPointWorking) {
       try {
-        print("changing job application status");
+        //print("changing job application status");
         final response =await _dio.patch('/jobs/$jobId/job-applications/$jobApplicantionId',data: status);
-        print(response.data);
+        //print(response.data);
         return response;
       } catch (e) {
         rethrow;
@@ -382,7 +381,7 @@ class JobApiService {
 
       try {
         final fileName = resumeFile.path.split('/').last;
-        print(" this is the media type ${getMediaType(resumeFile).toString()}");
+        //print(" this is the media type ${getMediaType(resumeFile).toString()}");
         final formData = FormData.fromMap({
           'file': await MultipartFile.fromFile(
             resumeFile.path,
@@ -394,7 +393,7 @@ class JobApiService {
         await _dio.post('/user/resume/upload', data: formData);
         // return response;
       } catch (e) {
-        print('Error uploading resume: $e');
+        //print('Error uploading resume: $e');
         rethrow;
       }
     } else {

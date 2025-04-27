@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -79,7 +79,7 @@ class JobApplicationCard extends StatelessWidget {
 
           // 3) Location
           Text(
-            "${job.location?.city ?? ""}, ${job.location?.country ?? ""}",
+            "${job.location.city ?? ""}, ${job.location.country ?? ""}",
             style: TextStyle(
               fontSize: 14.sp,
               color: Colors.grey[600],
@@ -209,7 +209,7 @@ class JobApplicationCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.red.shade400),
+          border: Border.all(color: ColorsManager.getPrimaryColor(context)),
           borderRadius: BorderRadius.circular(8.r),
         ),
         padding: EdgeInsets.all(8.w),
@@ -220,7 +220,7 @@ class JobApplicationCard extends StatelessWidget {
               width: 50.w,
               height: 50.w,
               decoration: BoxDecoration(
-                color: Colors.red.shade400,
+                color: ColorsManager.getPrimaryColor(context),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               alignment: Alignment.center,

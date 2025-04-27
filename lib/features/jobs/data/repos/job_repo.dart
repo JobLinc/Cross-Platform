@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/services/job_api_service.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 
 class JobRepo {
   final JobApiService _jobApiService;
@@ -149,7 +147,7 @@ class JobRepo {
         //   // Handle error response
         //   throw Exception('Failed to apply for job: ${response.data['message']}');
       }
-    } on Exception catch (e) {
+    } catch(e) {
       //throw Exception( e.toString().split(':').last);
       rethrow;
     }
