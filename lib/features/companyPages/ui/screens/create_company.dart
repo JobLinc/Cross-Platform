@@ -118,6 +118,12 @@ class CreateCompanyPage extends StatelessWidget {
                               );
                         } else {
                           print('Form is invalid');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Make sure that you approved the terms and conditions and filled all fields!'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           _termsAndConditionsKey.currentState!.validate();
                         }
                       },

@@ -167,18 +167,18 @@ extension OrganizationTypeExtension on OrganizationType {
 }
 
 class Company {
-  final String name;
+  String name;
   String? id;
-  final String profileUrl;
+  String profileUrl;
   String? overview;
   String? website;
   String? tagline;
   String? logoUrl;
   String? coverUrl;
   String? location;
-  final Industry industry;
-  final OrganizationSize organizationSize;
-  final OrganizationType organizationType;
+  Industry industry;
+  OrganizationSize organizationSize;
+  OrganizationType organizationType;
   int followers = 0;
   bool isVerified = true;
 

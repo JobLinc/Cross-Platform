@@ -24,7 +24,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       emit(ProfileLoading());
       final profile = await _profileRepository.getUserProfile();
-      firstname = profile.firstname;
       if (!isClosed) {
         emit(ProfileLoaded(profile));
       }

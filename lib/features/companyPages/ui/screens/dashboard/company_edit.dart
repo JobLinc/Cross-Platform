@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/models/update_company_model.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/industry_comboBox.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textField.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/name_textField.dart';
@@ -44,10 +44,8 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
 
     // Initialize dropdown values from company or use defaults
     selectedIndustry = widget.company.industry;
-    selectedOrgSize =
-        widget.company.organizationSize;
-    selectedOrgType =
-        widget.company.organizationType;
+    selectedOrgSize = widget.company.organizationSize;
+    selectedOrgType = widget.company.organizationType;
   }
 
   @override
@@ -107,11 +105,19 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
               backgroundColor: Colors.green,
             ),
           );
-          // Navigator.pushReplacementNamed(
-          //   context,
-          //   Routes.companyPageHome,
-          //   arguments: {'company': state.company, 'isAdmin': true},
-          // );
+          widget.company.name = companyNameController.text;
+          widget.company.website = websiteController.text;
+          widget.company.profileUrl = jobLincUrlController.text;
+          widget.company.overview = overviewController.text;
+          widget.company.industry = selectedIndustry;
+          widget.company.organizationSize = selectedOrgSize;
+          widget.company.organizationType = selectedOrgType;
+
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.companyPageHome,
+            arguments: {'company': widget.company, 'isAdmin': true},
+          );
         }
       },
       builder: (context, state) {
@@ -120,62 +126,88 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
           appBar: AppBar(
             title: const Text("Edit Company"),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CompanyNameTextFormField(
-                        nameController: companyNameController),
-                    SizedBox(height: 16.h),
-                    CompanyWebsiteTextFormField(
-                        websiteController: websiteController),
-                    SizedBox(height: 16.h),
-                    CompanyjobLincUrlTextFormField(
-                        jobLincUrlController: jobLincUrlController),
-                    SizedBox(height: 16.h),
-                    OverviewTextFormField(
-                        overviewController: overviewController),
-                    SizedBox(height: 16.h),
-                    IndustryDropdown(
-                      value: selectedIndustry,
-                      onChanged: (value) {
-                        selectedIndustry = value!;
-                      },
-                    ),
-                    SizedBox(height: 20.h),
-                    OrganizationSizeDropdown(
-                      value: selectedOrgSize,
-                      onChanged: (value) {
-                        selectedOrgSize = value!;
-                      },
-                    ),
-                    SizedBox(height: 5.h),
-                    OrganizationTypeDropdown(
-                      value: selectedOrgType,
-                      onChanged: (value) {
-                        selectedOrgType = value!;
-                      },
-                    ),
-
-                    // Add other fields here
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: updateCompanyData,
-                        child: const Text('Save'),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CompanyNameTextFormField(
+                          nameController: companyNameController),
+                      SizedBox(height: 16.h),
+                      CompanyWebsiteTextFormField(
+                          websiteController: websiteController),
+                      SizedBox(height: 16.h),
+                      CompanyjobLincUrlTextFormField(
+                          jobLincUrlController: jobLincUrlController),
+                      SizedBox(height: 16.h),
+                      OverviewTextFormField(
+                          overviewController: overviewController),
+                      SizedBox(height: 16.h),
+                      IndustryDropdown(
+                        value: selectedIndustry,
+                        onChanged: (value) {
+                          selectedIndustry = value!;
+                        },
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20.h),
+                      OrganizationSizeDropdown(
+                        value: selectedOrgSize,
+                        onChanged: (value) {
+                          selectedOrgSize = value!;
+                        },
+                      ),
+                      SizedBox(height: 5.h),
+                      OrganizationTypeDropdown(
+                        value: selectedOrgType,
+                        onChanged: (value) {
+                          selectedOrgType = value!;
+                        },
+                      ),
+                      // Add other fields here
+                      SizedBox(height: 80.h), // Extra space for the button
+                    ],
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                  color: Colors.white,
+                  child: SizedBox(
+                    height: 30.h,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorsManager.crimsonRed,
+                      ),
+                      onPressed: updateCompanyData,
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+}
+
+extension on EditCompanySuccess {
+  get company => null;
 }
