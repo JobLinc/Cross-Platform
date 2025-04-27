@@ -147,7 +147,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
             ),
           );
           Future.delayed(Duration(seconds: 2), () {
-            Navigator.pop(context);
+            Navigator.of(context).pop(true);
           });
         }
       },
@@ -160,9 +160,10 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
           child: Column(
             children: [
               buildContactInfoCard(),
-              buildTextField(
-                  _emailController, TextInputType.text, "Email address*"),
-              SizedBox(height: 16.h),
+              // buildTextField(
+              //     _emailController, TextInputType.text, "Email address*"),
+              // SizedBox(height: 16.h),
+
               // buildTextField(_countryCodeController, "Phone country code*"),
               DropdownButtonFormField2<String>(
                 dropdownStyleData: DropdownStyleData(
@@ -273,23 +274,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 ),
                 child: const Text("Upload New Resume"),
               ),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     await _clearStoredResume();
-              //     setState(() {
-              //       _selectedResumeId = null;
-              //       _selectedResumeLocalPath = null;
-              //     });
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       SnackBar(content: Text("Resume storage cleared.")),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.grey,
-              //     foregroundColor: Colors.white,
-              //   ),
-              //   child: const Text("Clear Resume Data"),
-              // ),
+ 
             ],
           ),
         ),
@@ -354,14 +339,7 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                         );
                         return;
                       }
-                      // final jobApplication = JobApplication(
-                      //   applicant: mockMainApplicant,
-                      //   job: widget.job,
-                      //   resume: resumes!.firstWhere(
-                      //       ((resume) => resume.id == _selectedResumeId!)),
-                      //   status: "JustApplied",
-                      //   createdAt: DateTime.now(),
-                      // );
+ 
                       context
                           .read<JobListCubit>()
                           .applyJob(widget.job.id, {
@@ -441,3 +419,27 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
 //   await prefs.remove("selected_resume_id");
 //   await prefs.remove("selected_resume_path");
 // }
+             // ElevatedButton(
+              //   onPressed: () async {
+              //     await _clearStoredResume();
+              //     setState(() {
+              //       _selectedResumeId = null;
+              //       _selectedResumeLocalPath = null;
+              //     });
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       SnackBar(content: Text("Resume storage cleared.")),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.grey,
+              //     foregroundColor: Colors.white,
+              //   ),
+              //   child: const Text("Clear Resume Data"),
+              // ),                     // final jobApplication = JobApplication(
+                      //   applicant: mockMainApplicant,
+                      //   job: widget.job,
+                      //   resume: resumes!.firstWhere(
+                      //       ((resume) => resume.id == _selectedResumeId!)),
+                      //   status: "JustApplied",
+                      //   createdAt: DateTime.now(),
+                      // );

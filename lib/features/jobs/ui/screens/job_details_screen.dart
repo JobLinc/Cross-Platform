@@ -657,10 +657,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         : 'User: ${job.employer!.username}';
     final ownerFollowers = hasCompany
         ? job.company!.followers
-        : null; // you could display something else for employer
+        : null; 
 
     return BlocListener<JobListCubit, JobListState>(
-      // … your existing listener …
+
       listener: (context, state) {
         if (state is JobDetailsLoading) {
           setState(() => loading = true);
@@ -670,6 +670,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           isApplied = appliedJobs.any((j) => j.id == job.id);
           isSaved = savedJobs.any((j) => j.id == job.id);
           setState(() => loading = false);
+        } else if (state is JobAppliedLoaded){
+          appliedJobs =state.appliedJobs;
+          isApplied = appliedJobs.any((j) => j.id == job.id);
         }
       },
       child: Material(
@@ -905,7 +908,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                     onPressed: isApplied
                         ? null
                         : () async {
-                            await Navigator.push(
+                            final reload =await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => BlocProvider.value(
@@ -915,7 +918,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 ),
                               ),
                             );
-                            await context.read<JobListCubit>().getAppliedJobs();
+                            if (reload){
+                              context.read<JobListCubit>().getAppliedJobs();
+                            }
+                            
                             // setState(() {
                             // });
                           },

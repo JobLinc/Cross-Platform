@@ -413,10 +413,12 @@ import 'package:joblinc/features/jobs/ui/screens/job_details_screen.dart';
 class JobCard extends StatelessWidget {
   final Job job;
   final bool savedPage;
+  final bool isCompanyPageAdmin;
   //final VoidCallback? press;
    JobCard({
     super.key,
     required this.job,
+    this.isCompanyPageAdmin=false,
     this.savedPage=false,
     required int itemIndex,
   });
@@ -476,7 +478,7 @@ return FutureBuilder<String?>(
       final userId = snap.data ?? '';
       final hasCompany = job.company != null;
       final ownerId   = hasCompany ? job.company!.id : job.employer!.id;
-      final isCreated = !hasCompany && ownerId == userId || hasCompany && MyCompanyIds.instance.companyIds.contains(job.company!.id) ;
+      final isCreated = (!hasCompany && ownerId == userId )|| isCompanyPageAdmin; //hasCompany && MyCompanyIds.instance.companyIds.contains(job.company!.id) ;
     return GestureDetector(
       key: Key("jobs_openJob_card${job.id}"),
       onTap: (){
@@ -616,12 +618,14 @@ class JobList extends StatelessWidget {
   final List<Job> jobs;
   final bool isCreated;
   final bool savedPage;
+  final bool isCompanyPageAdmin;
 
   const JobList(
       {super.key,
       required this.jobs,
       this.isCreated = false,
-      this.savedPage = false});
+      this.savedPage = false,
+      this.isCompanyPageAdmin = false});
 
   @override
   Widget build(BuildContext context) {
@@ -653,6 +657,7 @@ class JobList extends StatelessWidget {
                 //   //print("Tapped on: ${sortedChats[index].userName}");
                 // },
                 savedPage: savedPage,
+                isCompanyPageAdmin: isCompanyPageAdmin,
               )),
     );
   }

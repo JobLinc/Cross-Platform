@@ -111,9 +111,11 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                           child: ElevatedButton(
                             onPressed: () => context
                                 .read<MyJobsCubit>()
-                                .acceptJobApplication(
+                                .changeJobApplicationStatus(
                                     widget.jobApplicant.job!,
-                                    widget.jobApplicant.applicant.id),
+                                    widget.jobApplicant.id,
+                                    {"status":"Accepted"}
+                                    ),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green),
                             child: Text(
@@ -129,9 +131,11 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                           child: ElevatedButton(
                             onPressed: () => context
                                 .read<MyJobsCubit>()
-                                .rejectJobApplication(
+                                .changeJobApplicationStatus(
                                     widget.jobApplicant.job!,
-                                    widget.jobApplicant.applicant.id),
+                                    widget.jobApplicant.id,
+                                    {"status":"Rejected"}
+                                    ),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red),
                             child: Text(
