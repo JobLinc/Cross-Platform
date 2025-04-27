@@ -13,4 +13,9 @@ class BlockedAccountRepo {
     return await blockedAccountsService.changeConnectionStatus(
         userId, ConnectionStatus.unblocked);
   }
+
+  Future<void> blockUser(String userId) async {
+    return await blockedAccountsService.changeConnectionStatus(
+        userId, ConnectionStatus.blocked);
+  }
 }
