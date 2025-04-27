@@ -105,8 +105,9 @@ class MyJobsCubit extends Cubit<MyJobsState> {
       Map<String, dynamic> status) async {
     emit(MyJobApplicantLoading());
     try {
-      _jobApplicant = await jobRepo.changeJobApplicationStatus(jobId, jobApplicationId, status);
-            if (_jobApplicant == null) {
+      _jobApplicant = await jobRepo.changeJobApplicationStatus(
+          jobId, jobApplicationId, status);
+      if (_jobApplicant == null) {
         emit(MyJobApplicantsEmpty());
       } else {
         emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
@@ -127,7 +128,14 @@ class MyJobsCubit extends Cubit<MyJobsState> {
   // }
 
   emitMyJobApplicantLoaded(JobApplicant jobApplicant) {
-    changeJobApplicationStatus(jobApplicant.job, jobApplicant.id, {"status": "Viewed"});
+    final status = jobApplicant.status;
+    if (status == "Pending") {
+      changeJobApplicationStatus(
+          jobApplicant.job, jobApplicant.id, {"status": "Viewed"});
+    } else {
+      emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
+    }
+    //changeJobApplicationStatus(jobApplicant.job, jobApplicant.id, {"status": "Viewed"});
     //emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
   }
 }
