@@ -60,20 +60,34 @@ class UserConnectionsApiService {
       rethrow;
     }
   }
+
   Future<Response> respondToConnection(String userId, String status) async {
-  if (status != 'Accepted' && status != 'Rejected') {
-    throw ArgumentError('Invalid status. Must be either "Accepted" or "Rejected".');
+    if (status != 'Accepted' && status != 'Rejected') {
+      throw ArgumentError(
+          'Invalid status. Must be either "Accepted" or "Rejected".');
+    }
+
+    try {
+      final response = await _dio.post(
+        '/connection/$userId/respond',
+        data: {'status': status},
+      );
+      return response;
+    } catch (e) {
+      print('API error responding to connection: $e');
+      rethrow;
+    }
   }
 
-  try {
-    final response = await _dio.post(
-      '/connection/$userId/respond',
-      data: {'status': status},
-    );
-    return response;
-  } catch (e) {
-    print('API error responding to connection: $e');
-    rethrow;
+  Future<Response> sendConnection(String userId) async {
+    try {
+      final response = await _dio.post(
+        '/connection/$userId', // The endpoint to send a connection request
+      );
+      return response;
+    } catch (e) {
+      print('API error sending connection request: $e');
+      rethrow;
+    }
   }
-}
 }

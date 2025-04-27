@@ -210,8 +210,8 @@ Future<void> setupGetIt() async {
             getIt<OthersApiService>(),
           ));
 
-  getIt.registerFactory<ProfileCubit>(
-      () => ProfileCubit(getIt<UserProfileRepository>()));
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
+      getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
 
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(

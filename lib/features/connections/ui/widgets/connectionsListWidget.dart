@@ -28,11 +28,17 @@ class ConnectionsListView extends StatelessWidget {
               color: Colors.white,
               child: GestureDetector(
                 key: Key("connection_profile_button"),
-                onTap: () {
+                onTap: () async {
                   //todo:go to the profile of the user
                   print("go to ${connection.firstname} profile");
-                  Navigator.pushNamed(context, Routes.otherProfileScreen,
-                      arguments: connection.userId);
+                  final shouldRefresh = await Navigator.pushNamed(
+                          context, Routes.otherProfileScreen,
+                          arguments: connection.userId) ??
+                      false;
+
+                  if (shouldRefresh == true) {
+                    context.read<ConnectionsCubit>().fetchConnections();
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

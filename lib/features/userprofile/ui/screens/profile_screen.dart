@@ -688,8 +688,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ],
       ),
-      onTap: () {
-        Navigator.pushNamed(context, Routes.connectionListScreen);
+      onTap: () async {
+        final shouldRefresh =
+            await Navigator.pushNamed(context, Routes.connectionListScreen) ??
+                false;
+
+        if (shouldRefresh == true) {
+          context
+              .read<ProfileCubit>()
+              .getUserProfile(); // or whatever function to refresh
+        }
       },
     );
   }

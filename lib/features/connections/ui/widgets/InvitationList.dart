@@ -29,11 +29,21 @@ class InvitationsList extends StatelessWidget {
               color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
                 key: Key("Invitations page Tile"),
-                onTap: () {
+                onTap: () async {
                   // TODO: Navigate to the user's profile
                   //print("Go to ${invitation.firstname}'s profile");
-                  Navigator.pushNamed(context, Routes.otherProfileScreen,
-                      arguments: invitation.userId);
+                  final shouldRefresh = await Navigator.pushNamed(
+                        context,
+                        Routes.otherProfileScreen,
+                        arguments: invitation.userId,
+                      ) ??
+                      false;
+
+                  if (shouldRefresh == true) {
+                    context
+                        .read<InvitationsCubit>()
+                        .fetchPendingInvitations(); // or whatever function to refresh
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

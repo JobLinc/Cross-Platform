@@ -52,4 +52,13 @@ class UserConnectionsRepository {
       rethrow;
     }
   }
+
+  Future<Response> sendConnection(String userId) async {
+    try {
+      return await _apiService.sendConnection(userId);
+    } catch (e) {
+      print('Repository error responding to connection: $e');
+      rethrow;
+    }
+  }
 }
