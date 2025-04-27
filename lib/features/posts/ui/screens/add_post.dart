@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
@@ -17,15 +18,14 @@ class AddPostScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is AddPostStateLoading) {
         } else if (state is AddPostStateSuccess) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Post successful')));
+          CustomSnackBar.show(
+              context: context,
+              message: 'Post successful',
+              type: SnackBarType.success);
           Navigator.pushReplacementNamed(context, Routes.homeScreen);
         } else if (state is AddPostStateFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-            "Error: ${state.error}",
-            style: TextStyle(color: Colors.red),
-          )));
+          CustomSnackBar.show(
+              context: context, message: state.error, type: SnackBarType.error);
         }
       },
       builder: (context, state) {
