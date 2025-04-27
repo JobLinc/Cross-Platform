@@ -52,17 +52,23 @@ class _JobListScreenState extends State<JobListScreen> {
     );
   }
 
-  labelClicked(String label) {
+  labelClicked(String label) async {
     if (label == "My Jobs") {
       Navigator.pushNamed(context, Routes.myJobsScreen);
-    } else if (label == "Post a free job") {
-      Navigator.push(
+    } else if (label == "Post a free job")  {
+      final bool created =  await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (_) => BlocProvider(
                     create: (context) => getIt<JobListCubit>(),
                     child: JobCreationScreen(),
                   )));
+          if (created == true) {
+            // If the job was created successfully, refresh the job list
+            // You can use a callback or any other method to trigger the refresh
+            // For example, you can call getAllJobs() again here
+            context.read<JobListCubit>().getAllJobs(queryParams: queryParams);
+          }
     }
     return;
   }

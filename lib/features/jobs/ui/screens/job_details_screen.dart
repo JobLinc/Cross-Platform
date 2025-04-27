@@ -673,6 +673,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         } else if (state is JobAppliedLoaded){
           appliedJobs =state.appliedJobs;
           isApplied = appliedJobs.any((j) => j.id == job.id);
+        } else if (state is JobSavedLoaded){
+          savedJobs =state.savedJobs;
+          isSaved = savedJobs.any((j) => j.id == job.id);
         }
       },
       child: Material(

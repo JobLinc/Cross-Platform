@@ -87,19 +87,19 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  Future<void> getJobApplicantById(String jobId, String applicantId) async {
-    emit(MyJobApplicantLoading());
-    try {
-      _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId)!;
-      if (_jobApplicant == null) {
-        emit(MyJobApplicantsEmpty());
-      } else {
-        emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
-      }
-    } catch (e) {
-      emit(MyJobsErrorLoading(e.toString()));
-    }
-  }
+  // Future<void> getJobApplicantById(String jobId, String applicantId) async {
+  //   emit(MyJobApplicantLoading());
+  //   try {
+  //     _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId)!;
+  //     if (_jobApplicant == null) {
+  //       emit(MyJobApplicantsEmpty());
+  //     } else {
+  //       emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
+  //     }
+  //   } catch (e) {
+  //     emit(MyJobsErrorLoading(e.toString()));
+  //   }
+  // }
 
   Future<void> changeJobApplicationStatus(String jobId, String jobApplicationId,
       Map<String, dynamic> status) async {
@@ -116,15 +116,15 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  acceptJobApplication(String jobId, String applicantId) async {
-    await jobRepo.acceptJobApplication(jobId, applicantId);
-    await getJobApplicantById(jobId, applicantId);
-  }
+  // acceptJobApplication(String jobId, String applicantId) async {
+  //   await jobRepo.acceptJobApplication(jobId, applicantId);
+  //   await getJobApplicantById(jobId, applicantId);
+  // }
 
-  rejectJobApplication(String jobId, String applicantId) async {
-    await jobRepo.rejectJobApplication(jobId, applicantId);
-    await getJobApplicantById(jobId, applicantId);
-  }
+  // rejectJobApplication(String jobId, String applicantId) async {
+  //   await jobRepo.rejectJobApplication(jobId, applicantId);
+  //   await getJobApplicantById(jobId, applicantId);
+  // }
 
   emitMyJobApplicantLoaded(JobApplicant jobApplicant) {
     changeJobApplicationStatus(jobApplicant.job, jobApplicant.id, {"status": "Viewed"});

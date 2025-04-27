@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -118,6 +119,11 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       listener: (context, state) {
         // Show a loading snackbar while sending application
         if (state is JobApplicationSending) {
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: "Application sent successfully",
+          //   type: SnackBarType.info,
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -127,13 +133,18 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   Text("Sending application..."),
                 ],
               ),
-              duration: Duration(seconds: 30),
+              duration: Duration(seconds: 8),
             ),
           );
         }
         // When application is sent, show success snackbar and pop screen
         else if (state is JobApplicationSent) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: "Application sent successfully",
+          //   type: SnackBarType.success,
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -149,6 +160,26 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
           Future.delayed(Duration(seconds: 2), () {
             Navigator.of(context).pop(true);
           });
+        } else if (state is JobApplicationErrorSending) {
+
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: state.errorMessage.split(":").last,
+          //   type: SnackBarType.error,
+          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error, color: Colors.red),
+                  SizedBox(width: 16.w),
+                  Text(state.errorMessage.split(":").last),
+                ],
+              ),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
       },
       child: Scaffold(

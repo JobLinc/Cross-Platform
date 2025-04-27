@@ -141,9 +141,18 @@ class JobRepo {
 
   Future<void>? applyJob(
       String jobId, Map<String, dynamic> jobApplication) async {
-    //final response =
-    await _jobApiService.applyJob(jobId, jobApplication);
-    //return Job.fromJson(response as Map<String, dynamic>);
+    try {
+      final response = await _jobApiService.applyJob(jobId, jobApplication);
+      if (response.statusCode == 201) {
+        return;
+        // } else {
+        //   // Handle error response
+        //   throw Exception('Failed to apply for job: ${response.data['message']}');
+      }
+    } on Exception catch (e) {
+      //throw Exception( e.toString().split(':').last);
+      rethrow;
+    }
   }
 
   Future<void>? acceptJobApplication(String jobId, String applicantId) async {

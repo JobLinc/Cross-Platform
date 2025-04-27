@@ -258,31 +258,43 @@ class JobApiService {
     }
   }
 
-  Future<void> applyJob(
+  Future<Response> applyJob(
       String jobId, Map<String, dynamic> jobApplication) async {
     if (apiEndPointWorking) {
       try {
         //Map<String, dynamic> applicationData = jobApplication.toJson();
         //print("api applying");
-        // final response =
+        final response =
             await _dio.post('/jobs/$jobId/apply', data: jobApplication);
-        // return response;
-      } catch (e) {
-        rethrow;
+        print("response${response.data}");
+        return response;
+      } on DioException catch (e) {
+        // print("Error ${e.res}" );
+        // rethrow;
+
+      if (e.response != null) {
+      final errorData = e.response!.data;
+      final errorMessage = errorData['message'] ?? 'Something went wrong';
+      print('Error: $errorMessage');
+      throw Exception(errorMessage);
+    } else {
+      print('Request failed without response: ${e.message}');
+      throw Exception('Request failed without response: ${e.message}');
+    }
       }
     } else {
       // await Future.delayed(Duration(milliseconds: 500));
       // //appliedJobs.add(jobApplication.job);
       // //jobApplications.add(jobApplication);
-      // final response = Response(
-      //   requestOptions: RequestOptions(path: ''),
-      //   statusCode: 200,
-      //   data: {
-      //     'message': 'applied to saved locally',
-      //   },
-      // );
-      // print(response);
-      // return response;
+      final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 200,
+        data: {
+          'message': 'applied to saved locally',
+        },
+      );
+      print(response);
+      return response;
     }
   }
 

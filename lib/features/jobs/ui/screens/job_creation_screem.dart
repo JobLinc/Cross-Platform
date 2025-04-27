@@ -152,8 +152,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
             );
             //Future.delayed(Duration(seconds: 2), () {
               if(!mounted)return;
-              Navigator.pop(context);
-              context.read<JobListCubit>().getAllJobs();
+              Navigator.of(context).pop(true);
             //});
 
           }
