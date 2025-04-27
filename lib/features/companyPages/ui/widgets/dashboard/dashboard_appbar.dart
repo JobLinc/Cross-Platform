@@ -6,9 +6,10 @@ import '../../../data/data/company.dart';
 
 class DashboardAppbar extends StatefulWidget implements PreferredSizeWidget {
   final Company company;
+  final Widget? leading;
   final String selectedValue;
   const DashboardAppbar(
-      {super.key, required this.company, this.selectedValue = "Dashboard"});
+      {super.key, required this.company,this.leading,this.selectedValue = "Dashboard"});
 
   @override
   State<DashboardAppbar> createState() => _DashboardAppbarState();
@@ -29,6 +30,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: widget.leading,
       toolbarHeight: 100.h,
       title: Column(
         children: [

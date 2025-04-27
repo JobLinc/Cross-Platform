@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
 import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
@@ -46,10 +48,18 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: widget.isAdmin
           ? DashboardAppbar(
+              leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios_new, size: 24.sp),
+        onPressed: () => Navigator.pushReplacementNamed(context, Routes.homeScreen),
+      ),
               company: widget.company,
               selectedValue: "Company Profile",
             )
           : AppBar(
+              leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios, size: 24.sp),
+        onPressed: () => Navigator.pushReplacementNamed(context, Routes.homeScreen),
+      ),
               backgroundColor: const Color(0xFFFAFAFA),
               title: Row(
                 children: [
