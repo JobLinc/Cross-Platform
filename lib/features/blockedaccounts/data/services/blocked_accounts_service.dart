@@ -25,7 +25,7 @@ class BlockedAccountsService {
     try {
       final statusMessage =
           '${newStatus.toString()[0].toUpperCase()}${newStatus.toString().substring(1)}';
-      final response = await _dio
+      await _dio
           .post('/connection/$userId/change', data: {'status': statusMessage});
     } catch (e) {
       throw Exception('Failed to fetch blocked accounts: ${e.toString()}');
