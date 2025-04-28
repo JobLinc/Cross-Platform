@@ -11,6 +11,7 @@ class UserHeader extends StatelessWidget {
       required this.username,
       required this.headline,
       required this.senderID,
+      required this.isCompany,
       this.action});
 
   ///Profile Picture URL
@@ -19,6 +20,8 @@ class UserHeader extends StatelessWidget {
   final String senderID;
 
   final String username;
+
+  final bool isCompany;
 
   ///The grey text under the username
   final String headline;
@@ -29,7 +32,9 @@ class UserHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, Routes.profileScreen),
+      onTap: () => isCompany
+          ? Navigator.pushNamed(context, Routes.companyPageHome)
+          : Navigator.pushNamed(context, Routes.otherProfileScreen),
       child: Row(
         spacing: 8,
         key: Key('post_header_container'),

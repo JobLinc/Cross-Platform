@@ -12,8 +12,15 @@ import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
   //this would need to be changed to support live updates to likes/comments/reposts
-  const Post({super.key, required this.data});
+  const Post({
+    super.key,
+    required this.data,
+    this.showExtraMenu = true,
+    this.showOwnerMenu = false,
+  });
   final PostModel data;
+  final bool showExtraMenu;
+  final bool showOwnerMenu;
 
   Widget build(BuildContext context) {
     return BlocProvider<PostCubit>(
@@ -40,7 +47,11 @@ class Post extends StatelessWidget {
             color: ColorsManager.getCardColor(context),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
-              child: PostContent(data: data),
+              child: PostContent(
+                data: data,
+                showExtraMenu: showExtraMenu,
+                showOwnerMenu: showOwnerMenu,
+              ),
             ),
           ),
         ),
@@ -53,9 +64,12 @@ class PostContent extends StatelessWidget {
   const PostContent({
     super.key,
     required this.data,
+    required this.showExtraMenu,
+    required this.showOwnerMenu,
   });
-
   final PostModel data;
+  final bool showExtraMenu;
+  final bool showOwnerMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -68,23 +82,38 @@ class PostContent extends StatelessWidget {
           username: data.username,
           headline: data.headline,
           senderID: data.senderID,
+          isCompany: data.isCompany,
           action: Padding(
             padding: const EdgeInsets.only(right: 5.0),
-            child: GestureDetector(
-              key: Key('post_header_lincButton'),
-              onTap: () => {
-                // context.read<UserConnectionsRepository>()
-              },
-              child: RichText(
-                text: TextSpan(
-                    style: TextStyle(
-                        color: ColorsManager.getPrimaryColor(context)),
-                    children: [
-                      TextSpan(
-                        text: data.isCompany ? '+ Follow' : '+ Linc',
+            child: Row(
+              spacing: 10,
+              children: [
+                GestureDetector(
+                  key: Key('post_header_lincButton'),
+                  onTap: () => {
+                    // context.read<UserConnectionsRepository>()
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                        style: TextStyle(
+                            color: ColorsManager.getPrimaryColor(context)),
+                        children: [
+                          TextSpan(
+                            text: data.isCompany ? '+ Follow' : '+ Linc',
+                          )
+                        ]),
+                  ),
+                ),
+                showExtraMenu
+                    ? IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () {
+                          showPostSettings(context, showOwnerMenu);
+                        },
+                        icon: Icon(Icons.more_vert),
                       )
-                    ]),
-              ),
+                    : SizedBox(),
+              ],
             ),
           ),
         ),
@@ -239,3 +268,40 @@ class PostAttachments extends StatelessWidget {
     );
   }
 }
+
+Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
+  return showModalBottomSheet(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: Column(
+          mainAxisSize: MainAxisSize.min, children: postSettingsNormalButtons),
+    ),
+  );
+}
+
+List<Widget> postSettingsNormalButtons = [
+  ListTile(
+    leading: Icon(Icons.bookmark_add_outlined),
+    title: Text('Save post'),
+  ),
+  ListTile(
+    leading: Icon(Icons.flag_outlined),
+    title: Text('Report post'),
+  ),
+  ListTile(
+    leading: Icon(Icons.person_off_outlined),
+    title: Text('Block user'),
+  ),
+];
+
+List<Widget> postSettingsOwnerButtons = [
+  ListTile(
+    leading: Icon(Icons.edit_outlined),
+    title: Text('Edit post'),
+  ),
+  ListTile(
+    leading: Icon(Icons.delete_outline),
+    title: Text('Delete post'),
+  ),
+];
