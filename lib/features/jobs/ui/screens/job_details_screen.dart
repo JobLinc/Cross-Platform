@@ -582,6 +582,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -657,6 +658,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         : 'User: ${job.employer!.username}';
     final ownerFollowers = hasCompany ? job.company!.followers : null;
 
+    onAvatarTap() {
+      if (hasCompany) {
+        Navigator.pushNamed(context, Routes.companyPageHome,
+            arguments: job.company!.urlSlug);
+      } else {
+        // e.g. navigate to an employer-profile screen
+        Navigator.pushNamed(context, Routes.otherProfileScreen,
+            arguments: job.employer!.id);
+      }
+    }
+
     return BlocListener<JobListCubit, JobListState>(
       listener: (context, state) {
         if (state is JobDetailsLoading) {
@@ -696,10 +708,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 // ————— HEADER —————
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 24.r,
-                      backgroundColor: ColorsManager.lightGray,
-                      backgroundImage: NetworkImage(ownerAvatar),
+                    GestureDetector(
+                      onTap: onAvatarTap ,
+                      child: CircleAvatar(
+                        radius: 30.r,
+                        backgroundColor: ColorsManager.lightGray,
+                        backgroundImage: NetworkImage(ownerAvatar),
+                      ),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(

@@ -459,14 +459,13 @@ class JobCard extends StatelessWidget {
     onAvatarTap() {
       if (hasCompany) {
         Navigator.pushNamed(context, Routes.companyPageHome,
-            arguments: job.company!.id);
+            arguments: job.company!.urlSlug);
       } else {
         // e.g. navigate to an employer-profile screen
         Navigator.pushNamed(context, Routes.otherProfileScreen,
-            arguments: job.employer);
+            arguments: job.employer!.id);
       }
     }
-
     // Format salary
     final salaryText = "${job.salaryRange.currency} "
         "${job.salaryRange.min.toStringAsFixed(0)}–"
