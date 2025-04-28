@@ -16,9 +16,9 @@ import 'package:joblinc/features/changepassword/data/services/change_password_ap
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changeusername/data/repos/change_username_repo.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
-import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
-import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
-import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
@@ -59,7 +59,7 @@ import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.da
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 final getIt = GetIt.instance;
 

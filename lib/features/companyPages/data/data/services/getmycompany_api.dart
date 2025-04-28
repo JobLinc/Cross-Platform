@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/companypages/data/data/models/getmycompany_response.dart';
+import 'package:joblinc/features/companyPages/data/data/models/getmycompany_response.dart';
 
 class CompanyApiService {
   final Dio _dio;
