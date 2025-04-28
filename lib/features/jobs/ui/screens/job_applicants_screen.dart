@@ -18,7 +18,7 @@ class _JobApplicantsScreenState extends State<JobApplicantsScreen> {
   void initState() {
     super.initState();
     // Call getJobApplicants with the job id
-    context.read<MyJobsCubit>().getJobApplicants(widget.job.id!);
+    context.read<MyJobsCubit>().getJobApplicants(widget.job.id);
   }
 
   @override
@@ -37,7 +37,7 @@ class _JobApplicantsScreenState extends State<JobApplicantsScreen> {
           if (state is MyJobApplicantsLoaded) {
             return JobApplicantList(
               key: ValueKey(state.jobApplicants.length),
-              jobApplications: state.jobApplicants,
+              jobApplicants: state.jobApplicants,
             );
           } else if (state is MyJobsLoading) {
             return const Center(child: CircularProgressIndicator());

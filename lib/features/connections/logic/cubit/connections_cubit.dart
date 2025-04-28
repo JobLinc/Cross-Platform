@@ -76,6 +76,33 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
   }
 
+  void unblockConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.changeConnectionStatus(
+          userId, "Unblocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        fetchBlockedConnections();
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        fetchBlockedConnections();
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
   void Searchclicked() {
     if (state != SearchState()) {
       emit(SearchState());
@@ -101,6 +128,39 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       lastNameSelected = !lastNameSelected;
       firstNameSelected = false;
       recentlyAddedSelected = false;
+    }
+  }
+
+  Future<void> fetchUserConnections(String userId) async {
+    emit(ConnectionsInitial());
+
+    try {
+      final response = await connectionsRepository.getUserConnections(userId);
+      if (!isClosed) {
+        emit(ConnectionsLoaded(response));
+      }
+      // Optionally store the fetched connections if needed
+      // userConnections = response;
+    } catch (error) {
+      if (!isClosed) {
+        emit(ConnectionsError("An error occurred: $error"));
+      }
+    }
+  }
+
+  Future<void> fetchBlockedConnections() async {
+    emit(ConnectionsInitial());
+
+    try {
+      final response = await connectionsRepository.getBlockedConnections();
+      if (!isClosed) {
+        emit(ConnectionsLoaded(response));
+        connections = response;
+      }
+    } catch (error) {
+      if (!isClosed) {
+        emit(ConnectionsError("An error occurred: $error"));
+      }
     }
   }
 

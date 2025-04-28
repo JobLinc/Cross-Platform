@@ -6,8 +6,9 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserExperiences extends StatelessWidget {
-  const UserExperiences({super.key, required this.profile});
+  const UserExperiences({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
+  final bool isuser;
 
   String _formatExperienceDates(dynamic startDate, dynamic endDate) {
     String issuedText = "";
@@ -96,52 +97,56 @@ class UserExperiences extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: ColorsManager.darkBurgundy,
-                                  size: 20.r,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Delete Experience'),
-                                        content: Text(
-                                            'Are you sure you want to delete "${experience.position}"?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              print(experience.experienceId);
-                                              Navigator.of(dialogContext).pop();
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .deleteExperience(
-                                                      experience.experienceId);
-                                              // Close dialog and delete Experience
-                                            },
-                                            child: Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                              if (isuser) ...[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: ColorsManager.darkBurgundy,
+                                    size: 20.r,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Delete Experience'),
+                                          content: Text(
+                                              'Are you sure you want to delete "${experience.position}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              },
+                                              child: Text('Cancel'),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                splashRadius: 20.r,
-                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                print(experience.experienceId);
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .deleteExperience(experience
+                                                        .experienceId);
+                                                // Close dialog and delete Experience
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  splashRadius: 20.r,
+                                ),
+                              ]
                             ],
                           ),
                           SizedBox(height: 4.h),

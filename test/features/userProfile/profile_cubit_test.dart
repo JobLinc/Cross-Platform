@@ -1,4 +1,4 @@
-import 'dart:io'; 
+import 'dart:io';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
@@ -7,16 +7,13 @@ import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
 void main() {
   late ProfileCubit profileCubit;
   late MockUserProfileRepository mockRepo;
 
-
   setUpAll(() {
-
     registerFallbackValue(UserProfileUpdateModel(
       firstName: 'John',
       lastName: 'Doe',
@@ -30,7 +27,6 @@ void main() {
       phoneNo: '123456789',
       biography: 'A short bio',
     ));
-
 
     registerFallbackValue(File('path/to/dummy/file'));
   });
@@ -65,7 +61,8 @@ void main() {
     experiences: [],
     certifications: [],
     languages: [],
-    resumes:[],
+    resumes: [],
+    username: 'alolo',
   );
 
   group('ProfileCubit Tests', () {
@@ -96,15 +93,11 @@ void main() {
       act: (cubit) =>
           cubit.updateUserProfile(UserProfileUpdateModel(firstName: 'John')),
       expect: () => [
-        isA<ProfileUpdating>(), 
-        isA<ProfileUpdated>(), 
-        isA<ProfileLoading>(), 
-        isA<ProfileLoaded>() 
-            .having(
-                (s) => s.profile,
-                'profile',
-                equals(
-                    dummyProfile)), 
+        isA<ProfileUpdating>(),
+        isA<ProfileUpdated>(),
+        isA<ProfileLoading>(),
+        isA<ProfileLoaded>()
+            .having((s) => s.profile, 'profile', equals(dummyProfile)),
       ],
     );
 
@@ -119,7 +112,7 @@ void main() {
       expect: () => [
         isA<ProfileUpdating>()
             .having((state) => state.operation, 'operation', 'Profile Picture'),
-        isA<ProfileError>(), 
+        isA<ProfileError>(),
       ],
     );
 

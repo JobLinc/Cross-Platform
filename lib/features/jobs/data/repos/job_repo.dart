@@ -1,9 +1,8 @@
 import 'dart:io';
-
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/services/job_api_service.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 
 class JobRepo {
   final JobApiService _jobApiService;
@@ -49,20 +48,24 @@ class JobRepo {
   /// Returns a Future that resolves to a list of jobs the user has applied to.
   Future<List<Job>>? getAppliedJobs() async {
     final response = await _jobApiService.getAppliedJobs();
-    final List<Job> jobs = (response.data as List)
-        .map((jobJson) => Job.fromJson(jobJson as Map<String, dynamic>))
+    final List<JobApplication> jobApplications = (response.data as List)
+        .map((jobJson) =>
+            JobApplication.fromJson(jobJson as Map<String, dynamic>))
         .toList();
+
+    //List<Job> jobs = jobApplications.map((app) => app.job).toList();
+    final jobs = jobApplications.map((app) => app.job).toList();
     return jobs;
   }
 
   /// Returns a Future that resolves to a list of jobs the user has applied to.
-  Future<List<Job>>? getCreatedJobs() async {
-    final response = await _jobApiService.getCreatedJobs();
-    final List<Job> jobs = (response.data as List)
-        .map((jobJson) => Job.fromJson(jobJson as Map<String, dynamic>))
-        .toList();
-    return jobs;
-  }
+  // Future<List<Job>>? getCreatedJobs() async {
+  //   final response = await _jobApiService.getCreatedJobs();
+  //   final List<Job> jobs = (response.data as List)
+  //       .map((jobJson) => Job.fromJson(jobJson as Map<String, dynamic>))
+  //       .toList();
+  //   return jobs;
+  // }
 
   //Future<List<Job>>? getSearchedFilteredJobs(Map<String,dynamic> queryParams) async {
   //   final response =
@@ -82,21 +85,21 @@ class JobRepo {
     return jobApplications;
   }
 
-  Future<List<JobApplication>>? getJobApplicants(String jobId) async {
+  Future<List<JobApplicant>>? getJobApplicants(String jobId) async {
     final response = await _jobApiService.getJobApplicants(jobId);
-    final List<JobApplication> jobApplicants = (response.data as List)
+    final List<JobApplicant> jobApplicants = (response.data as List)
         .map((jobAppJson) =>
-            JobApplication.fromJson(jobAppJson as Map<String, dynamic>))
+            JobApplicant.fromJson(jobAppJson as Map<String, dynamic>))
         .toList();
     return jobApplicants;
   }
 
-  Future<JobApplication>? getJobApplicantById(
+  Future<JobApplicant>? getJobApplicantById(
       String jobId, String applicantId) async {
     final response =
         await _jobApiService.getJobApplicantById(jobId, applicantId);
-    final JobApplication jobApplicant =
-        JobApplication.fromJson(response.data as Map<String, dynamic>);
+    final JobApplicant jobApplicant =
+        JobApplicant.fromJson(response.data as Map<String, dynamic>);
     return jobApplicant;
   }
 
@@ -109,9 +112,9 @@ class JobRepo {
     return resumes;
   }
 
-  Future<void>? createJob({required Map<String,dynamic> jobReq}) async {
+  Future<void>? createJob({required Map<String, dynamic> jobReq}) async {
     //final response =
-    await _jobApiService.createJob(jobReq:jobReq);
+    await _jobApiService.createJob(jobReq: jobReq);
     //return Job.fromJson(response as Map<String, dynamic>);
   }
 
@@ -125,10 +128,29 @@ class JobRepo {
     //return Job.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<void>? applyJob(String jobId, JobApplication jobApplication) async {
-    //final response =
-    await _jobApiService.applyJob(jobId, jobApplication);
-    //return Job.fromJson(response as Map<String, dynamic>);
+  Future<JobApplicant>? changeJobApplicationStatus(
+      String jobId, String applicantId, Map<String, dynamic> status) async {
+    final response = await _jobApiService.changeJobApplicationStatus(
+        jobId, applicantId, status);
+    final JobApplicant jobApplicant =
+        JobApplicant.fromJson(response.data as Map<String, dynamic>);
+    return jobApplicant;
+  }
+
+  Future<void>? applyJob(
+      String jobId, Map<String, dynamic> jobApplication) async {
+    try {
+      final response = await _jobApiService.applyJob(jobId, jobApplication);
+      if (response.statusCode == 201) {
+        return;
+        // } else {
+        //   // Handle error response
+        //   throw Exception('Failed to apply for job: ${response.data['message']}');
+      }
+    } catch(e) {
+      //throw Exception( e.toString().split(':').last);
+      rethrow;
+    }
   }
 
   Future<void>? acceptJobApplication(String jobId, String applicantId) async {

@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -17,14 +19,14 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   String firstname = "";
   final UserProfileRepository _profileRepository;
-
-  ProfileCubit(this._profileRepository) : super(ProfileInitial());
+  final UserConnectionsRepository connectionsRepository;
+  ProfileCubit(this._profileRepository, this.connectionsRepository)
+      : super(ProfileInitial());
 
   Future<void> getUserProfile() async {
     try {
       emit(ProfileLoading());
       final profile = await _profileRepository.getUserProfile();
-      firstname = profile.firstname;
       if (!isClosed) {
         emit(ProfileLoaded(profile));
       }
@@ -344,4 +346,166 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
+
+  ///////////////////////////////////OTHERS//////////////////////////
+  Future<void> getPublicUserProfile(String userId) async {
+    emit(ProfileLoading());
+    try {
+      final profile = await _profileRepository.getPublicUserProfile(userId);
+      if (!isClosed) {
+        emit(ProfileLoaded(profile));
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ProfileError('Failed to load public profile: ${e.toString()}'));
+      }
+    }
+  }
+
+  void respondToConnectionInvitation(
+      String userId, String status, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.respondToConnection(
+        userId,
+        status,
+      );
+
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Connection $status successfully",
+          type: SnackBarType.success,
+        );
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+          context: context,
+          message: "Failed to $status connection",
+          type: SnackBarType.error,
+        );
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Couldn't $status the connection",
+          type: SnackBarType.error,
+        );
+      }
+    }
+  }
+
+  void removeConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.changeConnectionStatus(
+          userId, "Canceled");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection withdrawn succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection withdrawing failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't withdraw connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void blockConnection(String userId, BuildContext context) async {
+    try {
+      final response =
+          await connectionsRepository.changeConnectionStatus(userId, "Blocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+ 
+  void unblockConnection(String userId, BuildContext context) async {
+    try {
+      final response =
+          await connectionsRepository.changeConnectionStatus(userId, "Unblocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void sendConnectionRequest(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.sendConnection(userId);
+
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Connection sent successfully",
+          type: SnackBarType.success,
+        );
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+          context: context,
+          message: "Failed to send connection",
+          type: SnackBarType.error,
+        );
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Couldn't send the connection",
+          type: SnackBarType.error,
+        );
+      }
+    }
+  }
+
+
 }

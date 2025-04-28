@@ -27,11 +27,7 @@ class ConnectionList extends StatelessWidget {
               leading: IconButton(
                   key: Key("connections_back_button"),
                   onPressed: () {
-                    int count = 0;
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.profileScreen,
-                      (route) => count++ >= 2,
-                    );
+                    Navigator.of(context).pop(true);
                   },
                   icon: Icon(Icons.arrow_back)),
               title: Text("Connection", style: TextStyle(fontSize: 20.sp)),

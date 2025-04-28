@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -307,7 +306,7 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     // Experience Level Filter
                     Text("Experience Level",
                         style: TextStyle(fontWeight: FontWeight.bold)),
@@ -345,7 +344,50 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                         }).toList(),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.h),
+                    // Salary Range Filter
+                    Text("Salary Range",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 5.h,),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: minSalaryController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Min Salary",
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              setModalState(() {
+                                searchFilter.minSalary =
+                                    int.tryParse(value) ?? 0;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            controller: maxSalaryController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Max Salary",
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              setModalState(() {
+                                searchFilter.maxSalary =
+                                    int.tryParse(value) ?? 0;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 10.h),
                     // Company Filter Dropdown with checkboxes
                     Text("Company",
                         style: TextStyle(fontWeight: FontWeight.bold)),
@@ -422,48 +464,8 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                           );
                         }).toList(),
                       ),
-                    SizedBox(height: 10),
-                    // Salary Range Filter
-                    Text("Salary Range",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: minSalaryController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Min Salary",
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              setModalState(() {
-                                searchFilter.minSalary =
-                                    int.tryParse(value) ?? 0;
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            controller: maxSalaryController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Max Salary",
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              setModalState(() {
-                                searchFilter.maxSalary =
-                                    int.tryParse(value) ?? 0;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
+                    
+                    SizedBox(height: 20.h),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {

@@ -18,7 +18,7 @@ class CompanyListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: SquareAvatar(
-        imageUrl: company.profilePictureUrl ??
+        imageUrl: company.logo ??
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
         size: 20.h,
       ),

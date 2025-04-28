@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
-import 'package:joblinc/features/jobs/ui/widgets/drop_down_Text_Fomr.dart';
+import 'package:joblinc/features/jobs/ui/widgets/drop_down_Text_Form.dart';
 import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
 import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 import 'package:joblinc/core/theming/colors.dart';
@@ -98,7 +98,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
             .toList(),
       };
 
-      print("Job Created: ${jobReq['experienceLevel']}");
+      print("Job Created: ${jobReq['experienceLevel']},${jobReq['workplace']},${jobReq['type']},${jobReq['salaryRange']},${jobReq['location']},${jobReq['skills']}");
       // // Here, you could call an API or Bloc to create the job.
       // // For this example, we'll just print the job details.
       context.read<JobListCubit>().createJob(jobReq:jobReq);
@@ -150,9 +150,11 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 duration: Duration(seconds: 2),
               ),
             );
-            Future.delayed(Duration(seconds: 2), () {
-              Navigator.pop(context);
-            });
+            //Future.delayed(Duration(seconds: 2), () {
+              if(!mounted)return;
+              Navigator.of(context).pop(true);
+            //});
+
           }
         },
         child: SingleChildScrollView(
