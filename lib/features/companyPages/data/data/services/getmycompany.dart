@@ -49,4 +49,68 @@ class CompanyApiService {
       throw Exception('Network error: ${e.message}');
     }
   }
+
+   Future<CompanyListResponse> getAllCompanies() async {
+    try {
+      final response = await dio.get('/companies',
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ));
+      print('''
+        === Received Response API All Companies ===
+        Status: ${response.statusCode} ${response.statusMessage}
+        Headers: ${response.headers}
+        Data: ${response.data}
+        ''');
+
+      if (response.statusCode != 200) {
+        throw Exception('Request failed with status ${response.statusCode}');
+      }
+
+      if (response.data == null) {
+        throw Exception('Response data is null');
+      }
+
+      if (response.data is List) {
+        return CompanyListResponse.fromJson(response.data as List<dynamic>);
+      } else {
+        throw Exception('Expected a list of all companies from API');
+      }
+    } on DioException catch (e) {
+      throw Exception('Network error: ${e.message}');
+    }
+  }
+
+  Future<CompanyResponse> getCompanyById(String slug) async {
+    try {
+      final response = await dio.get('/companies/$slug',
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ));
+      print('''
+        === Received Response API Company by ID ===
+        Status: ${response.statusCode} ${response.statusMessage}
+        Headers: ${response.headers}
+        Data: ${response.data}
+        ''');
+
+      if (response.statusCode != 200) {
+        throw Exception('Request failed with status ${response.statusCode}');
+      }
+
+      if (response.data == null) {
+        throw Exception('Response data is null');
+      }
+
+      return CompanyResponse.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw Exception('Network error: ${e.message}');
+    }
+  }
 }

@@ -4,6 +4,8 @@ import 'package:joblinc/features/companypages/data/data/services/getmycompany.da
 abstract class CompanyRepository {
   Future<List<Company>> getCurrentCompanies();
   Future<int> getCompanyCount();
+  Future<List<Company>> getAllCompanies();
+  Future<Company> getCompanyBySlug(String slug);
 }
 
 class CompanyRepositoryImpl implements CompanyRepository {
@@ -27,7 +29,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
               OrganizationTypeExtension.fromDisplayName(companyResponse.type)!,
           overview: companyResponse.overview,
           website: companyResponse.website,
-          logoUrl: companyResponse.profilePictureUrl,
+          logoUrl: companyResponse.logo,
           id: companyResponse.id
         );
       }).toList();
@@ -44,6 +46,80 @@ class CompanyRepositoryImpl implements CompanyRepository {
       return companyListResponse.count;
     } catch (e) {
       throw Exception('Failed to get company count: $e');
+    }
+  }
+
+  @override
+  Future<List<Company>> getAllCompanies() async {
+    try {
+      final companyListResponse = await apiService.getAllCompanies();
+      final companies = companyListResponse.companies
+          .map((companyResponse) {
+            try {
+              return Company(
+                name: companyResponse.name ?? 'Name not available',
+                profileUrl: companyResponse.urlSlug ?? 'URL slug not available',
+                industry: companyResponse.industry != null
+                    ? (IndustryExtension.fromDisplayName(
+                            companyResponse.industry.replaceAll('–', '-')) ??
+                        Industry.technology)
+                    : Industry.technology,
+                organizationSize: companyResponse.size != null
+                    ? (OrganizationSizeExtension.fromDisplayName(
+                            companyResponse.size.replaceAll('–', '-')) ??
+                        OrganizationSize.elevenToFifty)
+                    : OrganizationSize.elevenToFifty,
+                organizationType: companyResponse.type != null
+                    ? (OrganizationTypeExtension.fromDisplayName(
+                            companyResponse.type.replaceAll('–', '-')) ??
+                        OrganizationType.privatelyHeld)
+                    : OrganizationType.privatelyHeld,
+                overview: companyResponse.overview ?? '',
+                website: companyResponse.website ?? 'Website not available',
+                logoUrl: companyResponse.logo ?? '',
+                id: companyResponse.id ?? '',
+              );
+            } catch (e) {
+              print('Error mapping company: ${companyResponse.toString()}');
+              print('Error details: $e');
+              return null;
+            }
+          })
+          .where((c) => c != null)
+          .cast<Company>()
+          .toList();
+      return companies;
+    } catch (e, stack) {
+      print('Error in getAllCompanies catch: $e');
+      print('Stack trace: $stack');
+      throw Exception('Failed to get all companies: $e');
+    }
+  }
+
+  @override
+  Future<Company> getCompanyBySlug(String slug) async {
+    try {
+      final companyListResponse = await apiService.getAllCompanies();
+      final company = companyListResponse.companies.firstWhere(
+        (company) => company.urlSlug == slug,
+        orElse: () => throw Exception('Company not found'),
+      );
+      return Company(
+        name: company.name,
+        profileUrl: company.urlSlug,
+        industry:
+            IndustryExtension.fromDisplayName(company.industry)!,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(company.size)!,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(company.type)!,
+        overview: company.overview,
+        website: company.website,
+        logoUrl: company.logo,
+        id: company.id
+      );
+    } catch (e) {
+      throw Exception('Failed to get company by slug: $e');
     }
   }
 }

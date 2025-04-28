@@ -52,4 +52,32 @@ class UserConnectionsRepository {
       rethrow;
     }
   }
+
+  Future<Response> sendConnection(String userId) async {
+    try {
+      return await _apiService.sendConnection(userId);
+    } catch (e) {
+      print('Repository error responding to connection: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<UserConnection>> getUserConnections(String userId) async {
+    try {
+      final data = await _apiService.getUserConnections(userId);
+
+      return data.map((json) => UserConnection.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Error mapping user connections: $e');
+    }
+  }
+  Future<List<UserConnection>> getBlockedConnections() async {
+  try {
+    final data = await _apiService.getBlockedConnections();
+
+    return data.map((json) => UserConnection.fromJson(json)).toList();
+  } catch (e) {
+    throw Exception('Error mapping blocked users: $e');
+  }
+}
 }
