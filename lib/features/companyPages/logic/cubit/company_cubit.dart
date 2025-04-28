@@ -1,6 +1,6 @@
 // // features/company/logic/cubit/company_cubit.dart
 // import 'package:bloc/bloc.dart';
-// import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+// import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
 // import '../../data/data/models/getmycompany_response.dart';
 
 // part 'company_state.dart';

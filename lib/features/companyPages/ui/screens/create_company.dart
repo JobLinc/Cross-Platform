@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
-import 'package:joblinc/features/companypages/ui/widgets/edit_button.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/industry_comboBox.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textField.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/edit_button.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/joblincUrl_textField.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/organizationType_comboBox.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 import '../widgets/square_avatar.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/website_textField.dart';
@@ -61,15 +61,14 @@ class CreateCompanyPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Company created successfully!'),
-                backgroundColor: Colors.green,  
+                backgroundColor: Colors.green,
               ),
             );
           } else if (state is CreateCompanyFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text('Failed to create company: ${state.error}'),
-                  backgroundColor: Colors.red
-                ),
+                  backgroundColor: Colors.red),
             );
           }
         },

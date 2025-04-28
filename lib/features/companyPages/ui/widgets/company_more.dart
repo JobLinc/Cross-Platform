@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart' show Routes;
-import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
 import '../screens/create_company.dart';
 
 class CompanyMoreButton extends StatelessWidget {

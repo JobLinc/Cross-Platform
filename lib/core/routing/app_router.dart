@@ -17,12 +17,12 @@ import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
-import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashboard.dart';
+import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
+import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
@@ -44,7 +44,7 @@ import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
-import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
+import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
@@ -56,7 +56,7 @@ import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_image_preview.dart';
 import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
