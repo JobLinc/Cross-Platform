@@ -36,5 +36,7 @@ class Routes {
   static const String addResumeScreen = '/addResumeScreen';
   static const String otherImagesPreview = '/otherImagesPreview';
   static const String otherProfileScreen = '/otherProfileScreen';
+  static const String othersConnectionScreen = '/othersConnectionScreen';
+  static const String blockedConnectionsList = '/blockedConnectionsList';
   // We'll use the homeScreen route for the main container
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/others_more_actions.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
@@ -29,7 +28,13 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            icon: Icon(Icons.arrow_back)),
+      ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state is ProfileLoading) {
@@ -74,10 +79,11 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                           children: [
                             Flexible(
                               child: ElevatedButton(
-                                onPressed: () {
-                                  // Navigator.pushNamed(
-                                  //     context, Routes.chatScreen);
-                                },
+                                onPressed: _getActionBasedOnConnectionStatus(
+                                    profile.connectionStatus,
+                                    context,
+                                    context.read<ProfileCubit>(),
+                                    profile.userId),
                                 style: ElevatedButton.styleFrom(
                                   side: BorderSide(
                                       color: ColorsManager.darkBurgundy),
@@ -100,9 +106,13 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
-                              child: const Icon(Icons.more_horiz_outlined,
-                                  color: Colors.black),
+                              onPressed: () {
+                                showModalBasedOnConnectionStatus(
+                                    context,
+                                    profile.connectionStatus,
+                                    context.read<ProfileCubit>(),
+                                    profile.userId);
+                              },
                               style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(
                                   side: BorderSide(
@@ -115,6 +125,8 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                                 foregroundColor: Colors.black,
                                 fixedSize: Size(50.w, 50.h),
                               ),
+                              child: const Icon(Icons.more_horiz_outlined,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
@@ -166,7 +178,7 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
           } else if (state is ProfileError) {
             return Center(child: Text(state.message));
           } else {
-            return const SizedBox.shrink();
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -176,15 +188,246 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
 
 String _getMessageBasedOnConnectionStatus(String connectionStatus) {
   switch (connectionStatus) {
-    case 'Connected':
+    case 'Accepted':
       return 'Message';
-    case 'Pending':
+    case 'Received':
+      return 'Respond';
+    case 'Sent':
       return 'Pending Request';
     case 'Blocked':
-      return 'Blocked';
-    case 'NotConnected':
+      return 'Unblock';
+    case 'Not Connected':
       return 'Connect Now';
     default:
-      return 'Message'; // Default case if none of the above matches
+      return 'Nothing to see';
   }
+}
+
+VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
+    BuildContext context, ProfileCubit cubit, String userId) {
+  switch (connectionStatus) {
+    case 'Connected':
+      return () {
+        // Navigate to Chat or send message
+      };
+    case 'Received':
+      return () {
+        _respondToRequest(context, cubit, userId);
+      };
+    case 'Sent':
+      return () {
+        withdrawConnection(context, cubit, userId);
+      }; // No action for pending request
+    case 'Blocked':
+      return () {
+        cubit.unblockConnection(userId, context);
+      }; // No action for blocked
+    case 'Not Connected':
+      return () {
+        cubit.sendConnectionRequest(userId, context);
+      };
+    default:
+      return null;
+  }
+}
+
+void _respondToRequest(
+    BuildContext context, ProfileCubit cubit, String userId) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24.r)), // Responsive border radius
+    ),
+    backgroundColor: Colors.white,
+    builder: (_) {
+      return Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: 24.w, vertical: 32.h), // Responsive padding
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.handshake,
+                size: 48.sp, color: Colors.blue), // Responsive icon size
+            SizedBox(height: 16.h),
+            Text(
+              "Respond to Connection Request",
+              style: TextStyle(
+                fontSize: 22.sp, // Responsive font size
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Accept Button
+                GestureDetector(
+                  onTap: () {
+                    cubit.respondToConnectionInvitation(
+                        userId, "Accepted", context);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: 120.w, // Responsive width
+                    padding: EdgeInsets.symmetric(
+                        vertical: 14.h), // Responsive padding
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent.shade700,
+                      borderRadius:
+                          BorderRadius.circular(16.r), // Responsive radius
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.withOpacity(0.3),
+                          blurRadius: 8.r, // Responsive blur radius
+                          offset: Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle,
+                            color: Colors.white,
+                            size: 32.sp), // Responsive icon size
+                        SizedBox(height: 8.h),
+                        Text(
+                          "Accept",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp, // Responsive font size
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Reject Button
+                GestureDetector(
+                  onTap: () {
+                    cubit.respondToConnectionInvitation(
+                        userId, "Rejected", context);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: 120.w, // Responsive width
+                    padding: EdgeInsets.symmetric(
+                        vertical: 14.h), // Responsive padding
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      borderRadius:
+                          BorderRadius.circular(16.r), // Responsive radius
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.red.withOpacity(0.3),
+                          blurRadius: 8.r, // Responsive blur radius
+                          offset: Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.cancel,
+                            color: Colors.white,
+                            size: 32.sp), // Responsive icon size
+                        SizedBox(height: 8.h),
+                        Text(
+                          "Reject",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp, // Responsive font size
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void withdrawConnection(
+    BuildContext context, ProfileCubit cubit, String userId) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    backgroundColor: Colors.white,
+    builder: (_) {
+      return Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: 24.w, vertical: 32.h), // Responsive padding
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.undo,
+                size: 48.sp,
+                color: Colors.orangeAccent), // Responsive icon size
+            const SizedBox(height: 16),
+            const Text(
+              "Withdraw Connection",
+              style: TextStyle(
+                fontSize: 22, // Responsive font size
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            GestureDetector(
+              onTap: () {
+                cubit.removeConnection(userId, context);
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: double.infinity,
+                padding:
+                    EdgeInsets.symmetric(vertical: 16.h), // Responsive padding
+                decoration: BoxDecoration(
+                  color: Colors.orangeAccent,
+                  borderRadius:
+                      BorderRadius.circular(16.r), // Responsive radius
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withOpacity(0.3),
+                      blurRadius: 8.r, // Responsive blur radius
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: const [
+                    Icon(Icons.undo,
+                        color: Colors.white, size: 32), // Responsive icon size
+                    SizedBox(height: 8),
+                    Text(
+                      "Withdraw",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18, // Responsive font size
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      );
+    },
+  );
 }

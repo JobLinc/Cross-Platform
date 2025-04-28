@@ -27,11 +27,20 @@ class SentConnectionsList extends StatelessWidget {
               color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
                 key: Key("Sent Invitations Page Tile"),
-                onTap: () {
+                onTap: () async {
                   // TODO: Navigate to the user's profile
                   print("Go to ${sent.firstname}'s profile");
-                  Navigator.pushNamed(context, Routes.otherProfileScreen,
-                      arguments: sent.userId);
+
+                  final shouldRefresh = await Navigator.pushNamed(
+                          context, Routes.otherProfileScreen,
+                          arguments: sent.userId) ??
+                      false;
+
+                  if (shouldRefresh == true) {
+                    context
+                        .read<SentConnectionsCubit>()
+                        .fetchSentInvitations(); // or whatever function to refresh
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

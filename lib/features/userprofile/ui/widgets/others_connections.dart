@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class othersConnections extends StatelessWidget {
   final UserProfile profile;
@@ -28,8 +30,15 @@ class othersConnections extends StatelessWidget {
           ],
         ],
       ),
-      onTap: () {
-        //Navigator.pushNamed(context, Routes.connectionListScreen);
+      onTap: () async {
+        final shouldRefresh = await Navigator.pushNamed(
+                context, Routes.othersConnectionScreen,
+                arguments: profile.userId) ??
+            false;
+
+        if (shouldRefresh == true) {
+          context.read<ProfileCubit>().getPublicUserProfile(profile.userId);
+        }
       },
     );
   }

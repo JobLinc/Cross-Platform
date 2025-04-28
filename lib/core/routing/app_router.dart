@@ -22,7 +22,9 @@ import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
+import 'package:joblinc/features/connections/ui/screens/block_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/connections/ui/screens/others_connection_list.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -232,6 +234,24 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<ConnectionsCubit>(),
             child: ConnectionPage(),
+          ),
+        );
+      case Routes.othersConnectionScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) =>
+                  getIt<ConnectionsCubit>()..fetchUserConnections(arguments),
+              child: OthersConnectionList(),
+            ),
+          );
+        } else {}
+
+      case Routes.blockedConnectionsList:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConnectionsCubit>(),
+            child: BlockedList(),
           ),
         );
       case Routes.settingsScreen:
