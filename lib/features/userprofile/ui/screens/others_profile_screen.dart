@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
@@ -197,11 +195,11 @@ String _getMessageBasedOnConnectionStatus(String connectionStatus) {
     case 'Sent':
       return 'Pending Request';
     case 'Blocked':
-      return 'Blocked';
+      return 'Unblock';
     case 'Not Connected':
       return 'Connect Now';
     default:
-      return 'Nothing to see'; // Default case if none of the above matches
+      return 'Nothing to see';
   }
 }
 
@@ -221,7 +219,9 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
         withdrawConnection(context, cubit, userId);
       }; // No action for pending request
     case 'Blocked':
-      return null; // No action for blocked
+      return () {
+        cubit.unblockConnection(userId, context);
+      }; // No action for blocked
     case 'Not Connected':
       return () {
         cubit.sendConnectionRequest(userId, context);
@@ -231,7 +231,6 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
   }
 }
 
-// Function to respond to a connection request (Accept/Reject)
 void _respondToRequest(
     BuildContext context, ProfileCubit cubit, String userId) {
   showModalBottomSheet(
@@ -358,7 +357,6 @@ void _respondToRequest(
   );
 }
 
-// Function to withdraw a connection
 void withdrawConnection(
     BuildContext context, ProfileCubit cubit, String userId) {
   showModalBottomSheet(

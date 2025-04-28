@@ -82,12 +82,38 @@ class UserConnectionsApiService {
   Future<Response> sendConnection(String userId) async {
     try {
       final response = await _dio.post(
-        '/connection/$userId', // The endpoint to send a connection request
+        '/connection/$userId',
       );
       return response;
     } catch (e) {
       print('API error sending connection request: $e');
       rethrow;
+    }
+  }
+
+  Future<List<dynamic>> getUserConnections(String userId) async {
+    try {
+      final response = await _dio.get('/connection/$userId/all');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load user connections');
+      }
+    } catch (e) {
+      throw Exception('Error fetching user connections: $e');
+    }
+  }
+
+  Future<List<dynamic>> getBlockedConnections() async {
+    try {
+      final response = await _dio.get('/connection/blocked');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load blocked users');
+      }
+    } catch (e) {
+      throw Exception('Error fetching blocked users: $e');
     }
   }
 }

@@ -450,6 +450,33 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
+ 
+  void unblockConnection(String userId, BuildContext context) async {
+    try {
+      final response =
+          await connectionsRepository.changeConnectionStatus(userId, "Unblocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
 
   void sendConnectionRequest(String userId, BuildContext context) async {
     try {
@@ -480,4 +507,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
+
+
 }
