@@ -5,6 +5,7 @@ abstract class CompanyRepository {
   Future<List<Company>> getCurrentCompanies();
   Future<int> getCompanyCount();
   Future<List<Company>> getAllCompanies();
+  Future<Company> getCompanyBySlug(String slug);
 }
 
 class CompanyRepositoryImpl implements CompanyRepository {
@@ -92,6 +93,33 @@ class CompanyRepositoryImpl implements CompanyRepository {
       print('Error in getAllCompanies catch: $e');
       print('Stack trace: $stack');
       throw Exception('Failed to get all companies: $e');
+    }
+  }
+
+  @override
+  Future<Company> getCompanyBySlug(String slug) async {
+    try {
+      final companyListResponse = await apiService.getAllCompanies();
+      final company = companyListResponse.companies.firstWhere(
+        (company) => company.urlSlug == slug,
+        orElse: () => throw Exception('Company not found'),
+      );
+      return Company(
+        name: company.name,
+        profileUrl: company.urlSlug,
+        industry:
+            IndustryExtension.fromDisplayName(company.industry)!,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(company.size)!,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(company.type)!,
+        overview: company.overview,
+        website: company.website,
+        logoUrl: company.logo,
+        id: company.id
+      );
+    } catch (e) {
+      throw Exception('Failed to get company by slug: $e');
     }
   }
 }
