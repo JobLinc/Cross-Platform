@@ -37,17 +37,18 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
         overview: overviewController.text,
       );
 
-      final CreateCompanyResponse response = await _createCompanyRepo.createCompany(
-          name: companyToAdd.name,
-          urlSlug: companyToAdd.profileUrl,
-          industry: companyToAdd.industry.displayName,
-          size: companyToAdd.organizationSize.displayName,
-          type: companyToAdd.organizationType.displayName,
-          overview: companyToAdd.overview!,
-          website: companyToAdd.website!);
+      final CreateCompanyResponse response =
+          await _createCompanyRepo.createCompany(
+              name: companyToAdd.name,
+              urlSlug: companyToAdd.profileUrl,
+              industry: companyToAdd.industry.displayName,
+              size: companyToAdd.organizationSize.displayName,
+              type: companyToAdd.organizationType.displayName,
+              overview: companyToAdd.overview!,
+              website: companyToAdd.website!);
 
-          companyToAdd.id = response.id;
-          
+      companyToAdd.id = response.id;
+
       mockCompanies.add(companyToAdd);
 
       emit(CreateCompanySuccess());

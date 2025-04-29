@@ -36,11 +36,11 @@ class Routes {
   static const String addResumeScreen = '/addResumeScreen';
   static const String otherImagesPreview = '/otherImagesPreview';
   static const String otherProfileScreen = '/otherProfileScreen';
+  static const String blockedAccountsScreen = '/blockedAccountsScreen';
   static const String othersConnectionScreen = '/othersConnectionScreen';
   static const String blockedConnectionsList = '/blockedConnectionsList';
   static const String followingListScreen = '/followingListScreen';
   static const String followersListScreen = '/followersListScreen';
   static const String adminPanel = '/adminPanel';
-  static const String blockedAccountsScreen = '/blockedAccountsScreen';
   // We'll use the homeScreen route for the main container
 }

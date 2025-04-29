@@ -16,7 +16,6 @@ class CreateCompanyRepo {
     required String website,
   }) {
     return _api.createCompany(
-      name, urlSlug, industry, size, type, overview, website
-    );
+        name, urlSlug, industry, size, type, overview, website);
   }
 }
