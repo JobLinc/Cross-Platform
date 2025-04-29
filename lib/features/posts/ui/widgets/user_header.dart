@@ -4,14 +4,14 @@ import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
 
 class UserHeader extends StatelessWidget {
-  //TODO add GestureDetector for the avatar + Info
-  UserHeader(
+  const UserHeader(
       {super.key,
       required this.imageURL,
       required this.username,
       required this.headline,
       required this.senderID,
       required this.isCompany,
+      this.timestamp,
       this.action});
 
   ///Profile Picture URL
@@ -26,6 +26,8 @@ class UserHeader extends StatelessWidget {
   ///The grey text under the username
   final String headline;
 
+  final DateTime? timestamp;
+
   ///Widget to be inserted at the end of the header
   final Widget? action;
 
@@ -33,8 +35,16 @@ class UserHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => isCompany
-          ? Navigator.pushNamed(context, Routes.companyPageHome)
-          : Navigator.pushNamed(context, Routes.otherProfileScreen),
+          ? Navigator.pushNamed(
+              context,
+              Routes.companyPageHome,
+              arguments: senderID,
+            )
+          : Navigator.pushNamed(
+              context,
+              Routes.otherProfileScreen,
+              arguments: senderID,
+            ),
       child: Row(
         spacing: 8,
         key: Key('post_header_container'),
@@ -50,7 +60,7 @@ class UserHeader extends StatelessWidget {
             ),
           ),
           Spacer(),
-          action ?? SizedBox()
+          action ?? SizedBox(),
         ],
       ),
     );
@@ -62,13 +72,25 @@ class UserInfo extends StatelessWidget {
     super.key,
     required this.username,
     required this.headline,
+    this.timestamp,
   });
 
   final String username;
   final String headline;
+  final DateTime? timestamp;
 
   @override
   Widget build(BuildContext context) {
+    String? timestampText;
+    if (timestamp != null) {
+      timestampText = '${timestamp?.difference(DateTime.now()).inDays}d';
+      if (timestampText == '0d') {
+        timestampText = '${timestamp?.difference(DateTime.now()).inHours}h';
+      }
+      if (timestampText == '0h') {
+        timestampText = '${timestamp?.difference(DateTime.now()).inMinutes}m';
+      }
+    }
     return Column(
       key: Key('post_header_userInfoContainer'),
       mainAxisSize: MainAxisSize.min,
@@ -90,6 +112,17 @@ class UserInfo extends StatelessWidget {
             fontWeight: FontWeightHelper.extraLight,
           ),
         ),
+        timestamp != null
+            ? Text(
+                key: Key('post_header_headline'),
+                timestampText!,
+                style: TextStyle(
+                  color: Colors.grey,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeightHelper.extraLight,
+                ),
+              )
+            : SizedBox(),
       ],
     );
   }

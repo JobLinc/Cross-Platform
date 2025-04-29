@@ -7,6 +7,7 @@ class PostModel {
     required this.headline,
     required this.profilePictureURL,
     required this.text,
+    this.timeStamp,
     required this.attachmentURLs,
     required this.commentCount,
     required this.likeCount,
@@ -29,6 +30,7 @@ class PostModel {
           ? (json['companyLogo'] ?? '')
           : (json['profilePicture'] ?? 'https://placehold.co/400/png'),
       text: json['text'] ?? '',
+      timeStamp: DateTime.parse(json['time']),
       attachmentURLs:
           (json['mediaUrl'] as List<dynamic>?)?.cast<String>() ?? [],
       commentCount: json['comments'] ?? 0,
@@ -44,6 +46,7 @@ class PostModel {
   final String headline;
   final String profilePictureURL;
   final String text;
+  final DateTime? timeStamp;
   List<dynamic> attachmentURLs;
   int commentCount;
   int likeCount;
@@ -60,6 +63,7 @@ PostModel mockPostData = PostModel(
       "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
   text:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  timeStamp: DateTime.now(),
   attachmentURLs: ['https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg'],
   commentCount: 1,
   likeCount: 2,

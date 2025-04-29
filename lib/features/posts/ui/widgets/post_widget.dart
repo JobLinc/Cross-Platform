@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
@@ -25,20 +26,21 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PostCubit>(
-      create: (context) => getIt<PostCubit>(),
+      create: (context) => getIt<PostCubit>()..setPostId(data.postID),
       child: BlocConsumer<PostCubit, PostState>(
         listener: (context, state) {
-          if (state is PostStateLoading) {
-          } else if (state is PostStateSuccess) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Post successful')));
-            Navigator.pop(context);
+          if (state is PostStateSuccess) {
+            CustomSnackBar.show(
+              context: context,
+              message: state.successMessage,
+              type: SnackBarType.success,
+            );
           } else if (state is PostStateFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-              "Error: ${state.error}",
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            )));
+            CustomSnackBar.show(
+              context: context,
+              message: state.error,
+              type: SnackBarType.error,
+            );
           }
         },
         builder: (context, state) => Padding(
@@ -84,6 +86,7 @@ class PostContent extends StatelessWidget {
           headline: data.headline,
           senderID: data.senderID,
           isCompany: data.isCompany,
+          timestamp: data.timeStamp,
           action: Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: Row(
@@ -151,7 +154,9 @@ class PostBody extends StatelessWidget {
       trimCollapsedText: "more",
       trimExpandedText: " show less",
       trimMode: TrimMode.Line,
-      style: TextStyle(color: ColorsManager.getTextPrimary(context)),
+      style: TextStyle(
+        color: ColorsManager.getTextPrimary(context),
+      ),
     );
   }
 }
@@ -284,14 +289,17 @@ List<Widget> postSettingsNormalButtons = [
   ListTile(
     leading: Icon(Icons.bookmark_add_outlined),
     title: Text('Save post'),
+    onTap: () {},
   ),
   ListTile(
     leading: Icon(Icons.flag_outlined),
     title: Text('Report post'),
+    onTap: () {},
   ),
   ListTile(
     leading: Icon(Icons.person_off_outlined),
     title: Text('Block user'),
+    onTap: () {},
   ),
 ];
 
@@ -299,9 +307,11 @@ List<Widget> postSettingsOwnerButtons = [
   ListTile(
     leading: Icon(Icons.edit_outlined),
     title: Text('Edit post'),
+    onTap: () {},
   ),
   ListTile(
     leading: Icon(Icons.delete_outline),
     title: Text('Delete post'),
+    onTap: () {},
   ),
 ];
