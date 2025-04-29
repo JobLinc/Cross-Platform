@@ -412,6 +412,10 @@ class AppRouter {
             child: UserAddResumeScreen(),
           ),
         );
+      case Routes.adminPanel:
+        return MaterialPageRoute(
+          builder: (context) => AdminPanel(),
+        );
 
       default:
         return null;
