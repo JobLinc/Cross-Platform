@@ -21,8 +21,13 @@ import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
+import 'package:joblinc/features/connections/ui/screens/block_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/connections/ui/screens/followers_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/following_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/others_connection_list.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 
@@ -44,9 +49,10 @@ import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
-
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
@@ -81,7 +87,7 @@ class AppRouter {
         // Main container handles all the main navigation now
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => getIt<HomeCubit>(),
+            create: (context) => getIt<HomeCubit>()..getFeed(),
             child: MainContainerScreen(),
           ),
         );
@@ -116,17 +122,21 @@ class AppRouter {
           );
         }
       case Routes.otherProfileScreen:
-        if (arguments is UserProfile) {
+        if (arguments is String) {
           return MaterialPageRoute(
-            builder: (context) => othersProfileScreen(profile: arguments),
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<ProfileCubit>(),
+              child: OthersProfileScreen(userId: arguments),
+            ),
           );
         } else {
           return MaterialPageRoute(
-            builder: (context) => Scaffold(
-              body: Text("2ntr"),
+            builder: (context) => const Scaffold(
+              body: Center(child: Text("2ntr")),
             ),
           );
         }
+
       // case Routes.chatScreen:
       //   return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
@@ -224,6 +234,38 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<ConnectionsCubit>(),
             child: ConnectionPage(),
+          ),
+        );
+      case Routes.followersListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowersListScreen(),
+          ),
+        );
+      case Routes.followingListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowingListScreen(),
+          ),
+        );
+      case Routes.othersConnectionScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) =>
+                  getIt<ConnectionsCubit>()..fetchUserConnections(arguments),
+              child: OthersConnectionList(),
+            ),
+          );
+        } else {}
+
+      case Routes.blockedConnectionsList:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConnectionsCubit>(),
+            child: BlockedList(),
           ),
         );
       case Routes.settingsScreen:
@@ -336,13 +378,13 @@ class AppRouter {
           ),
         );
 
-      // case Routes.addExperienceScreen:
-      //   return MaterialPageRoute(
-      //     builder: (context) => BlocProvider(
-      //       create: (context) => getIt<ProfileCubit>(),
-      //       child: UserAddExperienceScreen(),
-      //     ),
-      //   );
+      case Routes.addExperienceScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddExperienceScreen(),
+          ),
+        );
 
       case Routes.addSkillScreen:
         return MaterialPageRoute(
@@ -352,6 +394,13 @@ class AppRouter {
           ),
         );
 
+      case Routes.addResumeScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddResumeScreen(),
+          ),
+        );
       default:
         return null;
     }

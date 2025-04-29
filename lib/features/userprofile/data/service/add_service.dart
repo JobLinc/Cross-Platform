@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 
 class addService {
   final Dio dio;
@@ -20,10 +25,9 @@ class addService {
     try {
       Response response = await dio.post(
         '/user/certificate/add',
-        data: certification.toJson(), // Convert to JSON string
+        data: certification.toJson(),
       );
 
-      // Handle successful response here if needed
       return response;
     } catch (e) {
       throw Exception('Failed to add certification: $e');
@@ -36,7 +40,6 @@ class addService {
         '/user/certificate/$certificationId',
       );
 
-      // Handle successful response here if needed
       return response;
     } catch (e) {
       throw Exception('Failed to delete certification: $e');
@@ -48,7 +51,7 @@ class addService {
       final response = await dio.get('/user/certificate');
 
       if (response.statusCode == 200) {
-        return response.data; // Should be a List<dynamic>
+        return response.data;
       } else {
         throw Exception('Failed to fetch certificates');
       }
@@ -56,4 +59,158 @@ class addService {
       throw Exception('API error: $e');
     }
   }
+
+  Future<List<Certification>> fetchExperiences() async {
+    try {
+      final response = await dio.get('/user/experience');
+      List data = response.data;
+      return data.map((json) => Certification.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load experiences: $e');
+    }
+  }
+
+  Future<Response> addExperience(Experience experience) async {
+    try {
+      Response response = await dio.post(
+        '/user/experience/add',
+        data: experience.toJson(),
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to add experience: $e');
+    }
+  }
+
+  Future<Response> deleteExperience(String experienceId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/experience/$experienceId',
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete experience: $e');
+    }
+  }
+
+  Future<List<dynamic>> getAllExperiences() async {
+    try {
+      final response = await dio.get('/user/experience');
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to fetch experiences');
+      }
+    } catch (e) {
+      throw Exception('API error: $e');
+    }
+  }
+
+  Future<List<Skill>> fetchSkills() async {
+    try {
+      final response = await dio.get('/user/skill');
+      List data = response.data;
+      return data.map((json) => Skill.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load experiences: $e');
+    }
+  }
+
+  Future<Response> addSkill(Skill skill) async {
+    try {
+      Response response = await dio.post(
+        '/user/skills/add',
+        data: skill.toJson(),
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to add skill: $e');
+    }
+  }
+
+  Future<Response> deleteSkill(String skillId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/skills/$skillId',
+      );
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete skill: $e');
+    }
+  }
+
+  Future<List<dynamic>> getAllSkills() async {
+    try {
+      final response = await dio.get('/user/skills');
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to fetch skills');
+      }
+    } catch (e) {
+      throw Exception('API error: $e');
+    }
+  }
+
+  Future<Response> uploadResume(File file) async {
+    try {
+      final fileName = file.path.split('/').last;
+      print(" this is the media type ${getMediaType(file).toString()}");
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+          contentType: getMediaType(file),
+        ),
+      });
+
+      final response = await dio.post('/user/resume/upload', data: formData);
+      return response;
+    } catch (e) {
+      print('Error uploading resume: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<dynamic>> getUserResumes() async {
+    try {
+      final response = await dio.get('/user/resume');
+      return response.data;
+    } catch (e, stackTrace) {
+      print('Error in ResumeApiService.getUserResumes: $e');
+      print('StackTrace: $stackTrace');
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteUserResume(String resumeid) async {
+    try {
+      final response = await dio.delete('/user/resume/$resumeid');
+      return response;
+    } on DioException catch (e) {
+      print("error  ${e.toString()}");
+      throw Exception(
+          'Failed to delete resume: ${e.response?.data ?? e.message}');
+    }
+  }
 }
+
+MediaType getMediaType(File file) {
+  final extension = file.path.split('.').last.toLowerCase();
+
+  switch (extension) {
+    case 'pdf':
+      return MediaType('application', 'pdf');
+    case 'doc':
+    case 'docx':
+      return MediaType('application', 'msword');  // MIME type for Word documents
+    default:
+      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+  }
+} 

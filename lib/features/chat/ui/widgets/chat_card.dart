@@ -24,54 +24,6 @@ class ChatCard extends StatelessWidget {
     this.selected = false,
   });
 
-
-
-//  Widget buildChatAvatar() {
-//     final pics = chat!.chatPicture! ;
-//     // fallback image if list is empty
-//     final defaultUrl =
-//         'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg';
-
-//     if (pics.length <= 2) {
-//       final url = pics.isNotEmpty ? pics.first : defaultUrl;
-//       return CircleAvatar(
-//         radius: 25.r,
-//         backgroundImage: NetworkImage(url),
-//       );
-//     }
-
-//     // more than 2: show first three, overlapped
-//     return SizedBox(
-//       width: 50.r,
-//       height: 50.r,
-//       child: Stack(
-//         children: [
-//           Positioned(
-//             left: 0,
-//             child: CircleAvatar(
-//               radius: 15.r,
-//               backgroundImage: NetworkImage(pics[0]),
-//             ),
-//           ),
-//           Positioned(
-//             left: 15.r,
-//             child: CircleAvatar(
-//               radius: 15.r,
-//               backgroundImage: NetworkImage(pics[1]),
-//             ),
-//           ),
-//           Positioned(
-//             left: 30.r,
-//             child: CircleAvatar(
-//               radius: 15.r,
-//               backgroundImage: NetworkImage(pics[2]),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -94,14 +46,6 @@ class ChatCard extends StatelessWidget {
             ] else ...[
               Stack(
                 children: [
-                  // CircleAvatar(
-                  //   radius: 25,
-                  //   backgroundImage: NetworkImage(
-                  //     chat!.chatPicture != null
-                  //         ? chat!.chatPicture![0]
-                  //         : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
-                  //   ),
-                  // ),
                   buildChatAvatar(chat!.chatPicture),
                   if (true)
                     Positioned(
@@ -119,20 +63,6 @@ class ChatCard extends StatelessWidget {
                     ),
                 ],
               ),
-              // if (chat.unreadCount > 0)
-              //   Positioned(
-              //     bottom: 2,
-              //     right: 2,
-              //     child: Container(
-              //       width: 10.r,
-              //       height: 10.r,
-              //       decoration: BoxDecoration(
-              //         color: Colors.green,
-              //         shape: BoxShape.circle,
-              //         border: Border.all(color: Colors.white, width: 2.w),
-              //       ),
-              //     ),
-              //   ),
             ],
             SizedBox(width: 10),
             Expanded(
@@ -160,7 +90,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount > 0) 
+                if (chat!.unreadCount > 0)
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -268,6 +198,10 @@ class _ChatListState extends State<ChatList> {
                     .read<ChatListCubit>()
                     .toggleSelection(sortedChats[index].chatId);
               },
+            ));
+  }
+}
+
               // {
               //   Navigator.push(
               //       context,
@@ -275,8 +209,17 @@ class _ChatListState extends State<ChatList> {
               //           builder: (context) => BlocProvider<ChatListCubit>(
               //               create: (context) => getIt<ChatListCubit>(),
               //               child: ChatScreen(chat: sortedChats[index]))));
-              // },
-            ));
-  }
-}
-
+              // },              // if (chat.unreadCount > 0)
+              //   Positioned(
+              //     bottom: 2,
+              //     right: 2,
+              //     child: Container(
+              //       width: 10.r,
+              //       height: 10.r,
+              //       decoration: BoxDecoration(
+              //         color: Colors.green,
+              //         shape: BoxShape.circle,
+              //         border: Border.all(color: Colors.white, width: 2.w),
+              //       ),
+              //     ),
+              //   ),

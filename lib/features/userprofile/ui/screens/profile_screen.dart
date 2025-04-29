@@ -5,12 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -20,10 +23,15 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   void _addSection(BuildContext context) {
+    final profileCubit = context.read<ProfileCubit>();
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return const UserProfileAddSection();
+        return BlocProvider.value(
+          value: profileCubit,
+          child: const UserProfileAddSection(),
+        );
       },
     );
   }
@@ -40,8 +48,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
+        } else if (state is ResumeAdded) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is ResumeFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
         }
-        
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -162,9 +179,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                    context, Routes.otherProfileScreen,
-                                    arguments: profile);
+                                showConnectionsOptionsBottomSheet(context);
                               },
                               child: const Icon(Icons.more_horiz_outlined,
                                   color: Colors.black),
@@ -205,16 +220,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                         ],
 
+                        // Experiences section
+                        if (profile.experiences.isNotEmpty) ...[
+                          SizedBox(height: 50.h),
+                          UserExperiences(profile: profile)
+                        ],
+
                         // Certificates section
                         if (profile.certifications.isNotEmpty) ...[
-                          SizedBox(height: 50.h),
                           UserCerificates(profile: profile),
                         ],
 
                         // Skills section
                         if (profile.skills.isNotEmpty) ...[
-                          SizedBox(height: 50.h),
                           UserSkills(profile: profile),
+                        ],
+                        if (profile.resumes.isNotEmpty) ...[
+                          UserResumes(profile: profile),
                         ],
                       ],
                     ),
@@ -338,7 +360,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             // Button 2 action
                           },
                           child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<ProfileCubit>()
+                                    .deleteProfilePicture();
+                              },
                               icon: Icon(
                                 Icons.delete,
                                 color: ColorsManager.darkBurgundy,
@@ -466,7 +492,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             // Button 2 action
                           },
                           child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<ProfileCubit>()
+                                    .deleteCoverPicture();
+                              },
                               icon: Icon(
                                 Icons.delete,
                                 color: ColorsManager.darkBurgundy,
@@ -656,10 +686,61 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ],
       ),
-      onTap: () {
-        Navigator.pushNamed(context, Routes.connectionListScreen);
+      onTap: () async {
+        final shouldRefresh =
+            await Navigator.pushNamed(context, Routes.connectionListScreen) ??
+                false;
+
+        if (shouldRefresh == true) {
+          context.read<ProfileCubit>().getUserProfile();
+        }
       },
     );
   }
 }
 
+void showConnectionsOptionsBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+    ),
+    builder: (innercontext) {
+      return Padding(
+        padding: EdgeInsets.all(16.sp),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.block, color: Colors.red),
+              title:
+                  Text('View Blocked List', style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.blockedConnectionsList);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person, color: Colors.blue),
+              title: Text('Show Followers List',
+                  style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followersListScreen);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_outline, color: Colors.green),
+              title: Text('Show Following List',
+                  style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followingListScreen);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}

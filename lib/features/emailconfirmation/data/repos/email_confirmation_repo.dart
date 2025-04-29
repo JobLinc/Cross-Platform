@@ -22,7 +22,5 @@ class EmailConfirmationRepo {
     );
   }
 
-  Future<bool> checkEmailConfirmationStatus(String userId) async {
-    return await _apiService.checkEmailConfirmationStatus(userId);
-  }
+ 
 }

@@ -45,7 +45,7 @@ class Chat {
     chatName: json['chatName'] as String,
     chatPicture: pics,                              // never null
     lastMessage: json['lastMessage'] as String,
-    sentDate: DateTime.parse(json['sentDate'] as String),
+    sentDate: json['sentDate'],
     unreadCount: json['unreadCount'] as int,
     isRead: json['isRead'] as bool,
   );

@@ -127,6 +127,9 @@ AppBar addPostTopBar(
                 style: TextButton.styleFrom(
                     backgroundColor:
                         Theme.of(context).colorScheme.secondaryContainer,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onSecondaryContainer,
+                    textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
                     disabledBackgroundColor: Colors.grey.shade300,
                     disabledForegroundColor: Colors.grey),
                 onPressed: value.text.isNotEmpty
