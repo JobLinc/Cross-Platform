@@ -25,6 +25,7 @@ import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
+import 'package:joblinc/features/companyPages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
@@ -63,6 +64,8 @@ import 'package:joblinc/features/userprofile/data/service/update_user_profile_ap
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/update_company_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/update_company_api_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -81,8 +84,8 @@ Future<void> setupGetIt() async {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -94,6 +97,14 @@ Future<void> setupGetIt() async {
   dio.interceptors.add(AuthInterceptor(getIt<AuthService>(), dio));
 
   getIt.registerLazySingleton<Dio>(() => dio);
+
+  // Register UpdateCompanyApiService
+  getIt.registerLazySingleton<UpdateCompanyApiService>(
+      () => UpdateCompanyApiService(getIt<Dio>()));
+
+  // Register UpdateCompanyRepo
+  getIt.registerLazySingleton<UpdateCompanyRepo>(
+      () => UpdateCompanyRepo(getIt<UpdateCompanyApiService>()));
 
   getIt.registerLazySingleton<LoginApiService>(
       () => LoginApiService(getIt<Dio>()));
@@ -153,7 +164,9 @@ Future<void> setupGetIt() async {
       onCompanyCreated: param1,
     ),
   );
-
+  getIt.registerFactory<EditCompanyCubit>(
+    () => EditCompanyCubit(getIt<UpdateCompanyRepo>()),
+  );
   getIt.registerLazySingleton<ChatApiService>(
     () => ChatApiService(getIt<Dio>()),
   );

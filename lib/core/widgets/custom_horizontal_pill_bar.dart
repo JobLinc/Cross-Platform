@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 
 class CustomHorizontalPillBar extends StatefulWidget {
   bool changePillColor;
@@ -56,7 +57,7 @@ class _CustomHorizontalPillBarState extends State<CustomHorizontalPillBar> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(20.r),
-                      color: widget.changePillColor ? (isSelected ? Colors.red: Colors.white) : Colors.white,
+                      color: widget.changePillColor ? (isSelected ? ColorsManager.getPrimaryColor(context): Colors.white) : Colors.white,
                     ),
                     child: Text(
                       label,

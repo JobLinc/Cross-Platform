@@ -1,13 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -59,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(
-                    (myUser.profilePicture == null || myUser.profilePicture == '')
+                    (myUser.profilePicture == null ||
+                            myUser.profilePicture == '')
                         ? 'https://placehold.co/400/png'
                         : myUser.profilePicture!,
                   ),
@@ -175,6 +181,54 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          // --- My Companies Section ---
+          FutureBuilder<List<Company>>(
+            future: CompanyRepositoryImpl(
+              CompanyApiService(getIt<Dio>()),
+            ).getCurrentCompanies(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return ListTile(
+                  leading: const Icon(Icons.business),
+                  title: const Text('Loading companies...'),
+                );
+              } else if (snapshot.hasError) {
+                return ListTile(
+                  leading: const Icon(Icons.business),
+                  title: const Text('Failed to load companies'),
+                  subtitle: Text('${snapshot.error}'),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                final companies = snapshot.data!;
+                if (companies.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return ExpansionTile(
+                  leading: const Icon(Icons.business),
+                  title: const Text('My Companies'),
+                  children: companies
+                      .map((company) => ListTile(
+                            leading: const Icon(Icons.apartment),
+                            title: Text(company.name),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.companyPageHome,
+                                arguments: {
+                                  'company': company,
+                                  'isAdmin': true
+                                },
+                              );
+                            },
+                          ))
+                      .toList(),
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
+          // --- End My Companies Section ---
           ListTile(
             leading: const Icon(Icons.connect_without_contact_rounded),
             title: const Text('View my connections'),

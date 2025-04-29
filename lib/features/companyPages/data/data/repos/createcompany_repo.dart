@@ -1,11 +1,12 @@
+import 'package:joblinc/features/companyPages/data/data/models/createcompany_response.dart';
 import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
 
 class CreateCompanyRepo {
-  final CreateCompanyApiService _createCompanyApiService;
+  final CreateCompanyApiService _api;
 
-  CreateCompanyRepo(this._createCompanyApiService);
+  CreateCompanyRepo(this._api);
 
-  Future<void> createCompany({
+  Future<CreateCompanyResponse> createCompany({
     required String name,
     required String urlSlug,
     required String industry,
@@ -13,8 +14,9 @@ class CreateCompanyRepo {
     required String type,
     required String overview,
     required String website,
-  }) async {
-    await _createCompanyApiService.createCompany(
-        name, urlSlug, industry, size, type, overview, website);
+  }) {
+    return _api.createCompany(
+      name, urlSlug, industry, size, type, overview, website
+    );
   }
 }

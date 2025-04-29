@@ -89,9 +89,11 @@ class AuthService {
     await _storage.delete(key: _confirmedKey);
     isLoggedInUser = false;
   }
+
   Future<void> updateEmail(String email) async {
     await _storage.write(key: _emailKey, value: email);
   }
+
   Future<void> updateConfirmationStatus(bool confirmed) async {
     await _storage.write(key: _confirmedKey, value: confirmed.toString());
   }

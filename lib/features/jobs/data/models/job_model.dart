@@ -196,11 +196,104 @@
 // }
 
 
+// class Job {
+//   final String id;
+//   final String title;
+//   final String industry;
+//   final Company company;
+//   final String description;
+//   final String workplace;
+//   final String type;
+//   final String experienceLevel;
+//   final SalaryRange salaryRange;
+//   final Location location;
+//   final List<String> keywords;
+//   final List<String> skills;
+//   final bool accepting;
+//   final DateTime createdAt;
+
+//   Job({
+//     required this.id,
+//     required this.title,
+//     required this.industry,
+//     required this.company,
+//     required this.description,
+//     required this.workplace,
+//     required this.type,
+//     required this.experienceLevel,
+//     required this.salaryRange,
+//     required this.location,
+//     required this.keywords,
+//     required this.skills,
+//     required this.accepting,
+//     required this.createdAt,
+//   });
+
+//   factory Job.fromJson(Map<String, dynamic> json) {
+//     // Sometimes Mongo returns _id, sometimes id, so we .toString() everything
+//     final rawId = json['id'] ?? json['_id'];
+//     final id = rawId?.toString() ?? '';
+
+//     // Skills come in under "skills" or maybe "keywords"
+//     final skillsField = (json['skills'] ?? json['keywords']) as List<dynamic>?;
+//     final skills = skillsField
+//             ?.map((e) => e.toString())
+//             .where((s) => s.isNotEmpty)
+//             .toList() ??
+//         <String>[];
+
+//     // If you still want a separate keywords list, you can fill it here:
+//     final keywordsField = (json['keywords'] as List<dynamic>?) ??
+//         <dynamic>[];
+//     final keywords = keywordsField
+//             .map((e) => e.toString())
+//             .where((s) => s.isNotEmpty)
+//             .toList();
+
+//     return Job(
+//       id: id,
+//       title: json['title']?.toString() ?? '',
+//       industry: json['industry']?.toString() ?? '',
+//       company: Company.fromJson(json['company'] as Map<String, dynamic>),
+//       description: json['description']?.toString() ?? '',
+//       workplace: json['workplace']?.toString() ?? '',
+//       type: json['type']?.toString() ?? '',
+//       experienceLevel: json['experienceLevel']?.toString() ?? '',
+//       salaryRange:
+//           SalaryRange.fromJson(json['salaryRange'] as Map<String, dynamic>),
+//       location: Location.fromJson(json['location'] as Map<String, dynamic>),
+//       keywords: keywords,
+//       skills: skills,
+//       accepting: json['accepting'] as bool? ?? false,
+//       createdAt: DateTime.parse(json['createdAt'] as String),
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         'id': id,
+//         'title': title,
+//         'industry': industry,
+//         'company': company.toJson(),
+//         'description': description,
+//         'workplace': workplace,
+//         'type': type,
+//         'experienceLevel': experienceLevel,
+//         'salaryRange': salaryRange.toJson(),
+//         'location': location.toJson(),
+//         'keywords': keywords,
+//         'skills': skills,
+//         'accepting': accepting,
+//         'createdAt': createdAt.toIso8601String(),
+//       };
+// }
+
+
 class Job {
   final String id;
   final String title;
   final String industry;
-  final Company company;
+  final Company? company;
+  final Employer? employer;
   final String description;
   final String workplace;
   final String type;
@@ -216,7 +309,8 @@ class Job {
     required this.id,
     required this.title,
     required this.industry,
-    required this.company,
+    this.company,
+    this.employer,
     required this.description,
     required this.workplace,
     required this.type,
@@ -229,63 +323,183 @@ class Job {
     required this.createdAt,
   });
 
+
   factory Job.fromJson(Map<String, dynamic> json) {
-    // Sometimes Mongo returns _id, sometimes id, so we .toString() everything
-    final rawId = json['id'] ?? json['_id'];
-    final id = rawId?.toString() ?? '';
+  final rawId = json['id'] ?? json['_id'];
+  final id = rawId?.toString() ?? '';
 
-    // Skills come in under "skills" or maybe "keywords"
-    final skillsField = (json['skills'] ?? json['keywords']) as List<dynamic>?;
-    final skills = skillsField
-            ?.map((e) => e.toString())
-            .where((s) => s.isNotEmpty)
-            .toList() ??
-        <String>[];
+  final skills = (json['skills'] ?? json['keywords'] ?? [])
+      .map<String>((e) => e.toString())
+      .toList();
 
-    // If you still want a separate keywords list, you can fill it here:
-    final keywordsField = (json['keywords'] as List<dynamic>?) ??
-        <dynamic>[];
-    final keywords = keywordsField
-            .map((e) => e.toString())
-            .where((s) => s.isNotEmpty)
-            .toList();
+  final keywords = (json['keywords'] ?? [])
+      .map<String>((e) => e.toString())
+      .toList();
 
-    return Job(
-      id: id,
-      title: json['title']?.toString() ?? '',
-      industry: json['industry']?.toString() ?? '',
-      company: Company.fromJson(json['company'] as Map<String, dynamic>),
-      description: json['description']?.toString() ?? '',
-      workplace: json['workplace']?.toString() ?? '',
-      type: json['type']?.toString() ?? '',
-      experienceLevel: json['experienceLevel']?.toString() ?? '',
-      salaryRange:
-          SalaryRange.fromJson(json['salaryRange'] as Map<String, dynamic>),
-      location: Location.fromJson(json['location'] as Map<String, dynamic>),
-      keywords: keywords,
-      skills: skills,
-      accepting: json['accepting'] as bool? ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+  Company? company;
+  Employer? employer;
+
+  if (json['company'] != null) {
+    company = Company.fromJson(json['company']);
+  } else if (json['employer'] != null) {
+    employer = Employer.fromJson(json['employer']);
+  }
+
+  // protect salaryRange
+  final salaryRange = json['salaryRange'] != null
+      ? SalaryRange.fromJson(json['salaryRange'])
+      : SalaryRange(id: '', min: 0, max: 0, currency: '');
+
+  final location = json['location'] != null
+      ? Location.fromJson(json['location'])
+      : Location(id: '', address: '', city: '', country: '');
+
+  return Job(
+    id: id,
+    title: json['title']?.toString() ?? '',
+    industry: json['industry']?.toString() ?? '',
+    company: company,
+    employer: employer,
+    description: json['description']?.toString() ?? '',
+    workplace: json['workplace']?.toString() ?? '',
+    type: json['type']?.toString() ?? '',
+    experienceLevel: json['experienceLevel']?.toString() ?? '',
+    salaryRange: salaryRange,
+    location: location,
+    keywords: keywords,
+    skills: skills,
+    accepting: json['accepting'] as bool? ?? false,
+    createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+  );
+}
+
+  // factory Job.fromJson(Map<String, dynamic> json) {
+  //   final rawId = json['id'] ?? json['_id'];
+  //   final id = rawId?.toString() ?? '';
+
+  //   // parse skills/keywords
+  //   final skillsField = (json['skills'] ?? json['keywords']) as List<dynamic>?;
+  //   final skills = skillsField
+  //           ?.map((e) => e.toString())
+  //           .where((s) => s.isNotEmpty)
+  //           .toList() ??
+  //       <String>[];
+  //   final keywordsField = (json['keywords'] as List<dynamic>?) ?? <dynamic>[];
+  //   final keywords = keywordsField
+  //           .map((e) => e.toString())
+  //           .where((s) => s.isNotEmpty)
+  //           .toList();
+
+  //   Company? company;
+  //   Employer? employer;
+  //   if (json['company'] != null) {
+  //     company = Company.fromJson(json['company'] as Map<String, dynamic>);
+  //   } else if (json['employer'] != null) {
+  //     // you could convert Employer to Company-like or just keep employer
+  //     employer = Employer.fromJson(json['employer'] as Map<String, dynamic>);
+  //   }
+
+  //    final salaryRange = json['salaryRange'] != null
+  //   ? SalaryRange.fromJson(json['salaryRange'])
+  //   : SalaryRange(id: '', min: 0, max: 0, currency: '');
+
+  // // same for industry if you expect it might be missing:
+  // final industry = json['industry']?.toString() ?? '';
+
+  //   return Job(
+  //     id: id,
+  //     title: json['title']?.toString() ?? '',
+  //     industry: industry,//json['industry']?.toString() ?? '',
+  //     company: company,
+  //     employer: employer,
+  //     description: json['description']?.toString() ?? '',
+  //     workplace: json['workplace']?.toString() ?? '',
+  //     type: json['type']?.toString() ?? '',
+  //     experienceLevel: json['experienceLevel']?.toString() ?? '',
+  //     salaryRange:salaryRange,
+  //         //SalaryRange.fromJson(json['salaryRange'] as Map<String, dynamic>),
+  //     location: Location.fromJson(json['location'] as Map<String, dynamic>),
+  //     keywords: keywords,
+  //     skills: skills,
+  //     accepting: json['accepting'] as bool? ?? false,
+  //     createdAt: DateTime.parse(json['createdAt'] as String),
+  //   );
+  // }
+
+  Map<String, dynamic> toJson() {
+    final m = <String, dynamic>{
+      'id': id,
+      'title': title,
+      'industry': industry,
+      'description': description,
+      'workplace': workplace,
+      'type': type,
+      'experienceLevel': experienceLevel,
+      'salaryRange': salaryRange.toJson(),
+      'location': location.toJson(),
+      'keywords': keywords,
+      'skills': skills,
+      'accepting': accepting,
+      'createdAt': createdAt.toIso8601String(),
+    };
+    if (company != null) {
+      m['company'] = company!.toJson();
+    }
+    if (employer != null) {
+      m['employer'] = employer!.toJson();
+    }
+    return m;
+  }
+}
+
+
+
+class Employer {
+  final String id;
+  final String firstname;
+  final String lastname;
+  final String username;
+  final String country;
+  final String city;
+  final String profilePicture;
+
+  Employer({
+    required this.id,
+    required this.firstname,
+    required this.lastname,
+    required this.username,
+    required this.country,
+    required this.city,
+    required this.profilePicture,
+  });
+
+  // Factory method to create an Employer instance from JSON
+  factory Employer.fromJson(Map<String, dynamic> json) {
+    return Employer(
+      id: json['id'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
+      username: json['username'],
+      country: json['country'],
+      city: json['city'],
+      profilePicture: json['profilePicture'],
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'industry': industry,
-        'company': company.toJson(),
-        'description': description,
-        'workplace': workplace,
-        'type': type,
-        'experienceLevel': experienceLevel,
-        'salaryRange': salaryRange.toJson(),
-        'location': location.toJson(),
-        'keywords': keywords,
-        'skills': skills,
-        'accepting': accepting,
-        'createdAt': createdAt.toIso8601String(),
-      };
+  // Method to convert an Employer instance to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstname': firstname,
+      'lastname': lastname,
+      'username': username,
+      'country': country,
+      'city': city,
+      'profilePicture': profilePicture,
+    };
+  }
 }
+
 
 class Company {
   final String id;
