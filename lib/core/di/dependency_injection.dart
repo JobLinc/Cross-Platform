@@ -5,6 +5,11 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/accountvisibility/data/repos/account_visibility_repo.dart';
+import 'package:joblinc/features/accountvisibility/data/services/account_visibility_service.dart';
+import 'package:joblinc/features/blockedaccounts/data/repos/blocked_account_repo.dart';
+import 'package:joblinc/features/blockedaccounts/data/services/blocked_accounts_service.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
@@ -20,6 +25,7 @@ import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
@@ -71,9 +77,9 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
   final baseUrl = Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api' 
-      : 'http://localhost:3000/api'; 
-      //'https://joblinc.me:3000/api'; 
+      ? 'http://10.0.2.2:3000/api'
+      : 'http://localhost:3000/api';
+  //'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -197,7 +203,8 @@ Future<void> setupGetIt() async {
       () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
   getIt.registerFactory<SentConnectionsCubit>(
       () => SentConnectionsCubit(getIt<UserConnectionsRepository>()));
-
+  getIt.registerFactory<FollowCubit>(
+      () => FollowCubit(getIt<UserConnectionsRepository>()));
   //User profile
   getIt.registerFactory<InvitationsCubit>(
       () => InvitationsCubit(getIt<UserConnectionsRepository>()));
@@ -262,4 +269,21 @@ Future<void> setupGetIt() async {
     () => ChangeUsernameCubit(getIt<ChangeUsernameRepo>()),
   );
   //User profile
+
+  // Blocked Accounts
+  getIt.registerLazySingleton<BlockedAccountsService>(
+      () => BlockedAccountsService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<BlockedAccountRepo>(
+      () => BlockedAccountRepo(getIt.get<BlockedAccountsService>()));
+
+  getIt.registerFactory<BlockedAccountsCubit>(
+      () => BlockedAccountsCubit(getIt.get<BlockedAccountRepo>()));
+
+  // Account Visibility
+  getIt.registerLazySingleton<AccountVisibilityService>(
+      () => AccountVisibilityService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<AccountVisibilityRepo>(
+      () => AccountVisibilityRepo(getIt.get<AccountVisibilityService>()));
 }

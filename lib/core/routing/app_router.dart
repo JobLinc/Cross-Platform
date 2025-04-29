@@ -6,6 +6,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
+import 'package:joblinc/features/blockedaccounts/ui/screens/blocked_accounts_screen.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -24,9 +26,12 @@ import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/connections/ui/screens/block_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/connections/ui/screens/followers_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/following_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/others_connection_list.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
@@ -239,8 +244,8 @@ class AppRouter {
                     } else {
                       return Scaffold(
                         body: Center(
-                            child: Text(
-                                'Invalid arguments for CompanyPageHome')),
+                            child:
+                                Text('Invalid arguments for CompanyPageHome')),
                       );
                     }
                   },
@@ -276,6 +281,20 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<ConnectionsCubit>(),
             child: ConnectionPage(),
+          ),
+        );
+      case Routes.followersListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowersListScreen(),
+          ),
+        );
+      case Routes.followingListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowingListScreen(),
           ),
         );
       case Routes.othersConnectionScreen:
@@ -433,6 +452,21 @@ class AppRouter {
           ),
         );
 
+      case Routes.blockedAccountsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                getIt.get<BlockedAccountsCubit>()..getBlockedUsers(),
+            child: BlockedAccountsScreen(),
+          ),
+        );
+      case Routes.addResumeScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: UserAddResumeScreen(),
+          ),
+        );
       default:
         return null;
     }

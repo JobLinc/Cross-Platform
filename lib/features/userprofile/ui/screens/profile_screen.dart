@@ -727,6 +727,7 @@ void showConnectionsOptionsBottomSheet(BuildContext context) {
                   style: TextStyle(fontSize: 18.sp)),
               onTap: () {
                 Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followersListScreen);
               },
             ),
             ListTile(
@@ -735,6 +736,7 @@ void showConnectionsOptionsBottomSheet(BuildContext context) {
                   style: TextStyle(fontSize: 18.sp)),
               onTap: () {
                 Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followingListScreen);
               },
             ),
           ],
