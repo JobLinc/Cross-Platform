@@ -8,6 +8,7 @@ class UserProfile {
   final String userId;
   final String firstname;
   final String lastname;
+  final String username;
   final String email;
   final String headline;
   final String profilePicture;
@@ -26,6 +27,7 @@ class UserProfile {
   final List<Certification> certifications;
   final List<Language> languages;
   final List<Resume> resumes;
+  final bool isFollowing;
 
   UserProfile({
     required this.userId,
@@ -49,6 +51,8 @@ class UserProfile {
     required this.certifications,
     required this.languages,
     required this.resumes,
+    required this.username,
+    required this.isFollowing,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -92,6 +96,8 @@ class UserProfile {
               ?.map((resume) => Resume.fromJson(resume))
               .toList() ??
           [],
+      username: json['username'] ?? '',
+      isFollowing: json['isFollowing'] ?? false,
     );
   }
 

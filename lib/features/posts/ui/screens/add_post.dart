@@ -19,7 +19,7 @@ class AddPostScreen extends StatelessWidget {
         } else if (state is AddPostStateSuccess) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Post successful')));
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          Navigator.pushNamedAndRemoveUntil(context, Routes.homeScreen, (Route <dynamic> route) => false);
         } else if (state is AddPostStateFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
