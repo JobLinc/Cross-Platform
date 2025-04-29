@@ -22,6 +22,7 @@ class Post extends StatelessWidget {
   final bool showExtraMenu;
   final bool showOwnerMenu;
 
+  @override
   Widget build(BuildContext context) {
     return BlocProvider<PostCubit>(
       create: (context) => getIt<PostCubit>(),
@@ -257,11 +258,7 @@ class PostAttachments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO this needs revising
-    // return FadeInImage.memoryNetwork(
-    //   placeholder: kTransparentImage,
-    //   image: attachmentURL,spaceAround
-    // );
+    //TODO prepare for multiple images
     return Image.network(
       key: Key('post_body_attachments'),
       attachmentURLs[0],
@@ -275,7 +272,10 @@ Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
     showDragHandle: true,
     builder: (context) => SafeArea(
       child: Column(
-          mainAxisSize: MainAxisSize.min, children: postSettingsNormalButtons),
+          mainAxisSize: MainAxisSize.min,
+          children: showOwnerMenu
+              ? postSettingsOwnerButtons
+              : postSettingsNormalButtons),
     ),
   );
 }

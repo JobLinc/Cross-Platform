@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/companypages/data/data/repos/companyjobs_repo.dart';
-import 'package:joblinc/features/companypages/data/data/services/companyjobs_api.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/companyjobs_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/companyjobs_api.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
@@ -11,7 +11,8 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 class CompanyHomeJobs extends StatelessWidget {
   final String companyId;
   final bool isAdmin;
-  const CompanyHomeJobs({required this.companyId, this.isAdmin = false, super.key});
+  const CompanyHomeJobs(
+      {required this.companyId, this.isAdmin = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,10 @@ class CompanyHomeJobs extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return JobList(jobs: snapshot.data!, isCreated: true, isCompanyPageAdmin: isAdmin);
+          return JobList(
+              jobs: snapshot.data!,
+              isCreated: true,
+              isCompanyPageAdmin: isAdmin);
         } else {
           return Container(
             height: 200.h,

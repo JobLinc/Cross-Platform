@@ -10,9 +10,9 @@ import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
