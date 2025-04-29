@@ -12,7 +12,6 @@ part 'edit_company_state.dart';
 class EditCompanyCubit extends Cubit<EditCompanyState> {
   final UpdateCompanyRepo _companyRepo;
   EditCompanyCubit(this._companyRepo) : super(EditCompanyInitial());
-  
 
   Future<void> updateCompany(UpdateCompanyModel updateData) async {
     try {
@@ -22,7 +21,8 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       // Reload the profile to get the updated data
     } catch (e) {
       if (!isClosed) {
-        emit(EditCompanyFailure('Failed to update company data: ${e.toString()}'));
+        emit(EditCompanyFailure(
+            'Failed to update company data: ${e.toString()}'));
       }
     }
   }
@@ -33,8 +33,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
     try {
       // Call the repository to upload the image
       emit(EditCompanyLoading());
-      Response response =
-          await _companyRepo.uploadCompanyLogo(imageFile);
+      Response response = await _companyRepo.uploadCompanyLogo(imageFile);
 
       if (response.statusCode == 200) {
         UpdateCompanyModel picModel =
@@ -42,7 +41,8 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         updateCompany(picModel);
         // getUserProfile();
       } else {
-        emit(EditCompanyFailure('Failed to upload company logo: ${response.statusMessage}'));
+        emit(EditCompanyFailure(
+            'Failed to upload company logo: ${response.statusMessage}'));
       }
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
