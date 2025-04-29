@@ -27,6 +27,7 @@ class UserProfile {
   final List<Certification> certifications;
   final List<Language> languages;
   final List<Resume> resumes;
+  final bool isFollowing;
 
   UserProfile({
     required this.userId,
@@ -51,6 +52,7 @@ class UserProfile {
     required this.languages,
     required this.resumes,
     required this.username,
+    required this.isFollowing,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -95,6 +97,7 @@ class UserProfile {
               .toList() ??
           [],
       username: json['username'] ?? '',
+      isFollowing: json['isFollowing'] ?? false,
     );
   }
 

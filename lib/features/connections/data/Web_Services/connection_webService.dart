@@ -18,6 +18,32 @@ class UserConnectionsApiService {
     }
   }
 
+  Future<List<dynamic>> getFollowing() async {
+    try {
+      final response = await _dio.get('/follow/following');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load follows');
+      }
+    } catch (e) {
+      throw Exception('Error fetching follows: $e');
+    }
+  }
+
+  Future<List<dynamic>> getFollowers() async {
+    try {
+      final response = await _dio.get('/follow/followers');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load follows');
+      }
+    } catch (e) {
+      throw Exception('Error fetching follows: $e');
+    }
+  }
+
   Future<List<dynamic>> getInvitations() async {
     try {
       final response = await _dio.get('/connection/received');
@@ -87,6 +113,30 @@ class UserConnectionsApiService {
       return response;
     } catch (e) {
       print('API error sending connection request: $e');
+      rethrow;
+    }
+  }
+
+  Future<Response> followConnection(String userId) async {
+    try {
+      final response = await _dio.post(
+        '/follow/$userId',
+      );
+      return response;
+    } catch (e) {
+      print('API error sending follow request: $e');
+      rethrow;
+    }
+  }
+
+  Future<Response> unfollowConnection(String userId) async {
+    try {
+      final response = await _dio.post(
+        '/follow/$userId/unfollow',
+      );
+      return response;
+    } catch (e) {
+      print('API error sending follow request: $e');
       rethrow;
     }
   }

@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
@@ -49,9 +53,36 @@ class UserResumes extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Uploaded Resumes',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Uploaded Resumes',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              isuser
+                  ? IconButton(
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['pdf', 'doc', 'docx'],
+                          allowMultiple: false,
+                        );
+
+                        if (result != null && result.files.isNotEmpty) {
+                          final platformFile = result.files.first;
+
+                          if (platformFile.path != null) {
+                            final file = File(platformFile.path!);
+                            context.read<ProfileCubit>().uploadResume(file);
+                            // Open the file using the OpenFile package
+                            //await OpenFile.open(platformFile.path!); // This works for both PDFs and Word docs
+                          }
+                        }
+                      },
+                      icon: Icon(Icons.add))
+                  : SizedBox.shrink(),
+            ],
           ),
           ListView.builder(
             shrinkWrap: true,
