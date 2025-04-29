@@ -50,6 +50,7 @@ void main() {
       certifications: [],
       languages: [],
       resumes: [],
+      username: 'alolo',
     );
 
     await tester.pumpWidget(
