@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
@@ -44,7 +45,8 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side: BorderSide(color: ColorsManager.getPrimaryColor(context), width: 2),
+        side:
+            BorderSide(color: ColorsManager.getPrimaryColor(context), width: 2),
       ),
       elevation: 5,
       shadowColor: Colors.redAccent,
@@ -55,19 +57,17 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
           children: [
             // Applicant info and picture
             GestureDetector(
-              onTap: widget.onTap,
+              onTap: () {
+                Navigator.pushNamed(context, Routes.otherProfileScreen,
+                    arguments: widget.jobApplicant.applicant.id);
+              },
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey[300],
-                    child: Text(
-                      widget.jobApplicant.applicant.firstname[0] +
-                          widget.jobApplicant.applicant.lastname[0],
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    backgroundImage: NetworkImage(
+                      widget.jobApplicant.applicant.profilePicture,
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -112,8 +112,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                                 .changeJobApplicationStatus(
                                     widget.jobApplicant.job,
                                     widget.jobApplicant.id,
-                                    {"status":"Accepted"}
-                                    ),
+                                    {"status": "Accepted"}),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green),
                             child: Text(
@@ -132,8 +131,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                                 .changeJobApplicationStatus(
                                     widget.jobApplicant.job,
                                     widget.jobApplicant.id,
-                                    {"status":"Rejected"}
-                                    ),
+                                    {"status": "Rejected"}),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red),
                             child: Text(
@@ -155,7 +153,6 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                   default:
                     return SizedBox();
                 }
-                
               },
             )
           ],
@@ -250,7 +247,7 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "${(resume.size / 1024.0).toStringAsFixed(1)} kB",// Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
+                    "${(resume.size / 1024.0).toStringAsFixed(1)} kB", // Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 12.sp,
@@ -265,8 +262,6 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
     );
   }
 }
-
-
 
 class JobApplicantList extends StatelessWidget {
   final List<JobApplicant> jobApplicants;
