@@ -103,10 +103,11 @@ class CommentBottomBar extends StatelessWidget {
 
 Future<dynamic> showCommentSectionBottomSheet(BuildContext context) {
   return showModalBottomSheet(
-      showDragHandle: true,
-      scrollControlDisabledMaxHeightRatio: 0.9,
-      context: context,
-      builder: (context) {
-        return CommentSection();
-      });
+    showDragHandle: true,
+    scrollControlDisabledMaxHeightRatio: 0.9,
+    context: context,
+    builder: (context) {
+      return CommentSection();
+    },
+  );
 }

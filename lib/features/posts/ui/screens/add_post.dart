@@ -19,13 +19,17 @@ class AddPostScreen extends StatelessWidget {
         if (state is AddPostStateLoading) {
         } else if (state is AddPostStateSuccess) {
           CustomSnackBar.show(
-              context: context,
-              message: 'Post successful',
-              type: SnackBarType.success);
+            context: context,
+            message: 'Post successful',
+            type: SnackBarType.success,
+          );
           Navigator.pushReplacementNamed(context, Routes.homeScreen);
         } else if (state is AddPostStateFailure) {
           CustomSnackBar.show(
-              context: context, message: state.error, type: SnackBarType.error);
+            context: context,
+            message: state.error,
+            type: SnackBarType.error,
+          );
         }
       },
       builder: (context, state) {
