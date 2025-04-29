@@ -9,11 +9,18 @@ class NotificationApiService {
 
   Future<List<NotificationModel>> getNotifications() async {
     try {
-      final response = await _dio.get("/notifications/get");
+      final response = await _dio.get("$_baseUrl/get");
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data['notifications'];
-        return data.map((json) => NotificationModel.fromJson(json)).toList();
+        if (response.data is List) {
+          final List<dynamic> data = response.data;
+          return data.map((json) => NotificationModel.fromJson(json)).toList();
+        } else if (response.data['notifications'] is List) {
+          final List<dynamic> data = response.data['notifications'];
+          return data.map((json) => NotificationModel.fromJson(json)).toList();
+        } else {
+          return [];
+        }
       } else {
         throw Exception(
             'Failed to fetch notifications: ${response.statusMessage}');
@@ -53,10 +60,26 @@ class NotificationApiService {
           default:
             throw Exception('Server error (${e.response?.statusCode})');
         }
-      } 
-      
+      }
+
+      throw Exception('Network error: ${e.message}');
     } catch (e) {
       throw Exception('Failed to mark notification as read: $e');
+    }
+  }
+
+  Future<int> getUnseenCount() async {
+    try {
+      final response = await _dio.get('$_baseUrl/unseen/count');
+
+      if (response.statusCode == 200) {
+        return response.data['count'] ?? 0;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print('Error getting unseen count: $e');
+      return 0;
     }
   }
 }

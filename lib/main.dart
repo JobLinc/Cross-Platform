@@ -9,18 +9,45 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
 import 'firebase_options.dart';
+
+// Handle background messages
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Set up background message handler
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+
+  // Set up dependencies
   await setupGetIt();
+
   await ScreenUtil.ensureScreenSize();
   await checkIfLoggedInUser();
   await checkIfConfirmedUser();
-  // Initialize the app with the appropriate theme and initial route
-  // based on the user's login status
+
+  // Initialize notification services if user is logged in
+  if (isLoggedInUser) {
+    try {
+      final notificationCubit = getIt<NotificationCubit>();
+      await notificationCubit.initServices();
+    } catch (e) {
+      print("Error initializing notification services: $e");
+    }
+  }
 
   runApp(
     ChangeNotifierProvider(

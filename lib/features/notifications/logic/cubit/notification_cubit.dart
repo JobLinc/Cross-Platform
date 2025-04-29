@@ -3,16 +3,44 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
+import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
+import 'package:joblinc/features/notifications/data/services/firebase_messaging_service.dart';
+import 'package:joblinc/features/notifications/data/services/socket_service.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_state.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRepo _repo;
-  late IO.Socket _socket;
-  // final String _socketUrl =
-  //     'https://api.joblinc.com'; // Replace with your actual socket URL
+  late SocketService _socketService;
 
-  NotificationCubit(this._repo) : super(NotificationInitial());
+  // Don't require FCM service in constructor
+  late FirebaseMessagingService _fcmService;
+  final String _socketUrl;
+  final DeviceTokenService _deviceTokenService;
+
+  NotificationCubit(
+    this._repo,
+    this._socketUrl,
+    this._deviceTokenService,
+  ) : super(NotificationInitial()) {
+    _socketService = SocketService(
+      baseUrl: _socketUrl,
+      onNewNotification: addNewNotification,
+    );
+  }
+
+  Future<void> initServices() async {
+    // Create FCM service with callback to this cubit
+    _fcmService = FirebaseMessagingService(
+      _deviceTokenService,
+      addNewNotification,
+    );
+
+    // Initialize Firebase Messaging
+    await _fcmService.initialize();
+
+    // Initialize Socket.IO connection
+    await _socketService.connect();
+  }
 
   Future<void> getNotifications() async {
     emit(NotificationLoading());
@@ -79,52 +107,37 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
-  void initSocket() async {
-    final AuthService authService = getIt<AuthService>();
-    final String? token = await authService.getAccessToken();
+  void addNewNotification(NotificationModel notification) {
+    if (state is NotificationLoaded) {
+      final currentNotifications = (state as NotificationLoaded).notifications;
 
-    if (token == null) {
-      print('Cannot initialize socket: No authentication token');
-      return;
+      // Check if this notification already exists
+      bool exists = currentNotifications.any((n) => n.id == notification.id);
+
+      if (!exists) {
+        // Add to the beginning of the list
+        emit(NotificationLoaded([notification, ...currentNotifications]));
+      }
+    } else if (state is NotificationInitial || state is NotificationError) {
+      emit(NotificationLoaded([notification]));
     }
+  }
 
-    // _socket = IO.io(
-    //   _socketUrl,
-    //   IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
-    //       {'Authorization': 'Bearer $token'}).build(),
-    // );
+  Future<int> getUnseenCount() async {
+    try {
+      return await _repo.getUnseenCount();
+    } catch (e) {
+      print('Error getting unseen count: $e');
+      return 0;
+    }
+  }
 
-    // _socket.connect();
-
-    // _socket.onConnect((_) {
-    //   print('Notification socket connected ✅');
-    // });
-
-    // _socket.on('newNotification', (data) {
-    //   try {
-    //     final newNotification = NotificationModel.fromJson(data);
-
-    //     if (state is NotificationLoaded) {
-    //       final currentNotifications =
-    //           (state as NotificationLoaded).notifications;
-    //       emit(NotificationLoaded([...currentNotifications, newNotification]));
-    //     } else {
-    //       emit(NotificationLoaded([newNotification]));
-    //     }
-    //   } catch (e) {
-    //     print('Error processing new notification: $e');
-    //   }
-    // });
-
-    // _socket.onDisconnect((_) => print('Notification socket disconnected ❌'));
-    // _socket.onError((data) => print('Notification socket error: $data'));
+  void initSocket() async {
+    await _socketService.connect();
   }
 
   void disposeSocket() {
-    if (_socket.connected) {
-      _socket.disconnect();
-      _socket.dispose();
-    }
+    _socketService.disconnect();
   }
 
   @override

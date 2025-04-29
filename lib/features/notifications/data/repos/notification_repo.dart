@@ -17,4 +17,8 @@ class NotificationRepo {
   Future<void> markAsRead(String notificationId) {
     return _apiService.markAsRead(notificationId);
   }
+
+  Future<int> getUnseenCount() {
+    return _apiService.getUnseenCount();
+  }
 }

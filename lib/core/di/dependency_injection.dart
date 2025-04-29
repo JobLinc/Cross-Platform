@@ -36,6 +36,8 @@ import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart'
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
 import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
+import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
+import 'package:joblinc/features/notifications/data/services/firebase_messaging_service.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
 import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
@@ -74,7 +76,11 @@ Future<void> setupGetIt() async {
   final baseUrl = Platform.isAndroid
       ? 'http://10.0.2.2:3000/api'
       : 'http://localhost:3000/api';
-  //'https://joblinc.me:3000/api';
+
+  // Define socket URL based on same host but with WebSocket protocol
+  final socketUrl =
+      Platform.isAndroid ? 'ws://10.0.2.2:3000' : 'ws://localhost:3000';
+
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -252,14 +258,21 @@ Future<void> setupGetIt() async {
 
   // Notifications
   getIt.registerFactory<NotificationApiService>(
-    () => NotificationApiService(getIt<Dio>()),
-  );
+      () => NotificationApiService(getIt<Dio>()));
 
   getIt.registerFactory<NotificationRepo>(
     () => NotificationRepo(getIt<NotificationApiService>()),
   );
 
-  getIt.registerFactory<NotificationCubit>(
-    () => NotificationCubit(getIt<NotificationRepo>()),
+  // Register Device Token Service
+  getIt.registerLazySingleton<DeviceTokenService>(
+    () => DeviceTokenService(getIt<Dio>()),
   );
+
+  // Register Notification Cubit with dependencies
+  getIt.registerFactory<NotificationCubit>(() => NotificationCubit(
+        getIt<NotificationRepo>(),
+        socketUrl,
+        getIt<DeviceTokenService>(),
+      ));
 }
