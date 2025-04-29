@@ -120,7 +120,8 @@ class CreateCompanyPage extends StatelessWidget {
                           print('Form is invalid');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Make sure that you approved the terms and conditions and filled all fields!'),
+                              content: Text(
+                                  'Make sure that you approved the terms and conditions and filled all fields!'),
                               backgroundColor: Colors.red,
                             ),
                           );

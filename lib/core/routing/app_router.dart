@@ -242,8 +242,8 @@ class AppRouter {
                     } else {
                       return Scaffold(
                         body: Center(
-                            child: Text(
-                                'Invalid arguments for CompanyPageHome')),
+                            child:
+                                Text('Invalid arguments for CompanyPageHome')),
                       );
                     }
                   },

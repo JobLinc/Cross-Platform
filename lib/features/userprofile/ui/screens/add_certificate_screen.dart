@@ -57,14 +57,13 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.black, 
-              onPrimary: Colors.white, 
-              onSurface: Colors.black, 
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor:
-                    Colors.black, 
+                foregroundColor: Colors.black,
               ),
             ),
           ),
