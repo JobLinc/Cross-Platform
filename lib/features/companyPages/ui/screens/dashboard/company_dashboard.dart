@@ -172,9 +172,7 @@ class CompanyDashboard extends StatelessWidget {
                                       create: (context) =>
                                           getIt<JobListCubit>(),
                                       child: JobCreationScreen(),
-                                    )
-                                  )
-                                );
+                                    )));
                       },
                       child: Text(
                         'Post a job',
