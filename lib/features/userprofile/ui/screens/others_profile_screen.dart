@@ -105,29 +105,32 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                                 )),
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                showModalBasedOnConnectionStatus(
-                                    context,
-                                    profile.connectionStatus,
-                                    context.read<ProfileCubit>(),
-                                    profile.userId);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(
-                                  side: BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                padding: const EdgeInsets.all(5),
-                                backgroundColor: const Color(0xFFFAFAFA),
-                                foregroundColor: Colors.black,
-                                fixedSize: Size(50.w, 50.h),
-                              ),
-                              child: const Icon(Icons.more_horiz_outlined,
-                                  color: Colors.black),
-                            ),
+                            profile.connectionStatus != "Blocked"
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      showModalBasedOnConnectionStatus(
+                                          context,
+                                          profile.connectionStatus,
+                                          context.read<ProfileCubit>(),
+                                          profile.userId,
+                                          profile.isFollowing);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: CircleBorder(
+                                        side: BorderSide(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(5),
+                                      backgroundColor: const Color(0xFFFAFAFA),
+                                      foregroundColor: Colors.black,
+                                      fixedSize: Size(50.w, 50.h),
+                                    ),
+                                    child: const Icon(Icons.more_horiz_outlined,
+                                        color: Colors.black),
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                         SizedBox(height: 20.h),
@@ -217,11 +220,11 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
     case 'Sent':
       return () {
         withdrawConnection(context, cubit, userId);
-      }; // No action for pending request
+      };
     case 'Blocked':
       return () {
         cubit.unblockConnection(userId, context);
-      }; // No action for blocked
+      };
     case 'Not Connected':
       return () {
         cubit.sendConnectionRequest(userId, context);

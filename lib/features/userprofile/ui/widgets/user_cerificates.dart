@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
@@ -67,6 +68,14 @@ class UserCerificates extends StatelessWidget {
                 'Licenses & Certifications',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+              isuser
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, Routes.addCertificationScreen);
+                      },
+                      icon: Icon(Icons.add))
+                  : SizedBox.shrink(),
             ],
           ),
           ListView.builder(

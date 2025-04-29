@@ -21,9 +21,12 @@ import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
 import 'package:joblinc/features/connections/ui/screens/block_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/connections/ui/screens/followers_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/following_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/others_connection_list.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
@@ -233,6 +236,20 @@ class AppRouter {
             child: ConnectionPage(),
           ),
         );
+      case Routes.followersListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowersListScreen(),
+          ),
+        );
+      case Routes.followingListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowingListScreen(),
+          ),
+        );
       case Routes.othersConnectionScreen:
         if (arguments is String) {
           return MaterialPageRoute(
@@ -384,7 +401,6 @@ class AppRouter {
             child: UserAddResumeScreen(),
           ),
         );
-
       default:
         return null;
     }

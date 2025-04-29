@@ -29,7 +29,7 @@ class UserProfileAddSection extends StatelessWidget {
                   icon: Icon(Icons.ios_share),
                   onPressed: () {
                     Navigator.pushReplacementNamed(
-                        context, Routes.addSkillScreen);
+                        context, Routes.addExperienceScreen);
                   },
                 ),
                 Text(

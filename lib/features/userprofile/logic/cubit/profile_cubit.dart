@@ -320,7 +320,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
       // You can optionally handle the response here, e.g., update the UI or state
     } catch (e) {
-      emit(ResumeFailed("Resume adding failed"));
+      if (!isClosed) {
+        emit(ResumeFailed("Resume adding failed"));
+      }
       print('Error in cubit while uploading resume: $e');
       // You can optionally emit an error state or handle the error gracefully
     }
@@ -450,11 +452,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
- 
+
   void unblockConnection(String userId, BuildContext context) async {
     try {
-      final response =
-          await connectionsRepository.changeConnectionStatus(userId, "Unblocked");
+      final response = await connectionsRepository.changeConnectionStatus(
+          userId, "Unblocked");
       if (response.statusCode == 200) {
         CustomSnackBar.show(
             context: context,
@@ -473,6 +475,58 @@ class ProfileCubit extends Cubit<ProfileState> {
         CustomSnackBar.show(
             context: context,
             message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void followConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.follwConnection(userId);
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection followed succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection followed failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't follow connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void unfollowConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.unfollwConnection(userId);
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection unfollowed succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection unfollowed failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't unfollow connection",
             type: SnackBarType.error);
       }
     }
@@ -507,6 +561,4 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
-
-
 }
