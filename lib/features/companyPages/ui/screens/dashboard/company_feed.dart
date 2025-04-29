@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
-import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart'
+import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/dashboard/dashboard_appbar.dart'
     show DashboardAppbar;
 
 class CompanyFeed extends StatefulWidget {
