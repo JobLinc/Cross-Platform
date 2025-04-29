@@ -42,13 +42,13 @@ final class MyJobApplicationsLoaded extends MyJobsState {
 final class MyJobApplicationsEmpty extends MyJobsState{}
 
 final class MyJobApplicantsLoaded extends MyJobsState{
-  final List<JobApplication> jobApplicants;
+  final List<JobApplicant> jobApplicants;
   MyJobApplicantsLoaded({required this.jobApplicants});
 }
 final class MyJobApplicantsEmpty extends MyJobsState{}
 
 final class MyJobApplicantLoading extends MyJobsState{}
 final class MyJobApplicantLoaded extends MyJobsState{
-  final JobApplication jobApplicant;
+  final JobApplicant jobApplicant;
   MyJobApplicantLoaded({required this.jobApplicant});
 }

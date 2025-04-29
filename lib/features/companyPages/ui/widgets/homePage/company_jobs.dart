@@ -2,34 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/companypages/data/data/services/getcompanyposts_api_service.dart';
-import 'package:joblinc/features/companypages/data/data/repos/getcompanyposts_repo.dart';
-import 'package:joblinc/features/posts/data/models/post_model.dart';
-import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
+import 'package:joblinc/features/companypages/data/data/repos/companyjobs_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/companyjobs_api.dart';
+import 'package:joblinc/features/jobs/data/models/job_model.dart';
+import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 
-class CompanyHomePosts extends StatelessWidget {
+class CompanyHomeJobs extends StatelessWidget {
   final String companyId;
-  const CompanyHomePosts({required this.companyId, super.key});
+  final bool isAdmin;
+  const CompanyHomeJobs({required this.companyId, this.isAdmin = false, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<PostModel>>(
-      future: GetCompanyPostsRepo(
-        GetCompanyPostsApiService(companyId, getIt<Dio>()),
-      ).getMyCompanyPosts(),
+    return FutureBuilder<List<Job>>(
+      future: GetCompanyJobsRepo(
+        GetCompanyJobsApiService(companyId, getIt<Dio>()),
+      ).getCompanyJobs(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(
             child: Text(
-              'Failed to load posts',
+              'Failed to load jobs',
               style: TextStyle(color: Colors.red),
             ),
           );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return PostList(posts: snapshot.data!);
+          return JobList(jobs: snapshot.data!, isCreated: true, isCompanyPageAdmin: isAdmin);
         } else {
           return Container(
             height: 200.h,
@@ -51,7 +52,7 @@ class CompanyHomePosts extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 80.w),
                   child: Center(
                     child: Text(
-                      "No posts yet",
+                      "No jobs yet",
                       style: TextStyle(
                         fontSize: 24.sp,
                       ),
@@ -64,7 +65,7 @@ class CompanyHomePosts extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 65.w),
                   child: Center(
                     child: Text(
-                      "Check back later for posts!",
+                      "Check back later for jobs!",
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: Colors.grey[600],

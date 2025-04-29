@@ -31,6 +31,7 @@ class CreateCompanyResponse {
   final String industry;
   final String urlSlug;
   final String overview;
+  final String id;
   // final String website;
   // final List<String> admins;
   // final String overview;
@@ -47,6 +48,7 @@ class CreateCompanyResponse {
 
   CreateCompanyResponse({
     required this.name,
+    required this.id,
     required this.industry,
     required this.size,
     required this.type,
@@ -74,6 +76,7 @@ class CreateCompanyResponse {
 
     return CreateCompanyResponse(
       name: json['name'] ?? "",
+      id: json['id'] ?? "",
       size: json['size'] ?? "",
       urlSlug: json['urlSlug'] ?? "",
       industry: json['industry'] ?? "",

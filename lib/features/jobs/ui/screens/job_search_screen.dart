@@ -1,42 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
+import 'package:joblinc/features/jobs/data/models/search_filter_request_DTO.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_card.dart';
-
-class Filter {
-  List<String>? experienceFilter;
-  List<String>? companyFilter;
-  int? minSalary;
-  int? maxSalary;
-
-  Filter({
-    this.experienceFilter,
-    this.companyFilter,
-    this.minSalary,
-    this.maxSalary,
-  });
-
-    Map<String, dynamic> toJson() {
-    return {
-      'experienceFilter': experienceFilter,
-      'companyFilter': companyFilter,
-      'minSalary': minSalary,
-      'maxSalary': maxSalary,
-    };
-  }
-
-  factory Filter.fromJson(Map<String, dynamic> json) {
-    return Filter(
-      experienceFilter: (json['experienceFilter'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      companyFilter: (json['companyFilter'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      minSalary: json['minSalary'] as int?,
-      maxSalary: json['maxSalary'] as int?,
-    );
-  }
-}
 
 class JobSearchScreen extends StatefulWidget {
   const JobSearchScreen({super.key});
@@ -49,12 +17,11 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController locationController = TextEditingController();
 
+  List<Map<String, dynamic>>? companies;
+  Map<String, dynamic>? searchFilterParams;
   //final parentContext= context;
 
-  Filter filter = Filter(
-    experienceFilter: [],
-    companyFilter: [],
-  );
+  SearchFilter searchFilter = SearchFilter();
 
   List<Job>? searchedJobs;
 
@@ -62,6 +29,7 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
   void initState() {
     super.initState();
     context.read<JobListCubit>().emitJobSearchInitial();
+    context.read<JobListCubit>().getCompanyNames();
   }
 
   @override
@@ -82,16 +50,19 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                       key: ValueKey(searchedJobs!.length), jobs: searchedJobs!);
                 } else if (state is JobSearchEmpty) {
                   return Center(child: Text("No jobs found."));
-                } else if (state is JobSearchErrorLoading && searchedJobs == null) {
+                } else if (state is JobSearchErrorLoading &&
+                    searchedJobs == null) {
                   return Center(child: Text("Error: ${state.errorMessage}"));
                 } else if (state is JobSearchInitial) {
                   return Center(
-                    child: Text("Start Searching to find countless opportunities"),
+                    child:
+                        Text("Start Searching to find countless opportunities"),
                   );
                 } else {
                   if (searchedJobs != null) {
                     return JobList(
-                        key: ValueKey(searchedJobs!.length), jobs: searchedJobs!);
+                        key: ValueKey(searchedJobs!.length),
+                        jobs: searchedJobs!);
                   } else {
                     return Center(
                       child: Text("Something went Wrong"),
@@ -121,7 +92,8 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.sp),
+                      icon: Icon(Icons.arrow_back,
+                          color: Colors.black, size: 24.sp),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -133,13 +105,20 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                           child: buildSearchField(
                             keyName: "jobSearch_searchByTitle_textField",
                             controller: titleController,
-                            hintText: "Search by title, skill, or company",
+                            hintText: "Search by title, skill, or Industry",
                             icon: Icons.search,
                             onChanged: (value) {
-                              //if (value.isNotEmpty) {
-                                parentContext.read<JobListCubit>().getSearchedFilteredJobs(
-                                    titleController.text, locationController.text,filter);
-                              //}
+                              if (titleController.text.isNotEmpty) {
+                                searchFilter.search = titleController.text;
+                                parentContext.read<JobListCubit>().getAllJobs(
+                                    isSearch: true,
+                                    queryParams: searchFilter.toQueryParameters(
+                                        fields: ["location"]));
+                              } else {
+                                context
+                                    .read<JobListCubit>()
+                                    .emitJobSearchInitial();
+                              }
                             },
                           ),
                         ),
@@ -151,10 +130,19 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                             hintText: "City, state, or zip code",
                             icon: Icons.location_on,
                             onChanged: (value) {
-                              //if (titleController.text.isNotEmpty) {
-                                parentContext.read<JobListCubit>().getSearchedFilteredJobs(
-                                    titleController.text, locationController.text,filter);
-                              //}
+                              if (titleController.text.isNotEmpty) {
+                                searchFilter.location = locationController.text;
+                                parentContext.read<JobListCubit>().getAllJobs(
+                                    isSearch: true,
+                                    queryParams: searchFilter.toQueryParameters(
+                                        fields: [
+                                          "location"
+                                        ])); //queryyParams: );
+                              } else {
+                                context
+                                    .read<JobListCubit>()
+                                    .emitJobSearchInitial();
+                              }
                             },
                           ),
                         ),
@@ -164,7 +152,26 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                   SizedBox(width: 10.w),
                   IconButton(
                     icon: Icon(Icons.filter_list),
-                    onPressed: () => buildFilterModalSheet(filter,parentContext),
+                    onPressed: () async {
+                      await context.read<JobListCubit>().getCompanyNames();
+                      setState(() {
+                        companies = context.read<JobListCubit>().companyNames;
+                      });
+                      buildFilterModalSheet(searchFilter, parentContext);
+                      // final fetchedCompanies =
+                      //     context.read<JobListCubit>().companyNames;
+                      // if (fetchedCompanies != null &&
+                      //     fetchedCompanies.isNotEmpty) {
+                      //   setState(() {
+                      //     companies = fetchedCompanies;
+                      //   });
+                      //   buildFilterModalSheet(searchFilter, parentContext);
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(content: Text('Could not load companies')),
+                      //   );
+                      // }
+                    },
                   ),
                   SizedBox(width: 10.w),
                 ],
@@ -211,34 +218,44 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
     );
   }
 
-  buildFilterModalSheet(Filter filter,BuildContext parentContext) {
-    List<String> experienceLevels = ['Entry', 'Mid', 'Senior'];
+  buildFilterModalSheet(SearchFilter searchFilter, BuildContext parentContext) {
+    List<String> experienceLevels = [
+      'Freshman',
+      'Junior',
+      'MidLevel',
+      'Senior'
+    ];
     // Initialize checkboxes based on filter.experienceFilter contents:
     Map<String, bool> expSelected = {
       for (var level in experienceLevels)
-        level: filter.experienceFilter?.contains(level) ?? false,
+        level: searchFilter.experienceFilter?.contains(level) ?? false,
     };
 
-    List<String> companyOptions = [
-      'Google',
-      'Microsoft',
-      'Apple',
-      'Amazon',
-      'Meta',
-      'Egyptian Co.',
-      'TechnoCorp'
-    ];
+    // List<String> companyOptions = [
+    //   'Google',
+    //   'Microsoft',
+    //   'Apple',
+    //   'Amazon',
+    //   'Meta',
+    //   'Egyptian Co.',
+    //   'TechnoCorp'
+    // ];
+
     // Initialize checkboxes based on filter.companyFilter:
     Map<String, bool> companySelected = {
-      for (var company in companyOptions)
-        company: filter.companyFilter?.contains(company) ?? false,
+      for (var company in companies!)
+        company['id']: searchFilter.companyFilter?.contains(company['id']) ?? false,
     };
 
     // Initialize salary controllers with filter values (or empty)
     TextEditingController minSalaryController = TextEditingController(
-        text: filter.minSalary != null ? filter.minSalary.toString() : "");
+        text: searchFilter.minSalary != null
+            ? searchFilter.minSalary.toString()
+            : "");
     TextEditingController maxSalaryController = TextEditingController(
-        text: filter.maxSalary != null ? filter.maxSalary.toString() : "");
+        text: searchFilter.maxSalary != null
+            ? searchFilter.maxSalary.toString()
+            : "");
 
     bool isCompanyDropdownOpen = false;
 
@@ -272,15 +289,15 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                             setModalState(() {
                               // Reset experience filter selections
                               expSelected.updateAll((key, value) => false);
-                              filter.experienceFilter = [];
+                              searchFilter.experienceFilter = [];
                               // Reset company filter selections
                               companySelected.updateAll((key, value) => false);
-                              filter.companyFilter = [];
+                              searchFilter.companyFilter = [];
                               // Clear salary controllers and values
                               minSalaryController.clear();
                               maxSalaryController.clear();
-                              filter.minSalary = null;
-                              filter.maxSalary = null;
+                              searchFilter.minSalary = null;
+                              searchFilter.maxSalary = null;
                               isCompanyDropdownOpen = false;
                             });
                           },
@@ -289,100 +306,49 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     // Experience Level Filter
                     Text("Experience Level",
                         style: TextStyle(fontWeight: FontWeight.bold)),
-                    Row(
-                      children: experienceLevels.map((level) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              value: expSelected[level],
-                              onChanged: (bool? value) {
-                                setModalState(() {
-                                  expSelected[level] = value ?? false;
-                                  // Update filter.experienceFilter accordingly
-                                  if (value == true) {
-                                    filter.experienceFilter ??= [];
-                                    if (!filter.experienceFilter!.contains(level)) {
-                                      filter.experienceFilter!.add(level);
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: experienceLevels.map((level) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: expSelected[level],
+                                onChanged: (bool? value) {
+                                  setModalState(() {
+                                    expSelected[level] = value ?? false;
+                                    // Update filter.experienceFilter accordingly
+                                    if (value == true) {
+                                      searchFilter.experienceFilter ??= [];
+                                      if (!searchFilter.experienceFilter!
+                                          .contains(level)) {
+                                        searchFilter.experienceFilter!
+                                            .add(level);
+                                      }
+                                    } else {
+                                      searchFilter.experienceFilter
+                                          ?.remove(level);
                                     }
-                                  } else {
-                                    filter.experienceFilter?.remove(level);
-                                  }
-                                });
-                              },
-                            ),
-                            Text(level),
-                            SizedBox(width: 10),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(height: 10),
-                    // Company Filter Dropdown with checkboxes
-                    Text("Company",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    GestureDetector(
-                      onTap: () {
-                        setModalState(() {
-                          isCompanyDropdownOpen = !isCompanyDropdownOpen;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              companySelected.values.any((selected) => selected)
-                                  ? companySelected.entries
-                                      .where((entry) => entry.value)
-                                      .map((entry) => entry.key)
-                                      .join(", ")
-                                  : "Select Companies",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            Icon(isCompanyDropdownOpen
-                                ? Icons.arrow_drop_up
-                                : Icons.arrow_drop_down),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (isCompanyDropdownOpen)
-                      Column(
-                        children: companyOptions.map((company) {
-                          return CheckboxListTile(
-                            title: Text(company),
-                            value: companySelected[company],
-                            onChanged: (bool? value) {
-                              setModalState(() {
-                                companySelected[company] = value ?? false;
-                                // Update filter.companyFilter accordingly
-                                if (value == true) {
-                                  filter.companyFilter ??= [];
-                                  if (!filter.companyFilter!.contains(company)) {
-                                    filter.companyFilter!.add(company);
-                                  }
-                                } else {
-                                  filter.companyFilter?.remove(company);
-                                }
-                              });
-                            },
+                                  });
+                                },
+                              ),
+                              Text(level),
+                              SizedBox(width: 4.w),
+                            ],
                           );
                         }).toList(),
                       ),
-                    SizedBox(height: 10),
+                    ),
+                    SizedBox(height: 10.h),
                     // Salary Range Filter
                     Text("Salary Range",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 5.h,),
                     Row(
                       children: [
                         Expanded(
@@ -395,7 +361,8 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                             ),
                             onChanged: (value) {
                               setModalState(() {
-                                filter.minSalary = int.tryParse(value) ?? 0;
+                                searchFilter.minSalary =
+                                    int.tryParse(value) ?? 0;
                               });
                             },
                           ),
@@ -411,28 +378,110 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                             ),
                             onChanged: (value) {
                               setModalState(() {
-                                filter.maxSalary = int.tryParse(value) ?? 0;
+                                searchFilter.maxSalary =
+                                    int.tryParse(value) ?? 0;
                               });
                             },
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+
+                    SizedBox(height: 10.h),
+                    // Company Filter Dropdown with checkboxes
+                    Text("Company",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    GestureDetector(
+                      onTap: () {
+                        setModalState(() {
+                          isCompanyDropdownOpen = !isCompanyDropdownOpen;
+                        });
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Text(
+                            //   companySelected.values.any((selected) => selected)
+                            //       ? companySelected.entries
+                            //           .where((entry) => entry.value)
+                            //           .map((entry) => entry.key)
+                            //           .join(", ")
+                            //       : "Select Companies",
+                            //   style: TextStyle(color: Colors.black),
+                            // ),
+
+                            Expanded(
+                              child: Text(
+                                companySelected.values.any((selected) => selected)
+                                    ? companies!
+                                        .where((company) =>
+                                            companySelected[company['id']] ==
+                                            true)
+                                        .map((company) => company['name'])
+                                        .join(", ")
+                                    : "Select Companies",
+                                style: TextStyle(color: Colors.black),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Icon(isCompanyDropdownOpen
+                                ? Icons.arrow_drop_up
+                                : Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (isCompanyDropdownOpen)
+                      Column(
+                        children: companies!.map((company) {
+                          return CheckboxListTile(
+                            title: Text(company['name']),
+                            value: companySelected[company['id']],
+                            onChanged: (bool? value) {
+                              setModalState(() {
+                                companySelected[company['id']] = value ?? false;
+                                // Update filter.companyFilter accordingly
+                                if (value == true) {
+                                  searchFilter.companyFilter ??= [];
+                                  if (!searchFilter.companyFilter!
+                                      .contains(company['id'])) {
+                                    searchFilter.companyFilter!
+                                        .add(company['id']);
+                                  }
+                                } else {
+                                  searchFilter.companyFilter
+                                      ?.remove(company['id']);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    
+                    SizedBox(height: 20.h),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
                           //if (titleController.text.isNotEmpty) {
-                                parentContext.read<JobListCubit>().getSearchedFilteredJobs(
-                                    titleController.text, locationController.text,filter);
+                          parentContext.read<JobListCubit>().getAllJobs(
+                              isSearch: true,
+                              queryParams: searchFilter
+                                  .toQueryParameters(fields: ["location"]));
                           //    }
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                         ),
-                        child: Text("Apply Filters", style: TextStyle(color: Colors.red)),
-
+                        child: Text("Apply Filters",
+                            style: TextStyle(color: Colors.red)),
                       ),
                     ),
                   ],
