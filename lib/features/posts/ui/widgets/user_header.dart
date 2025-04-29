@@ -57,6 +57,7 @@ class UserHeader extends StatelessWidget {
             child: UserInfo(
               username: username,
               headline: headline,
+              timestamp: timestamp,
             ),
           ),
           Spacer(),
@@ -83,12 +84,12 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     String? timestampText;
     if (timestamp != null) {
-      timestampText = '${timestamp?.difference(DateTime.now()).inDays}d';
+      timestampText = '${DateTime.now().difference(timestamp!).inDays}d';
       if (timestampText == '0d') {
-        timestampText = '${timestamp?.difference(DateTime.now()).inHours}h';
+        timestampText = '${DateTime.now().difference(timestamp!).inHours}h';
       }
       if (timestampText == '0h') {
-        timestampText = '${timestamp?.difference(DateTime.now()).inMinutes}m';
+        timestampText = '${DateTime.now().difference(timestamp!).inMinutes}m';
       }
     }
     return Column(
@@ -103,23 +104,26 @@ class UserInfo extends StatelessWidget {
             fontWeight: FontWeightHelper.extraBold,
           ),
         ),
-        Text(
-          key: Key('post_header_headline'),
-          headline,
-          style: TextStyle(
-            color: Colors.grey,
-            overflow: TextOverflow.ellipsis,
-            fontWeight: FontWeightHelper.extraLight,
-          ),
-        ),
-        timestamp != null
+        headline.isNotEmpty
             ? Text(
                 key: Key('post_header_headline'),
+                headline,
+                style: TextStyle(
+                  color: Colors.grey,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeightHelper.extraLight,
+                ),
+              )
+            : SizedBox(),
+        timestamp != null
+            ? Text(
+                key: Key('post_header_timestamp'),
                 timestampText!,
                 style: TextStyle(
                   color: Colors.grey,
                   overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeightHelper.extraLight,
+                  fontSize: 12,
                 ),
               )
             : SizedBox(),

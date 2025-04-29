@@ -8,11 +8,11 @@ class CommentApiService {
 
   Future<List<CommentModel>> getComments(String postID) async {
     try {
-      final response = await _dio.post('/post/$postID/comments');
+      final response = await _dio.get('/post/$postID/comments');
       List<CommentModel> comments = [];
 
-      for (Map<String, dynamic> post in response.data) {
-        comments.add(CommentModel.fromJson(post, postID));
+      for (Map<String, dynamic> comment in response.data) {
+        comments.add(CommentModel.fromJson(comment, postID));
       }
 
       return comments;

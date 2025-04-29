@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
+import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
@@ -25,6 +28,7 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<int> likeCount = ValueNotifier(data.likeCount);
     return BlocProvider<PostCubit>(
       create: (context) => getIt<PostCubit>()..setPostId(data.postID),
       child: BlocConsumer<PostCubit, PostState>(
@@ -35,6 +39,8 @@ class Post extends StatelessWidget {
               message: state.successMessage,
               type: SnackBarType.success,
             );
+          } else if (state is PostStateCommentsLoaded) {
+            showCommentSectionBottomSheet(context, data.postID, state.comments);
           } else if (state is PostStateFailure) {
             CustomSnackBar.show(
               context: context,
@@ -54,6 +60,7 @@ class Post extends StatelessWidget {
                 data: data,
                 showExtraMenu: showExtraMenu,
                 showOwnerMenu: showOwnerMenu,
+                likeCount: likeCount,
               ),
             ),
           ),
@@ -69,10 +76,12 @@ class PostContent extends StatelessWidget {
     required this.data,
     required this.showExtraMenu,
     required this.showOwnerMenu,
+    required this.likeCount,
   });
   final PostModel data;
   final bool showExtraMenu;
   final bool showOwnerMenu;
+  final ValueNotifier<int> likeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +137,7 @@ class PostContent extends StatelessWidget {
             ? PostAttachments(attachmentURLs: data.attachmentURLs)
             : SizedBox(),
         PostNumerics(
-          likesCount: data.likeCount,
+          likesCount: likeCount,
           commentCount: data.commentCount,
           repostCount: data.repostCount,
         ),
@@ -136,7 +145,10 @@ class PostContent extends StatelessWidget {
           height: 0,
           color: ColorsManager.getTextSecondary(context),
         ),
-        PostActionBar(),
+        PostActionBar(
+          userReaction: data.userReaction,
+          likeCount: likeCount,
+        ),
       ],
     );
   }
@@ -169,7 +181,7 @@ class PostNumerics extends StatelessWidget {
     required this.repostCount,
   });
 
-  final int likesCount;
+  final ValueNotifier<int> likesCount;
   final int commentCount;
   final int repostCount;
 
@@ -182,14 +194,17 @@ class PostNumerics extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(
-            Icons.thumb_up,
+            LucideIcons.thumbsUp,
             size: 15,
             color: ColorsManager.getTextSecondary(context),
           ),
-          Text(
-            key: Key('post_numerics_likeCount'),
-            ' $likesCount',
-            style: TextStyles.font13GrayRegular(context),
+          ValueListenableBuilder(
+            valueListenable: likesCount,
+            builder: (context, value, child) => Text(
+              key: Key('post_numerics_likeCount'),
+              ' $value',
+              style: TextStyles.font13GrayRegular(context),
+            ),
           ),
           Spacer(),
           (commentCount == 0)
@@ -216,10 +231,17 @@ class PostNumerics extends StatelessWidget {
 }
 
 class PostActionBar extends StatelessWidget {
-  const PostActionBar({super.key});
+  const PostActionBar({
+    super.key,
+    required this.likeCount,
+    required this.userReaction,
+  });
+  final ValueNotifier<int> likeCount;
+  final Reactions? userReaction;
 
   @override
   Widget build(BuildContext context) {
+    final initialLikeCount = likeCount.value;
     final iconColor = ColorsManager.getTextSecondary(context);
 
     return Padding(
@@ -230,14 +252,75 @@ class PostActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //TODO Implement Buttons
-          IconButton(
-            key: Key('post_actionBar_like'),
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.thumb_up, color: iconColor),
-          ),
+          ReactionButton(
+              onReactionChanged: (item) {
+                print('triggered');
+                if (item?.value != null) {
+                  context.read<PostCubit>().reactToPost((item?.value)!);
+                  if (userReaction == null &&
+                      initialLikeCount == likeCount.value) {
+                    likeCount.value++;
+                  }
+                }
+              },
+              isChecked: userReaction != null,
+              selectedReaction: getReaction(userReaction),
+              itemsSpacing: 10,
+              toggle: false,
+              placeholder: Reaction(
+                value: null,
+                icon: Icon(
+                  LucideIcons.smilePlus,
+                ),
+              ),
+              reactions: [
+                Reaction(
+                  value: Reactions.like,
+                  icon: Icon(
+                    LucideIcons.thumbsUp,
+                    color: Colors.blue,
+                  ),
+                ),
+                Reaction(
+                  value: Reactions.celebrate,
+                  icon: Icon(
+                    LucideIcons.partyPopper,
+                    color: Colors.pink,
+                  ),
+                ),
+                Reaction(
+                  value: Reactions.support,
+                  icon: Icon(
+                    LucideIcons.helpingHand,
+                    color: Colors.green.shade600,
+                  ),
+                ),
+                Reaction(
+                  value: Reactions.funny,
+                  icon: Icon(
+                    LucideIcons.laugh,
+                    color: Colors.purple.shade600,
+                  ),
+                ),
+                Reaction(
+                  value: Reactions.love,
+                  icon: Icon(
+                    LucideIcons.heart,
+                    color: Colors.red.shade600,
+                  ),
+                ),
+                Reaction(
+                  value: Reactions.insightful,
+                  icon: Icon(
+                    LucideIcons.lightbulb,
+                    color: Colors.yellow.shade600,
+                  ),
+                ),
+              ],
+              itemSize: Size(24, 24)),
           IconButton(
             key: Key('post_actionBar_comment'),
-            onPressed: () => {showCommentSectionBottomSheet(context)},
+            onPressed: () => {context.read<PostCubit>().getComments()},
             icon: Icon(Icons.comment, color: iconColor),
           ),
           IconButton(
@@ -272,6 +355,49 @@ class PostAttachments extends StatelessWidget {
 }
 
 Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
+  List<Widget> postSettingsNormalButtons = [
+    ListTile(
+      leading: Icon(Icons.bookmark_add_outlined),
+      title: Text('Save post'),
+      onTap: () {
+        context.read<PostCubit>().savePost();
+        Navigator.pop(context);
+      },
+    ),
+    ListTile(
+      leading: Icon(Icons.flag_outlined),
+      title: Text('Report post'),
+      onTap: () {
+        // context.read<PostCubit>().reportPost();
+        Navigator.pop(context);
+      },
+    ),
+    ListTile(
+      leading: Icon(Icons.person_off_outlined),
+      title: Text('Block user'),
+      onTap: () {
+        Navigator.pop(context);
+      },
+    ),
+  ];
+
+  List<Widget> postSettingsOwnerButtons = [
+    ListTile(
+      leading: Icon(Icons.edit_outlined),
+      title: Text('Edit post'),
+      onTap: () {
+        Navigator.pop(context);
+      },
+    ),
+    ListTile(
+      leading: Icon(Icons.delete_outline),
+      title: Text('Delete post'),
+      onTap: () {
+        context.read<PostCubit>().deletePost();
+        Navigator.pop(context);
+      },
+    ),
+  ];
   return showModalBottomSheet(
     context: context,
     showDragHandle: true,
@@ -284,34 +410,3 @@ Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
     ),
   );
 }
-
-List<Widget> postSettingsNormalButtons = [
-  ListTile(
-    leading: Icon(Icons.bookmark_add_outlined),
-    title: Text('Save post'),
-    onTap: () {},
-  ),
-  ListTile(
-    leading: Icon(Icons.flag_outlined),
-    title: Text('Report post'),
-    onTap: () {},
-  ),
-  ListTile(
-    leading: Icon(Icons.person_off_outlined),
-    title: Text('Block user'),
-    onTap: () {},
-  ),
-];
-
-List<Widget> postSettingsOwnerButtons = [
-  ListTile(
-    leading: Icon(Icons.edit_outlined),
-    title: Text('Edit post'),
-    onTap: () {},
-  ),
-  ListTile(
-    leading: Icon(Icons.delete_outline),
-    title: Text('Delete post'),
-    onTap: () {},
-  ),
-];

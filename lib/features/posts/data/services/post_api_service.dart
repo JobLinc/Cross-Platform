@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class PostApiService {
   final Dio _dio;
@@ -32,6 +33,21 @@ class PostApiService {
     }
   }
 
+  Future<List<PostModel>> getSavedPosts() async {
+    try {
+      final response = await _dio.get('/post/saved-posts');
+      List<PostModel> posts = [];
+
+      for (Map<String, dynamic> post in response.data) {
+        posts.add(PostModel.fromJson(post));
+      }
+
+      return posts;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
   Future<String> addPost(String text) async {
     try {
       final response = await _dio.post('/post/add', data: {
@@ -43,11 +59,59 @@ class PostApiService {
     }
   }
 
-  // Future<bool> likePost(String postID) async {
-  //   try {
-  //     final response = await _dio.post('/post/')
-  //   }
-  // }
+  Future<void> savePost(String postId) async {
+    try {
+      final respone = await _dio.post('/post/$postId/save');
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<void> unsavePost(String postId) async {
+    try {
+      final respone = await _dio.post('/post/$postId/unsave');
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<void> editPost(
+    String postId,
+    String? text,
+    List<String>? attachmentsUrls,
+  ) async {
+    try {
+      final data = {};
+      if (text != null) {
+        data.addAll({'text': text});
+      }
+      if (attachmentsUrls != null) {
+        data.addAll({'mediaUrl': attachmentsUrls});
+      }
+      final respone =
+          await _dio.post('/post/$postId/edit', data: {}..addAll(data));
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      final respone = await _dio.post('/post/$postId/delete');
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<void> reactToPost(String postId, Reactions reaction) async {
+    final type = reaction.toString().split('.')[1];
+    try {
+      final respone = await _dio.post('/post/$postId/react',
+          data: {'type': '${type[0].toUpperCase()}${type.substring(1)}'});
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
 
   String _handleDioError(DioException e) {
     if (e.response != null) {

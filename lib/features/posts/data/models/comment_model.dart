@@ -30,6 +30,7 @@ class CommentModel {
       profilePictureURL:
           companyComment ? json['companyLogo'] : json['commentId'],
       text: json['text'],
+      timeStamp: DateTime.parse(json['time']).toLocal(),
       likeCount: json['likes'],
       replyCount: json['comments'],
     );

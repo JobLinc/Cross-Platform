@@ -1,3 +1,5 @@
+import 'package:joblinc/features/posts/logic/reactions.dart';
+
 class PostModel {
   PostModel({
     required this.postID,
@@ -8,6 +10,7 @@ class PostModel {
     required this.profilePictureURL,
     required this.text,
     this.timeStamp,
+    this.userReaction,
     required this.attachmentURLs,
     required this.commentCount,
     required this.likeCount,
@@ -30,7 +33,8 @@ class PostModel {
           ? (json['companyLogo'] ?? '')
           : (json['profilePicture'] ?? 'https://placehold.co/400/png'),
       text: json['text'] ?? '',
-      timeStamp: DateTime.parse(json['time']),
+      timeStamp: DateTime.parse(json['time']).toLocal(),
+      userReaction: parseReactions(json['userReaction']),
       attachmentURLs:
           (json['mediaUrl'] as List<dynamic>?)?.cast<String>() ?? [],
       commentCount: json['comments'] ?? 0,
@@ -47,6 +51,7 @@ class PostModel {
   final String profilePictureURL;
   final String text;
   final DateTime? timeStamp;
+  final Reactions? userReaction;
   List<dynamic> attachmentURLs;
   int commentCount;
   int likeCount;

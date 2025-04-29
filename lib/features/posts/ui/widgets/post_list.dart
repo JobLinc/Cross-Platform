@@ -16,6 +16,7 @@ class PostList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      cacheExtent: 2000,
       itemCount: posts.length,
       itemBuilder: (context, index) => Post(
         data: posts[index],
