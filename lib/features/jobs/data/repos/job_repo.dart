@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/services/job_api_service.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 
 class JobRepo {
   final JobApiService _jobApiService;
@@ -141,9 +139,18 @@ class JobRepo {
 
   Future<void>? applyJob(
       String jobId, Map<String, dynamic> jobApplication) async {
-    //final response =
-    await _jobApiService.applyJob(jobId, jobApplication);
-    //return Job.fromJson(response as Map<String, dynamic>);
+    try {
+      final response = await _jobApiService.applyJob(jobId, jobApplication);
+      if (response.statusCode == 201) {
+        return;
+        // } else {
+        //   // Handle error response
+        //   throw Exception('Failed to apply for job: ${response.data['message']}');
+      }
+    } catch(e) {
+      //throw Exception( e.toString().split(':').last);
+      rethrow;
+    }
   }
 
   Future<void>? acceptJobApplication(String jobId, String applicantId) async {

@@ -582,6 +582,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -655,24 +656,41 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     final ownerSubtitle = hasCompany
         ? 'Size: ${job.company!.size}'
         : 'User: ${job.employer!.username}';
-    final ownerFollowers = hasCompany
-        ? job.company!.followers
-        : null; 
+    final ownerFollowers = hasCompany ? job.company!.followers : null;
+
+    onAvatarTap() {
+      if (hasCompany) {
+        Navigator.pushNamed(context, Routes.companyPageHome,
+            arguments: job.company!.urlSlug);
+      } else {
+        // e.g. navigate to an employer-profile screen
+        Navigator.pushNamed(context, Routes.otherProfileScreen,
+            arguments: job.employer!.id);
+      }
+    }
 
     return BlocListener<JobListCubit, JobListState>(
-
       listener: (context, state) {
         if (state is JobDetailsLoading) {
           setState(() => loading = true);
         } else if (state is JobDetailsLoaded) {
           appliedJobs = state.appliedJobs;
           savedJobs = state.savedJobs;
-          isApplied = appliedJobs.any((j) => j.id == job.id);
-          isSaved = savedJobs.any((j) => j.id == job.id);
+          setState(() {
+            isApplied = appliedJobs.any((j) => j.id == job.id);
+            isSaved = savedJobs.any((j) => j.id == job.id);
+          });
           setState(() => loading = false);
-        } else if (state is JobAppliedLoaded){
-          appliedJobs =state.appliedJobs;
-          isApplied = appliedJobs.any((j) => j.id == job.id);
+        } else if (state is JobAppliedLoaded) {
+          appliedJobs = state.appliedJobs;
+          setState(() {
+            isApplied = appliedJobs.any((j) => j.id == job.id);
+          });
+        } else if (state is JobSavedLoaded) {
+          savedJobs = state.savedJobs;
+          setState(() {
+            isSaved = savedJobs.any((j) => j.id == job.id);
+          });
         }
       },
       child: Material(
@@ -690,10 +708,13 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 // ————— HEADER —————
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 24.r,
-                      backgroundColor: ColorsManager.lightGray,
-                      backgroundImage: NetworkImage(ownerAvatar),
+                    GestureDetector(
+                      onTap: onAvatarTap ,
+                      child: CircleAvatar(
+                        radius: 30.r,
+                        backgroundColor: ColorsManager.lightGray,
+                        backgroundImage: NetworkImage(ownerAvatar),
+                      ),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
@@ -766,17 +787,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   children: [
                     Chip(
                       backgroundColor: ColorsManager.softMutedSilver,
-                      label: Text(job.workplace!,
+                      label: Text(job.workplace,
                           style: TextStyles.font13Medium(context)),
                     ),
                     Chip(
                       backgroundColor: ColorsManager.softMutedSilver,
-                      label: Text(job.type!,
+                      label: Text(job.type,
                           style: TextStyles.font13Medium(context)),
                     ),
                     Chip(
                       backgroundColor: ColorsManager.softMutedSilver,
-                      label: Text(job.experienceLevel!,
+                      label: Text(job.experienceLevel,
                           style: TextStyles.font13Medium(context)),
                     ),
                     if (salary != null)
@@ -807,7 +828,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  job.industry!,
+                  job.industry,
                   style: TextStyles.font14Regular(context),
                 ),
 
@@ -822,7 +843,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  job.description!,
+                  job.description,
                   style: TextStyles.font14Regular(context),
                 ),
 
@@ -908,7 +929,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                     onPressed: isApplied
                         ? null
                         : () async {
-                            final reload =await Navigator.push(
+                            final reload = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => BlocProvider.value(
@@ -918,10 +939,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 ),
                               ),
                             );
-                            if (reload){
+                            if (reload) {
                               context.read<JobListCubit>().getAppliedJobs();
                             }
-                            
+
                             // setState(() {
                             // });
                           },

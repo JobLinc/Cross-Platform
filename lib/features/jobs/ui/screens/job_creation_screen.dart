@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
-import 'package:joblinc/features/jobs/ui/widgets/drop_down_Text_Fomr.dart';
+import 'package:joblinc/features/jobs/ui/widgets/drop_down_Text_Form.dart';
 import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
 import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 import 'package:joblinc/core/theming/colors.dart';
@@ -152,8 +152,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
             );
             //Future.delayed(Duration(seconds: 2), () {
               if(!mounted)return;
-              Navigator.pop(context);
-              context.read<JobListCubit>().getAllJobs();
+              Navigator.of(context).pop(true);
             //});
 
           }

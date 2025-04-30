@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/features/userProfile/data/repo/user_profile_repository.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 

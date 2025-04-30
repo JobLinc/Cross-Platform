@@ -1,18 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
-import 'package:joblinc/features/chat/data/models/message_model.dart';
 
-bool apiEndPointFunctional=true;
+bool apiEndPointFunctional = true;
 
 class ChatApiService {
   final Dio _dio;
 
-  ChatApiService(this._dio);
+  ChatApiService(this._dio) {
+    print('[ChatApiService] Dio baseUrl: ${_dio.options.baseUrl}');
+  }
 
   Future<Response> getAllChats() async {
-    if(apiEndPointFunctional){
+    if (apiEndPointFunctional) {
       try {
-        final response = await _dio.get('/chat/all',);
+        final response = await _dio.get(
+          '/chat/all',
+        );
         print(response);
         return response;
       } catch (e) {
@@ -31,46 +34,45 @@ class ChatApiService {
     }
   }
 
-
   Future<Response> getChatDetails(String chatId) async {
     //if (apiEndPointFunctional) {
-      try {
-        final response = await _dio.get('/chat/c/$chatId');
-        print("1 $response");
-        return response;
-      } catch (e) {
-        throw Exception("Failed to fetch chat details: $e");
-      }
-  //  } else {
-  //     ChatDetail mockChatDetail = mockChatDetails
-  //         .firstWhere((chatDetail) => chatDetail.chatId == chatId);
-  //     final response = Response<dynamic>(
-  //       requestOptions: RequestOptions(path: ''),
-  //       data: mockChatDetail.toJson(),
-  //       statusCode: 200,
-  //       statusMessage: 'OK',
-  //     );
-  //     return response;
-  //   }
+    try {
+      final response = await _dio.get('/chat/c/$chatId');
+      print("1 $response");
+      return response;
+    } catch (e) {
+      throw Exception("Failed to fetch chat details: $e");
+    }
+    //  } else {
+    //     ChatDetail mockChatDetail = mockChatDetails
+    //         .firstWhere((chatDetail) => chatDetail.chatId == chatId);
+    //     final response = Response<dynamic>(
+    //       requestOptions: RequestOptions(path: ''),
+    //       data: mockChatDetail.toJson(),
+    //       statusCode: 200,
+    //       statusMessage: 'OK',
+    //     );
+    //     return response;
+    //   }
   }
-  
 
   /// Create a new chat group
   Future<void> createChat() async {
-    if(apiEndPointFunctional){
+    if (apiEndPointFunctional) {
       try {
         await _dio.post('/chat/create');
       } catch (e) {
         throw Exception("Failed to create chat: $e");
       }
-    } else{
-
-    }
+    } else {}
   }
 
   /// Open a chat with specified participants
-  Future<Response> openChat({required List<String> receiverIDs,required String senderID,}) async {
-    if(apiEndPointFunctional){
+  Future<Response> openChat({
+    required List<String> receiverIDs,
+    required String senderID,
+  }) async {
+    if (apiEndPointFunctional) {
       try {
         final response = await _dio.post('/chat/openChat', data: {
           "receiverIDs": receiverIDs,
@@ -81,11 +83,11 @@ class ChatApiService {
         throw Exception("Failed to open chat: $e");
       }
     } else {
-        final response = Response<dynamic>(
-          requestOptions: RequestOptions(path: ''),
-          data: mockChats.map((job) => job.toJson()).toList(),
-          statusCode: 200,
-          statusMessage: 'OK',
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
       );
       return response;
     }
@@ -100,7 +102,7 @@ class ChatApiService {
     }
   }
 
-    Future<void> archiveChat(String chatId) async {
+  Future<void> archiveChat(String chatId) async {
     try {
       await _dio.put('/chat/archive', data: {"chatId": chatId});
     } catch (e) {
@@ -109,7 +111,8 @@ class ChatApiService {
   }
 
   /// Change the chat title
-  Future<void> changeTitle({required String chatId,required String chatTitle}) async {
+  Future<void> changeTitle(
+      {required String chatId, required String chatTitle}) async {
     try {
       await _dio.put('/chat/changeTitle', data: {
         "chatId": chatId,
@@ -130,9 +133,25 @@ class ChatApiService {
       throw Exception("Failed to mark chat: $e");
     }
   }
+
+  Future<Response> getConnections() async {
+    print('[ChatApiService] Calling /connection/connected...');
+    try {
+      final response = await _dio.get('/connection/connected');
+      print('[ChatApiService] Response: $response');
+      if (response.statusCode != 200) {
+        print('[ChatApiService] Non-200 status code: ${response.statusCode}');
+        throw Exception("Failed to fetch connections");
+      }
+      // Debug: print response data
+      print('[ChatApiService] Response data: ${response.data}');
+      return response;
+    } catch (e, stack) {
+      print('[ChatApiService] Error fetching connections: $e\n$stack');
+      throw Exception("Failed to fetch connections for the user: $e");
+    }
+  }
 }
-
-
 
 //   Future<List<dynamic>> getAllChats() async {
 //   try {
@@ -411,7 +430,7 @@ class ChatApiService {
 //         senderId: "user_006",
 //         status: "read",
 //       ),
-      
+
 //     ],
 //   ),
 // ];

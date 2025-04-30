@@ -8,7 +8,7 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_creation_screem.dart';
+import 'package:joblinc/features/jobs/ui/screens/job_creation_screen.dart';
 
 class CompanyDashboard extends StatelessWidget {
   final Company company;
@@ -172,9 +172,7 @@ class CompanyDashboard extends StatelessWidget {
                                       create: (context) =>
                                           getIt<JobListCubit>(),
                                       child: JobCreationScreen(),
-                                    )
-                                  )
-                                );
+                                    )));
                       },
                       child: Text(
                         'Post a job',
