@@ -27,6 +27,48 @@ class MediaDisplayer extends StatefulWidget {
 
 class _MediaDisplayerState extends State<MediaDisplayer> {
   bool _hasStartedUpload = false;
+  late final String _localPath;
+  bool _sent = false;
+
+  @override
+    void initState() {
+    super.initState();
+   // final c = widget.message.content;
+  //   // pick whichever non-URL path:
+  //   _localPath = c.image.isNotEmpty && !c.image.startsWith('http') ? c.image
+  //              : c.video.isNotEmpty && !c.video.startsWith('http') ? c.video
+  //              : c.document.isNotEmpty && !c.document.startsWith('http') ? c.document
+  //              : "";
+  //   if (_localPath.isNotEmpty) {
+  //     context.read<ChatCubit>().uploadMedia(File(_localPath));
+  //   }
+   }
+
+
+    @override
+//   Widget build(BuildContext context) {
+//     return BlocListener<ChatCubit, ChatState>(
+//       listener: (context, state) {
+//         if (!_sent && state is MediaUploaded) {
+//           _sent = true;
+//           final c = widget.message.content;
+//           // replace local path with URL
+//           if (c.image == _localPath) c.image = state.url;
+//           if (c.video == _localPath) c.video = state.url;
+//           if (c.document == _localPath) c.document = state.url;
+//           // now send exactly once
+//           widget.socketService.sendFileMessage(
+//             widget.chatId,
+//             state.url,
+//             c.image.isNotEmpty ? 'image' :
+//             c.video.isNotEmpty ? 'video' : 'document',
+//           );
+//         }
+//       },
+//       child: buildMediaContent(context, widget.message.content),
+//     );
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +92,9 @@ class _MediaDisplayerState extends State<MediaDisplayer> {
         context.read<ChatCubit>().uploadMedia(file);
       }
     }
+
+
+    
 
     return SizedBox(
       height: 200.h,
