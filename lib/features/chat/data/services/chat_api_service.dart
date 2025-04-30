@@ -2,18 +2,28 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
-bool apiEndPointFunctional=true;
+bool apiEndPointFunctional = true;
 
 class ChatApiService {
   final Dio _dio;
 
   ChatApiService(this._dio);
 
+  // Future<Response> getChatById(String chatId) async {
+  //   try {
+  //     final response = await _dio.get('/chat/all');
+  //     print("all chat response ${response}");
+  //     return response;
+  //   } catch (e) {
+  //     throw Exception("Failed to fetch chats: $e");
+  //   }
+  // }
+
   Future<Response> getAllChats() async {
-    if(apiEndPointFunctional){
+    if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/all');
-        print("all chat response ${response}" );
+        print("all chat response ${response}");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -22,7 +32,7 @@ class ChatApiService {
       await Future.delayed(Duration(seconds: 1));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: [],//mockChats.map((job) => job.toJson()).toList(),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -31,46 +41,45 @@ class ChatApiService {
     }
   }
 
-
   Future<Response> getChatDetails(String chatId) async {
     //if (apiEndPointFunctional) {
-      try {
-        final response = await _dio.get('/chat/c/$chatId');
-        print("1 $response");
-        return response;
-      } catch (e) {
-        throw Exception("Failed to fetch chat details: $e");
-      }
-  //  } else {
-  //     ChatDetail mockChatDetail = mockChatDetails
-  //         .firstWhere((chatDetail) => chatDetail.chatId == chatId);
-  //     final response = Response<dynamic>(
-  //       requestOptions: RequestOptions(path: ''),
-  //       data: mockChatDetail.toJson(),
-  //       statusCode: 200,
-  //       statusMessage: 'OK',
-  //     );
-  //     return response;
-  //   }
+    try {
+      final response = await _dio.get('/chat/c/$chatId');
+      print("1 $response");
+      return response;
+    } catch (e) {
+      throw Exception("Failed to fetch chat details: $e");
+    }
+    //  } else {
+    //     ChatDetail mockChatDetail = mockChatDetails
+    //         .firstWhere((chatDetail) => chatDetail.chatId == chatId);
+    //     final response = Response<dynamic>(
+    //       requestOptions: RequestOptions(path: ''),
+    //       data: mockChatDetail.toJson(),
+    //       statusCode: 200,
+    //       statusMessage: 'OK',
+    //     );
+    //     return response;
+    //   }
   }
-  
 
   /// Create a new chat group
   Future<void> createChat() async {
-    if(apiEndPointFunctional){
+    if (apiEndPointFunctional) {
       try {
         await _dio.post('/chat/create');
       } catch (e) {
         throw Exception("Failed to create chat: $e");
       }
-    } else{
-
-    }
+    } else {}
   }
 
   /// Open a chat with specified participants
-  Future<Response> openChat({required List<String> receiverIDs,required String senderID,}) async {
-    if(apiEndPointFunctional){
+  Future<Response> openChat({
+    required List<String> receiverIDs,
+    required String senderID,
+  }) async {
+    if (apiEndPointFunctional) {
       try {
         final response = await _dio.post('/chat/openChat', data: {
           "receiverIDs": receiverIDs,
@@ -81,11 +90,11 @@ class ChatApiService {
         throw Exception("Failed to open chat: $e");
       }
     } else {
-        final response = Response<dynamic>(
-          requestOptions: RequestOptions(path: ''),
-          data: [],//mockChats.map((job) => job.toJson()).toList(),
-          statusCode: 200,
-          statusMessage: 'OK',
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
       );
       return response;
     }
@@ -100,7 +109,7 @@ class ChatApiService {
     }
   }
 
-    Future<void> archiveChat(String chatId) async {
+  Future<void> archiveChat(String chatId) async {
     try {
       await _dio.put('/chat/archive', data: {"chatId": chatId});
     } catch (e) {
@@ -109,7 +118,8 @@ class ChatApiService {
   }
 
   /// Change the chat title
-  Future<void> changeTitle({required String chatId,required String chatTitle}) async {
+  Future<void> changeTitle(
+      {required String chatId, required String chatTitle}) async {
     try {
       await _dio.put('/chat/changeTitle', data: {
         "chatId": chatId,
@@ -123,25 +133,26 @@ class ChatApiService {
   /// Mark a chat as read/unread for a user
   Future<void> markReadOrUnread({required String chatId}) async {
     try {
-      await _dio.put('/chat/readOrUnread', data: {
+      print("api marking");
+      final response =await _dio.put('/chat/readOrUnread', data: {
         "chatId": chatId,
       });
+      print(response);
     } catch (e) {
       throw Exception("Failed to mark chat: $e");
     }
   }
 
-
-
-
-
-
-    Future<String> uploadMedia(File file) async {
+  Future<String> uploadMedia(File file) async {
     try {
       final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last,contentType: getMediaType(file),),
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: file.path.split('/').last,
+          contentType: getMediaType(file),
+        ),
       });
-      final  response = await _dio.post('/chat/upload-media', data: formData);
+      final response = await _dio.post('/chat/upload-media', data: formData);
       print(response);
       // Assume backend returns { url: "https://..." }
       return (response.data as String);
@@ -150,10 +161,7 @@ class ChatApiService {
     }
   }
 
-
-
-
-    MediaType getMediaType(File file) {
+  MediaType getMediaType(File file) {
     final extension = file.path.split('.').last.toLowerCase();
 
     switch (extension) {
@@ -166,11 +174,13 @@ class ChatApiService {
         return MediaType('video', 'mp4');
       case 'pdf':
         return MediaType('application', 'pdf');
-       case 'doc':
-    case 'docx':
-      return MediaType('application', 'msword');  // MIME type for Word documents
-    default:
-      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+      case 'doc':
+      case 'docx':
+        return MediaType(
+            'application', 'msword'); // MIME type for Word documents
+      default:
+        return MediaType(
+            'application', 'octet-stream'); // Fallback for unsupported types
     }
   }
 }
