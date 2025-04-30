@@ -56,15 +56,21 @@ class ChatApiService {
     //   }
   }
 
-  /// Create a new chat group
-  Future<void> createChat() async {
-    if (apiEndPointFunctional) {
-      try {
-        await _dio.post('/chat/create');
-      } catch (e) {
-        throw Exception("Failed to create chat: $e");
-      }
-    } else {}
+  /// Create a new chat (private or group)
+  Future<Response> createChat({
+    required List<String> receiverIds,
+    String? title,
+  }) async {
+    try {
+      final data = {
+        "receiverIds": receiverIds,
+        if (title != null) "title": title,
+      };
+      final response = await _dio.post('/chat/create', data: data);
+      return response;
+    } catch (e) {
+      throw Exception("Failed to create chat: $e");
+    }
   }
 
   /// Open a chat with specified participants
