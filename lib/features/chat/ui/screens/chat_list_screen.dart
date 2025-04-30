@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
@@ -148,7 +149,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   // Selection mode AppBar
   if (state is ChatListSelected) {
     return AppBar(
-      backgroundColor: Colors.red,
+      backgroundColor: ColorsManager.crimsonRed,
       leading: IconButton(
         icon: Icon(Icons.close, size: 24.sp),
         onPressed: () => context.read<ChatListCubit>().clearSelection(),
@@ -161,12 +162,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   final bool showRecentLabel = searchTextController.text.isEmpty;
-  final double extraHeight = showRecentLabel ? 100.h : 0;
+  final double extraHeight = showRecentLabel ? 45.h : 0;
 
   return PreferredSize(
     preferredSize: Size.fromHeight(kToolbarHeight + extraHeight + 20.h), // Adjusted height
     child: AppBar(
-      backgroundColor: const Color.fromARGB(255, 255, 68, 68),
+      backgroundColor: ColorsManager.crimsonRed,
       elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: SafeArea(

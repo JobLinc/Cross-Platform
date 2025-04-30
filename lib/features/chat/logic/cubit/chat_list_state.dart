@@ -51,3 +51,4 @@ final class ChatDetailEmpty extends ChatListState {}
 final class ChatDetailErrorLoading extends ChatListState {
   final String errorMessage;
   ChatDetailErrorLoading(this.errorMessage);}
+

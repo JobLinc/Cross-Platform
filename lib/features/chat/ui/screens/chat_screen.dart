@@ -8,9 +8,12 @@ import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/services/chat_socket_service.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/video_player_screen.dart';
 import 'package:joblinc/features/chat/ui/widgets/chat_avatar.dart';
+import 'package:joblinc/features/chat/ui/widgets/media_displayer.dart';
 import 'package:joblinc/features/chat/ui/widgets/new_message.dart';
 import 'package:joblinc/features/chat/ui/widgets/star_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -118,39 +121,54 @@ class _ChatScreenState extends State<ChatScreen> {
         try {
           final Map<String, dynamic> map = Map<String, dynamic>.from(data);
           // Check if this is a message intended for this chat
-          if (map['chatId'] == widget.chat.chatId) {
-            // Create message from content
-            final content = map['content'] as Map<String, dynamic>;
-            final Message msg;
+          //if (map['chatId'] == widget.chat.chatId) {
+          // Create message from content
+          final content = map['content'] as Map<String, dynamic>;
+          final Message msg;
 
-            if (content.containsKey('text')) {
-              msg = Message(
-                messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-                type: 'text',
-                seenBy: [],
-                content: MessageContent(text: content['text']),
-                sentDate: DateTime.now(),
-                senderId: map['senderId'] ?? "unknown",
-              );
-            } else if (content.containsKey('image')) {
-              msg = Message(
-                messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-                type: 'image',
-                seenBy: [],
-                content: MessageContent(image: content['image']),
-                sentDate: DateTime.now(),
-                senderId: map['senderId'] ?? "unknown",
-              );
-            } else {
-              // Default case or unsupported message type
-              return;
-            }
-
-            if (mounted) {
-              setState(() => messages.add(msg));
-              _scrollToBottom();
-            }
+          if (content.containsKey('text')) {
+            msg = Message(
+              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+              type: 'text',
+              seenBy: [],
+              content: MessageContent(text: content['text']),
+              sentDate: DateTime.now(),
+              senderId: map['senderId'] ?? "unknown",
+            );
+          } else if (content.containsKey('image')) {
+            msg = Message(
+              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+              type: 'image',
+              seenBy: [],
+              content: MessageContent(image: content['image']),
+              sentDate: DateTime.now(),
+              senderId: map['senderId'] ?? "unknown",
+            );
+          } else if (content.containsKey('video')) {
+            msg = Message(
+              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+              type: 'video',
+              seenBy: [],
+              content: MessageContent(image: content['video']),
+              sentDate: DateTime.now(),
+              senderId: map['senderId'] ?? "unknown",
+            );
+          } else {
+            msg = Message(
+              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+              type: 'video',
+              seenBy: [],
+              content: MessageContent(image: content['video']),
+              sentDate: DateTime.now(),
+              senderId: map['senderId'] ?? "unknown",
+            );
           }
+
+          if (mounted) {
+            setState(() => messages.add(msg));
+            _scrollToBottom();
+          }
+          //}
         } catch (e) {
           print('⚠️ Error parsing receiveMessage: $e');
         }
@@ -231,14 +249,14 @@ class _ChatScreenState extends State<ChatScreen> {
     final result = await FilePicker.platform.pickFiles(type: FileType.any);
     if (result == null) return;
     final path = result.files.first.path!;
-    sendFile(path, FileType.any);
+    handleMedia(path, FileType.any);
   }
 
   Future<void> pickFromGallery() async {
     final result = await FilePicker.platform.pickFiles(type: FileType.media);
     if (result == null) return;
     final path = result.files.first.path!;
-    sendFile(
+    handleMedia(
         path,
         result.files.first.extension!.startsWith("mp4")
             ? FileType.video
@@ -249,17 +267,18 @@ class _ChatScreenState extends State<ChatScreen> {
     final photo =
         await picker.pickImage(source: ImageSource.camera, maxWidth: 1280);
     if (photo == null) return;
-    sendFile(photo.path, FileType.image);
+    handleMedia(photo.path, FileType.image);
   }
 
   Future<void> captureVideo() async {
     final video = await picker.pickVideo(
         source: ImageSource.camera, maxDuration: const Duration(seconds: 30));
     if (video == null) return;
-    sendFile(video.path, FileType.video);
+    handleMedia(video.path, FileType.video);
   }
 
-  void sendFile(String path, FileType type) {
+  void handleMedia(String path, FileType type) {
+    // void sendFile(String path, FileType type) {
     String fileType;
 
     if (type == FileType.image) {
@@ -270,10 +289,10 @@ class _ChatScreenState extends State<ChatScreen> {
       fileType = 'document';
     }
 
-    // Simple emit without acknowledgment - matching frontend
-    socketService.sendFileMessage(widget.chat.chatId, path, fileType);
+    //   // Simple emit without acknowledgment - matching frontend
+    //   socketService.sendFileMessage(widget.chat.chatId, path, fileType);
 
-    // Local message handling for UI updates
+    //   // Local message handling for UI updates
     final content = MessageContent(
       image: type == FileType.image ? path : "",
       video: type == FileType.video ? path : "",
@@ -465,6 +484,68 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  AppBar buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Row(
+        children: [
+          buildChatAvatar(widget.chat.chatPicture),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.chat.chatName,
+                  style: TextStyle(fontSize: 16),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  status == "online" ? "Active now" : "Offline",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+            icon: const Icon(Icons.more_horiz), onPressed: showMoreOptions),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.video_call),
+        ),
+        StarButton(),
+      ],
+    );
+  }
+
+  Widget buildMessageContent(Message message) {
+    final c = message.content;
+    if ((c.image.isNotEmpty) ||
+        (c.video.isNotEmpty) ||
+        (c.document.isNotEmpty)) {
+      return BlocProvider(
+        create: (context) => getIt<ChatCubit>(),
+        child: MediaDisplayer(
+          message: message,
+          chatId: widget.chat.chatId,
+          socketService: socketService,
+        ),
+      );
+    }
+
+    return Text(
+      c.text,
+      style: TextStyle(fontSize: 20.sp, color: Color.fromARGB(255, 0, 0, 0)),
+    );
+  }
+
   Widget buildMessageList(List<Message> messages) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -546,90 +627,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget buildMessageContent(Message message) {
-    final c = message.content;
-    if (c.image.isNotEmpty) {
-      return Image.file(
-        File(c.image),
-        width: 200.w,
-        height: 200.h,
-        fit: BoxFit.cover,
-      );
-    }
-    if (c.video.isNotEmpty) {
-      return GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
-        ),
-        child: Container(
-          width: 200.w,
-          height: 200.h,
-          color: Colors.black,
-          child: Icon(Icons.play_arrow, size: 50.sp, color: Colors.white),
-        ),
-      );
-    }
-    if (c.document.isNotEmpty) {
-      final name = c.document.split('/').last;
-      return InkWell(
-        onTap: () => OpenFile.open(c.document),
-        child: Row(
-          children: [
-            Icon(Icons.insert_drive_file, size: 24.sp, color: Colors.grey),
-            SizedBox(width: 8.w),
-            Expanded(child: Text(name, style: TextStyle(fontSize: 14.sp))),
-          ],
-        ),
-      );
-    }
-    return Text(
-      c.text,
-      style: TextStyle(fontSize: 20.sp, color: Color.fromARGB(255, 0, 0, 0)),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        children: [
-          buildChatAvatar(widget.chat.chatPicture),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.chat.chatName,
-                  style: TextStyle(fontSize: 16),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  status == "online" ? "Active now" : "Offline",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-            icon: const Icon(Icons.more_horiz), onPressed: showMoreOptions),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.video_call),
-        ),
-        StarButton(),
-      ],
     );
   }
 

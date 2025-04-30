@@ -18,6 +18,7 @@ import 'package:joblinc/features/changepassword/data/services/change_password_ap
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changeusername/data/repos/change_username_repo.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
 import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
 import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
@@ -175,6 +176,10 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ChatListCubit>(
     () => ChatListCubit(getIt<ChatRepo>()),
+  );
+
+    getIt.registerFactory<ChatCubit>(
+    () => ChatCubit(getIt<ChatRepo>()),
   );
 
   getIt.registerLazySingleton<JobApiService>(

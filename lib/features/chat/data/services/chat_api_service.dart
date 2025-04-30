@@ -1,5 +1,6 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/chat/data/models/chat_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 bool apiEndPointFunctional = true;
 
@@ -13,10 +14,8 @@ class ChatApiService {
   Future<Response> getAllChats() async {
     if (apiEndPointFunctional) {
       try {
-        final response = await _dio.get(
-          '/chat/all',
-        );
-        print(response);
+        final response = await _dio.get('/chat/all');
+        print("all chat response ${response}" );
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -25,7 +24,7 @@ class ChatApiService {
       await Future.delayed(Duration(seconds: 1));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: mockChats.map((job) => job.toJson()).toList(),
+        data: [],//mockChats.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -89,11 +88,11 @@ class ChatApiService {
         throw Exception("Failed to open chat: $e");
       }
     } else {
-      final response = Response<dynamic>(
-        requestOptions: RequestOptions(path: ''),
-        data: mockChats.map((job) => job.toJson()).toList(),
-        statusCode: 200,
-        statusMessage: 'OK',
+        final response = Response<dynamic>(
+          requestOptions: RequestOptions(path: ''),
+          data: [],//mockChats.map((job) => job.toJson()).toList(),
+          statusCode: 200,
+          statusMessage: 'OK',
       );
       return response;
     }

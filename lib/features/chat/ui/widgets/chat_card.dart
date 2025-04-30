@@ -77,9 +77,7 @@ class ChatCard extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    /*"${chat?.lastSender == 'You' ? 'You' : chat?.chatName}: */ chat
-                            ?.lastMessage ??
-                        'No messages',
+                    "${chat?.senderName}:  ${chat?.lastMessage ?? 'No messages'}",
                     style: TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
