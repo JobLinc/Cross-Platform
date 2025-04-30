@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
@@ -349,6 +348,7 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                     // Salary Range Filter
                     Text("Salary Range",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 5.h,),
                     Row(
                       children: [
                         Expanded(

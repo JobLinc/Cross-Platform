@@ -1,11 +1,8 @@
 import 'dart:io';
-
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
-import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
-import 'package:joblinc/features/jobs/ui/screens/job_search_screen.dart';
 
 part 'job_list_state.dart';
 
@@ -26,7 +23,7 @@ class JobListCubit extends Cubit<JobListState> {
   Future<void> getAllJobs({bool isSearch= false,Map<String,dynamic>? queryParams}) async {
     isSearch ? emit(JobSearchLoading()): emit(JobListLoading()) ;
     try {
-      print("cubit requesting");
+      //print("cubit requesting");
       _jobs = await jobRepo.getAllJobs(queryParams: queryParams)!;
       if (_jobs.isEmpty) {
         isSearch ? emit(JobSearchEmpty()): emit(JobListEmpty());
@@ -86,9 +83,9 @@ class JobListCubit extends Cubit<JobListState> {
     Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {
-      //List<Job> savedJobs = await jobRepo.getSavedJobs()!;
+      List<Job> savedJobs = await jobRepo.getSavedJobs()!;
       List<Job> appliedJobs = await jobRepo.getAppliedJobs()!;
-      emit(JobDetailsLoaded(savedJobs: [], appliedJobs: appliedJobs));
+      emit(JobDetailsLoaded(savedJobs: savedJobs, appliedJobs: appliedJobs));
     } catch (e) {
       emit(JobDetailsErrorLoading(e.toString()));
     }

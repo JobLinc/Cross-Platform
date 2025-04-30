@@ -6,6 +6,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
+import 'package:joblinc/features/blockedaccounts/ui/screens/blocked_accounts_screen.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -14,6 +16,7 @@ import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubi
 import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_chat_screen.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
@@ -243,8 +246,8 @@ class AppRouter {
                     } else {
                       return Scaffold(
                         body: Center(
-                            child: Text(
-                                'Invalid arguments for CompanyPageHome')),
+                            child:
+                                Text('Invalid arguments for CompanyPageHome')),
                       );
                     }
                   },
@@ -453,6 +456,14 @@ class AppRouter {
           ),
         );
 
+      case Routes.blockedAccountsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                getIt.get<BlockedAccountsCubit>()..getBlockedUsers(),
+            child: BlockedAccountsScreen(),
+          ),
+        );
       case Routes.addResumeScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
@@ -460,6 +471,11 @@ class AppRouter {
             child: UserAddResumeScreen(),
           ),
         );
+
+      case Routes.createChat:
+         return MaterialPageRoute(
+            builder: (context) => CreateChatScreen(),
+          );
       default:
         return null;
     }
