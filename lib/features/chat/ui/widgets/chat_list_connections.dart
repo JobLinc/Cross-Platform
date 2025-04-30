@@ -169,6 +169,7 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                         final chat = Chat(
                                           chatId: createdChat.chatId,
                                           chatName: createdChat.chatName,
+                                          senderName: "",
                                           chatPicture: createdChat.chatPicture,
                                           lastMessage: lastMessageText,
                                           sentDate: lastMessageDate,

@@ -156,7 +156,50 @@ class ChatApiService {
       throw Exception("Failed to fetch connections for the user: $e");
     }
   }
+
+  Future<String> uploadMedia(File file) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: file.path.split('/').last,
+          contentType: getMediaType(file),
+        ),
+      });
+      final response = await _dio.post('/chat/upload-media', data: formData);
+      print(response);
+      // Assume backend returns { url: "https://..." }
+      return (response.data as String);
+    } catch (e) {
+      throw Exception("Failed to upload media: $e");
+    }
+  }
+
+  MediaType getMediaType(File file) {
+    final extension = file.path.split('.').last.toLowerCase();
+
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+        return MediaType('image', 'jpeg');
+      case 'png':
+        return MediaType('image', 'png');
+      case 'mp4':
+        return MediaType('video', 'mp4');
+      case 'pdf':
+        return MediaType('application', 'pdf');
+      case 'doc':
+      case 'docx':
+        return MediaType(
+            'application', 'msword'); // MIME type for Word documents
+      default:
+        return MediaType(
+            'application', 'octet-stream'); // Fallback for unsupported types
+    }
+  }
 }
+
+
 
 //   Future<List<dynamic>> getAllChats() async {
 //   try {
