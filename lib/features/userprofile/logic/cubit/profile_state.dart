@@ -54,11 +54,11 @@ class CertificateAdded extends ProfileState {
 //   CertificateUpdated(this.message);
 // }
 
-// class CertificateDeleted extends ProfileState {
-//   final String message;
+class CertificateDeleted extends ProfileState {
+  final String message;
 
-//   CertificateDeleted(this.message);
-// }
+  CertificateDeleted(this.message);
+}
 
 class AddingSkill extends ProfileState {
   final String message;
@@ -78,26 +78,46 @@ class SkillAdded extends ProfileState {
 //   SkillUpdated(this.message);
 // }
 
-// class SkillDeleted extends ProfileState {
-//   final String message;
+class SkillDeleted extends ProfileState {
+  final String message;
 
-//   SkillDeleted(this.message);
-// }
+  SkillDeleted(this.message);
+}
 
 class ExperienceAdded extends ProfileState {
   final String message;
 
   ExperienceAdded(this.message);
 }
+
 class ResumeAdded extends ProfileState {
   final String message;
 
   ResumeAdded(this.message);
 }
+
 class ResumeFailed extends ProfileState {
   final String message;
 
   ResumeFailed(this.message);
+}
+
+class SkillFailed extends ProfileState {
+  final String message;
+
+  SkillFailed(this.message);
+}
+
+class ExperienceFailed extends ProfileState {
+  final String message;
+
+  ExperienceFailed(this.message);
+}
+
+class CertificateFailed extends ProfileState {
+  final String message;
+
+  CertificateFailed(this.message);
 }
 // class ExperienceUpdated extends ProfileState {
 //   final String message;
@@ -105,11 +125,11 @@ class ResumeFailed extends ProfileState {
 //   ExperienceUpdated(this.message);
 // }
 
-// class ExperienceDeleted extends ProfileState {
-//   final String message;
+class ExperienceDeleted extends ProfileState {
+  final String message;
 
-//   ExperienceDeleted(this.message);
-// }
+  ExperienceDeleted(this.message);
+}
 
 class ProfileError extends ProfileState {
   final String message;

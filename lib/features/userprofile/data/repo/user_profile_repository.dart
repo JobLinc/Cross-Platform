@@ -62,8 +62,7 @@ class UserProfileRepository {
 
       print('User profile updated successfully');
     } catch (e) {
-      print('Error updating user personal information: $e');
-      throw Exception('Failed to update profile: ${e.toString()}');
+      rethrow;
     }
   }
 
@@ -109,6 +108,14 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> editCertification(Certification certification) async {
+    try {
+      return await addApiService.editCertification(certification);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> deleteCertification(String certificationId) async {
     try {
       return await addApiService.deleteCertification(certificationId);
@@ -126,7 +133,7 @@ class UserProfileRepository {
           .map((item) => Certification.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
@@ -154,13 +161,21 @@ class UserProfileRepository {
           .map((item) => Experience.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
   Future<Response> addSkill(Skill skill) async {
     try {
       return await addApiService.addSkill(skill);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editSkill(Skill skill) async {
+    try {
+      return await addApiService.editSkill(skill);
     } catch (e) {
       rethrow;
     }
@@ -182,7 +197,7 @@ class UserProfileRepository {
           .map((item) => Skill.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
@@ -204,7 +219,7 @@ class UserProfileRepository {
       return await addApiService.deleteUserResume(resumeid);
     } catch (e) {
       print("error ${e.toString()}");
-      throw Exception('Failed to delete resume. Please try again later.');
+      rethrow;
     }
   }
 
@@ -214,7 +229,7 @@ class UserProfileRepository {
       return await othersApiService.getPublicUserProfile(userId);
     } catch (e) {
       print(e.toString());
-      throw Exception('Failed to fetch public user profile: $e');
+      rethrow;
     }
   }
 }

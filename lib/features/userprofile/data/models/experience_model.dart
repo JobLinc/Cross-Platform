@@ -47,9 +47,8 @@ class Experience {
     return {
       'position': position,
       'company': company,
-      'startDate': startDate.toIso8601String(), // Convert to ISO 8601 string
-      if (endDate != null)
-        'endDate': endDate!.toIso8601String(), // Convert to ISO 8601 string
+      'startDate': startDate.toIso8601String(),
+      if (endDate != null) 'endDate': endDate!.toIso8601String(),
       'description': description,
     };
   }

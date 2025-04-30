@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserAddSkillScreen extends StatefulWidget {
   @override
+  Skill? skill;
+
+  UserAddSkillScreen({this.skill});
   _UserAddSkillScreenState createState() => _UserAddSkillScreenState();
 }
 
@@ -33,6 +37,12 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
     super.initState();
     // Initialize controllers
     skillNameController = TextEditingController();
+    if (widget.skill != null) {
+      skillNameController.text = widget.skill!.name;
+    }
+    if (widget.skill != null) {
+      selectedSkillLevel = skillLevels[widget.skill!.level - 1];
+    }
   }
 
   @override
@@ -55,14 +65,19 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
 
       // Map skill level to integer
       final level = skillLevels.indexOf(selectedSkillLevel!) + 1;
-
       // Create skill model
-      final Skill skillToAdd =
-          Skill(name: skillNameController.text, level: level, id: "");
 
-      print('Saving skill with: ${skillToAdd.toJson()}');
-
-      context.read<ProfileCubit>().addSkill(skillToAdd);
+      if (widget.skill == null) {
+        final Skill skillToAdd =
+            Skill(name: skillNameController.text, level: level, id: "");
+        print('Saving skill with: ${skillToAdd.toJson()}');
+        context.read<ProfileCubit>().addSkill(skillToAdd);
+      } else {
+        final Skill skillToAdd = Skill(
+            name: skillNameController.text, level: level, id: widget.skill!.id);
+        print('Saving skill with: ${skillToAdd.toJson()}');
+        context.read<ProfileCubit>().editSkill(skillToAdd);
+      }
     }
   }
 
@@ -72,7 +87,7 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('Add Skill'),
+        title: widget.skill == null ? Text('Add Skill') : Text('Edit Skill'),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -104,10 +119,15 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Skill added successfully!'),
+                content: Text(state.message),
                 backgroundColor: Colors.green,
               ),
             );
+          } else if (state is SkillFailed) {
+            CustomSnackBar.show(
+                context: context,
+                message: state.message,
+                type: SnackBarType.error);
           }
         },
         builder: (context, state) {
@@ -125,11 +145,17 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Add skill',
-                          style: TextStyle(
-                            fontSize: 25.sp,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      widget.skill == null
+                          ? Text('Add skill',
+                              style: TextStyle(
+                                fontSize: 25.sp,
+                                fontWeight: FontWeight.bold,
+                              ))
+                          : Text('Edit skill',
+                              style: TextStyle(
+                                fontSize: 25.sp,
+                                fontWeight: FontWeight.bold,
+                              )),
                       SizedBox(height: 8.h),
                       Text('* Indicates required field',
                           textAlign: TextAlign.left,
@@ -146,7 +172,8 @@ class _UserAddSkillScreenState extends State<UserAddSkillScreen> {
                     key: Key('profileAddSkill_skillName_textField'),
                     controller: skillNameController,
                     labelText: 'Skill Name*',
-                    hintText: 'Ex: Project Management',
+                    hintText:
+                        widget.skill == null ? 'Ex: Project Management' : null,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Skill is required.';
