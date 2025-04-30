@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
-import 'package:joblinc/features/chat/data/models/connections_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
