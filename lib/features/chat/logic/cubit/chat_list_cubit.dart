@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
@@ -44,11 +46,6 @@ class ChatListCubit extends Cubit<ChatListState> {
       emit(ChatDetailErrorLoading(e.toString()));
     } 
   }
-
-
-
-
-
 
   void searchChats(String query){
     if (query.isEmpty){
@@ -130,6 +127,9 @@ class ChatListCubit extends Cubit<ChatListState> {
     selectedIds.clear();
     await getAllChats();
   }
+
+
+
 
 }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
@@ -11,7 +13,7 @@ class ChatRepo {
 
   Future<List<Chat>>? getAllChats() async {
     final response = await _chatApiService.getAllChats() ; 
-    final List<Chat> chats = (response.data as List)
+    final List<Chat> chats = (response.data["chats"] as List)
       .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
       .toList();
     print(chats);
@@ -53,5 +55,10 @@ class ChatRepo {
     await _chatApiService.markReadOrUnread(chatId: chatId);
     // Optionally, process response if needed
   }
+
+    Future<String> uploadMedia(File file) async {
+    return await _chatApiService.uploadMedia(file);
+  }
+
 }
 

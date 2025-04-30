@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:joblinc/features/chat/data/models/chat_model.dart';
-import 'package:joblinc/features/chat/data/models/message_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 bool apiEndPointFunctional=true;
 
@@ -12,8 +12,8 @@ class ChatApiService {
   Future<Response> getAllChats() async {
     if(apiEndPointFunctional){
       try {
-        final response = await _dio.get('/chat/all',);
-        print(response);
+        final response = await _dio.get('/chat/all');
+        print("all chat response ${response}" );
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -22,7 +22,7 @@ class ChatApiService {
       await Future.delayed(Duration(seconds: 1));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: mockChats.map((job) => job.toJson()).toList(),
+        data: [],//mockChats.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -83,7 +83,7 @@ class ChatApiService {
     } else {
         final response = Response<dynamic>(
           requestOptions: RequestOptions(path: ''),
-          data: mockChats.map((job) => job.toJson()).toList(),
+          data: [],//mockChats.map((job) => job.toJson()).toList(),
           statusCode: 200,
           statusMessage: 'OK',
       );
@@ -130,7 +130,52 @@ class ChatApiService {
       throw Exception("Failed to mark chat: $e");
     }
   }
+
+
+
+
+
+
+    Future<String> uploadMedia(File file) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last,contentType: getMediaType(file),),
+      });
+      final  response = await _dio.post('/chat/upload-media', data: formData);
+      print(response);
+      // Assume backend returns { url: "https://..." }
+      return (response.data as String);
+    } catch (e) {
+      throw Exception("Failed to upload media: $e");
+    }
+  }
+
+
+
+
+    MediaType getMediaType(File file) {
+    final extension = file.path.split('.').last.toLowerCase();
+
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+        return MediaType('image', 'jpeg');
+      case 'png':
+        return MediaType('image', 'png');
+      case 'mp4':
+        return MediaType('video', 'mp4');
+      case 'pdf':
+        return MediaType('application', 'pdf');
+       case 'doc':
+    case 'docx':
+      return MediaType('application', 'msword');  // MIME type for Word documents
+    default:
+      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+    }
+  }
 }
+
+
 
 
 
