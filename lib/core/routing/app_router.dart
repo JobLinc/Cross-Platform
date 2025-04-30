@@ -19,6 +19,7 @@ import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/create_chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_group_screen.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
@@ -480,6 +481,12 @@ class AppRouter {
          return MaterialPageRoute(
             builder: (context) => CreateChatScreen(),
           );
+
+      case Routes.createGroupChatScreen:
+         return MaterialPageRoute(
+            builder: (context) => CreateGroupScreen(),
+          );
+        
       default:
         return null;
     }

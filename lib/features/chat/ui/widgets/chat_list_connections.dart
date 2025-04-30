@@ -147,6 +147,24 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                 ? IconButton(
                                     key: Key("connection_chat_button"),
                                     onPressed: () async {
+                                      // Show loading snackbar
+                                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                      final loadingSnackBar = SnackBar(
+                                        duration: const Duration(minutes: 1),
+                                        content: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(strokeWidth: 2),
+                                            ),
+                                            SizedBox(width: 16),
+                                            Text("Creating the chat"),
+                                          ],
+                                        ),
+                                      );
+                                      scaffoldMessenger.showSnackBar(loadingSnackBar);
+
                                       try {
                                         final chatRepo = getIt<ChatRepo>();
                                         final createdChat = await chatRepo.createChat(
@@ -177,6 +195,8 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                           isRead: true,
                                         );
 
+                                        scaffoldMessenger.hideCurrentSnackBar();
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -187,6 +207,7 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                           ),
                                         );
                                       } catch (e) {
+                                        scaffoldMessenger.hideCurrentSnackBar();
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(content: Text('Failed to create chat: $e')),
                                         );

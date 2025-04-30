@@ -43,5 +43,6 @@ class Routes {
   static const String followingListScreen = '/followingListScreen';
   static const String followersListScreen = '/followersListScreen';
   static const String createChat = '/createChat';
+  static const String createGroupChatScreen = '/createGroupChatScreen';
   // We'll use the homeScreen route for the main container
 }
