@@ -1,10 +1,7 @@
-
-import 'package:joblinc/features/companyPages/data/data/models/company_model.dart';
-
 class Experience {
   final String experienceId;
   final String position;
-  final CompanyResponse company;
+  final String company;
   final DateTime startDate;
   final DateTime? endDate;
   final String description;
@@ -51,8 +48,7 @@ class Experience {
       'position': position,
       'company': company,
       'startDate': startDate.toIso8601String(),
-      if (endDate != null)
-        'endDate': endDate!.toIso8601String(),
+      if (endDate != null) 'endDate': endDate!.toIso8601String(),
       'description': description,
     };
   }

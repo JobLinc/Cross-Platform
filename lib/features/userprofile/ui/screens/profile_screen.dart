@@ -16,7 +16,6 @@ import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
-
 class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -45,10 +44,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
-        } else if (state is ProfileUpdated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
         } else if (state is ResumeAdded) {
           CustomSnackBar.show(
               context: context,
@@ -64,17 +59,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               context: context,
               message: state.message,
               type: SnackBarType.error);
-        }else if (state is ExperienceDeleted) {
+        } else if (state is ExperienceDeleted) {
           CustomSnackBar.show(
               context: context,
               message: state.message,
               type: SnackBarType.success);
-        }else if (state is CertificateDeleted) {
+        } else if (state is CertificateDeleted) {
           CustomSnackBar.show(
               context: context,
               message: state.message,
               type: SnackBarType.success);
-        }else if (state is SkillDeleted) {
+        } else if (state is SkillDeleted) {
           CustomSnackBar.show(
               context: context,
               message: state.message,
