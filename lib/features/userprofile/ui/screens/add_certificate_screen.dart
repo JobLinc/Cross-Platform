@@ -208,7 +208,7 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Certificate added successfully!'),
+                content: Text(state.message),
                 backgroundColor: Colors.green,
               ),
             );

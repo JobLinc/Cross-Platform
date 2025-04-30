@@ -168,7 +168,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (response.statusCode == 200) {
         UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
-        emit(CertificateAdded("Certificate Added"));
+        emit(CertificateAdded("Certificate Added Successfully"));
         // getUserProfile();
       } else {
         if (!isClosed) {
@@ -194,7 +194,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (response.statusCode == 200) {
         UserProfileUpdateModel skillModel = UserProfileUpdateModel();
         updateUserProfile(skillModel);
-        emit(CertificateAdded("Certificate Updated"));
+        emit(CertificateAdded("Certificate Updated Successfully"));
       } else {
         if (!isClosed) {
           emit(CertificateFailed('Failed to Edit Certificate.'));
