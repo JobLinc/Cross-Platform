@@ -108,6 +108,14 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> editCertification(Certification certification) async {
+    try {
+      return await addApiService.editCertification(certification);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> deleteCertification(String certificationId) async {
     try {
       return await addApiService.deleteCertification(certificationId);

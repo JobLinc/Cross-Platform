@@ -185,6 +185,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  void editCertificate(Certification certification) async {
+    try {
+      emit(ProfileUpdating("Editing Certificate"));
+      final response =
+          await _profileRepository.editCertification(certification);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel skillModel = UserProfileUpdateModel();
+        updateUserProfile(skillModel);
+        emit(CertificateAdded("Certificate Updated"));
+      } else {
+        if (!isClosed) {
+          emit(CertificateFailed('Failed to Edit Certificate.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(CertificateFailed('Error : ${e.toString()}'));
+      }
+    }
+  }
+
   Future<void> deleteCertificate(String certificationId) async {
     try {
       final response =

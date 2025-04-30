@@ -49,6 +49,27 @@ class addService {
     }
   }
 
+  Future<Response> editCertification(Certification certification) async {
+    try {
+      Response response = await dio.put(
+        '/user/certificate/${certification.certificationId}',
+        data: certification.toJson(),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
   Future<Response> deleteCertification(String certificationId) async {
     try {
       Response response = await dio.delete(

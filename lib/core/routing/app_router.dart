@@ -51,6 +51,7 @@ import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
@@ -434,7 +435,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddCertificateScreen(),
+            child: UserAddCertificateScreen(
+              certificate: (arguments as Certification?),
+            ),
           ),
         );
 
@@ -473,9 +476,9 @@ class AppRouter {
         );
 
       case Routes.createChat:
-         return MaterialPageRoute(
-            builder: (context) => CreateChatScreen(),
-          );
+        return MaterialPageRoute(
+          builder: (context) => CreateChatScreen(),
+        );
       default:
         return null;
     }
