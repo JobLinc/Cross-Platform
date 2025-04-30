@@ -4,6 +4,8 @@ abstract class PostState {}
 
 final class PostStateInitial extends PostState {}
 
+final class PostStateCommentsLoading extends PostState {}
+
 final class PostStateCommentsLoaded extends PostState {
   final List<CommentModel> comments;
   PostStateCommentsLoaded(this.comments);

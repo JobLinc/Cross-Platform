@@ -6,6 +6,15 @@ class CommentApiService {
 
   CommentApiService(this._dio);
 
+  Future<CommentModel> getComment(String postId, String commentId) async {
+    try {
+      final response = await _dio.get('/comment/$commentId');
+      return CommentModel.fromJson(response.data, postId);
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
   Future<List<CommentModel>> getComments(String postID) async {
     try {
       final response = await _dio.get('/post/$postID/comments');
@@ -17,6 +26,7 @@ class CommentApiService {
 
       return comments;
     } on DioException catch (e) {
+      print(e.toString());
       throw Exception(_handleDioError(e));
     }
   }

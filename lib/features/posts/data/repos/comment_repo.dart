@@ -6,6 +6,10 @@ class CommentRepo {
 
   CommentRepo(this._commentApiService);
 
+  Future<CommentModel> getComment(String postId, String commentId) async {
+    return await _commentApiService.getComment(postId, commentId);
+  }
+
   Future<List<CommentModel>> getComments(String postID) async {
     return await _commentApiService.getComments(postID);
   }

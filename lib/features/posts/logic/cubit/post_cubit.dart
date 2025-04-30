@@ -19,6 +19,10 @@ class PostCubit extends Cubit<PostState> {
     this.postId = postId;
   }
 
+  void closeComments() {
+    emit(PostStateInitial());
+  }
+
   Future<void> savePost() async {
     try {
       await _postRepo.savePost(postId);
@@ -64,6 +68,7 @@ class PostCubit extends Cubit<PostState> {
   }
 
   Future<void> getComments() async {
+    emit(PostStateCommentsLoading());
     try {
       final comments = await _commentRepo.getComments(postId);
       emit(PostStateCommentsLoaded(comments));

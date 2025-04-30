@@ -40,7 +40,8 @@ class Post extends StatelessWidget {
               type: SnackBarType.success,
             );
           } else if (state is PostStateCommentsLoaded) {
-            showCommentSectionBottomSheet(context, data.postID, state.comments);
+            showCommentSectionBottomSheet(context, data.postID, state.comments)
+                .whenComplete(context.read<PostCubit>().closeComments);
           } else if (state is PostStateFailure) {
             CustomSnackBar.show(
               context: context,
@@ -57,6 +58,7 @@ class Post extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: PostContent(
+                state: state,
                 data: data,
                 showExtraMenu: showExtraMenu,
                 showOwnerMenu: showOwnerMenu,
@@ -73,11 +75,13 @@ class Post extends StatelessWidget {
 class PostContent extends StatelessWidget {
   const PostContent({
     super.key,
+    required this.state,
     required this.data,
     required this.showExtraMenu,
     required this.showOwnerMenu,
     required this.likeCount,
   });
+  final PostState state;
   final PostModel data;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -146,6 +150,7 @@ class PostContent extends StatelessWidget {
           color: ColorsManager.getTextSecondary(context),
         ),
         PostActionBar(
+          state: state,
           userReaction: data.userReaction,
           likeCount: likeCount,
         ),
@@ -233,9 +238,11 @@ class PostNumerics extends StatelessWidget {
 class PostActionBar extends StatelessWidget {
   const PostActionBar({
     super.key,
+    required this.state,
     required this.likeCount,
     required this.userReaction,
   });
+  final PostState state;
   final ValueNotifier<int> likeCount;
   final Reactions? userReaction;
 
@@ -320,7 +327,12 @@ class PostActionBar extends StatelessWidget {
               itemSize: Size(24, 24)),
           IconButton(
             key: Key('post_actionBar_comment'),
-            onPressed: () => {context.read<PostCubit>().getComments()},
+            onPressed: () {
+              if (state is! PostStateCommentsLoaded &&
+                  state is! PostStateCommentsLoading) {
+                context.read<PostCubit>().getComments();
+              }
+            },
             icon: Icon(Icons.comment, color: iconColor),
           ),
           IconButton(

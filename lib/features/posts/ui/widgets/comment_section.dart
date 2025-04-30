@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
@@ -10,7 +12,7 @@ import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment.dart';
 
 class CommentSection extends StatelessWidget {
-  CommentSection({
+  const CommentSection({
     super.key,
     required this.postId,
     required this.comments,
@@ -20,6 +22,8 @@ class CommentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<List<CommentModel>> commentsNotifier =
+        ValueNotifier(comments);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -48,11 +52,16 @@ class CommentSection extends StatelessWidget {
                             ),
                           ),
                           Expanded(
-                            child: ListView.builder(
-                                itemCount: comments.length,
+                            child: ValueListenableBuilder(
+                              valueListenable: commentsNotifier,
+                              builder: (context, commentsList, child) =>
+                                  ListView.builder(
+                                itemCount: commentsList.length,
                                 itemBuilder: (context, index) => Comment(
-                                      data: comments[index],
-                                    )),
+                                  data: commentsList[index],
+                                ),
+                              ),
+                            ),
                           ),
                         ]
                       : [Center(child: Text('No comments yet'))],
@@ -62,7 +71,10 @@ class CommentSection extends StatelessWidget {
             Divider(
               height: 0,
             ),
-            CommentBottomBar(postId: postId)
+            CommentBottomBar(
+              postId: postId,
+              commentNotifier: commentsNotifier,
+            )
           ],
         ),
       ),
@@ -74,9 +86,11 @@ class CommentBottomBar extends StatelessWidget {
   CommentBottomBar({
     super.key,
     required this.postId,
+    required this.commentNotifier,
   });
   final String postId;
   final TextEditingController commentController = TextEditingController();
+  final ValueNotifier<List<CommentModel>> commentNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -104,18 +118,24 @@ class CommentBottomBar extends StatelessWidget {
             ),
           ),
           IconButton(
-              onPressed: () {
+              onPressed: () async {
                 if (commentController.text.isNotEmpty) {
                   try {
-                    getIt
-                        .get<CommentRepo>()
-                        .addComment(postId, commentController.text);
+                    final repo = getIt.get<CommentRepo>();
+                    final commentId =
+                        await repo.addComment(postId, commentController.text);
+                    // commentNotifier.value
+                    //     .add(await repo.getComment(postId, commentId));
+                    commentNotifier.value = await repo.getComments(postId);
+                    commentController.text = '';
                   } on Exception catch (e) {
-                    CustomSnackBar.show(
-                      context: context,
-                      message: e.toString(),
-                      type: SnackBarType.error,
-                    );
+                    if (context.mounted) {
+                      CustomSnackBar.show(
+                        context: context,
+                        message: e.toString(),
+                        type: SnackBarType.error,
+                      );
+                    }
                   }
                 }
               },
