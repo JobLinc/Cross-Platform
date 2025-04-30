@@ -84,6 +84,15 @@ class UserSkills extends StatelessWidget {
                               ),
                               if (isuser) ...[
                                 IconButton(
+                                    onPressed: () async {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.addSkillScreen,
+                                        arguments: skill
+                                      );
+                                    },
+                                    icon: Icon(Icons.edit)),
+                                IconButton(
                                   icon: Icon(
                                     Icons.delete,
                                     color: ColorsManager.darkBurgundy,

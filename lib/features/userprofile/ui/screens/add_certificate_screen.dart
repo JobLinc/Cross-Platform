@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
@@ -57,14 +58,13 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.black, 
-              onPrimary: Colors.white, 
-              onSurface: Colors.black, 
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor:
-                    Colors.black, 
+                foregroundColor: Colors.black,
               ),
             ),
           ),
@@ -175,6 +175,11 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
                 backgroundColor: Colors.green,
               ),
             );
+          } else if (state is CertificateFailed) {
+            CustomSnackBar.show(
+                context: context,
+                message: state.message,
+                type: SnackBarType.error);
           }
         },
         builder: (context, state) {

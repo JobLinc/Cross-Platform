@@ -58,6 +58,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               context: context,
               message: state.message,
               type: SnackBarType.error);
+        } else if (state is ExperienceFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        }else if (state is ExperienceDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        }else if (state is CertificateDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        }else if (state is SkillDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
         }
       },
       builder: (context, state) {
@@ -715,27 +735,39 @@ void showConnectionsOptionsBottomSheet(BuildContext context) {
               leading: Icon(Icons.block, color: Colors.red),
               title:
                   Text('View Blocked List', style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.blockedConnectionsList);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.blockedConnectionsList);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
               },
             ),
             ListTile(
               leading: Icon(Icons.person, color: Colors.blue),
               title: Text('Show Followers List',
                   style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.followersListScreen);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.followersListScreen);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
               },
             ),
             ListTile(
               leading: Icon(Icons.person_outline, color: Colors.green),
               title: Text('Show Following List',
                   style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.followingListScreen);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.followingListScreen);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
               },
             ),
           ],

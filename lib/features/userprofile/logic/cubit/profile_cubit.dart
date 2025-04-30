@@ -174,13 +174,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       } else {
         if (!isClosed) {
           print("hello I am out");
-          emit(ProfileError('Failed to add certificate as it already exists'));
+          emit(CertificateFailed(
+              'Failed to add certificate as it already exists'));
         }
       }
     } catch (e) {
       if (!isClosed) {
         print("hello I am inside");
-        emit(ProfileError('Error: $e'));
+        emit(CertificateFailed('Error: $e'));
       }
     }
   }
@@ -192,19 +193,21 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       if (response.statusCode == 200) {
         // Optionally update profile or UI after deletion
+        emit(CertificateDeleted("Certification Deleted succefully"));
         UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
+
         // getUserProfile();
       } else {
         if (!isClosed) {
           print("Failed deletion logic triggered");
-          emit(ProfileError('Failed to delete certificate.'));
+          emit(CertificateFailed('Failed to delete certificate.'));
         }
       }
     } catch (e) {
       if (!isClosed) {
         print("Exception caught while deleting");
-        emit(ProfileError('Error: $e'));
+        emit(CertificateFailed('Error: $e'));
       }
     }
   }
@@ -219,7 +222,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void addSkill(Skill skill) async {
     try {
-      emit(ProfileUpdating("Adding experience"));
+      emit(ProfileUpdating("Adding skill"));
       final response = await _profileRepository.addSkill(skill);
 
       if (response.statusCode == 200) {
@@ -228,12 +231,33 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(SkillAdded("Skill Added"));
       } else {
         if (!isClosed) {
-          emit(ProfileError('Failed to add skill.'));
+          emit(SkillFailed('Failed to add skill.'));
         }
       }
     } catch (e) {
       if (!isClosed) {
-        emit(ProfileError('Error: $e'));
+        emit(SkillFailed('Error : ${e.toString()}'));
+      }
+    }
+  }
+
+  void editSkill(Skill skill) async {
+    try {
+      emit(ProfileUpdating("Editing skill"));
+      final response = await _profileRepository.editSkill(skill);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel skillModel = UserProfileUpdateModel();
+        updateUserProfile(skillModel);
+        emit(SkillAdded("Skill Updated"));
+      } else {
+        if (!isClosed) {
+          emit(SkillFailed('Failed to Edit skill.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(SkillFailed('Error : ${e.toString()}'));
       }
     }
   }
@@ -244,18 +268,19 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileUpdating("Deleting skill"));
       final response = await _profileRepository.deleteSkill(skillid);
       if (response.statusCode == 200) {
+        emit(SkillDeleted("Skill Deleted succefully"));
         UserProfileUpdateModel expModel = UserProfileUpdateModel();
         updateUserProfile(expModel);
       } else {
         if (!isClosed) {
           print("Failed deletion logic triggered");
-          emit(ProfileError('Failed to delete experience.'));
+          emit(SkillFailed('Failed to delete experience.'));
         }
       }
     } catch (e) {
       if (!isClosed) {
         print("Exception caught while deleting");
-        emit(ProfileError('Error: $e'));
+        emit(SkillFailed('Error: $e'));
       }
     }
   }
@@ -271,12 +296,12 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(ExperienceAdded("Experience Added"));
       } else {
         if (!isClosed) {
-          emit(ProfileError('Failed to add experience.'));
+          emit(ExperienceFailed('Failed to add experience.'));
         }
       }
     } catch (e) {
       if (!isClosed) {
-        emit(ProfileError('Error: $e'));
+        emit(ExperienceFailed('Error: $e'));
       }
     }
   }
@@ -289,18 +314,19 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.deleteExperience(position);
 
       if (response.statusCode == 200) {
+        emit(ExperienceDeleted("Experience Deleted succefully"));
         UserProfileUpdateModel expModel = UserProfileUpdateModel();
         await updateUserProfile(expModel);
       } else {
         if (!isClosed) {
           print("Failed deletion logic triggered");
-          emit(ProfileError('Failed to delete experience.'));
+          emit(ExperienceFailed('Failed to delete experience.'));
         }
       }
     } catch (e) {
       if (!isClosed) {
         print("Exception caught while deleting");
-        emit(ProfileError('Error: $e'));
+        emit(ExperienceFailed('Error: $e'));
       }
     }
   }
@@ -321,7 +347,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       // You can optionally handle the response here, e.g., update the UI or state
     } catch (e) {
       if (!isClosed) {
-        emit(ResumeFailed("Resume adding failed"));
+        emit(ResumeFailed("Error : ${e.toString()}"));
       }
       print('Error in cubit while uploading resume: $e');
       // You can optionally emit an error state or handle the error gracefully
