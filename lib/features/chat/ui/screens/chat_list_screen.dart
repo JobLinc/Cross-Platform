@@ -194,6 +194,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     ),
                   ),
                   IconButton(
+                    key: const Key("chatList_add_iconButton"),
+                    onPressed: () {
+                      // context.read<ChatListCubit>().addNewChat();
+                      // addNewChat();
+                      Navigator.pushNamed(context, '/createChat');
+                    },
+                    icon: const Icon(Icons.add, color: Colors.white),
+                  ),
+                  IconButton(
                     key: const Key("chatList_filter_iconButton"),
                     onPressed: () {
                       setState(() {

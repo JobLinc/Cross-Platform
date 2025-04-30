@@ -42,5 +42,6 @@ class Routes {
   static const String blockedConnectionsList = '/blockedConnectionsList';
   static const String followingListScreen = '/followingListScreen';
   static const String followersListScreen = '/followersListScreen';
+  static const String createChat = '/createChat';
   // We'll use the homeScreen route for the main container
 }
