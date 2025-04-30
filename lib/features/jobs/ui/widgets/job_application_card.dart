@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
@@ -22,6 +23,7 @@ class JobApplicationCard extends StatelessWidget {
     final localPath = '${directory.path}/$resumeName';
     final file = File(localPath);
 
+
     if (await file.exists()) {
       await OpenFile.open(localPath);
     } else if (await canLaunchUrl(Uri.parse(resumeUrl))) {
@@ -38,6 +40,9 @@ class JobApplicationCard extends StatelessWidget {
     final job = jobApplication.job;
     final resume = jobApplication.resume;
     final dateStr = DateFormat.yMMMd().format(jobApplication.createdAt);
+    final hasCompany = job.company != null;
+    final employerName   = hasCompany ? job.company!.name : "${job.employer!.firstname}  ${job.employer!.lastname}";
+    print(jobApplication.status);
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
@@ -64,7 +69,7 @@ class JobApplicationCard extends StatelessWidget {
 
           // 2) Company & Industry
           Text(
-            "${job.company?.name ?? ""} • ${job.industry ?? ""}",
+            "${employerName ?? ""} • ${job.industry ?? ""}",
             style: TextStyle(
               fontSize: 16.sp,
               color: Colors.grey[800],
@@ -184,14 +189,14 @@ class JobApplicationCard extends StatelessWidget {
   }
 
   Color _statusColor(String status) {
-    switch (status.toLowerCase()) {
-      case "application pending review":
+    switch (status) {
+      case "Pending":
         return Colors.orange;
-      case "decision in progress":
+      case "Viewed":
         return Colors.blue;
-      case "approved":
+      case "Accepted":
         return Colors.green;
-      case "rejected":
+      case "Rejected":
         return Colors.red;
       default:
         return Colors.grey;
@@ -200,7 +205,7 @@ class JobApplicationCard extends StatelessWidget {
 
   Widget buildResumeCard(BuildContext context, Resume resume) {
     return GestureDetector(
-      onTap: () => _openResume(context, resume.url, resume.name),
+      onTap: () => _openResume(context, resume.file, resume.name),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -220,7 +225,7 @@ class JobApplicationCard extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text(
-                resume.extension.replaceAll('.', '').toUpperCase(),
+                resume.name.split('.').last.toUpperCase(),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -245,7 +250,7 @@ class JobApplicationCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "${(resume.size / 1024.0).toStringAsFixed(1)} kB - Last updated on ${DateFormat('M/d/yyyy').format(resume.date)}",
+                    "${(resume.size / 1024.0).toStringAsFixed(1)} kB",//Last updated on ${DateFormat('M/d/yyyy').format(resume.date)},
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 12.sp,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
-import 'package:joblinc/features/premium/data/models/user_model.dart';
+import 'package:joblinc/features/jobs/ui/widgets/drop_down_Text_Fomr.dart';
+import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
+import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
+import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/theming/font_styles.dart';
 
 class JobCreationScreen extends StatefulWidget {
   const JobCreationScreen({Key? key}) : super(key: key);
@@ -19,12 +22,16 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
   final titleController = TextEditingController();
   final industryController = TextEditingController();
   final descriptionController = TextEditingController();
-  final keywordsController = TextEditingController();
+  final skillsController = TextEditingController();
+  final addressController = TextEditingController();
   final cityController = TextEditingController();
   final countryController = TextEditingController();
   final minSalaryController = TextEditingController();
   final maxSalaryController = TextEditingController();
-
+  final currencyController = TextEditingController();
+  final experienceController = TextEditingController();
+  final typeController = TextEditingController();
+  final placeController = TextEditingController();
   // Dropdown values.
   String? experienceLevel;
   String? workplace;
@@ -52,47 +59,50 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
     titleController.dispose();
     industryController.dispose();
     descriptionController.dispose();
-    keywordsController.dispose();
+    skillsController.dispose();
     cityController.dispose();
     countryController.dispose();
     minSalaryController.dispose();
     maxSalaryController.dispose();
+    currencyController.dispose();
+    experienceController.dispose();
+    typeController.dispose();
+    placeController.dispose();
     super.dispose();
   }
 
   void _createJob() {
     if (_formKey.currentState!.validate()) {
-      final job = Job(
-        title: titleController.text,
-        industry: industryController.text,
-        company: Company(
-          name: "${mockMainUser.firstname} ${mockMainUser.lastname}",
-          size: "Individual Employer",
-        ),
-        description: descriptionController.text,
-        workplace: workplace,
-        type: jobType,
-        experienceLevel: experienceLevel,
-        salaryRange: SalaryRange(
-          min: double.tryParse(minSalaryController.text) ?? 0,
-          max: double.tryParse(maxSalaryController.text) ?? 0,
-        ),
-        location: Location(
-          city: cityController.text,
-          country: countryController.text,
-        ),
-        keywords: keywordsController.text
+      Map<String,dynamic> jobReq = 
+      {
+        'title':titleController.text,
+        'industry': industryController.text,
+        'description': descriptionController.text,
+        'workplace': placeController.text,
+        'type': typeController.text,
+        'experienceLevel': experienceController.text,
+        'salaryRange': {
+          'from':double.tryParse(minSalaryController.text) ?? 0,
+          'to':double.tryParse(maxSalaryController.text) ?? 0,
+          'currency':currencyController.text,
+        },
+        'location': {
+          'address':addressController.text,
+          'city': cityController.text,
+          'country': countryController.text,
+        },
+        'skills': skillsController.text
             .split(',')
             .map((e) => e.trim())
             .where((element) => element.isNotEmpty)
             .toList(),
-        createdAt: DateTime.now(),
-      );
+      };
 
-      // Here, you could call an API or Bloc to create the job.
-      // For this example, we'll just print the job details.
-      context.read<JobListCubit>().createJob(job);
-      //print("Job Created: ${job.title}, ${job.industry}, ${job.company?.name}");
+      print("Job Created: ${jobReq['experienceLevel']},${jobReq['workplace']},${jobReq['type']},${jobReq['salaryRange']},${jobReq['location']},${jobReq['skills']}");
+      // // Here, you could call an API or Bloc to create the job.
+      // // For this example, we'll just print the job details.
+      context.read<JobListCubit>().createJob(jobReq:jobReq);
+
     }
   }
 
@@ -140,9 +150,12 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 duration: Duration(seconds: 2),
               ),
             );
-            Future.delayed(Duration(seconds: 2), () {
+            //Future.delayed(Duration(seconds: 2), () {
+              if(!mounted)return;
               Navigator.pop(context);
-            });
+              context.read<JobListCubit>().getAllJobs();
+            //});
+
           }
         },
         child: SingleChildScrollView(
@@ -169,65 +182,18 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                       value == null || value.isEmpty ? "Enter industry" : null,
                 ),
                 SizedBox(height: 16.h),
-                // Experience Level Dropdown
-                DropdownButtonFormField<String>(
-                  decoration: _inputDecoration("Experience Level"),
-                  value: experienceLevel,
-                  items: ["Entry", "Mid", "Senior"]
-                      .map((level) => DropdownMenuItem(
-                            value: level,
-                            child:
-                                Text(level, style: TextStyle(fontSize: 14.sp)),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      experienceLevel = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? "Select an experience level" : null,
-                ),
+
+                DropDownTextFormField(
+                    fieldName: "Experience Level",
+                    choiceController: experienceController),
                 SizedBox(height: 16.h),
-                // Workplace Dropdown
-                DropdownButtonFormField<String>(
-                  decoration: _inputDecoration("Workplace"),
-                  value: workplace,
-                  items: ["Onsite", "Remote", "Hybrid"]
-                      .map((work) => DropdownMenuItem(
-                            value: work,
-                            child:
-                                Text(work, style: TextStyle(fontSize: 14.sp)),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      workplace = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? "Select a workplace" : null,
-                ),
+
+                DropDownTextFormField(
+                    fieldName: "Workplace", choiceController: placeController),
                 SizedBox(height: 16.h),
-                // Job Type Dropdown
-                DropdownButtonFormField<String>(
-                  decoration: _inputDecoration("Job Type"),
-                  value: jobType,
-                  items: ["Full-time", "Part-time", "Contract"]
-                      .map((type) => DropdownMenuItem(
-                            value: type,
-                            child:
-                                Text(type, style: TextStyle(fontSize: 14.sp)),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      jobType = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? "Select a job type" : null,
-                ),
+
+                DropDownTextFormField(
+                    fieldName: "Job Type", choiceController: typeController),
                 SizedBox(height: 16.h),
                 // Description
                 TextFormField(
@@ -266,56 +232,213 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                             : null,
                       ),
                     ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                        child: CurrencyDropDownTextFormField(
+                            fieldName: "Currency",
+                            currencyController: currencyController))
                   ],
                 ),
                 SizedBox(height: 16.h),
-                // Location: City
-                TextFormField(
-                  controller: cityController,
-                  cursorColor: Colors.red,
-                  decoration: _inputDecoration("City"),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? "Enter city" : null,
+
+
+                CountryTextFormField(
+                    key: Key('job_country_textfield'),
+                    countryController: countryController),
+                SizedBox(
+                  height: 16.h,
                 ),
+                CityTextFormField(
+                    key: Key('job_city_textfield'),
+                    cityController: cityController),
+                
+
                 SizedBox(height: 16.h),
-                // Location: Country
+                // Address
                 TextFormField(
-                  controller: countryController,
+                  controller: addressController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Country"),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? "Enter country" : null,
+                  decoration: _inputDecoration("Address"),
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Enter Job Address"
+                      : null,
                 ),
                 SizedBox(height: 16.h),
                 // Keywords
                 TextFormField(
-                  controller: keywordsController,
+                  controller: skillsController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Keywords (comma separated)"),
+                  decoration: _inputDecoration("Skills (comma separated)"),
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Enter needed Job skills"
+                      : null,
                 ),
                 SizedBox(height: 24.h),
-                ElevatedButton(
-                  onPressed: _createJob,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.red),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 32.w,
-                      vertical: 16.h,
-                    ),
-                    textStyle: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  child: const Text("Create Job"),
-                ),
+
               ],
             ),
           ),
         ),
       ),
+      bottomNavigationBar: SafeArea(
+        child: Row(
+          children: [
+            SizedBox(width: 50.w),
+            ElevatedButton(
+              onPressed: _createJob,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: ColorsManager.getPrimaryColor(context),
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.red),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 100.w,
+                  vertical: 16.h,
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: Text(
+                "Create Job",
+                style: TextStyles.font13SemiBold(context)
+                    .copyWith(color: ColorsManager.getPrimaryColor(context)),
+              ),
+            ),
+            SizedBox(width: 50.w),
+          ],
+        ),
+      ),
     );
   }
 }
+                // Experience Level Dropdown
+                // DropdownButtonFormField<String>(
+                //   decoration: _inputDecoration("Experience Level"),
+                //   value: experienceLevel,
+                //   items: ["Entry", "Mid", "Senior"]
+                //       .map((level) => DropdownMenuItem(
+                //             value: level,
+                //             child:
+                //                 Text(level, style: TextStyle(fontSize: 14.sp)),
+                //           ))
+                //       .toList(),
+                //   onChanged: (value) {
+                //     setState(() {
+                //       experienceLevel = value;
+                //     });
+                //   },
+                //   validator: (value) =>
+                //       value == null ? "Select an experience level" : null,
+                // ), 
+                //               // // Workplace Dropdown
+                // DropdownButtonFormField<String>(
+                //   decoration: _inputDecoration("Workplace"),
+                //   value: workplace,
+                //   items: ["Onsite", "Remote", "Hybrid"]
+                //       .map((work) => DropdownMenuItem(
+                //             value: work,
+                //             child:
+                //                 Text(work, style: TextStyle(fontSize: 14.sp)),
+                //           ))
+                //       .toList(),
+                //   onChanged: (value) {
+                //     setState(() {
+                //       workplace = value;
+                //     });
+                //   },
+                //   validator: (value) =>
+                //       value == null ? "Select a workplace" : null,
+                // ),                // // Job Type Dropdown
+                // DropdownButtonFormField<String>(
+                //   decoration: _inputDecoration("Job Type"),
+                //   value: jobType,
+                //   items: ["Full-time", "Part-time", "Contract"]
+                //       .map((type) => DropdownMenuItem(
+                //             value: type,
+                //             child:
+                //                 Text(type, style: TextStyle(fontSize: 14.sp)),
+                //           ))
+                //       .toList(),
+                //   onChanged: (value) {
+                //     setState(() {
+                //       jobType = value;
+                //     });
+                //   },
+                //   validator: (value) =>
+                //       value == null ? "Select a job type" : null,
+                // ),      // Job(
+      //   title: titleController.text,
+      //   industry: industryController.text,
+      //   company: Company(
+      //     name: "${mockMainUser.firstname} ${mockMainUser.lastname}",
+      //     size: "Individual Employer",
+      //   ),
+      //   description: descriptionController.text,
+      //   workplace: workplace,
+      //   type: jobType,
+      //   experienceLevel: experienceLevel,
+      //   salaryRange: SalaryRange(
+      //     min: double.tryParse(minSalaryController.text) ?? 0,
+      //     max: double.tryParse(maxSalaryController.text) ?? 0,
+      //   ),
+      //   location: Location(
+      //     city: cityController.text,
+      //     country: countryController.text,
+      //   ),
+      //   keywords: keywordsController.text
+      //       .split(',')
+      //       .map((e) => e.trim())
+      //       .where((element) => element.isNotEmpty)
+      //       .toList(),
+      //   createdAt: DateTime.now(),
+      // );                // ElevatedButton(
+                //   onPressed: _createJob,
+                //   style: ElevatedButton.styleFrom(
+                //     foregroundColor: Colors.red,
+                //     backgroundColor: Colors.white,
+                //     side: const BorderSide(color: Colors.red),
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 32.w,
+                //       vertical: 16.h,
+                //     ),
+                //     textStyle: TextStyle(
+                //       fontSize: 16.sp,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                //   child: const Text("Create Job"),
+                // ),// SizedBox(height: 16.h),
+                // Location: Country
+                // TextFormField(
+                //   controller: countryController,
+                //   cursorColor: Colors.red,
+                //   decoration: _inputDecoration("Country"),
+                //   validator: (value) =>
+                //       value == null || value.isEmpty ? "Enter country" : null,
+                // ),                // Location: City
+                // Row(
+                //   children: [
+                //     // Expanded(
+                //     //   child: TextFormField(
+                //     //     controller: cityController,
+                //     //     cursorColor: Colors.red,
+                //     //     decoration: _inputDecoration("City"),
+                //     //     validator: (value) => value == null || value.isEmpty
+                //     //         ? "Enter city"
+                //     //         : null,
+                //     //   ),
+                //     // ),
+
+                //     // Expanded(
+                //     //   child: TextFormField(
+                //     //     controller: countryController,
+                //     //     cursorColor: Colors.red,
+                //     //     decoration: _inputDecoration("Country"),
+                //     //     validator: (value) => value == null || value.isEmpty
+                //     //         ? "Enter country"
+                //     //         : null,
+                //     //   ),
+                //     // ),
+                //   ],
+                // ),

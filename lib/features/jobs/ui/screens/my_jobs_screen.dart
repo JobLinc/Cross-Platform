@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/widgets/custom_horizontal_pill_bar.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/jobs/ui/widgets/job_application_card.dart';
@@ -14,11 +16,18 @@ class MyJobsScreen extends StatefulWidget {
 
 class _MyJobsScreenState extends State<MyJobsScreen> {
   String selected = "saved";
+  final auth = getIt<AuthService>();
+  late final String userId;
 
   @override
   void initState() {
     super.initState();
+    _initializeUserId();
     context.read<MyJobsCubit>().getSavedJobs();
+  }
+
+  Future<void> _initializeUserId() async {
+    userId = await auth.getUserId() ?? '';
   }
 
   @override
@@ -53,7 +62,8 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
               } else if (state is MySavedJobsLoaded) {
                 return JobList(
                     key: ValueKey(state.savedJobs.length),
-                    jobs: state.savedJobs);
+                    jobs: state.savedJobs,
+                    savedPage: true,);
               } else if (state is MyAppliedJobsLoaded) {
                 return JobList(
                     key: ValueKey(state.appliedJobs.length),
@@ -84,7 +94,7 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
       } else if (label == "Job Applications") {
         context.read<MyJobsCubit>().getJobApplications();
       } else if (label == "Created") {
-        context.read<MyJobsCubit>().getCreatedJobs();
+        context.read<MyJobsCubit>().getCreatedJobs(userId);
       }
     });
     return;

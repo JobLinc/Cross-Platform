@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/data/repos/job_repo.dart';
@@ -11,8 +12,8 @@ class MyJobsCubit extends Cubit<MyJobsState> {
 
   List<Job> _jobs = [];
   List<JobApplication> _jobApplications = [];
-  List<JobApplication> _jobApplicants = [];
-  JobApplication? _jobApplicant;
+  List<JobApplicant> _jobApplicants = [];
+  JobApplicant? _jobApplicant;
 
   MyJobsCubit(this.jobRepo) : super(MyJobsInitial());
 
@@ -44,10 +45,10 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  Future<void> getCreatedJobs() async {
+  Future<void> getCreatedJobs(String userId) async {
     emit(MyJobsLoading());
     try {
-      _jobs = await jobRepo.getCreatedJobs()!;
+      _jobs = await jobRepo.getAllJobs(queryParams: {"employer.id": userId})!;
       if (_jobs.isEmpty) {
         emit(MyCreatedJobsEmpty());
       } else {
@@ -90,7 +91,7 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     emit(MyJobApplicantLoading());
     try {
       _jobApplicant = await jobRepo.getJobApplicantById(jobId, applicantId)!;
-      if (_jobApplicant == null ) {
+      if (_jobApplicant == null) {
         emit(MyJobApplicantsEmpty());
       } else {
         emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
@@ -100,15 +101,33 @@ class MyJobsCubit extends Cubit<MyJobsState> {
     }
   }
 
-  acceptJobApplication(String jobId, String aaplicantId) async {
-    await jobRepo.acceptJobApplication(jobId, aaplicantId);
+  Future<void> changeJobApplicationStatus(String jobId, String jobApplicationId,
+      Map<String, dynamic> status) async {
+    emit(MyJobApplicantLoading());
+    try {
+      _jobApplicant = await jobRepo.changeJobApplicationStatus(jobId, jobApplicationId, status);
+            if (_jobApplicant == null) {
+        emit(MyJobApplicantsEmpty());
+      } else {
+        emit(MyJobApplicantLoaded(jobApplicant: _jobApplicant!));
+      }
+    } on Exception catch (e) {
+      emit(MyJobsErrorLoading(e.toString()));
+    }
   }
 
-  rejectJobApplication(String jobId, String aaplicantId) async {
-    await jobRepo.rejectJobApplication(jobId, aaplicantId);
+  acceptJobApplication(String jobId, String applicantId) async {
+    await jobRepo.acceptJobApplication(jobId, applicantId);
+    await getJobApplicantById(jobId, applicantId);
   }
 
-  emitMyJobApplicantLoaded(JobApplication jobApplicant){
-        emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
+  rejectJobApplication(String jobId, String applicantId) async {
+    await jobRepo.rejectJobApplication(jobId, applicantId);
+    await getJobApplicantById(jobId, applicantId);
+  }
+
+  emitMyJobApplicantLoaded(JobApplicant jobApplicant) {
+    changeJobApplicationStatus(jobApplicant.job, jobApplicant.id, {"status": "Viewed"});
+    //emit(MyJobApplicantLoaded(jobApplicant: jobApplicant));
   }
 }

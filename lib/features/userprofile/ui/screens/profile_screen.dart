@@ -16,6 +16,7 @@ import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
+
 class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();

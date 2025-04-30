@@ -98,7 +98,7 @@ extension IndustryExtension on Industry {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
@@ -132,7 +132,7 @@ extension OrganizationSizeExtension on OrganizationSize {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
@@ -156,37 +156,43 @@ extension OrganizationTypeExtension on OrganizationType {
     }
   }
 
-   static OrganizationType? fromDisplayName(String displayName) {
+  static OrganizationType? fromDisplayName(String displayName) {
     for (final value in OrganizationType.values) {
       if (value.displayName == displayName) {
         return value;
       }
     }
-    return null; 
+    return null;
   }
 }
 
 class Company {
-  final String name;
-  final String profileUrl;
+  String name;
+  String? id;
+  String profileUrl;
   String? overview;
   String? website;
   String? tagline;
   String? logoUrl;
   String? coverUrl;
   String? location;
-  final Industry industry;
-  final OrganizationSize organizationSize;
-  final OrganizationType organizationType;
+  String? country;
+  String? city;
+  Industry industry;
+  OrganizationSize organizationSize;
+  OrganizationType organizationType;
   int followers = 0;
   bool isVerified = true;
 
   Company({
     required this.name,
+    this.id,
     required this.profileUrl,
     this.website,
     this.tagline,
     this.overview,
+    this.country,
+    this.city,
     required this.industry,
     required this.organizationSize,
     required this.organizationType,
@@ -201,6 +207,7 @@ class Company {
 List<Company> mockCompanies = [
   Company(
     name: "Microsoft",
+    id: "1",
     profileUrl: "joblinc.com/microsoft",
     industry: Industry.softwareDevelopment,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -217,6 +224,7 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Google",
+    id: "2",
     profileUrl: "joblinc.com/google",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -248,6 +256,7 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Amazon",
+    id: "3",
     profileUrl: "joblinc.com/amazon",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -263,6 +272,7 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Tesla",
+    id: "4",
     profileUrl: "joblinc.com/tesla",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -278,6 +288,7 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Netflix",
+    id: "5",
     profileUrl: "joblinc.com/netflix",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,
@@ -293,6 +304,7 @@ List<Company> mockCompanies = [
   ),
   Company(
     name: "Uber",
+    id: "6",
     profileUrl: "joblinc.com/uber",
     industry: Industry.technology,
     organizationSize: OrganizationSize.tenThousandPlus,

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:flutter/material.dart';
+import 'package:joblinc/features/companypages/data/data/models/createcompany_response.dart';
 import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
 
 part 'create_company_state.dart';
@@ -36,7 +37,7 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
         overview: overviewController.text,
       );
 
-      await _createCompanyRepo.createCompany(
+      final CreateCompanyResponse response = await _createCompanyRepo.createCompany(
           name: companyToAdd.name,
           urlSlug: companyToAdd.profileUrl,
           industry: companyToAdd.industry.displayName,
@@ -44,6 +45,9 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
           type: companyToAdd.organizationType.displayName,
           overview: companyToAdd.overview!,
           website: companyToAdd.website!);
+
+          companyToAdd.id = response.id;
+          
       mockCompanies.add(companyToAdd);
 
       emit(CreateCompanySuccess());

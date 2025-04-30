@@ -6,9 +6,10 @@ import '../../../data/data/company.dart';
 
 class DashboardAppbar extends StatefulWidget implements PreferredSizeWidget {
   final Company company;
+  final Widget? leading;
   final String selectedValue;
   const DashboardAppbar(
-      {super.key, required this.company, this.selectedValue = "Dashboard"});
+      {super.key, required this.company,this.leading,this.selectedValue = "Dashboard"});
 
   @override
   State<DashboardAppbar> createState() => _DashboardAppbarState();
@@ -29,6 +30,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: widget.leading,
       toolbarHeight: 100.h,
       title: Column(
         children: [
@@ -77,39 +79,36 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   switch (newValue) {
                     case "Dashboard":
                       _selectedValue = "Dashboard";
-                      Navigator.pushReplacementNamed(
+                      Navigator.pushNamed(
                         context,
                         Routes.companyDashboard,
                         arguments: widget.company,
                       );
 
                       break;
-                    case "Page Posts":
-                      _selectedValue = "Page Posts";
+                    case "Company Profile":
+                      _selectedValue = "Company Profile";
                       Navigator.pushReplacementNamed(
                         context,
-                        Routes.companyPagePosts,
-                        arguments: widget.company,
+                        Routes.companyPageHome,
+                        arguments: {'company': widget.company, 'isAdmin': true}
                       );
 
                       break;
                     // case "Analytics":
                     //   Navigator.pushNamed(context, Routes.analytics);
                     //   break;
-                    case "Feed":
-                      _selectedValue = "Feed";
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.companyFeed,
-                        arguments: widget.company,
-                      );
-                      break;
+                    
                     // case "Inbox":
                     //   Navigator.pushNamed(context, Routes.inboxPage);
                     //   break;
-                    // case "Edit Page":
-                    //   Navigator.pushNamed(context, Routes.editPage);
-                    //   break;
+                    case "Edit Page":
+                      Navigator.pushNamed(
+                        context, 
+                        Routes.companyEdit,
+                        arguments: widget.company,
+                      );
+                      break;
                     // case "Jobs":
                     //   Navigator.pushNamed(context, Routes.jobsPage);
                     //   break;
@@ -117,9 +116,8 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                 },
                 items: <String>[
                   'Dashboard',
-                  'Page Posts',
+                  'Company Profile',
                   'Analytics',
-                  'Feed',
                   'Inbox',
                   'Edit Page',
                   'Jobs',
@@ -130,16 +128,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   );
                 }).toList(),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left:170.w 
-                  ), // Ensure flutter_screenutil is initialized
-                child: IconButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, Routes.addPostScreen),
-                  icon: Icon(Icons.post_add_rounded),
-                ),
-              ),
+              
             ],
           ),
         ],
