@@ -7,7 +7,7 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
-import 'package:readmore/readmore.dart';
+//import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
@@ -115,14 +115,15 @@ class PostBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReadMoreText(
-      text,
-      trimLines: 3,
-      trimCollapsedText: "more",
-      trimExpandedText: " show less",
-      trimMode: TrimMode.Line,
-      style: TextStyle(color: ColorsManager.getTextPrimary(context)),
-    );
+    // return ReadMoreText(
+    //   text,
+    //   trimLines: 3,
+    //   trimCollapsedText: "more",
+    //   trimExpandedText: " show less",
+    //   trimMode: TrimMode.Line,
+    //   style: TextStyle(color: ColorsManager.getTextPrimary(context)),
+    // );
+    return Center(child :Text("jsggadk"));
   }
 }
 
