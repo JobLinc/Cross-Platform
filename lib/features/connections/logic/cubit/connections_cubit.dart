@@ -103,12 +103,6 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
   }
 
-  void Searchclicked() {
-    if (state != SearchState()) {
-      emit(SearchState());
-    }
-  }
-
   void Backclicked() {
     if (state != ConnectionsInitial()) {
       emit(ConnectionsInitial());

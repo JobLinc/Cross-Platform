@@ -64,6 +64,7 @@ import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.d
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
@@ -78,9 +79,9 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl =  Platform.isAndroid
+  final baseUrl = Platform.isAndroid
       ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api'; 
+      : 'http://localhost:3000/api';
   // 'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
@@ -179,7 +180,7 @@ Future<void> setupGetIt() async {
     () => ChatListCubit(getIt<ChatRepo>()),
   );
 
-    getIt.registerFactory<ChatCubit>(
+  getIt.registerFactory<ChatCubit>(
     () => ChatCubit(getIt<ChatRepo>()),
   );
 
@@ -237,7 +238,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
       getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
-
+  getIt.registerFactory<SearchCubit>(
+      () => SearchCubit(getIt<UserConnectionsRepository>()));
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
       () => EmailConfirmationApiService(getIt<Dio>()));
