@@ -8,7 +8,9 @@ import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart'
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_more_actions.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class OthersProfileScreen extends StatefulWidget {
@@ -173,6 +175,18 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             isuser: false,
                           ),
                         ],
+                        if (profile.resumes.isNotEmpty) ...[
+                          UserResumes(
+                            profile: profile,
+                            isuser: false,
+                          ),
+                        ],
+                        if (profile.education.isNotEmpty) ...[
+                          UserEducations(
+                            profile: profile,
+                            isUser: false,
+                          ),
+                        ]
                       ],
                     ),
                   ),
