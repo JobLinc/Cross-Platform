@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +8,7 @@ import 'package:joblinc/features/chat/data/services/chat_socket_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/video_player_screen.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class MediaDisplayer extends StatefulWidget {
   final String chatId;
@@ -170,38 +171,190 @@ Widget buildMediaContent(BuildContext context, MessageContent c) {
       ),
     );
   }
-  if (c.video.isNotEmpty && c.video.startsWith('http')) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
-      ),
-      child: Container(
-        width: 200.w,
-        height: 200.h,
-        color: Colors.black,
-        child: Icon(Icons.play_arrow, size: 50.sp, color: Colors.white),
-      ),
-    );
-  }
-  if (c.document.isNotEmpty && c.document.startsWith('http')) {
-    final name = c.document.split('/').last;
-    return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+  // if (c.video.isNotEmpty && c.video.startsWith('http')) {
+  //   return GestureDetector(
+  //     onTap: () => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
+  //     ),
+  //     child: Container(
+  //       width: 200.w,
+  //       height: 200.h,
+  //       color: Colors.black,
+  //       child: Icon(Icons.play_arrow, size: 50.sp, color: Colors.white),
+  //     ),
+  //   );
+  // }
+
+
+
+// ...existing code...
+
+if (c.video.isNotEmpty && c.video.startsWith('http')) {
+  return FutureBuilder<Uint8List?>(
+    future: VideoThumbnail.thumbnailData(
+      video: c.video,
+      imageFormat: ImageFormat.PNG,
+      maxWidth: 200, // specify the width of the thumbnail, let height auto-scale
+      quality: 75,
+    ),
+    builder: (context, snapshot) {
+      Widget thumb;
+      if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+        thumb = Image.memory(
+          snapshot.data!,
+          width: 200.w,
+          height: 200.h,
+          fit: BoxFit.cover,
+        );
+      } else {
+        thumb = Container(
+          width: 200.w,
+          height: 200.h,
+          color: Colors.black,
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+      return GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
         ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            thumb,
+            Icon(Icons.play_circle_fill, size: 56.sp, color: Colors.white70),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+
+  // if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  //   final name = c.document.split('/').last;
+  //   return InkWell(
+  //     onTap: () => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+  //       ),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Icon(Icons.insert_drive_file, size: 24.sp, color: Colors.grey),
+  //         SizedBox(width: 8.w),
+  //         Expanded(child: Text(name, style: TextStyle(fontSize: 14.sp))),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  // final name = c.document.split('/').last;
+  // return InkWell(
+  //   onTap: () => Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+  //     ),
+  //   ),
+  //   child: Container(
+  //     width: 220.w,
+  //     height: 80.h,
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+  //     decoration: BoxDecoration(
+  //       color: Colors.grey[100],
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(color: Colors.grey[300]!),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
+  //         SizedBox(width: 12.w),
+  //         Expanded(
+  //           child: Text(
+  //             name,
+  //             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+  //             overflow: TextOverflow.ellipsis,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   ),
+  // );
+// }
+
+if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  final name = c.document.split('/').last;
+  return InkWell(
+    onTap: () => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
       ),
-      child: Row(
+    ),
+    child: Container(
+      width: 220.w,
+      height: 80.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Stack(
         children: [
-          Icon(Icons.insert_drive_file, size: 24.sp, color: Colors.grey),
-          SizedBox(width: 8.w),
-          Expanded(child: Text(name, style: TextStyle(fontSize: 14.sp))),
+          // Document preview background (first page as thumbnail)
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.25,
+              child: FutureBuilder<Uint8List?>(
+                future: VideoThumbnail.thumbnailData( // Use video_thumbnail for PDF preview if you have a PDF thumbnail generator, else use a placeholder
+                  video: '', // <-- Replace with PDF thumbnail generator if available
+                  imageFormat: ImageFormat.PNG,
+                  maxWidth: 220,
+                  quality: 50,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    return Image.memory(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    );
+                  } else {
+                    // Placeholder for document preview
+                    return Container(
+                      color: Colors.grey[300],
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+          // Foreground row with icon and name
+          Row(
+            children: [
+              Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  name,
+                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
   // Show placeholder for local file before upload
   if (c.image.isNotEmpty) {
     return Container(

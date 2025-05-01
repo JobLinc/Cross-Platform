@@ -918,7 +918,7 @@ class _ChatScreenState extends State<ChatScreen> {
               messageId: DateTime.now().millisecondsSinceEpoch.toString(),
               type: 'video',
               seenBy: [],
-              content: MessageContent(image: content['video']),
+              content: MessageContent(video: content['video']),
               sentDate: DateTime.now(),
               senderId: map['senderId'] ?? "unknown",
             );
@@ -927,7 +927,7 @@ class _ChatScreenState extends State<ChatScreen> {
               messageId: DateTime.now().millisecondsSinceEpoch.toString(),
               type: 'document',
               seenBy: [],
-              content: MessageContent(image: content['video']),
+              content: MessageContent(document: content['document']),
               sentDate: DateTime.now(),
               senderId: map['senderId'] ?? "unknown",
             );

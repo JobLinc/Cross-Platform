@@ -75,6 +75,7 @@ class Chat {
 
 
   String formatDynamicTime(DateTime dateTime) {
+    dateTime= dateTime.toLocal();
     DateTime now = DateTime.now();
     DateTime yesterday = now.subtract(Duration(days: 1));
 

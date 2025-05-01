@@ -39,39 +39,61 @@ class ChatCard extends StatelessWidget {
         child: Row(
           children: [
             if (selectionMode)
-              Checkbox(value: selected, onChanged: (_) => onTap(), activeColor: Colors.red),
+              Checkbox(
+                  value: selected,
+                  onChanged: (_) => onTap(),
+                  activeColor: Colors.red)
             //CircleAvatar(backgroundImage: NetworkImage(chat.chatPicture)),
-            chat.chatPicture != null
-                ? buildChatAvatar(chat.chatPicture!)
-                : buildChatAvatar(null),
+            else
+              chat.chatPicture != null
+                  ? buildChatAvatar(chat.chatPicture!)
+                  : buildChatAvatar(null),
             SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(chat.chatName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                  Text(chat.chatName,
+                      style: TextStyle(
+                          fontSize: 16.sp, fontWeight: FontWeight.bold)),
                   SizedBox(height: 4.h),
                   chat.isTyping == true
-                      ? Text("Typing...", style: TextStyle(fontStyle: FontStyle.italic, color: Colors.green))
-                      : Text("${chat.senderName}: ${chat.lastMessage ?? ''}", overflow: TextOverflow.ellipsis),
+                      ? Text("Typing...",
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic, color: Colors.green))
+                      : Text("${chat.senderName}: ${chat.lastMessage ?? ''}",
+                          overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
             if (chat.unreadCount! > 0)
               Container(
                 padding: EdgeInsets.all(6.r),
-                decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                child: Text('${chat.unreadCount}', style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+                decoration:
+                    BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                child: Text('${chat.unreadCount}',
+                    style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+              ),
+            if (!chat.isRead && !(chat.unreadCount! > 0))
+              Container(
+                padding: EdgeInsets.all(6.r),
+                decoration:
+                    BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                child: Container(
+                  padding: EdgeInsets.all(3.r),
+                  decoration:
+                      BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                ),
               ),
             SizedBox(width: 8.w),
-            Text(chat.time ?? '', style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+            Text(chat.time ?? '',
+                style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
           ],
         ),
       ),
     );
   }
 }
-
 
 // class ChatCard extends StatelessWidget {
 //   //final int? itemIndex;
