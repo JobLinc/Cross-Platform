@@ -175,12 +175,6 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             isuser: false,
                           ),
                         ],
-                        if (profile.resumes.isNotEmpty) ...[
-                          UserResumes(
-                            profile: profile,
-                            isuser: false,
-                          ),
-                        ],
                         if (profile.education.isNotEmpty) ...[
                           UserEducations(
                             profile: profile,
