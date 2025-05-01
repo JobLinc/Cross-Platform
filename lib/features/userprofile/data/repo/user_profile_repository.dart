@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
@@ -108,9 +109,33 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> addEducation(Education education) async {
+    try {
+      return await addApiService.addEducation(education);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteEducation(String educationId) async {
+    try {
+      return await addApiService.deleteEducation(educationId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> editCertification(Certification certification) async {
     try {
       return await addApiService.editCertification(certification);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editEducation(Education education) async {
+    try {
+      return await addApiService.editEducation(education);
     } catch (e) {
       rethrow;
     }
@@ -229,6 +254,18 @@ class UserProfileRepository {
       return await othersApiService.getPublicUserProfile(userId);
     } catch (e) {
       print(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<Education>> getUserEducations() async {
+    try {
+      final educations = await addApiService.getUserEducations();
+
+      return educations
+          .map((e) => Education.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
       rethrow;
     }
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 
@@ -49,6 +50,66 @@ class addService {
     }
   }
 
+  Future<Response> addEducation(Education education) async {
+    try {
+      Response response = await dio.post(
+        '/user/education/add',
+        data: education.toJson(),
+      );
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> deleteEducation(String educationId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/education/$educationId',
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> editEducation(Education education) async {
+    try {
+      Response response = await dio.put(
+        '/user/education/${education.educationId}',
+        data: education.toJson(),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
   Future<Response> editCertification(Certification certification) async {
     try {
       Response response = await dio.put(
@@ -67,6 +128,16 @@ class addService {
       } else {
         throw Exception("Error : ${e.toString()}");
       }
+    }
+  }
+
+  Future<List<dynamic>> getUserEducations() async {
+    try {
+      final response = await dio.get('/user/education');
+      return response.data;
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data['message'] ?? 'Failed to fetch education.');
     }
   }
 

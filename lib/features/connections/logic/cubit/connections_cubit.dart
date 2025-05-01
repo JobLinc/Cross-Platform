@@ -70,7 +70,7 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't remove connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }
@@ -97,7 +97,7 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't block connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }

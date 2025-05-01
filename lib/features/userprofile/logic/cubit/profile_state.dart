@@ -59,6 +59,11 @@ class CertificateDeleted extends ProfileState {
 
   CertificateDeleted(this.message);
 }
+class EducationDeleted extends ProfileState {
+  final String message;
+
+  EducationDeleted(this.message);
+}
 
 class AddingSkill extends ProfileState {
   final String message;
@@ -124,6 +129,17 @@ class CertificateFailed extends ProfileState {
 
 //   ExperienceUpdated(this.message);
 // }
+class EducationAdded extends ProfileState {
+  final String message;
+
+  EducationAdded(this.message);
+}
+
+class EducationFailed extends ProfileState {
+  final String message;
+
+  EducationFailed(this.message);
+}
 
 class ExperienceDeleted extends ProfileState {
   final String message;

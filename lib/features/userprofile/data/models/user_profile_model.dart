@@ -1,4 +1,5 @@
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/resume_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -206,45 +207,45 @@ class UserProfile {
 //   }
 // }
 
-class Education {
-  final String educationId;
-  final String school;
-  final String degree;
-  final String fieldOfStudy;
-  final int startYear;
-  final int? endYear;
+// class Education {
+//   final String educationId;
+//   final String school;
+//   final String degree;
+//   final String fieldOfStudy;
+//   final int startYear;
+//   final int? endYear;
 
-  Education({
-    required this.educationId,
-    required this.school,
-    required this.degree,
-    required this.fieldOfStudy,
-    required this.startYear,
-    this.endYear,
-  });
+//   Education({
+//     required this.educationId,
+//     required this.school,
+//     required this.degree,
+//     required this.fieldOfStudy,
+//     required this.startYear,
+//     this.endYear,
+//   });
 
-  factory Education.fromJson(Map<String, dynamic> json) {
-    return Education(
-      educationId: json['educationId'] ?? '',
-      school: json['school'] ?? '',
-      degree: json['degree'] ?? '',
-      fieldOfStudy: json['fieldOfStudy'] ?? '',
-      startYear: json['startYear'] ?? 0,
-      endYear: json['endYear'],
-    );
-  }
+//   factory Education.fromJson(Map<String, dynamic> json) {
+//     return Education(
+//       educationId: json['educationId'] ?? '',
+//       school: json['school'] ?? '',
+//       degree: json['degree'] ?? '',
+//       fieldOfStudy: json['fieldOfStudy'] ?? '',
+//       startYear: json['startYear'] ?? 0,
+//       endYear: json['endYear'],
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'educationId': educationId,
-      'school': school,
-      'degree': degree,
-      'fieldOfStudy': fieldOfStudy,
-      'startYear': startYear,
-      if (endYear != null) 'endYear': endYear,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'educationId': educationId,
+//       'school': school,
+//       'degree': degree,
+//       'fieldOfStudy': fieldOfStudy,
+//       'startYear': startYear,
+//       if (endYear != null) 'endYear': endYear,
+//     };
+//   }
+// }
 
 class Language {
   final String languageId;

@@ -52,9 +52,11 @@ import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_education_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
@@ -440,7 +442,13 @@ class AppRouter {
             ),
           ),
         );
-
+      case Routes.addEducationScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: AddEducationScreen(education: arguments as Education?),
+          ),
+        );
       case Routes.addExperienceScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
