@@ -179,7 +179,7 @@ class CompanyData extends StatelessWidget {
                     ),
                     Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
                     Text(
-                      "37M followers", // TODO: Replace with actual followers
+                      company.followers.toString(), // TODO: Replace with actual followers
                       style: TextStyle(
                           fontSize: 16.sp, color: Colors.grey.shade600),
                     ),

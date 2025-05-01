@@ -348,6 +348,27 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   }
   // }
 
+  void editExperience(ExperienceModel experience) async {
+    try {
+      emit(ProfileUpdating("Editing Experience"));
+      final response = await _profileRepository.editExperience(experience);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+        emit(ExperienceAdded("Experience Updated"));
+      } else {
+        if (!isClosed) {
+          emit(ExperienceFailed('Failed to Edit experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ExperienceFailed('Error: $e'));
+      }
+    }
+  }
+  
   void deleteExperience(String position) async {
     try {
       print("hello");

@@ -14,6 +14,7 @@ import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
+// ignore: must_be_immutable
 class UserAddExperienceScreen extends StatefulWidget {
   ExperienceResponse? experience;
 
@@ -60,6 +61,51 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
     endDateController = TextEditingController();
     descriptionController = TextEditingController();
     getCompanies();
+
+    if (widget.experience != null) {
+      print('Experience ID: ${widget.experience!.id}');
+      print('Experience Company ID: ${widget.experience!.company.id}');
+      print('Experience Company Name: ${widget.experience!.company.name}');
+      print('Experience Position: ${widget.experience!.position}');
+      print('Experience Start Date: ${widget.experience!.startDate}');
+      print('Experience End Date: ${widget.experience!.endDate}');
+      print('Experience Description: ${widget.experience!.description}');
+      print('Experience Mode: ${widget.experience!.mode}');
+      print('Experience Type: ${widget.experience!.type}');
+
+      experienceNameController.text = widget.experience!.position;
+      startDateController.text =
+          DateFormat('MMMM yyyy').format(widget.experience!.startDate);
+      selectedstartDate = widget.experience!.startDate;
+      if (widget.experience!.endDate != 'Present' &&
+          DateTime.tryParse(widget.experience!.endDate) != null &&
+          DateTime.parse(widget.experience!.endDate).isBefore(DateTime.now())) {
+        selectedendDate = DateTime.parse(widget.experience!.endDate);
+        endDateController.text =
+            DateFormat('MMMM yyyy').format(selectedendDate!);
+      } else {
+        endDateController.text = 'Present';
+        isStillWorking = true;
+      }
+      descriptionController.text = widget.experience!.description;
+      selectedMode = widget.experience!.mode;
+      selectedType = widget.experience!.type;
+      // Set company dropdown or organizationController based on company id
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final expCompanyId = widget.experience!.company.id;
+        if (expCompanyId == '') {
+          setState(() {
+            selectedCompanyId = null;
+            organizationController.text = widget.experience!.company.name;
+          });
+        } else {
+          setState(() {
+            selectedCompanyId = expCompanyId;
+            organizationController.text = '';
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -77,8 +123,10 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now().add(Duration(days: 365 * 10)),
+      firstDate: DateTime(1990),
+      lastDate: isstartDate
+          ? DateTime.now().add(Duration(days: 365 * 10))
+          : DateTime.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -196,8 +244,12 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
         );
         print(
             'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
-        print(context.read<ProfileCubit>());
-        context.read<ProfileCubit>().addExperience(experienceToAdd);
+        if (widget.experience == null) {
+          context.read<ProfileCubit>().addExperience(experienceToAdd);
+        } else {
+          experienceToAdd.experienceId = widget.experience!.id;
+          context.read<ProfileCubit>().editExperience(experienceToAdd);
+        }
       } else {
         final ExperienceModel experienceToAdd = ExperienceModel(
           position: experienceNameController.text,
@@ -215,8 +267,13 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
         print(
             'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
         print(context.read<ProfileCubit>());
-
-        context.read<ProfileCubit>().addExperience(experienceToAdd);
+        if (widget.experience == null) {
+          context.read<ProfileCubit>().addExperience(experienceToAdd);
+        } else {
+          experienceToAdd.experienceId = widget.experience!.id;
+          context.read<ProfileCubit>().editExperience(experienceToAdd);
+        }
+        
       }
     }
   }

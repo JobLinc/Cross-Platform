@@ -1,5 +1,7 @@
+import 'package:joblinc/features/companypages/data/data/models/getmycompany_response.dart';
+
 class ExperienceModel {
-  final String experienceId;
+  String experienceId;
   String? companyId;
   String? company;
   final String position;
@@ -37,7 +39,7 @@ class ExperienceModel {
 
 class ExperienceResponse {
   final String id;
-  final CompanyInfo company;
+  final CompanyResponse company;
   final String position;
   final DateTime startDate;
   final String endDate;
@@ -59,7 +61,7 @@ class ExperienceResponse {
   factory ExperienceResponse.fromJson(Map<String, dynamic> json) {
     return ExperienceResponse(
       id: json['id'] ?? '',
-      company: CompanyInfo.fromJson(json['company'] as Map<String, dynamic>),
+      company: CompanyResponse.fromJson(json['company'] as Map<String, dynamic>),
       position: json['position'] ?? '',
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: json['endDate'] ?? '',

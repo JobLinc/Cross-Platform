@@ -101,12 +101,13 @@ class UserExperiences extends StatelessWidget {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (experience.company.logo.isNotEmpty)
+                              if (experience.company.logo != null &&
+                                  experience.company.logo!.isNotEmpty)
                                 Padding(
                                   padding:
                                       EdgeInsets.only(right: 8.w, top: 2.h),
                                   child: Image.network(
-                                    experience.company.logo,
+                                    experience.company.logo!,
                                     width: 40.w,
                                     height: 40.w,
                                     fit: BoxFit.cover,
@@ -145,6 +146,15 @@ class UserExperiences extends StatelessWidget {
                                           ),
                                         ),
                                         if (isuser) ...[
+                                          IconButton(
+                                              onPressed: () async {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  Routes.addExperienceScreen,
+                                                  arguments: experience,
+                                                );
+                                              },
+                                              icon: Icon(Icons.edit)),
                                           IconButton(
                                             icon: Icon(
                                               Icons.delete,
