@@ -3,12 +3,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_thumbnail_video/index.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/services/chat_socket_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/video_player_screen.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
+
 
 class MediaDisplayer extends StatefulWidget {
   final String chatId;
