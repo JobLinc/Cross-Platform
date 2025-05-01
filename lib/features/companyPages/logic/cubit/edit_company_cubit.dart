@@ -53,4 +53,31 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       emit(EditCompanyFailure('Error: $e'));
     }
   }
+   Future<Company?> uploadCompanyCover(File imageFile) async {
+    try {
+      emit(EditCompanyInitial());
+      final companyResponse = await _companyRepo.uploadCompanyCover(imageFile);
+      emit(EditCompanySuccess());
+      return Company(
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry:
+            IndustryExtension.fromDisplayName(companyResponse.industry) ??
+                Industry.technology,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
+                OrganizationType.governmentAgency,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        id: companyResponse.id,
+        followers: companyResponse.followers!,
+      );
+    } catch (e) {
+      emit(EditCompanyFailure('Error: $e'));
+    }
+  }
 }

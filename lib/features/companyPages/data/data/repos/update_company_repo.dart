@@ -24,4 +24,12 @@ class UpdateCompanyRepo {
       rethrow;
     }
   }
+   Future<CompanyResponse> uploadCompanyCover(File imageFile) async {
+    try {
+      final company = await apiService.uploadCompanyCover(imageFile);
+      return CompanyResponse.fromJson(company as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
