@@ -11,6 +11,12 @@ import 'package:joblinc/features/companypages/ui/widgets/form/industry_comboBox.
 import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textField.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
+import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companypages/ui/widgets/edit_button.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/industry_comboBox.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textField.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import '../widgets/square_avatar.dart';

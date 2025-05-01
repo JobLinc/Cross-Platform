@@ -14,9 +14,10 @@ import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubi
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
 import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
-import 'package:joblinc/features/chat/ui/screens/create_chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
@@ -143,8 +144,13 @@ class AppRouter {
           );
         }
 
-      // case Routes.chatScreen:
-      //   return MaterialPageRoute(builder: (context) => ChatScreen());
+      case Routes.chatScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => getIt<ChatListCubit>(),
+                child: ChatScreen(
+                  chatId: arguments as String,
+                )));
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

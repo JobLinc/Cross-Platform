@@ -200,10 +200,10 @@ class Participant {
 
 class MessageContent {
   final String text;
-  final String image;
-  final String video;
-  final String audio;
-  final String document;
+  String image;
+  String video;
+  String audio;
+  String document;
 
   MessageContent({
     this.text = "",

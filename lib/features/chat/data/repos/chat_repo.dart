@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
@@ -11,11 +13,21 @@ class ChatRepo {
 
   ChatRepo(this._chatApiService);
 
-  Future<List<Chat>>? getAllChats() async {
+  Future<Chat>? getChatById(String chatId) async {
     final response = await _chatApiService.getAllChats();
-    final List<Chat> chats = (response.data as List)
-        .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
-        .toList();
+        final List<Chat> chats = (response.data["chats"] as List)
+      .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
+      .toList();
+    final chat = chats.firstWhere((chat) => chat.chatId == chatId);
+      return chat;
+
+  }
+
+  Future<List<Chat>>? getAllChats() async {
+    final response = await _chatApiService.getAllChats() ; 
+    final List<Chat> chats = (response.data["chats"] as List)
+      .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
+      .toList();
     print(chats);
     return chats;
   }
@@ -57,24 +69,5 @@ class ChatRepo {
     await _chatApiService.markReadOrUnread(chatId: chatId);
     // Optionally, process response if needed
   }
-
-  /// Fetches the list of connections.
-  Future<List<UserConnection>> getConnections() async {
-    print('[ChatRepo] Fetching connections...');
-    final response = await _chatApiService.getConnections();
-    print('[ChatRepo] Raw response data: ${response.data}');
-    try {
-      final List<UserConnection> connections = (response.data as List)
-          .map((json) {
-            print('[ChatRepo] Mapping connection: $json');
-            return UserConnection.fromJson(json as Map<String, dynamic>);
-          })
-          .toList();
-      print('[ChatRepo] Mapped connections: $connections');
-      return connections;
-    } catch (e, stack) {
-      print('[ChatRepo] Error mapping connections: $e\n$stack');
-      rethrow;
-    }
-  }
 }
+
