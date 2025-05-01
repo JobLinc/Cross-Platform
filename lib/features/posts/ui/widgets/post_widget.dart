@@ -135,8 +135,11 @@ class PostContent extends StatelessWidget {
             ),
           ),
         ),
-        PostBody(
-          text: data.text,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: PostBody(
+            text: data.text,
+          ),
         ),
         data.repost == null
             ? (data.attachmentURLs.isNotEmpty
