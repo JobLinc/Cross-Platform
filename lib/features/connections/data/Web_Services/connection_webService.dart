@@ -13,7 +13,7 @@ class UserConnectionsApiService {
       } else {
         throw Exception('Failed to load users');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -34,7 +34,7 @@ class UserConnectionsApiService {
       } else {
         throw Exception('Failed to load follows');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -55,7 +55,7 @@ class UserConnectionsApiService {
       } else {
         throw Exception('Failed to load follows');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -77,7 +77,7 @@ class UserConnectionsApiService {
         print("error ");
         throw Exception('Failed to load invitations');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -99,7 +99,7 @@ class UserConnectionsApiService {
         print("error ");
         throw Exception('Failed to load sent invitations');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -119,7 +119,7 @@ class UserConnectionsApiService {
         data: {'status': status},
       );
       return response;
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -133,14 +133,13 @@ class UserConnectionsApiService {
   }
 
   Future<Response> respondToConnection(String userId, String status) async {
-
     try {
       final response = await _dio.post(
         '/connection/$userId/respond',
         data: {'status': status},
       );
       return response;
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -159,7 +158,27 @@ class UserConnectionsApiService {
         '/connection/$userId',
       );
       return response;
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> createchat(String userId) async {
+    try {
+      print(userId);
+      final response = await _dio.post('/chat/create', data: {
+        "receiverIds": [userId]
+      });
+      return response;
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -197,7 +216,7 @@ class UserConnectionsApiService {
         '/follow/$userId/unfollow',
       );
       return response;
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);
@@ -239,7 +258,7 @@ class UserConnectionsApiService {
       } else {
         throw Exception('Failed to load blocked users');
       }
-    }  on DioException catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
         print(errorData);

@@ -164,6 +164,15 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
     }
   }
 
+  Future<String?> createchat(String userId) async {
+    try {
+      return await connectionsRepository.createchat(userId);
+    } catch (e) {
+      emit(ConnectionsError("error : ${e.toString()}"));
+     
+    }
+  }
+
   List<UserConnection> SortingData() {
     List<UserConnection> data = connections;
     if (firstNameSelected == false && lastNameSelected == false) {

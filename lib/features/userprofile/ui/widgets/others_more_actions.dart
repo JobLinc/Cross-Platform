@@ -24,7 +24,7 @@ void showModalBasedOnConnectionStatus(
     case 'Blocked':
       //showBlockedModal(context); // (You can design this — maybe only unblock?)
       break;
-    case 'Not Connected':
+    case 'Not Connected' || 'NotConnected':
       showSentModal(context, cubit, userId,
           isFollowing); // (Maybe a simple connect button)
       break;

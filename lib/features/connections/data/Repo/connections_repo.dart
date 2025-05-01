@@ -119,4 +119,15 @@ class UserConnectionsRepository {
       rethrow;
     }
   }
+
+  Future<String> createchat(String userId) async {
+    try {
+      print("REPOOOOOOOOOOOOOOOOOOOO");
+      final response = await _apiService.createchat(userId);
+      print("${response.data["chatId"]}");
+      return response.data["chatId"];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

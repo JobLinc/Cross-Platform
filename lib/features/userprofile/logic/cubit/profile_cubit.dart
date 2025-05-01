@@ -688,4 +688,13 @@ void editEducation(Education education) async {
       }
     }
   }
+    Future<String?> createchat(String userId) async {
+    try {
+      return await connectionsRepository.createchat(userId);
+    } catch (e) {
+      emit(EducationFailed("error : ${e.toString()}"));
+     
+    }
+  }
+
 }
