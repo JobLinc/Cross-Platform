@@ -27,28 +27,28 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
   }
 
   Future<Company?> uploadCompanyLogo(File imageFile) async {
-    // UserProfileUpdateModel updateData =
-    //     UserProfileUpdateModel(profilePicture: imageFile.path);
     try {
-      // Call the repository to upload the image
       emit(EditCompanyInitial());
       final companyResponse = await _companyRepo.uploadCompanyLogo(imageFile);
+      emit(EditCompanySuccess());
       return Company(
-          name: companyResponse.name,
-          profileUrl: companyResponse.urlSlug,
-          industry:
-              IndustryExtension.fromDisplayName(companyResponse.industry) ??
-                  Industry.technology,
-          organizationSize:
-              OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
-                  OrganizationSize.elevenToFifty,
-          organizationType:
-              OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
-                  OrganizationType.governmentAgency,
-          overview: companyResponse.overview,
-          website: companyResponse.website,
-          logoUrl: companyResponse.logo,
-          id: companyResponse.id);
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry:
+            IndustryExtension.fromDisplayName(companyResponse.industry) ??
+                Industry.technology,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
+                OrganizationType.governmentAgency,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        id: companyResponse.id,
+        followers: companyResponse.followers!,
+      );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
     }

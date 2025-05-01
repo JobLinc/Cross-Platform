@@ -112,22 +112,35 @@ class CompanyImages extends StatelessWidget {
                                           if (image == null) {
                                             return;
                                           }
+
                                           if (iscover) {
                                           } else {
-                                            context
+                                            Company? apiCompany = await context
                                                 .read<EditCompanyCubit>()
                                                 .uploadCompanyLogo(image);
+
+                                            Navigator.pop(
+                                                bottomSheetContext); // Close the bottom sheet
+                                            int count = 0;
+                                            if (apiCompany != null) {
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                Routes.companyPageHome,
+                                                arguments: {
+                                                  'company': apiCompany,
+                                                  'isAdmin': true
+                                                },
+                                                (route) => count++ >= 2,
+                                              );
+                                            } else {
+                                              CustomSnackBar.show(
+                                                  context: context,
+                                                  message:
+                                                      'Error uploading image',
+                                                  type: SnackBarType.error);
+                                            }
                                           }
 
-                                          Navigator.pop(
-                                              bottomSheetContext); // Close the bottom sheet
-                                          int count = 0;
-                                          company.logoUrl = image.path;
-                                          Navigator.of(context)
-                                              .pushNamedAndRemoveUntil(
-                                            Routes.profileScreen,
-                                            (route) => count++ >= 2,
-                                          );
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
