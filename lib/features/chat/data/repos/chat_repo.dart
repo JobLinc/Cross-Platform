@@ -69,5 +69,29 @@ class ChatRepo {
     await _chatApiService.markReadOrUnread(chatId: chatId);
     // Optionally, process response if needed
   }
-}
 
+    Future<String> uploadMedia(File file) async {
+    return await _chatApiService.uploadMedia(file);
+  }
+
+
+  /// Fetches the list of connections.
+  Future<List<UserConnection>> getConnections() async {
+    print('[ChatRepo] Fetching connections...');
+    final response = await _chatApiService.getConnections();
+    print('[ChatRepo] Raw response data: ${response.data}');
+    try {
+      final List<UserConnection> connections = (response.data as List)
+          .map((json) {
+            print('[ChatRepo] Mapping connection: $json');
+            return UserConnection.fromJson(json as Map<String, dynamic>);
+          })
+          .toList();
+      print('[ChatRepo] Mapped connections: $connections');
+      return connections;
+    } catch (e, stack) {
+      print('[ChatRepo] Error mapping connections: $e\n$stack');
+      rethrow;
+    }
+  }
+}

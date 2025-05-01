@@ -136,7 +136,7 @@ class ChatApiService {
   Future<void> markReadOrUnread({required String chatId}) async {
     try {
       print("api marking");
-      final response =await _dio.put('/chat/readOrUnread', data: {
+      final response = await _dio.put('/chat/readOrUnread', data: {
         "chatId": chatId,
       });
       print(response);
@@ -185,11 +185,6 @@ class ChatApiService {
             'application', 'octet-stream'); // Fallback for unsupported types
     }
   }
-}
-
-
-
-
 
   Future<Response> getConnections() async {
     print('[ChatApiService] Calling /connection/connected...');
