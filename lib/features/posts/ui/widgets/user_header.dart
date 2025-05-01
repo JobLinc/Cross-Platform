@@ -29,7 +29,8 @@ class UserHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, Routes.profileScreen),
+      onTap: () => Navigator.pushNamed(context, Routes.otherProfileScreen,
+          arguments: senderID),
       child: Row(
         spacing: 8,
         key: Key('post_header_container'),
