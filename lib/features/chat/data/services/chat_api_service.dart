@@ -168,6 +168,7 @@ class ChatApiService {
       throw Exception("Failed to fetch connections for the user: $e");
     }
   }
+  
 
   Future<String> uploadMedia(File file) async {
     try {
@@ -210,23 +211,7 @@ class ChatApiService {
     }
   }
 
-  Future<Response> getConnections() async {
-    print('[ChatApiService] Calling /connection/connected...');
-    try {
-      final response = await _dio.get('/connection/connected');
-      print('[ChatApiService] Response: $response');
-      if (response.statusCode != 200) {
-        print('[ChatApiService] Non-200 status code: ${response.statusCode}');
-        throw Exception("Failed to fetch connections");
-      }
-      // Debug: print response data
-      print('[ChatApiService] Response data: ${response.data}');
-      return response;
-    } catch (e, stack) {
-      print('[ChatApiService] Error fetching connections: $e\n$stack');
-      throw Exception("Failed to fetch connections for the user: $e");
-    }
-  }
+
 }
 
 //   Future<List<dynamic>> getAllChats() async {
