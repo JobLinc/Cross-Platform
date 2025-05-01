@@ -4,12 +4,13 @@ class Chat {
   final String chatId;
   final String chatName;
   final List<String>? chatPicture;
-  final String lastMessage;
-  final String senderName;
-  final DateTime sentDate; // Unix timestamp in seconds
-  final int unreadCount;
+  String? lastMessage;
+  String? senderName;
+  DateTime? sentDate; // Unix timestamp in seconds
+  int? unreadCount;
   final bool isRead;
   late String time;
+  bool? isTyping; // Default value for isTyping
 
   Chat({
     required this.chatId,
@@ -20,7 +21,9 @@ class Chat {
     required this.sentDate,
     required this.unreadCount,
     required this.isRead,
-  }){time = formatDynamicTime(sentDate);}
+  }){time = formatDynamicTime(sentDate!);
+    isTyping = false; // Initialize isTyping to false by default
+  }
 
   factory Chat.fromJson(Map<String, dynamic> json) {
      // the placeholder path to look for
@@ -47,7 +50,7 @@ class Chat {
     chatName: json['chatName'] as String,
     chatPicture: pics,                              // never null
     lastMessage: json['lastMessage'] as String,
-    senderName: json['senderName'] as String,
+    senderName: json['senderName'] ?? "",
     sentDate: DateTime.parse(json['sentDate']),
     unreadCount: json['unreadCount'] as int,
     isRead: json['isRead'] as bool,
@@ -72,6 +75,7 @@ class Chat {
 
 
   String formatDynamicTime(DateTime dateTime) {
+    dateTime= dateTime.toLocal();
     DateTime now = DateTime.now();
     DateTime yesterday = now.subtract(Duration(days: 1));
 

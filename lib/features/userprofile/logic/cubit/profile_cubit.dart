@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
-import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
@@ -181,6 +181,77 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (!isClosed) {
         print("hello I am inside");
         emit(CertificateFailed('Error: $e'));
+      }
+    }
+  }
+
+  Future<void> addEducation(Education education) async {
+    // UserProfileUpdateModel updateData =
+    //     UserProfileUpdateModel(profilePicture: imageFile.path);
+    try {
+      // Call the repository to upload the image
+      emit(ProfileUpdating("Profile Picture"));
+      final response = await _profileRepository.addEducation(education);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
+        updateUserProfile(picModel);
+        emit(EducationAdded("Education Added Successfully"));
+      } else {
+        if (!isClosed) {
+          print("hello I am out");
+          emit(EducationFailed('Failed to add Education as it already exists'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("hello I am inside");
+        emit(EducationFailed('Error: $e'));
+      }
+    }
+  }
+void editEducation(Education education) async {
+    try {
+      emit(ProfileUpdating("Editing Education"));
+      final response =
+          await _profileRepository.editEducation(education);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel skillModel = UserProfileUpdateModel();
+        updateUserProfile(skillModel);
+        emit(EducationAdded("Education Updated Successfully"));
+      } else {
+        if (!isClosed) {
+          emit(EducationFailed('Failed to Edit Education.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(EducationFailed('Error : ${e.toString()}'));
+      }
+    }
+  }
+  Future<void> deleteEducation(String educationId) async {
+    try {
+      final response = await _profileRepository.deleteEducation(educationId);
+
+      if (response.statusCode == 200) {
+        // Optionally update profile or UI after deletion
+        emit(EducationDeleted("Education Deleted succefully"));
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
+        updateUserProfile(picModel);
+
+        // getUserProfile();
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(EducationFailed('Failed to delete certificate.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(EducationFailed('Error: $e'));
       }
     }
   }
@@ -439,6 +510,15 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<List<Education>?> getuserEducations() async {
+    try {
+      return await _profileRepository.getUserEducations();
+    } catch (e) {
+      ProfileError(e.toString());
+    }
+    return null;
+  }
+
   ///////////////////////////////////OTHERS//////////////////////////
   Future<void> getPublicUserProfile(String userId) async {
     emit(ProfileLoading());
@@ -650,4 +730,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
+    Future<String?> createchat(String userId) async {
+    try {
+      return await connectionsRepository.createchat(userId);
+    } catch (e) {
+      emit(EducationFailed("error : ${e.toString()}"));
+     
+    }
+  }
+
 }

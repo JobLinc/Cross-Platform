@@ -13,6 +13,17 @@ class ChatRepo {
 
   ChatRepo(this._chatApiService);
 
+  Future<Chat>? getChatById(String chatId) async {
+    final response = await _chatApiService.getChatById(chatId);
+      //   final List<Chat> chats = (response.data["chats"] as List)
+      // .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
+      // .toList();
+    //final chat = chats.firstWhere((chat) => chat.chatId == chatId);
+   final chat = Chat.fromJson(response.data  as Map<String, dynamic>);
+    return chat;
+
+  }
+
   Future<List<Chat>>? getAllChats() async {
     final response = await _chatApiService.getAllChats() ; 
     final List<Chat> chats = (response.data["chats"] as List)

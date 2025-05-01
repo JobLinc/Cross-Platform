@@ -37,6 +37,7 @@ class OthersConnectionList extends StatelessWidget {
                     return Column(
                       key: Key("ConnectionListbody"),
                       children: [
+                        connection_Buttons(connections: connections),
                         Expanded(
                             child: ConnectionsListView(
                           key: Key("the List of connections"),
@@ -49,8 +50,7 @@ class OthersConnectionList extends StatelessWidget {
                     return Text(state.error);
                   } else if (state is ConnectionsInitial) {
                     return const Center(child: CircularProgressIndicator());
-                  } else 
-                  {
+                  } else {
                     return const Center(child: CircularProgressIndicator());
                   }
                 }));

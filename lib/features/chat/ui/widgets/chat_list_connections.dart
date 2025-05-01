@@ -197,14 +197,15 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
 
                                         scaffoldMessenger.hideCurrentSnackBar();
 
-                                        Navigator.push(
+                                        Navigator.pushNamed(
                                           context,
-                                          MaterialPageRoute(
-                                            builder: (_) => BlocProvider.value(
-                                              value: context.read<ChatListCubit>(),
-                                              child: ChatScreen(chat: chat),
-                                            ),
-                                          ),
+                                          // MaterialPageRoute(
+                                          //   builder: (_) => BlocProvider.value(
+                                          //     value: context.read<ChatListCubit>(),
+                                          //     child: ChatScreen(chatId: chat.chatId),
+                                          //   ),
+                                          // ),
+                                          Routes.chatScreen,arguments: chat.chatId
                                         );
                                       } catch (e) {
                                         scaffoldMessenger.hideCurrentSnackBar();

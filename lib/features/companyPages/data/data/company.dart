@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/features/companypages/data/data/models/location_model.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
-
-import 'services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 
 enum Industry {
   itServices,
@@ -210,7 +209,7 @@ class Company {
     this.locations,
   });
 
-  Future<bool> isAdmin() async{
+  Future<bool> isAdmin() async {
     final companies = await CompanyRepositoryImpl(
       CompanyApiService(getIt<Dio>()),
     ).getAllCompanies();

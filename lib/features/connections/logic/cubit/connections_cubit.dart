@@ -70,7 +70,7 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't remove connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }
@@ -97,15 +97,9 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't block connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
-    }
-  }
-
-  void Searchclicked() {
-    if (state != SearchState()) {
-      emit(SearchState());
     }
   }
 
@@ -161,6 +155,15 @@ class ConnectionsCubit extends Cubit<ConnectionsState> {
       if (!isClosed) {
         emit(ConnectionsError("An error occurred: $error"));
       }
+    }
+  }
+
+  Future<String?> createchat(String userId) async {
+    try {
+      return await connectionsRepository.createchat(userId);
+    } catch (e) {
+      emit(ConnectionsError("error : ${e.toString()}"));
+     
     }
   }
 

@@ -188,15 +188,16 @@ class _GroupChatConnectionsListViewState
 
                         scaffoldMessenger.hideCurrentSnackBar();
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => BlocProvider.value(
-                              value: context.read<ChatListCubit>(),
-                              child: ChatScreen(chat: chat),
-                            ),
-                          ),
-                        );
+                        Navigator.pushNamed(
+                            context,
+                            // MaterialPageRoute(
+                            //   builder: (_) => BlocProvider.value(
+                            //     value: context.read<ChatListCubit>(),
+                            //     child: ChatScreen(chat: chat),
+                            //   ),
+                            // ),
+                            Routes.chatScreen,
+                            arguments: chat.chatId);
                       } catch (e) {
                         scaffoldMessenger.hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(

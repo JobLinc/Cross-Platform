@@ -11,11 +11,43 @@ class ChatApiService {
     print('[ChatApiService] Dio baseUrl: ${_dio.options.baseUrl}');
   }
 
+  // Future<Response> getChatById(String chatId) async {
+  //   try {
+  //     final response = await _dio.get('/chat/all');
+  //     print("all chat response ${response}");
+  //     return response;
+  //   } catch (e) {
+  //     throw Exception("Failed to fetch chats: $e");
+  //   }
+  // }
+
+  Future<Response> getChatById(String chatId) async {
+    if (apiEndPointFunctional) {
+      try {
+        final response = await _dio.get('/chat/chat-card/$chatId');
+        print("123232 $response");
+        return response;
+      } catch (e) {
+        throw Exception("Failed to fetch chat details: $e");
+      }
+    } else {
+      await Future.delayed(Duration(seconds: 1));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      //print(response);
+      return response;
+    }
+  } 
+
   Future<Response> getAllChats() async {
     if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/all');
-        print("all chat response ${response}" );
+        print("all chat response ${response}");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -24,7 +56,7 @@ class ChatApiService {
       await Future.delayed(Duration(seconds: 1));
       final response = Response<dynamic>(
         requestOptions: RequestOptions(path: ''),
-        data: [],//mockChats.map((job) => job.toJson()).toList(),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
         statusCode: 200,
         statusMessage: 'OK',
       );
@@ -88,11 +120,11 @@ class ChatApiService {
         throw Exception("Failed to open chat: $e");
       }
     } else {
-        final response = Response<dynamic>(
-          requestOptions: RequestOptions(path: ''),
-          data: [],//mockChats.map((job) => job.toJson()).toList(),
-          statusCode: 200,
-          statusMessage: 'OK',
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
       );
       return response;
     }
@@ -131,9 +163,11 @@ class ChatApiService {
   /// Mark a chat as read/unread for a user
   Future<void> markReadOrUnread({required String chatId}) async {
     try {
-      await _dio.put('/chat/readOrUnread', data: {
+      print("api marking");
+      final response = await _dio.put('/chat/readOrUnread', data: {
         "chatId": chatId,
       });
+      print(response);
     } catch (e) {
       throw Exception("Failed to mark chat: $e");
     }
@@ -156,6 +190,7 @@ class ChatApiService {
       throw Exception("Failed to fetch connections for the user: $e");
     }
   }
+  
 
   Future<String> uploadMedia(File file) async {
     try {
@@ -197,9 +232,9 @@ class ChatApiService {
             'application', 'octet-stream'); // Fallback for unsupported types
     }
   }
+
+
 }
-
-
 
 //   Future<List<dynamic>> getAllChats() async {
 //   try {
