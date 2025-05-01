@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/features/companypages/data/data/models/location_model.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 
 import 'services/getmycompany.dart';
@@ -189,6 +190,7 @@ class Company {
   OrganizationType organizationType;
   int followers = 0;
   bool isVerified = true;
+  List <CompanyLocationModel>? locations;
 
   Company({
     required this.name,
@@ -205,7 +207,7 @@ class Company {
     this.logoUrl,
     this.coverUrl,
     this.followers = 0,
-    this.location,
+    this.locations,
   });
 
   Future<bool> isAdmin() async{
@@ -239,7 +241,7 @@ List<Company> mockCompanies = [
     website: "https://www.microsoft.com",
     tagline:
         "Empowering every person and every organization on the planet to achieve more.",
-    location: "Redmond, Washington",
+    // location: "Redmond, Washington",
   ),
   Company(
     name: "Google",
@@ -256,7 +258,7 @@ List<Company> mockCompanies = [
     website: "https://google.com",
     tagline:
         "To organize the world's information and make it universally accessible and useful.",
-    location: "Mountain View, California",
+    // location: "Mountain View, California",
   ),
   Company(
     name: "Apple",
@@ -271,7 +273,7 @@ List<Company> mockCompanies = [
     followers: 22000000,
     website: "https://www.apple.com",
     tagline: "Think different.",
-    location: "Cupertino, California",
+    // location: "Cupertino, California",
   ),
   Company(
     name: "Amazon",
@@ -287,7 +289,7 @@ List<Company> mockCompanies = [
     followers: 18000000,
     website: "https://www.amazon.com",
     tagline: "Work hard. Have fun. Make history.",
-    location: "Seattle, Washington",
+    // location: "Seattle, Washington",
   ),
   Company(
     name: "Tesla",
@@ -303,7 +305,7 @@ List<Company> mockCompanies = [
     followers: 12000000,
     website: "https://www.tesla.com",
     tagline: "Accelerating the world's transition to sustainable energy.",
-    location: "Palo Alto, California",
+    // location: "Palo Alto, California",
   ),
   Company(
     name: "Netflix",
@@ -319,7 +321,7 @@ List<Company> mockCompanies = [
     followers: 10000000,
     website: "https://www.netflix.com",
     tagline: "See what's next.",
-    location: "Los Gatos, California",
+    // location: "Los Gatos, California",
   ),
   Company(
     name: "Uber",
@@ -335,6 +337,6 @@ List<Company> mockCompanies = [
     followers: 8000000,
     website: "https://www.uber.com",
     tagline: "We ignite opportunity by setting the world in motion.",
-    location: "San Francisco, California",
+    // location: "San Francisco, California",
   ),
 ];

@@ -1,3 +1,5 @@
+import 'package:joblinc/features/companypages/data/data/models/location_model.dart';
+
 import '../company.dart';
 
 List<Company> allCompanies = [];
@@ -15,6 +17,7 @@ class CompanyResponse {
   final int? followers;
   final int? employees;
   final String? createdAt;
+  final List <CompanyLocationModel>? locations;
 
   CompanyResponse({
     required this.id,
@@ -29,6 +32,7 @@ class CompanyResponse {
     this.followers,
     this.employees,
     this.createdAt,
+    this.locations,
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,9 @@ class CompanyResponse {
       followers: json['followers'],
       employees: json['employees'],
       createdAt: json['createdAt'],
+      locations: (json['locations'] as List<dynamic>?)
+          ?.map((e) => CompanyLocationModel.fromJson(e))
+          .toList(),
     );
   }
 }

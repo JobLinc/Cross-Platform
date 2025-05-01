@@ -124,6 +124,7 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1990),
+      
       lastDate: DateTime.now(), // Only allow past or today for both start and end date
       builder: (context, child) {
         return Theme(
