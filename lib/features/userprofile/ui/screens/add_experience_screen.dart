@@ -1,14 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserAddExperienceScreen extends StatefulWidget {
+  ExperienceResponse? experience;
+
   @override
+  UserAddExperienceScreen({this.experience});
   _UserAddExperienceScreenState createState() =>
       _UserAddExperienceScreenState();
 }
@@ -19,11 +29,27 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
   late TextEditingController startDateController;
   late TextEditingController endDateController;
   late TextEditingController descriptionController;
+  String? selectedCompanyId;
+  String? selectedMode;
+  String? selectedType;
+  late TextEditingController companyNameController;
 
   DateTime? selectedstartDate;
   DateTime? selectedendDate;
 
+  List<String> modes = ["OnSite", "Remote", "Hybrid"];
+  List<String> types = [
+    "Full-time",
+    "Part-time",
+    "Contract",
+    "Temporary",
+    "Volunteer",
+    "Internship"
+  ];
+  List<Company> companiesList = [];
+
   final _formKey = GlobalKey<FormState>();
+  bool isStillWorking = false;
 
   @override
   void initState() {
@@ -33,6 +59,7 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
     startDateController = TextEditingController();
     endDateController = TextEditingController();
     descriptionController = TextEditingController();
+    getCompanies();
   }
 
   @override
@@ -103,32 +130,94 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
     return monthNames[month - 1];
   }
 
+  void getCompanies() async {
+    final companies = await CompanyRepositoryImpl(
+      CompanyApiService(getIt<Dio>()),
+    ).getAllCompanies();
+    setState(() {
+      companiesList = companies;
+    });
+  }
+
   void saveExperience() {
     if (_formKey.currentState!.validate()) {
       if (selectedstartDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please select a start date.'),
+            content: Text('Start date is required.'),
             backgroundColor: Colors.red,
           ),
         );
         return;
       }
 
-      final Experience experienceToAdd = Experience(
-        position: experienceNameController.text,
-        company: organizationController.text,
-        startDate: selectedstartDate!,
-        experienceId: '',
-        endDate: selectedendDate,
-        description: descriptionController.text,
-      );
+      if (!isStillWorking && selectedendDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'Please select an end date or tick that you are currently working in this role.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
 
-      print(
-          'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
-      print(context.read<ProfileCubit>().firstname);
+      if (selectedendDate != null &&
+          selectedstartDate!.isAfter(selectedendDate!)) {
+        CustomSnackBar.show(
+          context: context,
+          type: SnackBarType.error,
+          message: 'Start date cannot be after end date.',
+        );
+        return;
+      }
 
-      context.read<ProfileCubit>().addExperience(experienceToAdd);
+      if ((selectedCompanyId == null || selectedCompanyId!.isEmpty) &&
+          (organizationController.text.isEmpty)) {
+        CustomSnackBar.show(
+          context: context,
+          type: SnackBarType.error,
+          message: 'Please select a company or enter its name.',
+        );
+        return;
+      }
+      if (selectedCompanyId != null && selectedCompanyId!.isNotEmpty) {
+        final ExperienceModel experienceToAdd = ExperienceModel(
+          experienceId: '',
+          companyId: selectedCompanyId!,
+          position: experienceNameController.text,
+          startDate: selectedstartDate!,
+          endDate: selectedendDate == null
+              ? 'Present'
+              : DateFormat('yyyy-MM-dd').format(selectedendDate!),
+          description: descriptionController.text,
+          mode: selectedMode ?? '',
+          type: selectedType ?? '',
+        );
+        print(
+            'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
+        print(context.read<ProfileCubit>());
+        context.read<ProfileCubit>().addExperience(experienceToAdd);
+      } else {
+        final ExperienceModel experienceToAdd = ExperienceModel(
+          position: experienceNameController.text,
+          company: organizationController.text,
+          startDate: selectedstartDate!,
+          endDate: selectedendDate == null
+              ? 'Present'
+              : DateFormat('yyyy-MM-dd').format(selectedendDate!),
+          description: descriptionController.text,
+          mode: selectedMode ?? '',
+          type: selectedType ?? '',
+          experienceId: '',
+        );
+
+        print(
+            'Saving Experience with DateTime objects: start: $selectedstartDate, Expiry: $selectedendDate');
+        print(context.read<ProfileCubit>());
+
+        context.read<ProfileCubit>().addExperience(experienceToAdd);
+      }
     }
   }
 
@@ -168,11 +257,10 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
               Routes.profileScreen,
               (route) => count++ >= 2,
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Experience added successfully!'),
-                backgroundColor: Colors.green,
-              ),
+            CustomSnackBar.show(
+              context: context,
+              type: SnackBarType.success,
+              message: 'Experience added successfully.',
             );
           }
         },
@@ -219,22 +307,130 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
                       return null;
                     },
                   ),
+                  SizedBox(height: 30.h),
+                  DropdownButtonFormField<String>(
+                    key: Key('profileAddExperience_company_dropdown'),
+                    value: selectedCompanyId,
+                    items: companiesList
+                        .map((company) => DropdownMenuItem<String>(
+                              value: company.id,
+                              child: Text(company.name),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCompanyId = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Company',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 16.h),
                   CustomRectangularTextFormField(
-                    key: Key(
-                        'profileAddExperience_issuingOrganization_textField'),
+                    key: Key('profileAddExperience_organization_textField'),
                     controller: organizationController,
-                    labelText: 'Company or organization*',
-                    hintText: 'Ex: Microsoft',
-                    maxLength: 250,
+                    hintText: 'If the company is not listed, add it here',
+                    maxLength: 255,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Issuing Organization is required.';
+                      if ((value == null || value.isEmpty) &&
+                          (selectedCompanyId == null ||
+                              selectedCompanyId!.isEmpty)) {
+                        return 'Organization name is required.';
                       }
                       return null;
                     },
                   ),
+                  SizedBox(height: 25.h),
+                  DropdownButtonFormField<String>(
+                    key: Key('profileAddExperience_mode_dropdown'),
+                    value: selectedMode,
+                    items: modes
+                        .map((mode) => DropdownMenuItem<String>(
+                              value: mode,
+                              child: Text(mode),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMode = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Mode',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 16.h),
+                  DropdownButtonFormField<String>(
+                    key: Key('profileAddExperience_type_dropdown'),
+                    value: selectedType,
+                    items: types
+                        .map((type) => DropdownMenuItem<String>(
+                              value: type,
+                              child: Text(type),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedType = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Type',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[500]!),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isStillWorking,
+                        activeColor: Colors.red,
+                        onChanged: (value) {
+                          setState(() {
+                            isStillWorking = value!;
+                            if (isStillWorking) {
+                              selectedendDate = null;
+                              endDateController.text = 'Present';
+                            } else {
+                              endDateController.clear();
+                            }
+                          });
+                        },
+                      ),
+                      Text('I am still working in this role',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          )),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
                   CustomRectangularTextFormField(
                     key: Key('profileAddExperience_startDate_textField'),
                     controller: startDateController,
@@ -243,22 +439,24 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
                     onTap: () =>
                         _selectYear(context, startDateController, true),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 10.h),
                   CustomRectangularTextFormField(
                     key: Key('profileAddExperience_endDate_textField'),
                     controller: endDateController,
-                    labelText: 'End Date',
+                    labelText: 'End Date*',
                     readOnly: true,
-                    onTap: () => _selectYear(context, endDateController, false),
+                    onTap: isStillWorking
+                        ? null
+                        : () => _selectYear(context, endDateController, false),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 20.h),
                   CustomRectangularTextFormField(
                     key: Key('profileAddExperience_description_textField'),
                     controller: descriptionController,
                     labelText: 'Description*',
                     hintText: 'Add a description of your job',
-                    maxLength: 1000,
-                    maxLines: 4,
+                    maxLength: 2000,
+                    maxLines: 5,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Description is required.';
@@ -267,30 +465,33 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
                     },
                   ),
                   SizedBox(height: 40.h),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 40.h,
-                    child: ElevatedButton(
-                      key: Key('profileAddExperience_save_button'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorsManager.crimsonRed,
-                      ),
-                      onPressed: saveExperience,
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+        child: SizedBox(
+          width: double.infinity,
+          height: 40.h,
+          child: ElevatedButton(
+            key: Key('profileAddExperience_save_button'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ColorsManager.crimsonRed,
+            ),
+            onPressed: saveExperience,
+            child: Text(
+              'Save',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
