@@ -25,10 +25,15 @@ class UserExperiences extends StatelessWidget {
       if (endDate is DateTime) {
         expiredText = "${_getMonthName(endDate.month)} ${endDate.year}";
       } else if (endDate is String) {
-        expiredText = "$endDate";
+        final parsed = DateTime.tryParse(endDate);
+        if (parsed != null) {
+          expiredText = "${_getMonthName(parsed.month)} ${parsed.year}";
+        } else {
+          expiredText = endDate;
+        }
       }
 
-      return "$issuedText • $expiredText";
+      return "$issuedText - $expiredText";
     }
 
     return issuedText;
@@ -85,8 +90,7 @@ class UserExperiences extends StatelessWidget {
             itemBuilder: (context, index) {
               final experience = profile.experiences[index];
               return Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5.h), // Reduced from 8.h to 4.h
+                padding: EdgeInsets.symmetric(horizontal: 5.h),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -95,90 +99,158 @@ class UserExperiences extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Text(
-                                  experience.position,
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
+                              if (experience.company.logo != null &&
+                                  experience.company.logo!.isNotEmpty)
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(right: 8.w, top: 2.h),
+                                  child: Image.network(
+                                    experience.company.logo!,
+                                    width: 40.w,
+                                    height: 40.w,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                        SizedBox.shrink(),
                                   ),
+                                ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                experience.position,
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.h),
+                                              Text(
+                                                "${experience.company.name} • ${experience.mode}",
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if (isuser) ...[
+                                          IconButton(
+                                              onPressed: () async {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  Routes.addExperienceScreen,
+                                                  arguments: experience,
+                                                );
+                                              },
+                                              icon: Icon(Icons.edit)),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: ColorsManager.darkBurgundy,
+                                              size: 20.r,
+                                            ),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                    dialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        'Delete Experience'),
+                                                    content: Text(
+                                                        'Are you sure you want to delete "${experience.position}"?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                                  dialogContext)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          print(experience.id);
+                                                          Navigator.of(
+                                                                  dialogContext)
+                                                              .pop();
+                                                          context
+                                                              .read<
+                                                                  ProfileCubit>()
+                                                              .deleteExperience(
+                                                                  experience
+                                                                      .id);
+                                                        },
+                                                        child: Text(
+                                                          'Delete',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints: BoxConstraints(),
+                                            splashRadius: 20.r,
+                                          ),
+                                        ]
+                                      ],
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      _formatExperienceDates(
+                                          experience.startDate,
+                                          experience.endDate),
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    if (experience.type != '')
+                                      Column(
+                                        children: [
+                                          SizedBox(height: 4.h),
+                                          Text(
+                                            experience.type!,
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      experience.description,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              if (isuser) ...[
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: ColorsManager.darkBurgundy,
-                                    size: 20.r,
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext dialogContext) {
-                                        return AlertDialog(
-                                          title: Text('Delete Experience'),
-                                          content: Text(
-                                              'Are you sure you want to delete "${experience.position}"?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(dialogContext)
-                                                    .pop();
-                                              },
-                                              child: Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                print(experience.experienceId);
-                                                Navigator.of(dialogContext)
-                                                    .pop();
-                                                context
-                                                    .read<ProfileCubit>()
-                                                    .deleteExperience(experience
-                                                        .experienceId);
-                                                // Close dialog and delete Experience
-                                              },
-                                              child: Text(
-                                                'Delete',
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                  splashRadius: 20.r,
-                                ),
-                              ]
                             ],
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            experience.company,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            _formatExperienceDates(
-                                experience.startDate, experience.endDate),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.grey[600],
-                            ),
                           ),
                           Divider(
                             color: Colors.grey[500],
                             thickness: 1,
-                            height: 15
-                                .h, // Explicitly set height to control spacing
+                            height: 15.h,
                           ),
                         ],
                       ),

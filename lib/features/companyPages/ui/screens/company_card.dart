@@ -71,7 +71,7 @@ class CompanyCard extends StatelessWidget {
                           Icon(Icons.circle,
                               size: 3.sp, color: Colors.grey.shade600),
                           Text(
-                            "37M followers", // TODO: Replace with actual followers
+                            company.followers.toString(), 
                             style: TextStyle(
                                 fontSize: 10.sp, color: Colors.grey.shade600),
                           ),

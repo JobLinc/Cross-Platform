@@ -377,7 +377,7 @@ void editEducation(Education education) async {
     }
   }
 
-  void addExperience(Experience experience) async {
+  void addExperience(ExperienceModel experience) async {
     try {
       emit(ProfilePictureUpdating("Adding experience"));
       final response = await _profileRepository.addExperience(experience);
@@ -385,10 +385,52 @@ void editEducation(Education education) async {
       if (response.statusCode == 200) {
         UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
         updateUserProfile(experienceModel);
-        emit(ExperienceAdded("Experience Added"));
+        emit(ExperienceAdded("Experience Added Successfully"));
       } else {
         if (!isClosed) {
           emit(ExperienceFailed('Failed to add experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ExperienceFailed('Error: $e'));
+      }
+    }
+  }
+
+  // void addExperienceByCompanyId(ExperienceByCompanyId experience) async {
+  //   try {
+  //     emit(ProfilePictureUpdating("Adding experience"));
+  //     final response = await _profileRepository.addExperienceByCompanyId(experience);
+
+  //     if (response.statusCode == 200) {
+  //       UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
+  //       updateUserProfile(experienceModel);
+  //       emit(ExperienceAdded("Experience Added"));
+  //     } else {
+  //       if (!isClosed) {
+  //         emit(ExperienceFailed('Failed to add experience.'));
+  //       }
+  //     }
+  //   } catch (e) {
+  //     if (!isClosed) {
+  //       emit(ExperienceFailed('Error: $e'));
+  //     }
+  //   }
+  // }
+
+  void editExperience(ExperienceModel experience) async {
+    try {
+      emit(ProfileUpdating("Editing Experience"));
+      final response = await _profileRepository.editExperience(experience);
+
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+        emit(ExperienceAdded("Experience Updated Successfully"));
+      } else {
+        if (!isClosed) {
+          emit(ExperienceFailed('Failed to Edit experience.'));
         }
       }
     } catch (e) {

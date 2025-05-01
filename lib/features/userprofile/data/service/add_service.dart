@@ -201,10 +201,31 @@ class addService {
     }
   }
 
-  Future<Response> addExperience(Experience experience) async {
+  Future<Response> addExperience(ExperienceModel experience) async {
     try {
+      print(" this is the experience model ${experience.toJson()}");
       Response response = await dio.post(
         '/user/experience/add',
+        data: experience.toJson(),
+      );
+      print(response.data);
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+  Future<Response> editExperience(ExperienceModel experience) async {
+    try {
+      Response response = await dio.put(
+        '/user/experience/${experience.experienceId}',
         data: experience.toJson(),
       );
 
@@ -221,7 +242,6 @@ class addService {
       }
     }
   }
-
   Future<Response> deleteExperience(String experienceId) async {
     try {
       Response response = await dio.delete(

@@ -14,6 +14,12 @@ class UserProfile {
   final String headline;
   final String profilePicture;
   final String coverPicture;
+  final bool confirmed;
+  final int role;
+  final String visibility;
+  final int plan;
+  final bool allowMessages;
+  final bool allowMessageRequests;
   final String connectionStatus;
   final String country;
   final String city;
@@ -24,7 +30,7 @@ class UserProfile {
   final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
-  final List<Experience> experiences;
+  final List<ExperienceResponse> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
   final List<Resume> resumes;
@@ -38,6 +44,12 @@ class UserProfile {
     required this.headline,
     required this.profilePicture,
     required this.coverPicture,
+    required this.confirmed,
+    required this.role,
+    required this.visibility,
+    required this.plan,
+    required this.allowMessages,
+    required this.allowMessageRequests,
     required this.country,
     required this.city,
     required this.biography,
@@ -64,6 +76,12 @@ class UserProfile {
       headline: json['headline'] ?? '',
       profilePicture: json['profilePicture'] ?? '',
       coverPicture: json['coverPicture'] ?? '',
+      confirmed: json['confirmed'] ?? false,
+      role: json['role'] ?? 0,
+      visibility: json['visibility'] ?? '',
+      plan: json['plan'] ?? 0,
+      allowMessages: json['allowMessages'] ?? false,
+      allowMessageRequests: json['allowMessageRequests'] ?? false,
       connectionStatus: json['connectionStatus'] ?? 'NotConnected',
       numberOfConnections: json['numberOfConnections'] ?? 0,
       matualConnections: json['mutualConnections'] ?? 0,
@@ -84,7 +102,7 @@ class UserProfile {
               .toList() ??
           [],
       experiences: (json['experiences'] as List<dynamic>?)
-              ?.map((exp) => Experience.fromJson(exp))
+              ?.map((exp) => ExperienceResponse.fromJson(exp))
               .toList() ??
           [],
       certifications: _parseCertifications(json['certificates']),

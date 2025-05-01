@@ -1,24 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
-import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
-import 'package:dio/dio.dart';
-import 'package:joblinc/features/chat/ui/widgets/chat_list_connections.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/chat/ui/widgets/group_list_connections.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 
-
-class CreateChatScreen extends StatefulWidget {
-  const CreateChatScreen({Key? key}) : super(key: key);
+class CreateGroupScreen extends StatefulWidget {
+  const CreateGroupScreen({super.key});
 
   @override
-  State<CreateChatScreen> createState() => _CreateChatScreenState();
+  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
 }
 
-class _CreateChatScreenState extends State<CreateChatScreen> {
-  late final ChatRepo _chatRepo;
+class _CreateGroupScreenState extends State<CreateGroupScreen> {
+    late final ChatRepo _chatRepo;
   late Future<List<UserConnection>> _connectionsFuture;
-
+  
   @override
   void initState() {
     super.initState();
@@ -26,23 +26,12 @@ class _CreateChatScreenState extends State<CreateChatScreen> {
     _chatRepo = ChatRepo(apiService);
     _connectionsFuture = _chatRepo.getConnections();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Start a Chat'),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, Routes.createGroupChatScreen);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.groups_rounded),
-            ),
-          ),
-        ],
+        title: const Text("Create Group"),
       ),
       body: FutureBuilder<List<UserConnection>>(
         future: _connectionsFuture,
@@ -57,17 +46,15 @@ class _CreateChatScreenState extends State<CreateChatScreen> {
           if (connections.isEmpty) {
             return Center(child: Text('You have no connections to chat with.'));
           }
-          return ChatConnectionsListView(
-            connections: connections,
-            isuser: true,
+          // Wrap with BlocProvider<ChatListCubit> here
+          return BlocProvider<ChatListCubit>(
+            create: (_) => getIt<ChatListCubit>(),
+            child: GroupChatConnectionsListView(
+              connections: connections,
+              isuser: true,
+            ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacementNamed(context, Routes.createGroupChatScreen);
-        },
-        child: Icon(Icons.groups_rounded),
       ),
     );
   }

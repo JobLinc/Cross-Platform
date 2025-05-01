@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
+import 'package:joblinc/features/chat/data/models/create_chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
-import 'package:joblinc/features/premium/data/models/user_model.dart';
 //import 'package:flutter/material.dart';
 
 class ChatRepo {
@@ -81,17 +81,28 @@ class ChatRepo {
     final response = await _chatApiService.getConnections();
     print('[ChatRepo] Raw response data: ${response.data}');
     try {
-      final List<UserConnection> connections = (response.data as List)
-          .map((json) {
-            print('[ChatRepo] Mapping connection: $json');
-            return UserConnection.fromJson(json as Map<String, dynamic>);
-          })
-          .toList();
+      final List<UserConnection> connections =
+          (response.data as List).map((json) {
+        print('[ChatRepo] Mapping connection: $json');
+        return UserConnection.fromJson(json as Map<String, dynamic>);
+      }).toList();
       print('[ChatRepo] Mapped connections: $connections');
       return connections;
     } catch (e, stack) {
       print('[ChatRepo] Error mapping connections: $e\n$stack');
       rethrow;
     }
+  }
+
+  /// Creates a new chat (private or group) and returns the created chat model.
+  Future<CreateChatModel> createChat({
+    required List<String> receiverIds,
+    String? title,
+  }) async {
+    final response = await _chatApiService.createChat(
+      receiverIds: receiverIds,
+      title: title,
+    );
+    return CreateChatModel.fromJson(response.data as Map<String, dynamic>);
   }
 }

@@ -162,9 +162,17 @@ class UserProfileRepository {
     }
   }
 
-  Future<Response> addExperience(Experience experience) async {
+  Future<Response> addExperience(ExperienceModel experience) async {
     try {
       return await addApiService.addExperience(experience);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editExperience(ExperienceModel experience) async {
+    try {
+      return await addApiService.editExperience(experience);
     } catch (e) {
       rethrow;
     }
@@ -178,12 +186,12 @@ class UserProfileRepository {
     }
   }
 
-  Future<List<Experience>> getAllExperiences() async {
+  Future<List<ExperienceResponse>> getAllExperiences() async {
     try {
       final List<dynamic> rawList = await addApiService.getAllExperiences();
 
       return rawList
-          .map((item) => Experience.fromJson(item as Map<String, dynamic>))
+          .map((item) => ExperienceResponse.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
       rethrow;

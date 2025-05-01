@@ -1008,9 +1008,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
 
     // Add message to local list
-    setState(() {
-      messages.add(newMsg);
-    });
+    // setState(() {
+    //   messages.add(newMsg);
+    // });
 
     _scrollToBottom();
 
