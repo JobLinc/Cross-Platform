@@ -314,7 +314,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (response.statusCode == 200) {
         UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
         updateUserProfile(experienceModel);
-        emit(ExperienceAdded("Experience Added"));
+        emit(ExperienceAdded("Experience Added Successfully"));
       } else {
         if (!isClosed) {
           emit(ExperienceFailed('Failed to add experience.'));
@@ -356,7 +356,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (response.statusCode == 200) {
         UserProfileUpdateModel expModel = UserProfileUpdateModel();
         updateUserProfile(expModel);
-        emit(ExperienceAdded("Experience Updated"));
+        emit(ExperienceAdded("Experience Updated Successfully"));
       } else {
         if (!isClosed) {
           emit(ExperienceFailed('Failed to Edit experience.'));
@@ -368,7 +368,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
-  
+
   void deleteExperience(String position) async {
     try {
       print("hello");

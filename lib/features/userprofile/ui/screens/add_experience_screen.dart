@@ -124,9 +124,7 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1990),
-      lastDate: isstartDate
-          ? DateTime.now().add(Duration(days: 365 * 10))
-          : DateTime.now(),
+      lastDate: DateTime.now(), // Only allow past or today for both start and end date
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -317,7 +315,7 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
             CustomSnackBar.show(
               context: context,
               type: SnackBarType.success,
-              message: 'Experience added successfully.',
+              message: state.message,
             );
           }
         },
