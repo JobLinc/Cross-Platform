@@ -29,12 +29,12 @@ class CompanyImages extends StatelessWidget {
         } else if (state is EditCompanySuccess) {
           CustomSnackBar.show(
               context: context,
-              message: 'COPANY UPDAAATED',
+              message: 'Company updated successfully',
               type: SnackBarType.success);
         } else if (state is EditCompanyFailure) {
           CustomSnackBar.show(
               context: context,
-              message: 'COPANY UPDAAATED',
+              message: 'Failed to update company: ${state.error}',
               type: SnackBarType.error);
         }
       },
@@ -157,23 +157,46 @@ class CompanyImages extends StatelessWidget {
                                         onTap: () async {
                                           File? image =
                                               await pickImage("gallery");
-                                          // Do something when Tile 2 is tapped
                                           print("Tile 2 tapped");
                                           if (image == null) {
                                             return;
                                           }
                                           if (iscover) {
                                           } else {
-                                            print(company.logoUrl);
+                                            // Show loading snackbar before closing the bottom sheet
+                                            final loadingSnackBar = SnackBar(
+                                              content: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 2,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 16),
+                                                  Text("Uploading image..."),
+                                                ],
+                                              ),
+                                              backgroundColor: Colors.black87,
+                                              duration: Duration(minutes: 1),
+                                            );
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(loadingSnackBar);
+
+                                            // Close the bottom sheet after showing the snackbar
+                                            Navigator.pop(bottomSheetContext);
+
                                             Company? apiCompany = await context
                                                 .read<EditCompanyCubit>()
                                                 .uploadCompanyLogo(image);
-                                            print(apiCompany!.logoUrl);
-                                            Navigator.pop(
-                                                bottomSheetContext); // Close the bottom sheet
-                                            int count = 0;
+
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar();
+
                                             if (apiCompany != null) {
-                                              print("HEllo");
                                               Navigator.of(context)
                                                   .pushNamedAndRemoveUntil(
                                                 Routes.companyPageHome,
@@ -181,7 +204,7 @@ class CompanyImages extends StatelessWidget {
                                                   'company': apiCompany,
                                                   'isAdmin': true
                                                 },
-                                                (route) => count++ >= 2,
+                                                (route) => false,
                                               );
                                             } else {
                                               CustomSnackBar.show(
@@ -191,11 +214,6 @@ class CompanyImages extends StatelessWidget {
                                                   type: SnackBarType.error);
                                             }
                                           }
-                                          // Response response = await getIt<UserProfileRepository>()
-                                          //     .uploadProfilePicture(image!);
-                                          // print(response.statusCode);
-                                          Navigator.pop(
-                                              bottomSheetContext); // Close the bottom sheet
                                         },
                                       ),
                                     ],
