@@ -19,19 +19,21 @@ class CompanyRepositoryImpl implements CompanyRepository {
       final companyListResponse = await apiService.getCurrentCompanies();
       final companies = companyListResponse.companies.map((companyResponse) {
         return Company(
-          name: companyResponse.name,
-          profileUrl: companyResponse.urlSlug,
-          industry:
-              IndustryExtension.fromDisplayName(companyResponse.industry)!,
-          organizationSize:
-              OrganizationSizeExtension.fromDisplayName(companyResponse.size)!,
-          organizationType:
-              OrganizationTypeExtension.fromDisplayName(companyResponse.type)!,
-          overview: companyResponse.overview,
-          website: companyResponse.website,
-          logoUrl: companyResponse.logo,
-          id: companyResponse.id
-        );
+            name: companyResponse.name,
+            profileUrl: companyResponse.urlSlug,
+            industry:
+                IndustryExtension.fromDisplayName(companyResponse.industry) ??
+                    Industry.technology,
+            organizationSize: OrganizationSizeExtension.fromDisplayName(
+                    companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
+            organizationType: OrganizationTypeExtension.fromDisplayName(
+                    companyResponse.type) ??
+                OrganizationType.governmentAgency,
+            overview: companyResponse.overview,
+            website: companyResponse.website,
+            logoUrl: companyResponse.logo,
+            id: companyResponse.id);
       }).toList();
       return companies;
     } catch (e) {
@@ -105,19 +107,17 @@ class CompanyRepositoryImpl implements CompanyRepository {
         orElse: () => throw Exception('Company not found'),
       );
       return Company(
-        name: company.name,
-        profileUrl: company.urlSlug,
-        industry:
-            IndustryExtension.fromDisplayName(company.industry)!,
-        organizationSize:
-            OrganizationSizeExtension.fromDisplayName(company.size)!,
-        organizationType:
-            OrganizationTypeExtension.fromDisplayName(company.type)!,
-        overview: company.overview,
-        website: company.website,
-        logoUrl: company.logo,
-        id: company.id
-      );
+          name: company.name,
+          profileUrl: company.urlSlug,
+          industry: IndustryExtension.fromDisplayName(company.industry)!,
+          organizationSize:
+              OrganizationSizeExtension.fromDisplayName(company.size)!,
+          organizationType:
+              OrganizationTypeExtension.fromDisplayName(company.type)!,
+          overview: company.overview,
+          website: company.website,
+          logoUrl: company.logo,
+          id: company.id);
     } catch (e) {
       throw Exception('Failed to get company by slug: $e');
     }

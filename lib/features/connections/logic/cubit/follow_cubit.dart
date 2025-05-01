@@ -45,7 +45,7 @@ class FollowCubit extends Cubit<FollowState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't unfollow connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }

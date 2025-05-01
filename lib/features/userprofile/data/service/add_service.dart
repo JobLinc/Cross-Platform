@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 
@@ -16,8 +17,16 @@ class addService {
       final response = await dio.get('/user/certificate');
       List data = response.data;
       return data.map((json) => Certification.fromJson(json)).toList();
-    } catch (e) {
-      throw Exception('Failed to load certifications: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -27,10 +36,108 @@ class addService {
         '/user/certificate/add',
         data: certification.toJson(),
       );
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> addEducation(Education education) async {
+    try {
+      Response response = await dio.post(
+        '/user/education/add',
+        data: education.toJson(),
+      );
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> deleteEducation(String educationId) async {
+    try {
+      Response response = await dio.delete(
+        '/user/education/$educationId',
+      );
 
       return response;
-    } catch (e) {
-      throw Exception('Failed to add certification: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> editEducation(Education education) async {
+    try {
+      Response response = await dio.put(
+        '/user/education/${education.educationId}',
+        data: education.toJson(),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> editCertification(Certification certification) async {
+    try {
+      Response response = await dio.put(
+        '/user/certificate/${certification.certificationId}',
+        data: certification.toJson(),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<List<dynamic>> getUserEducations() async {
+    try {
+      final response = await dio.get('/user/education');
+      return response.data;
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data['message'] ?? 'Failed to fetch education.');
     }
   }
 
@@ -41,8 +148,16 @@ class addService {
       );
 
       return response;
-    } catch (e) {
-      throw Exception('Failed to delete certification: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -55,8 +170,16 @@ class addService {
       } else {
         throw Exception('Failed to fetch certificates');
       }
-    } catch (e) {
-      throw Exception('API error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -65,24 +188,60 @@ class addService {
       final response = await dio.get('/user/experience');
       List data = response.data;
       return data.map((json) => Certification.fromJson(json)).toList();
-    } catch (e) {
-      throw Exception('Failed to load experiences: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
-  Future<Response> addExperience(Experience experience) async {
+  Future<Response> addExperience(ExperienceModel experience) async {
     try {
+      print(" this is the experience model ${experience.toJson()}");
       Response response = await dio.post(
         '/user/experience/add',
         data: experience.toJson(),
       );
-
+      print(response.data);
       return response;
-    } catch (e) {
-      throw Exception('Failed to add experience: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
+  Future<Response> editExperience(ExperienceModel experience) async {
+    try {
+      Response response = await dio.put(
+        '/user/experience/${experience.experienceId}',
+        data: experience.toJson(),
+      );
 
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
   Future<Response> deleteExperience(String experienceId) async {
     try {
       Response response = await dio.delete(
@@ -90,8 +249,16 @@ class addService {
       );
 
       return response;
-    } catch (e) {
-      throw Exception('Failed to delete experience: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -104,8 +271,16 @@ class addService {
       } else {
         throw Exception('Failed to fetch experiences');
       }
-    } catch (e) {
-      throw Exception('API error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -114,8 +289,16 @@ class addService {
       final response = await dio.get('/user/skill');
       List data = response.data;
       return data.map((json) => Skill.fromJson(json)).toList();
-    } catch (e) {
-      throw Exception('Failed to load experiences: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -127,8 +310,37 @@ class addService {
       );
 
       return response;
-    } catch (e) {
-      throw Exception('Failed to add skill: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> editSkill(Skill skill) async {
+    try {
+      Response response = await dio.put(
+        '/user/skills/${skill.id}',
+        data: skill.toJson(),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -139,8 +351,16 @@ class addService {
       );
 
       return response;
-    } catch (e) {
-      throw Exception('Failed to delete skill: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -153,8 +373,16 @@ class addService {
       } else {
         throw Exception('Failed to fetch skills');
       }
-    } catch (e) {
-      throw Exception('API error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -172,9 +400,16 @@ class addService {
 
       final response = await dio.post('/user/resume/upload', data: formData);
       return response;
-    } catch (e) {
-      print('Error uploading resume: $e');
-      rethrow;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -182,10 +417,16 @@ class addService {
     try {
       final response = await dio.get('/user/resume');
       return response.data;
-    } catch (e, stackTrace) {
-      print('Error in ResumeApiService.getUserResumes: $e');
-      print('StackTrace: $stackTrace');
-      rethrow;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -194,9 +435,15 @@ class addService {
       final response = await dio.delete('/user/resume/$resumeid');
       return response;
     } on DioException catch (e) {
-      print("error  ${e.toString()}");
-      throw Exception(
-          'Failed to delete resume: ${e.response?.data ?? e.message}');
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 }
@@ -209,8 +456,9 @@ MediaType getMediaType(File file) {
       return MediaType('application', 'pdf');
     case 'doc':
     case 'docx':
-      return MediaType('application', 'msword');  // MIME type for Word documents
+      return MediaType('application', 'msword'); // MIME type for Word documents
     default:
-      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+      return MediaType(
+          'application', 'octet-stream'); // Fallback for unsupported types
   }
-} 
+}

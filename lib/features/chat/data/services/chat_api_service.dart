@@ -7,7 +7,9 @@ bool apiEndPointFunctional = true;
 class ChatApiService {
   final Dio _dio;
 
-  ChatApiService(this._dio);
+  ChatApiService(this._dio) {
+    print('[ChatApiService] Dio baseUrl: ${_dio.options.baseUrl}');
+  }
 
   // Future<Response> getChatById(String chatId) async {
   //   try {
@@ -85,15 +87,21 @@ class ChatApiService {
     //   }
   }
 
-  /// Create a new chat group
-  Future<void> createChat() async {
-    if (apiEndPointFunctional) {
-      try {
-        await _dio.post('/chat/create');
-      } catch (e) {
-        throw Exception("Failed to create chat: $e");
-      }
-    } else {}
+  /// Create a new chat (private or group)
+  Future<Response> createChat({
+    required List<String> receiverIds,
+    String? title,
+  }) async {
+    try {
+      final data = {
+        "receiverIds": receiverIds,
+        if (title != null) "title": title,
+      };
+      final response = await _dio.post('/chat/create', data: data);
+      return response;
+    } catch (e) {
+      throw Exception("Failed to create chat: $e");
+    }
   }
 
   /// Open a chat with specified participants
@@ -156,7 +164,7 @@ class ChatApiService {
   Future<void> markReadOrUnread({required String chatId}) async {
     try {
       print("api marking");
-      final response =await _dio.put('/chat/readOrUnread', data: {
+      final response = await _dio.put('/chat/readOrUnread', data: {
         "chatId": chatId,
       });
       print(response);
@@ -164,6 +172,25 @@ class ChatApiService {
       throw Exception("Failed to mark chat: $e");
     }
   }
+
+  Future<Response> getConnections() async {
+    print('[ChatApiService] Calling /connection/connected...');
+    try {
+      final response = await _dio.get('/connection/connected');
+      print('[ChatApiService] Response: $response');
+      if (response.statusCode != 200) {
+        print('[ChatApiService] Non-200 status code: ${response.statusCode}');
+        throw Exception("Failed to fetch connections");
+      }
+      // Debug: print response data
+      print('[ChatApiService] Response data: ${response.data}');
+      return response;
+    } catch (e, stack) {
+      print('[ChatApiService] Error fetching connections: $e\n$stack');
+      throw Exception("Failed to fetch connections for the user: $e");
+    }
+  }
+  
 
   Future<String> uploadMedia(File file) async {
     try {
@@ -205,11 +232,9 @@ class ChatApiService {
             'application', 'octet-stream'); // Fallback for unsupported types
     }
   }
+
+
 }
-
-
-
-
 
 //   Future<List<dynamic>> getAllChats() async {
 //   try {
@@ -488,7 +513,7 @@ class ChatApiService {
 //         senderId: "user_006",
 //         status: "read",
 //       ),
-      
+
 //     ],
 //   ),
 // ];

@@ -11,7 +11,8 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 class CompanyHomeJobs extends StatelessWidget {
   final String companyId;
   final bool isAdmin;
-  const CompanyHomeJobs({required this.companyId, this.isAdmin = false, super.key});
+  const CompanyHomeJobs(
+      {required this.companyId, this.isAdmin = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,10 @@ class CompanyHomeJobs extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return JobList(jobs: snapshot.data!, isCreated: true, isCompanyPageAdmin: isAdmin);
+          return JobList(
+              jobs: snapshot.data!,
+              isCreated: true,
+              isCompanyPageAdmin: isAdmin);
         } else {
           return Container(
             height: 200.h,

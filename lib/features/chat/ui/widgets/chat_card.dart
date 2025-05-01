@@ -270,13 +270,13 @@ class _ChatListState extends State<ChatList> {
               selected:
                   widget.selectedIds?.contains(sortedChats[index].chatId) ??
                       false,
-              onTap: () {
+              onTap: () async {
                 if (widget.selectionMode) {
                   context
                       .read<ChatListCubit>()
                       .toggleSelection(sortedChats[index].chatId);
                 } else {
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => BlocProvider.value(
@@ -285,6 +285,9 @@ class _ChatListState extends State<ChatList> {
                       ),
                     ),
                   );
+                  context
+                      .read<ChatListCubit>()
+                      .getAllChats();
                 }
               },
               onLongPress: () {
@@ -293,6 +296,7 @@ class _ChatListState extends State<ChatList> {
                     .toggleSelection(sortedChats[index].chatId);
               },
             ));
+
   }
 }
 

@@ -14,7 +14,7 @@ class UserConnectionsRepository {
 
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping users: $e');
+      rethrow;
     }
   }
 
@@ -24,7 +24,7 @@ class UserConnectionsRepository {
 
       return data.map((json) => Follow.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping follows: $e');
+      rethrow;
     }
   }
 
@@ -34,7 +34,7 @@ class UserConnectionsRepository {
 
       return data.map((json) => Follow.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping follows: $e');
+      rethrow;
     }
   }
 
@@ -43,7 +43,7 @@ class UserConnectionsRepository {
       final data = await _apiService.getInvitations();
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping invitations: $e');
+      rethrow;
     }
   }
 
@@ -52,7 +52,7 @@ class UserConnectionsRepository {
       final data = await _apiService.getSentInvitations();
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping sent invitations: $e');
+      rethrow;
     }
   }
 
@@ -60,7 +60,6 @@ class UserConnectionsRepository {
     try {
       return await _apiService.changeConnectionStatus(userId, status);
     } catch (e) {
-      print('Repository error changing connection status: $e');
       rethrow;
     }
   }
@@ -107,7 +106,7 @@ class UserConnectionsRepository {
 
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping user connections: $e');
+      rethrow;
     }
   }
 
@@ -117,7 +116,18 @@ class UserConnectionsRepository {
 
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping blocked users: $e');
+      rethrow;
+    }
+  }
+
+  Future<String> createchat(String userId) async {
+    try {
+      print("REPOOOOOOOOOOOOOOOOOOOO");
+      final response = await _apiService.createchat(userId);
+      print("${response.data["chatId"]}");
+      return response.data["chatId"];
+    } catch (e) {
+      rethrow;
     }
   }
 }

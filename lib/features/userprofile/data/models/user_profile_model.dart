@@ -1,4 +1,5 @@
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/resume_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -13,6 +14,12 @@ class UserProfile {
   final String headline;
   final String profilePicture;
   final String coverPicture;
+  final bool confirmed;
+  final int role;
+  final String visibility;
+  final int plan;
+  final bool allowMessages;
+  final bool allowMessageRequests;
   final String connectionStatus;
   final String country;
   final String city;
@@ -23,7 +30,7 @@ class UserProfile {
   final List<PostModel> recentPosts;
   final List<Skill> skills;
   final List<Education> education;
-  final List<Experience> experiences;
+  final List<ExperienceResponse> experiences;
   final List<Certification> certifications;
   final List<Language> languages;
   final List<Resume> resumes;
@@ -37,6 +44,12 @@ class UserProfile {
     required this.headline,
     required this.profilePicture,
     required this.coverPicture,
+    required this.confirmed,
+    required this.role,
+    required this.visibility,
+    required this.plan,
+    required this.allowMessages,
+    required this.allowMessageRequests,
     required this.country,
     required this.city,
     required this.biography,
@@ -63,6 +76,12 @@ class UserProfile {
       headline: json['headline'] ?? '',
       profilePicture: json['profilePicture'] ?? '',
       coverPicture: json['coverPicture'] ?? '',
+      confirmed: json['confirmed'] ?? false,
+      role: json['role'] ?? 0,
+      visibility: json['visibility'] ?? '',
+      plan: json['plan'] ?? 0,
+      allowMessages: json['allowMessages'] ?? false,
+      allowMessageRequests: json['allowMessageRequests'] ?? false,
       connectionStatus: json['connectionStatus'] ?? 'NotConnected',
       numberOfConnections: json['numberOfConnections'] ?? 0,
       matualConnections: json['mutualConnections'] ?? 0,
@@ -83,7 +102,7 @@ class UserProfile {
               .toList() ??
           [],
       experiences: (json['experiences'] as List<dynamic>?)
-              ?.map((exp) => Experience.fromJson(exp))
+              ?.map((exp) => ExperienceResponse.fromJson(exp))
               .toList() ??
           [],
       certifications: _parseCertifications(json['certificates']),
@@ -206,45 +225,45 @@ class UserProfile {
 //   }
 // }
 
-class Education {
-  final String educationId;
-  final String school;
-  final String degree;
-  final String fieldOfStudy;
-  final int startYear;
-  final int? endYear;
+// class Education {
+//   final String educationId;
+//   final String school;
+//   final String degree;
+//   final String fieldOfStudy;
+//   final int startYear;
+//   final int? endYear;
 
-  Education({
-    required this.educationId,
-    required this.school,
-    required this.degree,
-    required this.fieldOfStudy,
-    required this.startYear,
-    this.endYear,
-  });
+//   Education({
+//     required this.educationId,
+//     required this.school,
+//     required this.degree,
+//     required this.fieldOfStudy,
+//     required this.startYear,
+//     this.endYear,
+//   });
 
-  factory Education.fromJson(Map<String, dynamic> json) {
-    return Education(
-      educationId: json['educationId'] ?? '',
-      school: json['school'] ?? '',
-      degree: json['degree'] ?? '',
-      fieldOfStudy: json['fieldOfStudy'] ?? '',
-      startYear: json['startYear'] ?? 0,
-      endYear: json['endYear'],
-    );
-  }
+//   factory Education.fromJson(Map<String, dynamic> json) {
+//     return Education(
+//       educationId: json['educationId'] ?? '',
+//       school: json['school'] ?? '',
+//       degree: json['degree'] ?? '',
+//       fieldOfStudy: json['fieldOfStudy'] ?? '',
+//       startYear: json['startYear'] ?? 0,
+//       endYear: json['endYear'],
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'educationId': educationId,
-      'school': school,
-      'degree': degree,
-      'fieldOfStudy': fieldOfStudy,
-      'startYear': startYear,
-      if (endYear != null) 'endYear': endYear,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'educationId': educationId,
+//       'school': school,
+//       'degree': degree,
+//       'fieldOfStudy': fieldOfStudy,
+//       'startYear': startYear,
+//       if (endYear != null) 'endYear': endYear,
+//     };
+//   }
+// }
 
 class Language {
   final String languageId;
