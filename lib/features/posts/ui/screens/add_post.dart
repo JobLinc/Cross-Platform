@@ -5,15 +5,19 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
 
 class AddPostScreen extends StatelessWidget {
-  AddPostScreen({super.key});
+  AddPostScreen({super.key, this.repost});
+  PostModel? repost;
   final TextEditingController _inputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<List<String>> mediaUrls = ValueNotifier([]);
     return BlocConsumer<AddPostCubit, AddPostState>(
       listener: (context, state) {
         if (state is AddPostStateLoading) {
@@ -34,36 +38,71 @@ class AddPostScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: addPostTopBar(context, _inputController),
+          appBar: addPostTopBar(context, _inputController, repost?.postID),
           body: Padding(
             padding: const EdgeInsets.only(
               left: 10.0,
               right: 10.0,
               bottom: 20.0,
             ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: LoadingIndicatorOverlay(
-                    inAsyncCall: state is AddPostStateLoading,
-                    child: TextField(
-                      controller: _inputController,
-                      maxLines: null,
-                      expands: true,
-                      onChanged: (text) => {if (text == '') {} else {}},
-                      decoration: InputDecoration(
-                        hintText: 'Share your thoughts...',
-                        hintStyle: TextStyle(color: Colors.grey.shade600),
-                        border: InputBorder.none,
-                      ),
-                      style: TextStyle(),
-                      showCursor: true,
-                      cursorColor: Colors.black,
-                    ),
-                  ),
-                ),
-                BottomButtons()
-              ],
+            child: LoadingIndicatorOverlay(
+              inAsyncCall: state is AddPostStateLoading,
+              child: Column(
+                children: repost == null
+                    ? ([
+                        Flexible(
+                          child: TextField(
+                            controller: _inputController,
+                            autofocus: true,
+                            maxLines: null,
+                            expands: true,
+                            onChanged: (text) => {if (text == '') {} else {}},
+                            decoration: InputDecoration(
+                              hintText: 'Share your thoughts...',
+                              hintStyle: TextStyle(color: Colors.grey.shade600),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(),
+                            showCursor: true,
+                            cursorColor: Colors.black,
+                          ),
+                        ),
+                        BottomButtons(
+                          mediaUrls: mediaUrls,
+                        )
+                      ])
+                    : [
+                        Flexible(
+                          child: TextField(
+                            controller: _inputController,
+                            autofocus: true,
+                            maxLines: null,
+                            expands: false,
+                            onChanged: (text) => {if (text == '') {} else {}},
+                            decoration: InputDecoration(
+                              hintText: 'Share your thoughts...',
+                              hintStyle: TextStyle(color: Colors.grey.shade600),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(),
+                            showCursor: true,
+                            cursorColor: Colors.black,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          child: Card(
+                            clipBehavior: Clip.hardEdge,
+                            child: Post(
+                              data: repost!,
+                              showRepost: false,
+                              showActionBar: false,
+                              showExtraMenu: false,
+                            ),
+                          ),
+                        ),
+                      ],
+              ),
             ),
           ),
         );
@@ -75,8 +114,9 @@ class AddPostScreen extends StatelessWidget {
 class BottomButtons extends StatelessWidget {
   const BottomButtons({
     super.key,
+    required this.mediaUrls,
   });
-
+  final ValueNotifier<List<String>> mediaUrls;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -89,14 +129,14 @@ class BottomButtons extends StatelessWidget {
               List<XFile> medias = await picker.pickMultipleMedia();
             },
             icon: Icon(Icons.image)),
-        IconButton(onPressed: () {}, icon: Icon(Icons.add)),
       ],
     );
   }
 }
 
-AppBar addPostTopBar(
-    BuildContext context, TextEditingController inputController) {
+AppBar addPostTopBar(BuildContext context,
+    TextEditingController inputController, String? repostId) {
+  bool isPublic;
   return AppBar(
     title: GestureDetector(
       onTap: () {
@@ -138,7 +178,9 @@ AppBar addPostTopBar(
                     disabledForegroundColor: Colors.grey),
                 onPressed: value.text.isNotEmpty
                     ? () {
-                        context.read<AddPostCubit>().addPost(value.text);
+                        context
+                            .read<AddPostCubit>()
+                            .addPost(value.text, [], repostId, true);
                       }
                     : null,
                 child: Text('Post'),
@@ -157,50 +199,70 @@ class PrivacySettings extends StatefulWidget {
 }
 
 class PrivacySettingsState extends State<PrivacySettings> {
-  late int selectedValue;
+  late bool isPublic;
 
   @override
   void initState() {
     super.initState();
-    selectedValue = 1;
+    isPublic = true;
   }
 
-  void _updateSelectedValue(int value) {
-    setState(() {
-      selectedValue = value;
-    });
+  void _updateSelectedValue(bool? value) {
+    if (value != null) {
+      setState(() {
+        isPublic = value;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-        child: Column(
-          children: [
-            Text(
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
               "Who can see your post?",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeightHelper.bold,
               ),
             ),
-            OverflowBar(
-              children: [
-                RadioListTile(
-                    title: Text('public'),
-                    subtitle: Text('data'),
-                    value: 1,
-                    groupValue: selectedValue,
-                    onChanged: (value) => _updateSelectedValue),
-                RadioListTile(
-                    value: 2,
-                    groupValue: selectedValue,
-                    onChanged: (value) => _updateSelectedValue),
-              ],
-            )
-          ],
-        ),
+          ),
+          ListTile(
+            leading: Radio(
+                value: true,
+                groupValue: isPublic,
+                onChanged: _updateSelectedValue),
+            title: Text(
+              'Public',
+              style: TextStyle(fontWeight: FontWeightHelper.semiBold),
+            ),
+            subtitle: Text(
+              'Anyone can see your post',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+            onTap: () => _updateSelectedValue(true),
+          ),
+          ListTile(
+            leading: Radio(
+                value: false,
+                groupValue: isPublic,
+                onChanged: _updateSelectedValue),
+            title: Text(
+              'Connections only',
+              style: TextStyle(fontWeight: FontWeightHelper.semiBold),
+            ),
+            subtitle: Text(
+              'Only connections can see your post',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+            onTap: () => _updateSelectedValue(false),
+          ),
+        ],
       ),
     );
   }

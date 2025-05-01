@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
@@ -21,9 +22,11 @@ class Post extends StatelessWidget {
     required this.data,
     this.showActionBar = true,
     this.showExtraMenu = true,
+    this.showRepost = true,
     this.showOwnerMenu = false,
   });
   final PostModel data;
+  final bool showRepost;
   final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -59,6 +62,7 @@ class Post extends StatelessWidget {
             child: PostContent(
               state: state,
               data: data,
+              showRepost: showRepost,
               showActionBar: showActionBar,
               showExtraMenu: showExtraMenu,
               showOwnerMenu: showOwnerMenu,
@@ -76,6 +80,7 @@ class PostContent extends StatelessWidget {
     super.key,
     required this.state,
     required this.data,
+    required this.showRepost,
     required this.showActionBar,
     required this.showExtraMenu,
     required this.showOwnerMenu,
@@ -83,6 +88,7 @@ class PostContent extends StatelessWidget {
   });
   final PostState state;
   final PostModel data;
+  final bool showRepost;
   final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -141,15 +147,17 @@ class PostContent extends StatelessWidget {
             text: data.text,
           ),
         ),
-        data.repost == null
+        data.repost == null || !showRepost
             ? (data.attachmentURLs.isNotEmpty
                 ? PostAttachments(attachmentURLs: data.attachmentURLs)
                 : SizedBox())
             : Padding(
                 padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                 child: Card(
+                  clipBehavior: Clip.hardEdge,
                   child: Post(
                     data: data.repost!,
+                    showRepost: false,
                     showActionBar: false,
                     showExtraMenu: false,
                   ),
@@ -168,6 +176,7 @@ class PostContent extends StatelessWidget {
             : SizedBox(),
         showActionBar
             ? PostActionBar(
+                data: data,
                 state: state,
                 userReaction: data.userReaction,
                 likeCount: likeCount,
@@ -257,10 +266,12 @@ class PostNumerics extends StatelessWidget {
 class PostActionBar extends StatelessWidget {
   const PostActionBar({
     super.key,
+    required this.data,
     required this.state,
     required this.likeCount,
     required this.userReaction,
   });
+  final PostModel data;
   final PostState state;
   final ValueNotifier<int> likeCount;
   final Reactions? userReaction;
@@ -356,7 +367,10 @@ class PostActionBar extends StatelessWidget {
           ),
           IconButton(
             key: Key('post_actionBar_repost'),
-            onPressed: () => {UnimplementedError()},
+            onPressed: () => {
+              Navigator.pushNamed(context, Routes.addPostScreen,
+                  arguments: data.repost ?? data)
+            },
             icon: Icon(Icons.loop, color: iconColor),
           ),
           IconButton(

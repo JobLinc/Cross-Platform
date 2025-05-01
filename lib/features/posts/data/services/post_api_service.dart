@@ -7,6 +7,36 @@ class PostApiService {
 
   PostApiService(this._dio);
 
+  Future<List<PostModel>> getUserPosts(String userid) async {
+    try {
+      final response = await _dio.get('/post/$userid/posts');
+      List<PostModel> posts = [];
+
+      for (Map<String, dynamic> post in response.data) {
+        posts.add(PostModel.fromJson(post));
+      }
+
+      return posts;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<List<PostModel>> getMyPosts() async {
+    try {
+      final response = await _dio.get('/post/my-posts');
+      List<PostModel> posts = [];
+
+      for (Map<String, dynamic> post in response.data) {
+        posts.add(PostModel.fromJson(post));
+      }
+
+      return posts;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
   Future<PostModel> getPost(String postID) async {
     try {
       final response = await _dio.get(
@@ -48,10 +78,18 @@ class PostApiService {
     }
   }
 
-  Future<String> addPost(String text) async {
+  Future<String> addPost(
+    String text,
+    List<String> media,
+    String? repostId,
+    bool isPublic,
+  ) async {
     try {
       final response = await _dio.post('/post/add', data: {
         'text': text,
+        'media': media.isNotEmpty ? media : null,
+        'repost': repostId,
+        'isPublic': isPublic,
       });
       return response.data['postId'];
     } on DioException catch (e) {

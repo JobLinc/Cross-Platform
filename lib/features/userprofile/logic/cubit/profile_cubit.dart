@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -20,8 +22,16 @@ class ProfileCubit extends Cubit<ProfileState> {
   String firstname = "";
   final UserProfileRepository _profileRepository;
   final UserConnectionsRepository connectionsRepository;
-  ProfileCubit(this._profileRepository, this.connectionsRepository)
+  final PostRepo _postRepo;
+  ProfileCubit(
+      this._profileRepository, this.connectionsRepository, this._postRepo)
       : super(ProfileInitial());
+
+  Future<void> getPosts(bool isOther, {String? userId}) async {
+    final List<PostModel> posts = isOther
+        ? await _postRepo.getUserPosts(userId!)
+        : await _postRepo.getMyPosts();
+  }
 
   Future<void> getUserProfile() async {
     try {

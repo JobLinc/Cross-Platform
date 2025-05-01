@@ -10,6 +10,14 @@ class PostRepo {
 
   PostRepo(this._postApiService, this._userProfileApiService);
 
+  Future<List<PostModel>> getUserPosts(String userId) async {
+    return await _postApiService.getUserPosts(userId);
+  }
+
+  Future<List<PostModel>> getMyPosts() async {
+    return await _postApiService.getMyPosts();
+  }
+
   Future<PostModel> getPost(String postID) async {
     return await _postApiService.getPost(postID);
   }
@@ -18,8 +26,9 @@ class PostRepo {
     return await _postApiService.getFeed(start, end);
   }
 
-  Future<String> addPost(String text) async {
-    return await _postApiService.addPost(text);
+  Future<String> addPost(
+      String text, List<String> media, String? repostId, bool isPublic) async {
+    return await _postApiService.addPost(text, media, repostId, isPublic);
   }
 
   Future<UserProfile> getUserInfo() async {

@@ -48,6 +48,7 @@ import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/forgetpassword/ui/screens/forgetpassword_screen.dart';
 import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
@@ -278,7 +279,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<AddPostCubit>(),
-            child: AddPostScreen(),
+            child: AddPostScreen(
+              repost: arguments is PostModel? ? arguments : null,
+            ),
           ),
         );
 

@@ -221,17 +221,23 @@ Future<void> setupGetIt() async {
       () => UploadApiService(getIt<Dio>()));
   getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
-  getIt
-      .registerLazySingleton<UserProfileRepository>(() => UserProfileRepository(
-            getIt<UserProfileApiService>(),
-            getIt<UpdateUserProfileApiService>(),
-            getIt<UploadApiService>(),
-            getIt<addService>(),
-            getIt<OthersApiService>(),
-          ));
+  getIt.registerLazySingleton<UserProfileRepository>(
+    () => UserProfileRepository(
+      getIt<UserProfileApiService>(),
+      getIt<UpdateUserProfileApiService>(),
+      getIt<UploadApiService>(),
+      getIt<addService>(),
+      getIt<OthersApiService>(),
+    ),
+  );
 
-  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
-      getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(
+      getIt<UserProfileRepository>(),
+      getIt<UserConnectionsRepository>(),
+      getIt.get<PostRepo>(),
+    ),
+  );
 
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
