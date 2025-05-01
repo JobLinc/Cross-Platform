@@ -12,7 +12,7 @@ enum Reactions {
   funny,
 }
 
-Reactions? parseReactions(String json) {
+Reactions? parseReactions(String? json) {
   switch (json) {
     case 'Like':
       return Reactions.like;

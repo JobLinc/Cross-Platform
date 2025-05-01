@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';

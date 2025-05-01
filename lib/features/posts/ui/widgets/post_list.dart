@@ -18,10 +18,13 @@ class PostList extends StatelessWidget {
     return ListView.builder(
       cacheExtent: 2000,
       itemCount: posts.length,
-      itemBuilder: (context, index) => Post(
-        data: posts[index],
-        showExtraMenu: showExtraMenu,
-        showOwnerMenu: showOwnerMenu,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Post(
+          data: posts[index],
+          showExtraMenu: showExtraMenu,
+          showOwnerMenu: showOwnerMenu,
+        ),
       ),
     );
   }

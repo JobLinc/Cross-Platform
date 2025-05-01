@@ -19,10 +19,12 @@ class Post extends StatelessWidget {
   const Post({
     super.key,
     required this.data,
+    this.showActionBar = true,
     this.showExtraMenu = true,
     this.showOwnerMenu = false,
   });
   final PostModel data;
+  final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
 
@@ -50,20 +52,17 @@ class Post extends StatelessWidget {
             );
           }
         },
-        builder: (context, state) => Padding(
-          key: Key('post_main_container'),
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
-            color: ColorsManager.getCardColor(context),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: PostContent(
-                state: state,
-                data: data,
-                showExtraMenu: showExtraMenu,
-                showOwnerMenu: showOwnerMenu,
-                likeCount: likeCount,
-              ),
+        builder: (context, state) => Container(
+          color: ColorsManager.getCardColor(context),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: PostContent(
+              state: state,
+              data: data,
+              showActionBar: showActionBar,
+              showExtraMenu: showExtraMenu,
+              showOwnerMenu: showOwnerMenu,
+              likeCount: likeCount,
             ),
           ),
         ),
@@ -77,12 +76,14 @@ class PostContent extends StatelessWidget {
     super.key,
     required this.state,
     required this.data,
+    required this.showActionBar,
     required this.showExtraMenu,
     required this.showOwnerMenu,
     required this.likeCount,
   });
   final PostState state;
   final PostModel data;
+  final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
   final ValueNotifier<int> likeCount;
@@ -137,23 +138,35 @@ class PostContent extends StatelessWidget {
         PostBody(
           text: data.text,
         ),
-        data.attachmentURLs.isNotEmpty
-            ? PostAttachments(attachmentURLs: data.attachmentURLs)
-            : SizedBox(),
+        data.repost == null
+            ? (data.attachmentURLs.isNotEmpty
+                ? PostAttachments(attachmentURLs: data.attachmentURLs)
+                : SizedBox())
+            : Card(
+                child: Post(
+                  data: data.repost!,
+                  showActionBar: false,
+                  showExtraMenu: false,
+                ),
+              ),
         PostNumerics(
           likesCount: likeCount,
           commentCount: data.commentCount,
           repostCount: data.repostCount,
         ),
-        Divider(
-          height: 0,
-          color: ColorsManager.getTextSecondary(context),
-        ),
-        PostActionBar(
-          state: state,
-          userReaction: data.userReaction,
-          likeCount: likeCount,
-        ),
+        showActionBar
+            ? Divider(
+                height: 0,
+                color: ColorsManager.getTextSecondary(context),
+              )
+            : SizedBox(),
+        showActionBar
+            ? PostActionBar(
+                state: state,
+                userReaction: data.userReaction,
+                likeCount: likeCount,
+              )
+            : SizedBox(),
       ],
     );
   }

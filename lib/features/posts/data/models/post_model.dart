@@ -15,6 +15,7 @@ class PostModel {
     required this.commentCount,
     required this.likeCount,
     required this.repostCount,
+    this.repost,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +41,8 @@ class PostModel {
       commentCount: json['comments'] ?? 0,
       likeCount: json['likes'] ?? 0,
       repostCount: json['reposts'] ?? 0,
+      repost:
+          json['repost'] == null ? null : PostModel.fromJson(json['repost']),
     );
   }
 
@@ -52,6 +55,7 @@ class PostModel {
   final String text;
   final DateTime? timeStamp;
   final Reactions? userReaction;
+  final PostModel? repost;
   List<dynamic> attachmentURLs;
   int commentCount;
   int likeCount;
