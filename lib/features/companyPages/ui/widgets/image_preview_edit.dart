@@ -164,9 +164,32 @@ class CompanyImages extends StatelessWidget {
                                           }
                                           if (iscover) {
                                           } else {
-                                            context
+                                            print(company.logoUrl);
+                                            Company? apiCompany = await context
                                                 .read<EditCompanyCubit>()
                                                 .uploadCompanyLogo(image);
+                                            print(apiCompany!.logoUrl);
+                                            Navigator.pop(
+                                                bottomSheetContext); // Close the bottom sheet
+                                            int count = 0;
+                                            if (apiCompany != null) {
+                                              print("HEllo");
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                Routes.companyPageHome,
+                                                arguments: {
+                                                  'company': apiCompany,
+                                                  'isAdmin': true
+                                                },
+                                                (route) => count++ >= 2,
+                                              );
+                                            } else {
+                                              CustomSnackBar.show(
+                                                  context: context,
+                                                  message:
+                                                      'Error uploading image',
+                                                  type: SnackBarType.error);
+                                            }
                                           }
                                           // Response response = await getIt<UserProfileRepository>()
                                           //     .uploadProfilePicture(image!);
