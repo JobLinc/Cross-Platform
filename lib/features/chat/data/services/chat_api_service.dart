@@ -21,6 +21,28 @@ class ChatApiService {
   //   }
   // }
 
+  Future<Response> getChatById(String chatId) async {
+    if (apiEndPointFunctional) {
+      try {
+        final response = await _dio.get('/chat/chat-card/$chatId');
+        print("123232 $response");
+        return response;
+      } catch (e) {
+        throw Exception("Failed to fetch chat details: $e");
+      }
+    } else {
+      await Future.delayed(Duration(seconds: 1));
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: [], //mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      //print(response);
+      return response;
+    }
+  } 
+
   Future<Response> getAllChats() async {
     if (apiEndPointFunctional) {
       try {

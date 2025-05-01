@@ -264,6 +264,7 @@ class ChatSocketService {
 
   // ─── Callbacks for screens to subscribe ────────────────────────────────────
   void Function(Map<String, dynamic> messageData)? onMessageReceived;
+  void Function(Map<String, dynamic> messageData)? onErrorReceived;
   void Function(String chatId)? onTyping;
   void Function(String chatId)? onStopTyping;
   void Function(String readerId)? onReadReceipt;
@@ -369,6 +370,14 @@ class ChatSocketService {
       _isInitialized = false;
     });
 
+    // _socket.onError(handlers: (error) {
+    //   print('⚠️ Socket error: $error');
+    // });
+    _socket.on('error', (error) {
+      print('⚠️ Socket  bbbbb error: $error');
+      onErrorReceived?.call(Map<String, dynamic>.from(error));
+    });
+
     // Debug all other events
     _socket.onAny((event, data) {
       print('🔍 [socket event] $event → ${data != null ? jsonEncode(data) : 'null'}');
@@ -376,6 +385,7 @@ class ChatSocketService {
 
     // Domain events:
     _socket.on('receiveMessage', (data) {
+      print('📥 Message received: ${jsonEncode(data)}');
       onMessageReceived?.call(Map<String, dynamic>.from(data));
     });
 

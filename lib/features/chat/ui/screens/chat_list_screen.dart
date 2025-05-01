@@ -155,27 +155,27 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     //MoreOptionsButton(),
                   ],
                 ),
-                if (searchTextController.text.isEmpty)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Recent Conversations",
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "View All",
-                          style:
-                              TextStyle(fontSize: 12.sp, color: Colors.white70),
-                        ),
-                      ),
-                    ],
-                  ),
+                // if (searchTextController.text.isEmpty)
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text(
+                //         "Recent Conversations",
+                //         style: TextStyle(
+                //             fontSize: 14.sp,
+                //             fontWeight: FontWeight.bold,
+                //             color: Colors.white),
+                //       ),
+                //       TextButton(
+                //         onPressed: () {},
+                //         child: Text(
+                //           "View All",
+                //           style:
+                //               TextStyle(fontSize: 12.sp, color: Colors.white70),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
               ],
             ),
           ),

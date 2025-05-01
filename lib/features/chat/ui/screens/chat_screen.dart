@@ -698,46 +698,45 @@
 //     );
 //   }
 // }
-          // ListTile(
-          //     leading: const Icon(Icons.move_to_inbox),
-          //     title: const Text("Move to Other"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.mark_chat_unread),
-          //     title: const Text("Mark as unread"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.star),
-          //     title: const Text("Star"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.notifications_off),
-          //     title: const Text("Mute"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.archive),
-          //     title: const Text("Archive"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.report),
-          //     title: const Text("Report / Block"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.delete),
-          //     title: const Text("Delete conversation"),
-          //     onTap: () {}),
-          // ListTile(
-          //     leading: const Icon(Icons.settings),
-          //     title: const Text("Manage settings"),
-          //     on Tap: () {}),
-
-
+// ListTile(
+//     leading: const Icon(Icons.move_to_inbox),
+//     title: const Text("Move to Other"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.mark_chat_unread),
+//     title: const Text("Mark as unread"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.star),
+//     title: const Text("Star"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.notifications_off),
+//     title: const Text("Mute"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.archive),
+//     title: const Text("Archive"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.report),
+//     title: const Text("Report / Block"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.delete),
+//     title: const Text("Delete conversation"),
+//     onTap: () {}),
+// ListTile(
+//     leading: const Icon(Icons.settings),
+//     title: const Text("Manage settings"),
+//     on Tap: () {}),
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/services/chat_socket_service.dart';
@@ -760,8 +759,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
-
   String? userId, accessToken;
   final socketService = ChatSocketService.instance;
   final ScrollController _scrollController = ScrollController();
@@ -845,6 +842,7 @@ class _ChatScreenState extends State<ChatScreen> {
       return;
     }
 
+    socketService.onErrorReceived = handleErrorReceive;
     socketService.onMessageReceived = handleMessageRecieve;
     socketService.onTyping = (_) => setState(() => isTyping = true);
     socketService.onStopTyping = (_) => setState(() => isTyping = false);
@@ -885,63 +883,72 @@ class _ChatScreenState extends State<ChatScreen> {
   //   _scrollToBottom();
   // }
 
+  handleErrorReceive(Map<String, dynamic> data) {
+    final message = data['message'] ?? 'An unknown error occurred';
+    CustomSnackBar.show(
+        context: context, message: message, type: SnackBarType.error);
+    setState(() {
+      messages.removeLast();
+    });
+  }
+
   handleMessageRecieve(data) {
-        print('📩 Received message: $data');
-        try {
-          final Map<String, dynamic> map = Map<String, dynamic>.from(data);
-          // Check if this is a message intended for this chat
-          //if (map['chatId'] == widget.chat.chatId) {
-          // Create message from content
-          final content = map['content'] as Map<String, dynamic>;
-          final Message msg;
+    print('📩 Received message: $data');
+    try {
+      final Map<String, dynamic> map = Map<String, dynamic>.from(data);
+      // Check if this is a message intended for this chat
+      //if (map['chatId'] == widget.chat.chatId) {
+      // Create message from content
+      final content = map['content'] as Map<String, dynamic>;
+      final Message msg;
 
-          if (content.containsKey('text')) {
-            msg = Message(
-              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-              type: 'text',
-              seenBy: [],
-              content: MessageContent(text: content['text']),
-              sentDate: DateTime.now(),
-              senderId: map['senderId'] ?? "unknown",
-            );
-          } else if (content.containsKey('image')) {
-            msg = Message(
-              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-              type: 'image',
-              seenBy: [],
-              content: MessageContent(image: content['image']),
-              sentDate: DateTime.now(),
-              senderId: map['senderId'] ?? "unknown",
-            );
-          } else if (content.containsKey('video')) {
-            msg = Message(
-              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-              type: 'video',
-              seenBy: [],
-              content: MessageContent(video: content['video']),
-              sentDate: DateTime.now(),
-              senderId: map['senderId'] ?? "unknown",
-            );
-          } else {
-            msg = Message(
-              messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-              type: 'document',
-              seenBy: [],
-              content: MessageContent(document: content['document']),
-              sentDate: DateTime.now(),
-              senderId: map['senderId'] ?? "unknown",
-            );
-          }
-
-          if (mounted) {
-            setState(() => messages.add(msg));
-            _scrollToBottom();
-          }
-          //}
-        } catch (e) {
-          print('⚠️ Error parsing receiveMessage: $e');
-        }
+      if (content.containsKey('text')) {
+        msg = Message(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: 'text',
+          seenBy: [],
+          content: MessageContent(text: content['text']),
+          sentDate: DateTime.now(),
+          senderId: map['senderId'] ?? "unknown",
+        );
+      } else if (content.containsKey('image')) {
+        msg = Message(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: 'image',
+          seenBy: [],
+          content: MessageContent(image: content['image']),
+          sentDate: DateTime.now(),
+          senderId: map['senderId'] ?? "unknown",
+        );
+      } else if (content.containsKey('video')) {
+        msg = Message(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: 'video',
+          seenBy: [],
+          content: MessageContent(video: content['video']),
+          sentDate: DateTime.now(),
+          senderId: map['senderId'] ?? "unknown",
+        );
+      } else {
+        msg = Message(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: 'document',
+          seenBy: [],
+          content: MessageContent(document: content['document']),
+          sentDate: DateTime.now(),
+          senderId: map['senderId'] ?? "unknown",
+        );
       }
+
+      if (mounted) {
+        setState(() => messages.add(msg));
+        _scrollToBottom();
+      }
+      //}
+    } catch (e) {
+      print('⚠️ Error parsing receiveMessage: $e');
+    }
+  }
 
   // void _handleIncomingData(Map<String, dynamic> data) {
   //   // 1. only process messages for this room
@@ -951,7 +958,7 @@ class _ChatScreenState extends State<ChatScreen> {
   //   if (data['senderId'] == userId) return;
 
   //   // assume server gives you a stable messageId
-  //   final incomingId = data['messageId'] as String? 
+  //   final incomingId = data['messageId'] as String?
   //                        ?? DateTime.now().millisecondsSinceEpoch.toString();
   //   if (_seenMessageIds.contains(incomingId)) return;
   //   _seenMessageIds.add(incomingId);
@@ -995,8 +1002,7 @@ class _ChatScreenState extends State<ChatScreen> {
   //   socketService.markAsRead(widget.chatId);
   // }
 
-
-   void _handleMessageSent(String messageText) {
+  void _handleMessageSent(String messageText) {
     // Create a local message object for immediate UI display
     final newMsg = Message(
       messageId: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -1043,10 +1049,6 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollController.dispose();
     super.dispose();
   }
-
-
-
-  
 
   // @override
   // Widget build(BuildContext context) {
@@ -1155,7 +1157,6 @@ class _ChatScreenState extends State<ChatScreen> {
   //     ),
   //   );
   // }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1296,7 +1297,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-   Widget buildMessageContent(Message message) {
+  Widget buildMessageContent(Message message) {
     final c = message.content;
     if ((c.image.isNotEmpty) ||
         (c.video.isNotEmpty) ||
@@ -1411,17 +1412,25 @@ class _ChatScreenState extends State<ChatScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(chat!.chatName, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
-              Text(isTyping ? "Typing..." : "Offline", style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(chat!.chatName,
+                  style: TextStyle(fontSize: 16),
+                  overflow: TextOverflow.ellipsis),
+              Text(isTyping ? "Typing..." : "Offline",
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
         ],
       ),
-      actions: [IconButton(icon: Icon(Icons.more_horiz), onPressed: _showMore), IconButton(icon: Icon(Icons.video_call), onPressed: () {}), StarButton()],
+      actions: [
+        IconButton(icon: Icon(Icons.more_horiz), onPressed: _showMore),
+        IconButton(icon: Icon(Icons.video_call), onPressed: () {}),
+        StarButton()
+      ],
     );
   }
 
-  void _showMore() => showModalBottomSheet(context: context, builder: (_) => _MoreOptionsSheet());
+  void _showMore() => showModalBottomSheet(
+      context: context, builder: (_) => _MoreOptionsSheet());
   //void _showAttachmentOptions() {/*…unchanged…*/}
   //   //=============================================Attachment Handling=============================================//
 
@@ -1542,7 +1551,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class _MoreOptionsSheet extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Container(padding: EdgeInsets.all(15), child: Column(mainAxisSize: MainAxisSize.min, children: []));
+  Widget build(BuildContext context) => Container(
+      padding: EdgeInsets.all(15),
+      child: Column(mainAxisSize: MainAxisSize.min, children: []));
 }
   // String? userId, accessToken;
   // final socketService = ChatSocketService.instance;
