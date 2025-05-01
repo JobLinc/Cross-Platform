@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserCerificates extends StatelessWidget {
-  const UserCerificates({super.key, required this.profile});
+  const UserCerificates({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
+  final bool isuser;
 
   String _formatCertificateDates(dynamic startYear, dynamic endYear) {
     String issuedText = "";
@@ -66,6 +68,14 @@ class UserCerificates extends StatelessWidget {
                 'Licenses & Certifications',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+              isuser
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, Routes.addCertificationScreen);
+                      },
+                      icon: Icon(Icons.add))
+                  : SizedBox.shrink(),
             ],
           ),
           ListView.builder(
@@ -97,50 +107,55 @@ class UserCerificates extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: ColorsManager.darkBurgundy,
-                                  size: 20.r,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Delete Certificate'),
-                                        content: Text(
-                                            'Are you sure you want to delete "${cert.name}"?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .deleteCertificate(cert.name);
-                                              // Close dialog and delete certificate
-                                            },
-                                            child: Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                              if (isuser) ...[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: ColorsManager.darkBurgundy,
+                                    size: 20.r,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Delete Certificate'),
+                                          content: Text(
+                                              'Are you sure you want to delete "${cert.name}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              },
+                                              child: Text('Cancel'),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                splashRadius: 20.r,
-                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .deleteCertificate(
+                                                        cert.certificationId);
+                                                // Close dialog and delete certificate
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  splashRadius: 20.r,
+                                ),
+                              ]
                             ],
                           ),
                           SizedBox(height: 4.h),

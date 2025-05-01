@@ -9,6 +9,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MockProfileCubit extends Mock implements ProfileCubit {}
+
 void main() {
   late MockProfileCubit mockProfileCubit;
 
@@ -46,6 +47,8 @@ void main() {
       experiences: [],
       certifications: [certification],
       languages: [],
+      resumes: [],
+      username: 'alolo',
     );
 
     await tester.pumpWidget(

@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
+import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
@@ -15,14 +19,14 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   String firstname = "";
   final UserProfileRepository _profileRepository;
-
-  ProfileCubit(this._profileRepository) : super(ProfileInitial());
+  final UserConnectionsRepository connectionsRepository;
+  ProfileCubit(this._profileRepository, this.connectionsRepository)
+      : super(ProfileInitial());
 
   Future<void> getUserProfile() async {
     try {
       emit(ProfileLoading());
       final profile = await _profileRepository.getUserProfile();
-      firstname = profile.firstname;
       if (!isClosed) {
         emit(ProfileLoaded(profile));
       }
@@ -69,6 +73,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> deleteProfilePicture() async {
+    // emit(RemoveSkill(skill));
+    try {
+      emit(ProfileUpdating("Deleting profile picture"));
+      final response = await _profileRepository.deleteProfilePicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
   Future<void> uploadCoverPicture(File imageFile) async {
     // UserProfileUpdateModel updateData =
     //     UserProfileUpdateModel(profilePicture: imageFile.path);
@@ -87,6 +113,27 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     } catch (e) {
       emit(ProfileError('Error: $e'));
+    }
+  }
+
+  Future<void> deleteCoverPicture() async {
+    try {
+      emit(ProfileUpdating("Deleting cover picture"));
+      final response = await _profileRepository.deleteCoverPicture();
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete cover picture.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting cover picture");
+        emit(ProfileError('Error: $e'));
+      }
     }
   }
 
@@ -119,8 +166,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addCertification(certification);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel picModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
         emit(CertificateAdded("Certificate Added"));
         // getUserProfile();
@@ -138,24 +184,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> deleteCertificate(String name) async {
+  Future<void> deleteCertificate(String certificationId) async {
     try {
-      emit(ProfileUpdating("Deleting Certificate"));
-      String certificationId;
-      final certificates = await _profileRepository.getAllCertificates();
-
-      certificationId =
-          certificates.firstWhere((cert) => cert.name == name).certificationId;
-
-      print(certificates);
-      print(certificationId);
       final response =
           await _profileRepository.deleteCertification(certificationId);
 
       if (response.statusCode == 200) {
         // Optionally update profile or UI after deletion
-        UserProfileUpdateModel picModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel picModel = UserProfileUpdateModel();
         updateUserProfile(picModel);
         // getUserProfile();
       } else {
@@ -186,8 +222,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addSkill(skill);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel skillModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel skillModel = UserProfileUpdateModel();
         updateUserProfile(skillModel);
         emit(SkillAdded("Skill Added"));
       } else {
@@ -202,8 +237,26 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void removeSkill(String skill) {
+  void removeSkill(String skillid) async {
     // emit(RemoveSkill(skill));
+    try {
+      emit(ProfileUpdating("Deleting skill"));
+      final response = await _profileRepository.deleteSkill(skillid);
+      if (response.statusCode == 200) {
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ProfileError('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting");
+        emit(ProfileError('Error: $e'));
+      }
+    }
   }
 
   void addExperience(Experience experience) async {
@@ -212,8 +265,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _profileRepository.addExperience(experience);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel experienceModel =
-            UserProfileUpdateModel(firstName: firstname);
+        UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
         updateUserProfile(experienceModel);
         emit(ExperienceAdded("Experience Added"));
       } else {
@@ -232,21 +284,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       print("hello");
       emit(ProfileUpdating("Deleting Experience"));
-      String experienceId;
-      final experiences = await _profileRepository.getAllExperiences();
 
-      experienceId = experiences
-          .firstWhere((exp) => exp.position == position)
-          .experienceId;
-
-      print(experiences);
-      print(experienceId);
-      final response = await _profileRepository.deleteExperience(experienceId);
+      final response = await _profileRepository.deleteExperience(position);
 
       if (response.statusCode == 200) {
-        UserProfileUpdateModel expModel =
-            UserProfileUpdateModel(firstName: firstname);
-        updateUserProfile(expModel);
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        await updateUserProfile(expModel);
       } else {
         if (!isClosed) {
           print("Failed deletion logic triggered");
@@ -257,6 +300,263 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (!isClosed) {
         print("Exception caught while deleting");
         emit(ProfileError('Error: $e'));
+      }
+    }
+  }
+
+  Future<void> uploadResume(File file) async {
+    try {
+      emit(ProfileUpdating("Uploading resume"));
+      final response = await _profileRepository.uploadResume(file);
+      print('Resume uploaded successfully: ${response.data}');
+      if (response.statusCode == 200) {
+        emit(ResumeAdded("Resume added succefully"));
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+
+        await updateUserProfile(expModel);
+      } else {
+        emit(ResumeFailed("Resume adding failed"));
+      }
+      // You can optionally handle the response here, e.g., update the UI or state
+    } catch (e) {
+      if (!isClosed) {
+        emit(ResumeFailed("Resume adding failed"));
+      }
+      print('Error in cubit while uploading resume: $e');
+      // You can optionally emit an error state or handle the error gracefully
+    }
+  }
+
+  Future<void> deleteresume(String resumeid) async {
+    try {
+      emit(ProfileUpdating("Deleting skill"));
+      final response = await _profileRepository.deleteResume(resumeid);
+      if (response.statusCode == 200) {
+        emit(ResumeAdded("Resume deleted succefully"));
+        UserProfileUpdateModel expModel = UserProfileUpdateModel();
+        await updateUserProfile(expModel);
+      } else {
+        if (!isClosed) {
+          print("Failed deletion logic triggered");
+          emit(ResumeFailed('Failed to delete experience.'));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print("Exception caught while deleting ${e.toString()}");
+        emit(ResumeFailed('Error: $e'));
+      }
+    }
+  }
+
+  ///////////////////////////////////OTHERS//////////////////////////
+  Future<void> getPublicUserProfile(String userId) async {
+    emit(ProfileLoading());
+    try {
+      final profile = await _profileRepository.getPublicUserProfile(userId);
+      if (!isClosed) {
+        emit(ProfileLoaded(profile));
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(ProfileError('Failed to load public profile: ${e.toString()}'));
+      }
+    }
+  }
+
+  void respondToConnectionInvitation(
+      String userId, String status, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.respondToConnection(
+        userId,
+        status,
+      );
+
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Connection $status successfully",
+          type: SnackBarType.success,
+        );
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+          context: context,
+          message: "Failed to $status connection",
+          type: SnackBarType.error,
+        );
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Couldn't $status the connection",
+          type: SnackBarType.error,
+        );
+      }
+    }
+  }
+
+  void removeConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.changeConnectionStatus(
+          userId, "Canceled");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection withdrawn succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection withdrawing failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't withdraw connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void blockConnection(String userId, BuildContext context) async {
+    try {
+      final response =
+          await connectionsRepository.changeConnectionStatus(userId, "Blocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void unblockConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.changeConnectionStatus(
+          userId, "Unblocked");
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocked succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection Blocking failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't block connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void followConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.follwConnection(userId);
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection followed succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection followed failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't follow connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void unfollowConnection(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.unfollwConnection(userId);
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection unfollowed succefully ",
+            type: SnackBarType.success);
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "connection unfollowed failed ",
+            type: SnackBarType.error);
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: "couldn't unfollow connection",
+            type: SnackBarType.error);
+      }
+    }
+  }
+
+  void sendConnectionRequest(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.sendConnection(userId);
+
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Connection sent successfully",
+          type: SnackBarType.success,
+        );
+        getPublicUserProfile(userId);
+      } else {
+        CustomSnackBar.show(
+          context: context,
+          message: "Failed to send connection",
+          type: SnackBarType.error,
+        );
+        getPublicUserProfile(userId);
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+          context: context,
+          message: "Couldn't send the connection",
+          type: SnackBarType.error,
+        );
       }
     }
   }

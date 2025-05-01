@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
@@ -25,7 +26,9 @@ class ConnectionList extends StatelessWidget {
             appBar: AppBar(
               leading: IconButton(
                   key: Key("connections_back_button"),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
                   icon: Icon(Icons.arrow_back)),
               title: Text("Connection", style: TextStyle(fontSize: 20.sp)),
               centerTitle: true,

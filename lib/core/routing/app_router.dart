@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
@@ -5,6 +6,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
+import 'package:joblinc/features/blockedaccounts/ui/screens/blocked_accounts_screen.dart';
 import 'package:joblinc/features/adminpanel/ui/screens/admin_panel.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
@@ -14,20 +17,25 @@ import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubi
 import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
-import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
+import 'package:joblinc/features/connections/ui/screens/block_list_screen.dart';
 import 'package:joblinc/features/connections/ui/screens/connections.dart';
+import 'package:joblinc/features/connections/ui/screens/followers_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/following_list_screen.dart';
+import 'package:joblinc/features/connections/ui/screens/others_connection_list.dart';
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
-
-import 'package:joblinc/features/home/ui/screens/home_screen.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
@@ -118,17 +126,21 @@ class AppRouter {
           );
         }
       case Routes.otherProfileScreen:
-        if (arguments is UserProfile) {
+        if (arguments is String) {
           return MaterialPageRoute(
-            builder: (context) => othersProfileScreen(profile: arguments),
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<ProfileCubit>(),
+              child: OthersProfileScreen(userId: arguments),
+            ),
           );
         } else {
           return MaterialPageRoute(
-            builder: (context) => Scaffold(
-              body: Text("2ntr"),
+            builder: (context) => const Scaffold(
+              body: Center(child: Text("2ntr")),
             ),
           );
         }
+
       // case Routes.chatScreen:
       //   return MaterialPageRoute(builder: (context) => ChatScreen());
       case Routes.forgotPasswordScreen:
@@ -203,6 +215,52 @@ class AppRouter {
           return MaterialPageRoute(
             builder: (context) => CompanyPageHome(company: arguments),
           );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyPageHome(
+              company: arguments['company'],
+              isAdmin: arguments['isAdmin'] ?? false,
+            ),
+          );
+        } else if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (context) {
+              try {
+                final repo = CompanyRepositoryImpl(
+                  CompanyApiService(getIt<Dio>()),
+                );
+                return FutureBuilder(
+                  future: repo.getCompanyBySlug(arguments),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Scaffold(
+                        body: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Scaffold(
+                        body: Center(
+                            child: Text(
+                                'Error 404: Requested company is not found')),
+                      );
+                    } else if (snapshot.hasData) {
+                      return CompanyPageHome(company: snapshot.data as Company);
+                    } else {
+                      return Scaffold(
+                        body: Center(
+                            child:
+                                Text('Invalid arguments for CompanyPageHome')),
+                      );
+                    }
+                  },
+                );
+              } catch (e) {
+                return Scaffold(
+                  body: Center(
+                      child: Text('Error 404: Requested company is not found')),
+                );
+              }
+            },
+          );
         } else {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -226,6 +284,38 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<ConnectionsCubit>(),
             child: ConnectionPage(),
+          ),
+        );
+      case Routes.followersListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowersListScreen(),
+          ),
+        );
+      case Routes.followingListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: FollowingListScreen(),
+          ),
+        );
+      case Routes.othersConnectionScreen:
+        if (arguments is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) =>
+                  getIt<ConnectionsCubit>()..fetchUserConnections(arguments),
+              child: OthersConnectionList(),
+            ),
+          );
+        } else {}
+
+      case Routes.blockedConnectionsList:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConnectionsCubit>(),
+            child: BlockedList(),
           ),
         );
       case Routes.settingsScreen:
@@ -282,16 +372,27 @@ class AppRouter {
           );
         }
 
-      case Routes.companyFeed:
+      case Routes.companyEdit:
         if (arguments is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyFeed(company: arguments),
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyPageEditScreen(company: arguments),
+            ),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyPageEditScreen(
+              company: arguments['company'],
+
+              // You can also pass isAdmin if needed: isAdmin: arguments['isAdmin'] ?? false,
+            ),
           );
         } else {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
               body: Center(
-                child: Text("Invalid arguments for CompanyDashboard"),
+                child: Text("Invalid arguments for CompanyEdit"),
               ),
             ),
           );
@@ -354,6 +455,14 @@ class AppRouter {
           ),
         );
 
+      case Routes.blockedAccountsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                getIt.get<BlockedAccountsCubit>()..getBlockedUsers(),
+            child: BlockedAccountsScreen(),
+          ),
+        );
       case Routes.addResumeScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(

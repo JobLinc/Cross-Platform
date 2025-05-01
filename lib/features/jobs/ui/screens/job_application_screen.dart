@@ -1,10 +1,11 @@
-import 'dart:ffi';
 import 'dart:io';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
+import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/widgets/resume_card.dart';
@@ -23,7 +24,7 @@ class JobApplicationScreen extends StatefulWidget {
 }
 
 class _JobApplicationScreenState extends State<JobApplicationScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  //final TextEditingController _emailController = TextEditingController();
   final TextEditingController _countryCodeController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
@@ -35,7 +36,10 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   void initState() {
     super.initState();
     // _loadStoredResumes();
-    _emailController.text = mockMainUser.email ?? "";
+    //_emailController.text = mockMainUser.email ?? "";
+  if (_countryCodeController.text.isEmpty) {
+    _countryCodeController.text = "+20";
+  }// Default to Egypt
     context.read<JobListCubit>().getAllResumes();
   }
 
@@ -56,12 +60,19 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   }
 
   Future<void> _pickResumeFile() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.any);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+      allowMultiple: false,
+      );
     if (result != null && result.files.isNotEmpty) {
       final platformFile = result.files.first;
       if (platformFile.path != null) {
         final file = File(platformFile.path!);
 
+        await context.read<JobListCubit>().uploadResume(file);
+
+        await context.read<JobListCubit>().getAllResumes();
         // Get the app documents directory
         final directory = await getApplicationDocumentsDirectory();
         final localPath = '${directory.path}/${platformFile.name}';
@@ -73,14 +84,12 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
 
         // Save file path in persistent storage
         await _saveResumeLocally(platformFile.name, localFile.path);
-        print(_selectedResumeId);
+        //print(_selectedResumeId);
         setState(() {
           _selectedResumeId = platformFile.name;
           //_selectedResumeLocalPath = localFile.path;
         });
 
-        context.read<JobListCubit>().uploadResume(file);
-        context.read<JobListCubit>().getAllResumes();
       }
     }
   }
@@ -107,6 +116,11 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       listener: (context, state) {
         // Show a loading snackbar while sending application
         if (state is JobApplicationSending) {
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: "Application sent successfully",
+          //   type: SnackBarType.info,
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -116,13 +130,18 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   Text("Sending application..."),
                 ],
               ),
-              duration: Duration(minutes: 1),
+              duration: Duration(seconds: 8),
             ),
           );
         }
         // When application is sent, show success snackbar and pop screen
         else if (state is JobApplicationSent) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: "Application sent successfully",
+          //   type: SnackBarType.success,
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -136,27 +155,55 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
             ),
           );
           Future.delayed(Duration(seconds: 2), () {
-            Navigator.pop(context);
+            Navigator.of(context).pop(true);
           });
+        } else if (state is JobApplicationErrorSending) {
+
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          // CustomSnackBar.show(
+          //   context: context,
+          //   message: state.errorMessage.split(":").last,
+          //   type: SnackBarType.error,
+          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error, color: Colors.red),
+                  SizedBox(width: 16.w),
+                  Text(state.errorMessage.split(":").last),
+                ],
+              ),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Apply to ${widget.job.company?.name ?? ''}"),
+          title: Text("Apply to ${widget.job.title ?? ""}"),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
           child: Column(
             children: [
               buildContactInfoCard(),
-              buildTextField(
-                  _emailController, TextInputType.text, "Email address*"),
-              SizedBox(height: 16.h),
+              // buildTextField(
+              //     _emailController, TextInputType.text, "Email address*"),
+              // SizedBox(height: 16.h),
+
               // buildTextField(_countryCodeController, "Phone country code*"),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField2<String>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 350.h,
+                  width: 1.sw - 32, // Match parent width minus padding
+                  direction:
+                      DropdownDirection.textDirection, // Follow text direction
+                  offset: const Offset(0, 0), // No offset
+                ),
                 value: _countryCodeController.text.isNotEmpty
                     ? _countryCodeController.text
-                    : null,
+                    : "+20",
                 decoration: InputDecoration(
                   labelText: "Phone country code*",
                   border: OutlineInputBorder(),
@@ -175,7 +222,8 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                   DropdownMenuItem(value: "+44", child: Text("UK (+44)")),
                   DropdownMenuItem(value: "+20", child: Text("Egypt (+20)")),
                   DropdownMenuItem(value: "+91", child: Text("India (+91)")),
-                  DropdownMenuItem(value: "+61", child: Text("Australia (+61)")),
+                  DropdownMenuItem(
+                      value: "+61", child: Text("Australia (+61)")),
                   DropdownMenuItem(value: "+81", child: Text("Japan (+81)")),
                   DropdownMenuItem(value: "+49", child: Text("Germany (+49)")),
                   DropdownMenuItem(value: "+33", child: Text("France (+33)")),
@@ -200,72 +248,69 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                       TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                 ),
               ),
-              BlocBuilder<JobListCubit, JobListState>(
-                builder: (context, state) {
-                  if (state is JobResumesLoading) {
-                    return CircularProgressIndicator();
-                  } else if (state is JobResumesLoaded) {
-                    resumes = state.resumes!;
-                    if (resumes!.isEmpty) {
-                      return Text("No resumes found. Upload a new one.");
-                    }
-                    return ResumeList(
-                      resumes: resumes!,
-                      selectedResumeId: _selectedResumeId,
-                      onResumeSelected: (resumeId) {
-                        setState(() {
-                          _selectedResumeId = resumeId;
-                        });
-                      },
-                      onOpenResume: _openResume, // Pass `_openResume` function
-                    );
-                  } else {
-                    if (resumes == null) {
-                      return const Text("Error loading resumes.");
-                    } else {
-                      if (resumes!.isEmpty) {
-                        return Text("No resumes found. Upload a new one.");
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: 320.h,
+                  minHeight: 100.h,
+                ),
+                child: SingleChildScrollView(
+                  child: BlocBuilder<JobListCubit, JobListState>(
+                    builder: (context, state) {
+                    if (state is JobResumeUploading) {
+                        return  Column(children: [
+                          Center(child: CircularProgressIndicator(color: ColorsManager.crimsonRed,)),
+                          Center(child: Text("Uploading Resume",style: TextStyle(color:ColorsManager.crimsonRed ),),)
+                        ],);
+                      }else if (state is JobResumesLoading) {
+                        return CircularProgressIndicator();
+                      } else if (state is JobResumesLoaded) {
+                        resumes = state.resumes!;
+                        if (resumes!.isEmpty) {
+                          return Text("No resumes found. Upload a new one.");
+                        }
+                        return ResumeList(
+                          resumes: resumes!,
+                          selectedResumeId: _selectedResumeId,
+                          onResumeSelected: (resumeId) {
+                            setState(() {
+                              _selectedResumeId = resumeId;
+                            });
+                          },
+                          onOpenResume: _openResume, // Pass `_openResume` function
+                        );
+                      } else {
+                        if (resumes == null) {
+                          return const Text("Error loading resumes.");
+                        } else {
+                          if (resumes!.isEmpty) {
+                            return Text("No resumes found. Upload a new one.");
+                          }
+                          return ResumeList(
+                            resumes: resumes!,
+                            selectedResumeId: _selectedResumeId,
+                            onResumeSelected: (resumeId) {
+                              setState(() {
+                                _selectedResumeId = resumeId;
+                              });
+                            },
+                            onOpenResume:
+                                _openResume, // Pass `_openResume` function
+                          );
+                        }
                       }
-                      return ResumeList(
-                        resumes: resumes!,
-                        selectedResumeId: _selectedResumeId,
-                        onResumeSelected: (resumeId) {
-                          setState(() {
-                            _selectedResumeId = resumeId;
-                          });
-                        },
-                        onOpenResume:
-                            _openResume, // Pass `_openResume` function
-                      );
-                    }
-                  }
-                },
+                    },
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: _pickResumeFile,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[400],
+                  backgroundColor:ColorsManager.getPrimaryColor(context),
                   foregroundColor: Colors.white,
                 ),
                 child: const Text("Upload New Resume"),
               ),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     await _clearStoredResume();
-              //     setState(() {
-              //       _selectedResumeId = null;
-              //       _selectedResumeLocalPath = null;
-              //     });
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       SnackBar(content: Text("Resume storage cleared.")),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.grey,
-              //     foregroundColor: Colors.white,
-              //   ),
-              //   child: const Text("Clear Resume Data"),
-              // ),
+ 
             ],
           ),
         ),
@@ -291,20 +336,20 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      final email = _emailController.text.trim();
+                      //final email = _emailController.text.trim();
                       final countryCode = _countryCodeController.text.trim();
                       final phoneNumber = _phoneNumberController.text.trim();
-                      final emailRegex =
-                          RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                      // final emailRegex =
+                      //     RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-                      if (email.isEmpty || !emailRegex.hasMatch(email)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text("Please enter a valid email address.")),
-                        );
-                        return;
-                      }
+                      // if (email.isEmpty || !emailRegex.hasMatch(email)) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(
+                      //         content:
+                      //             Text("Please enter a valid email address.")),
+                      //   );
+                      //   return;
+                      //}
                       if (countryCode.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -330,19 +375,16 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                         );
                         return;
                       }
-                      final jobApplication = JobApplication(
-                        applicant: mockMainApplicant,
-                        job: widget.job,
-                        resume: resumes!.firstWhere(((resume)=> resume.id==_selectedResumeId!)),
-                        status: "JustApplied",
-                        createdAt: DateTime.now(),
-                      );
+ 
                       context
                           .read<JobListCubit>()
-                          .applyJob(widget.job.id!, jobApplication);
+                          .applyJob(widget.job.id, {
+                            "phone": phoneNumber,
+                            "resumeId": _selectedResumeId,
+                          });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[400],
+                      backgroundColor: ColorsManager.getPrimaryColor(context),
                       foregroundColor: Colors.white,
                     ),
                     child: const Text("Apply"),
@@ -413,3 +455,27 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
 //   await prefs.remove("selected_resume_id");
 //   await prefs.remove("selected_resume_path");
 // }
+             // ElevatedButton(
+              //   onPressed: () async {
+              //     await _clearStoredResume();
+              //     setState(() {
+              //       _selectedResumeId = null;
+              //       _selectedResumeLocalPath = null;
+              //     });
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       SnackBar(content: Text("Resume storage cleared.")),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.grey,
+              //     foregroundColor: Colors.white,
+              //   ),
+              //   child: const Text("Clear Resume Data"),
+              // ),                     // final jobApplication = JobApplication(
+                      //   applicant: mockMainApplicant,
+                      //   job: widget.job,
+                      //   resume: resumes!.firstWhere(
+                      //       ((resume) => resume.id == _selectedResumeId!)),
+                      //   status: "JustApplied",
+                      //   createdAt: DateTime.now(),
+                      // );

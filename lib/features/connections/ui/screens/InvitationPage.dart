@@ -36,7 +36,11 @@ class InvitationPage extends StatelessWidget {
               child: Text(state.error),
             );
           } else {
-            return Container();
+            return Container(
+              child: Center(
+                child: Text("hello"),
+              ),
+            );
           }
         },
       ),

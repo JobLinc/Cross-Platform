@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
+
 class addService {
   final Dio dio;
 
@@ -70,7 +74,7 @@ class addService {
     try {
       Response response = await dio.post(
         '/user/experience/add',
-        data: experience.toJson(), 
+        data: experience.toJson(),
       );
 
       return response;
@@ -96,7 +100,7 @@ class addService {
       final response = await dio.get('/user/experience');
 
       if (response.statusCode == 200) {
-        return response.data; 
+        return response.data;
       } else {
         throw Exception('Failed to fetch experiences');
       }
@@ -104,7 +108,7 @@ class addService {
       throw Exception('API error: $e');
     }
   }
-  
+
   Future<List<Skill>> fetchSkills() async {
     try {
       final response = await dio.get('/user/skill');
@@ -119,7 +123,7 @@ class addService {
     try {
       Response response = await dio.post(
         '/user/skills/add',
-        data: skill.toJson(), 
+        data: skill.toJson(),
       );
 
       return response;
@@ -145,7 +149,7 @@ class addService {
       final response = await dio.get('/user/skills');
 
       if (response.statusCode == 200) {
-        return response.data; 
+        return response.data;
       } else {
         throw Exception('Failed to fetch skills');
       }
@@ -153,4 +157,60 @@ class addService {
       throw Exception('API error: $e');
     }
   }
+
+  Future<Response> uploadResume(File file) async {
+    try {
+      final fileName = file.path.split('/').last;
+      print(" this is the media type ${getMediaType(file).toString()}");
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+          contentType: getMediaType(file),
+        ),
+      });
+
+      final response = await dio.post('/user/resume/upload', data: formData);
+      return response;
+    } catch (e) {
+      print('Error uploading resume: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<dynamic>> getUserResumes() async {
+    try {
+      final response = await dio.get('/user/resume');
+      return response.data;
+    } catch (e, stackTrace) {
+      print('Error in ResumeApiService.getUserResumes: $e');
+      print('StackTrace: $stackTrace');
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteUserResume(String resumeid) async {
+    try {
+      final response = await dio.delete('/user/resume/$resumeid');
+      return response;
+    } on DioException catch (e) {
+      print("error  ${e.toString()}");
+      throw Exception(
+          'Failed to delete resume: ${e.response?.data ?? e.message}');
+    }
+  }
 }
+
+MediaType getMediaType(File file) {
+  final extension = file.path.split('.').last.toLowerCase();
+
+  switch (extension) {
+    case 'pdf':
+      return MediaType('application', 'pdf');
+    case 'doc':
+    case 'docx':
+      return MediaType('application', 'msword');  // MIME type for Word documents
+    default:
+      return MediaType('application', 'octet-stream'); // Fallback for unsupported types
+  }
+} 
