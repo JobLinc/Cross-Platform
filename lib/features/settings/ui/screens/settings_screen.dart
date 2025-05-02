@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/accountvisibility/ui/screens/account_visibility_screen.dart';
 
@@ -78,6 +79,7 @@ class SettingsScreen extends StatelessWidget {
             onTap: () {
               AuthService authService = getIt<AuthService>();
               authService.clearUserInfo();
+              UserService.clearUserData();  
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.loginScreen,
