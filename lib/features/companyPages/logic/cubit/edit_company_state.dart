@@ -4,10 +4,17 @@ abstract class EditCompanyState {}
 
 class EditCompanyInitial extends EditCompanyState {}
 
-class EditCompanyLoading extends EditCompanyState {}
+class EditCompanyFailed extends EditCompanyState {
+  final String error;
 
-class EditCompanySuccess extends EditCompanyState {
-  
+  EditCompanyFailed(this.error);
+}
+
+class EditCompanySuccess extends EditCompanyState 
+{
+  final Company? company;
+
+  EditCompanySuccess({ this.company});
 }
 
 class EditCompanyFailure extends EditCompanyState {

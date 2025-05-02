@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/userprofile/data/models/follow_model.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 class UserConnectionsRepository {
   final UserConnectionsApiService _apiService;
@@ -122,10 +123,17 @@ class UserConnectionsRepository {
 
   Future<String> createchat(String userId) async {
     try {
-      print("REPOOOOOOOOOOOOOOOOOOOO");
       final response = await _apiService.createchat(userId);
       print("${response.data["chatId"]}");
       return response.data["chatId"];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<UserProfile>> searchUsers(String keyword) {
+    try {
+      return _apiService.searchUsers(keyword);
     } catch (e) {
       rethrow;
     }

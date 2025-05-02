@@ -65,6 +65,7 @@ import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.d
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
@@ -242,7 +243,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
       getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
-
+  getIt.registerFactory<SearchCubit>(
+      () => SearchCubit(getIt<UserConnectionsRepository>()));
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
       () => EmailConfirmationApiService(getIt<Dio>()));
