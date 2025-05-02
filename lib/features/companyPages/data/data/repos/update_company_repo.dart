@@ -32,4 +32,22 @@ class UpdateCompanyRepo {
       rethrow;
     }
   }
+
+  Future<CompanyResponse> removeCompanyLogo() async {
+    try {
+      final company = await apiService.removeCompanyLogo();
+      return CompanyResponse.fromJson(company as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CompanyResponse> removeCompanyCover() async {
+    try {
+      final company = await apiService.removeCompanyCover();
+      return CompanyResponse.fromJson(company as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

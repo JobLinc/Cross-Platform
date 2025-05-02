@@ -106,6 +106,38 @@ class UpdateCompanyApiService {
     }
   }
 
+  Future <dynamic> removeCompanyLogo() async {
+    try {
+      final response = await _dio.delete(
+        '/companies/remove-logo',
+      );
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null &&
+          e.response!.data is Map &&
+          e.response!.data['message'] != null) {
+        throw Exception(e.response!.data['message']);
+      }
+      throw Exception('Failed to remove company logo: ${e.message}');
+    }
+  }
+
+  Future <dynamic> removeCompanyCover() async {
+    try {
+      final response = await _dio.delete(
+        '/companies/remove-cover',
+      );
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null &&
+          e.response!.data is Map &&
+          e.response!.data['message'] != null) {
+        throw Exception(e.response!.data['message']);
+      }
+      throw Exception('Failed to remove company logo: ${e.message}');
+    }
+  }
+
   MediaType getMediaType(File file) {
     final extension = file.path.split('.').last.toLowerCase();
 

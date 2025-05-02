@@ -34,9 +34,8 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry:
-            IndustryExtension.fromDisplayName(companyResponse.industry) ??
-                Industry.technology,
+        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
+            Industry.technology,
         organizationSize:
             OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
                 OrganizationSize.elevenToFifty,
@@ -53,7 +52,8 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       emit(EditCompanyFailure('Error: $e'));
     }
   }
-   Future<Company?> uploadCompanyCover(File imageFile) async {
+
+  Future<Company?> uploadCompanyCover(File imageFile) async {
     try {
       emit(EditCompanyInitial());
       final companyResponse = await _companyRepo.uploadCompanyCover(imageFile);
@@ -61,9 +61,8 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry:
-            IndustryExtension.fromDisplayName(companyResponse.industry) ??
-                Industry.technology,
+        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
+            Industry.technology,
         organizationSize:
             OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
                 OrganizationSize.elevenToFifty,
@@ -73,11 +72,71 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         overview: companyResponse.overview,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
+        coverUrl: companyResponse.coverPhoto,
         id: companyResponse.id,
         followers: companyResponse.followers!,
       );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
+      return null;
+    }
+  }
+
+  Future<Company?> removeCompanyLogo() async {
+    try {
+      emit(EditCompanyInitial());
+      final companyResponse = await _companyRepo.removeCompanyLogo();
+      emit(EditCompanySuccess());
+      return Company(
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
+            Industry.technology,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
+                OrganizationType.governmentAgency,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        coverUrl: companyResponse.coverPhoto,
+        id: companyResponse.id,
+        followers: companyResponse.followers ?? 0,
+      );
+    } catch (e) {
+      emit(EditCompanyFailure('Error: $e'));
+      return null;
+    }
+  }
+
+  Future<Company?> removeCompanyCover() async {
+    try {
+      emit(EditCompanyInitial());
+      final companyResponse = await _companyRepo.removeCompanyCover();
+      emit(EditCompanySuccess());
+      return Company(
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
+            Industry.technology,
+        organizationSize:
+            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
+        organizationType:
+            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
+                OrganizationType.governmentAgency,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        coverUrl: companyResponse.coverPhoto,
+        id: companyResponse.id,
+        followers: companyResponse.followers ?? 0,
+      );
+    } catch (e) {
+      emit(EditCompanyFailure('Error: $e'));
+      return null;
     }
   }
 }

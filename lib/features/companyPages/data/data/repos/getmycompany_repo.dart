@@ -33,6 +33,8 @@ class CompanyRepositoryImpl implements CompanyRepository {
             overview: companyResponse.overview,
             website: companyResponse.website,
             logoUrl: companyResponse.logo,
+            coverUrl: companyResponse.coverPhoto,
+            followers: companyResponse.followers ?? 0,
             id: companyResponse.id);
       }).toList();
       return companies;
@@ -80,6 +82,9 @@ class CompanyRepositoryImpl implements CompanyRepository {
                 website: companyResponse.website ?? 'Website not available',
                 logoUrl: companyResponse.logo ?? '',
                 id: companyResponse.id ?? '',
+                coverUrl: companyResponse.coverPhoto ?? '',
+                followers: companyResponse.followers ?? 0,
+
               );
             } catch (e) {
               print('Error mapping company: ${companyResponse.toString()}');
@@ -117,7 +122,11 @@ class CompanyRepositoryImpl implements CompanyRepository {
           overview: company.overview,
           website: company.website,
           logoUrl: company.logo,
-          id: company.id);
+          id: company.id,
+          coverUrl: company.coverPhoto,
+          followers: company.followers ?? 0,
+          
+          );
     } catch (e) {
       throw Exception('Failed to get company by slug: $e');
     }
