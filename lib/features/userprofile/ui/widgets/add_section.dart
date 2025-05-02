@@ -29,7 +29,7 @@ class UserProfileAddSection extends StatelessWidget {
                   icon: Icon(Icons.ios_share),
                   onPressed: () {
                     Navigator.pushReplacementNamed(
-                        context, Routes.addSkillScreen);
+                        context, Routes.addExperienceScreen);
                   },
                 ),
                 Text(
@@ -105,7 +105,7 @@ class UserProfileAddSection extends StatelessWidget {
               //Navigator.pushReplacementNamed(context, Routes.addResumeScreen);
               final result = await FilePicker.platform.pickFiles(
                 type: FileType.custom,
-                allowedExtensions: ['pdf'],
+                allowedExtensions: ['pdf', 'doc', 'docx'],
                 allowMultiple: false,
               );
 
@@ -132,7 +132,7 @@ class UserProfileAddSection extends StatelessWidget {
                     //Navigator.pushReplacementNamed(context, Routes.addResumeScreen);
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['pdf'],
+                      allowedExtensions: ['pdf', 'doc', 'docx'],
                       allowMultiple: false,
                     );
 

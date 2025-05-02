@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 
@@ -25,9 +27,20 @@ class SentConnectionsList extends StatelessWidget {
               color: ColorsManager.warmWhite, // White background
               child: GestureDetector(
                 key: Key("Sent Invitations Page Tile"),
-                onTap: () {
+                onTap: () async {
                   // TODO: Navigate to the user's profile
                   print("Go to ${sent.firstname}'s profile");
+
+                  final shouldRefresh = await Navigator.pushNamed(
+                          context, Routes.otherProfileScreen,
+                          arguments: sent.userId) ??
+                      false;
+
+                  if (shouldRefresh == true) {
+                    context
+                        .read<SentConnectionsCubit>()
+                        .fetchSentInvitations(); // or whatever function to refresh
+                  }
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,13 +48,12 @@ class SentConnectionsList extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Align(
-                        alignment:
-                            Alignment.topLeft, // Align avatar to top-left
-                        child: CircleAvatar(
-                          radius: 25.r, // Bigger avatar
-                          child: Text(sent.firstname[0]), // First letter
-                        ),
-                      ),
+                          alignment:
+                              Alignment.topLeft, // Align avatar to top-left
+                          child: ProfileImage(
+                            imageURL: sent.profilePicture,
+                            radius: 25.r,
+                          )),
                     ),
                     Expanded(
                       child: Column(
@@ -73,8 +85,11 @@ class SentConnectionsList extends StatelessWidget {
                       child: ElevatedButton(
                         key: Key("sent_invitations_list_withdraw_button"),
                         onPressed: () {
-                          BlocProvider.of<SentConnectionsCubit>(context)
-                              .withdrawclicked(sent.userId);
+                          // BlocProvider.of<SentConnectionsCubit>(context)
+                          //     .withdrawclicked(sent.userId);
+                          context
+                              .read<SentConnectionsCubit>()
+                              .removeConnection(sent, context);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

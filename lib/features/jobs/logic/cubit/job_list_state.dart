@@ -27,6 +27,13 @@ final class JobResumesErrorLoading extends JobListState {
   JobResumesErrorLoading(this.errorMessage);
 }
 
+final class JobResumeUploading extends JobListState {}
+final class JobResumeUploaded extends JobListState {}
+final class JobResumeErrorUploading extends JobListState {
+    final String errorMessage;
+  JobResumeErrorUploading(this.errorMessage);
+}
+
 
 
 final class JobApplicationSending extends JobListState{}

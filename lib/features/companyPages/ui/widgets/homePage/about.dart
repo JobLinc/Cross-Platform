@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 
 class CompanyHomeAbout extends StatelessWidget {
   final Company company;
@@ -15,7 +15,7 @@ class CompanyHomeAbout extends StatelessWidget {
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8.h),
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -35,7 +35,7 @@ class CompanyHomeAbout extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16.0),
+          SizedBox(height: 16.h),
           _buildInfoColumn('Website', company.website!),
           _buildInfoColumn('Industry', company.industry.displayName),
           _buildInfoColumn(
@@ -48,7 +48,7 @@ class CompanyHomeAbout extends StatelessWidget {
 
   Widget _buildInfoColumn(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -58,7 +58,7 @@ class CompanyHomeAbout extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4.0),
+          SizedBox(height: 4.h),
           Text(
             value,
             style: TextStyle(

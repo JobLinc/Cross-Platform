@@ -1,13 +1,18 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserResumes extends StatelessWidget {
-  const UserResumes({super.key, required this.profile});
+  const UserResumes({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
+  final bool isuser;
 
   String _formatFileSize(int sizeInBytes) {
     if (sizeInBytes >= 1024 * 1024) {
@@ -48,9 +53,36 @@ class UserResumes extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Uploaded Resumes',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Uploaded Resumes',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              isuser
+                  ? IconButton(
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['pdf', 'doc', 'docx'],
+                          allowMultiple: false,
+                        );
+
+                        if (result != null && result.files.isNotEmpty) {
+                          final platformFile = result.files.first;
+
+                          if (platformFile.path != null) {
+                            final file = File(platformFile.path!);
+                            context.read<ProfileCubit>().uploadResume(file);
+                            // Open the file using the OpenFile package
+                            //await OpenFile.open(platformFile.path!); // This works for both PDFs and Word docs
+                          }
+                        }
+                      },
+                      icon: Icon(Icons.add))
+                  : SizedBox.shrink(),
+            ],
           ),
           ListView.builder(
             shrinkWrap: true,
@@ -79,49 +111,53 @@ class UserResumes extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: ColorsManager.darkBurgundy,
-                                  size: 20.r,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Delete Resume'),
-                                        content: Text(
-                                            'Are you sure you want to delete "${resume.name}"?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .deleteresume(resume.id);
-                                            },
-                                            child: Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                              if (isuser) ...[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: ColorsManager.darkBurgundy,
+                                    size: 20.r,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Delete Resume'),
+                                          content: Text(
+                                              'Are you sure you want to delete "${resume.name}"?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                              },
+                                              child: Text('Cancel'),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                splashRadius: 20.r,
-                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(dialogContext)
+                                                    .pop();
+                                                context
+                                                    .read<ProfileCubit>()
+                                                    .deleteresume(resume.id);
+                                              },
+                                              child: Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  splashRadius: 20.r,
+                                ),
+                              ]
                             ],
                           ),
                           SizedBox(height: 4.h),

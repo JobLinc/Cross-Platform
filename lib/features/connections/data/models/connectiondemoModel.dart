@@ -95,16 +95,29 @@ class UserConnection {
   });
 
   factory UserConnection.fromJson(Map<String, dynamic> json) {
+    DateTime? parseDate(dynamic dateValue) {
+      if (dateValue == null) return null;
+      if (dateValue is DateTime) return dateValue;
+      if (dateValue is String) {
+        try {
+          return DateTime.parse(dateValue);
+        } catch (e) {
+          print('Error parsing date: $dateValue - $e');
+          return null;
+        }
+      }
+      return null;
+    }
+
     return UserConnection(
       userId: json["userId"],
       firstname: json["firstname"],
       lastname: json["lastname"],
       headline: json["headline"] ?? "",
-      profilePicture: json["profilePicture"] ??
-          "https://res.cloudinary.com/dufshbyse/image/upload/v1744210597/placeholder/placeholder/profile.png",
+      profilePicture: json["profilePicture"] ?? "",
       connectionStatus: json["connectionStatus"] ?? "Connected",
       mutualConnections: json["mutualConnections"],
-      time_of_connections: json["time"],
+      time_of_connections: parseDate(json["time"]) ?? DateTime.now(),
     );
   }
   Map<String, dynamic> toJson() {

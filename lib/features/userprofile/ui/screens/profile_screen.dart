@@ -16,6 +16,7 @@ import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
+
 class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -179,9 +180,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(
-                                    context, Routes.otherProfileScreen,
-                                    arguments: profile);
+                                showConnectionsOptionsBottomSheet(context);
                               },
                               child: const Icon(Icons.more_horiz_outlined,
                                   color: Colors.black),
@@ -688,9 +687,61 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ],
       ),
-      onTap: () {
-        Navigator.pushNamed(context, Routes.connectionListScreen);
+      onTap: () async {
+        final shouldRefresh =
+            await Navigator.pushNamed(context, Routes.connectionListScreen) ??
+                false;
+
+        if (shouldRefresh == true) {
+          context.read<ProfileCubit>().getUserProfile();
+        }
       },
     );
   }
+}
+
+void showConnectionsOptionsBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+    ),
+    builder: (innercontext) {
+      return Padding(
+        padding: EdgeInsets.all(16.sp),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.block, color: Colors.red),
+              title:
+                  Text('View Blocked List', style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.blockedConnectionsList);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person, color: Colors.blue),
+              title: Text('Show Followers List',
+                  style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followersListScreen);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person_outline, color: Colors.green),
+              title: Text('Show Following List',
+                  style: TextStyle(fontSize: 18.sp)),
+              onTap: () {
+                Navigator.pop(innercontext);
+                Navigator.pushNamed(context, Routes.followingListScreen);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
-import 'package:joblinc/features/companypages/ui/widgets/edit_button.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/industry_comboBox.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/joblincUrl_textField.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_comboBox.dart';
-import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
+import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/edit_button.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/industry_comboBox.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/joblincUrl_textField.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/organizationType_comboBox.dart';
+import 'package:joblinc/features/companyPages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
-import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companyPages/data/data/company.dart';
 import '../widgets/square_avatar.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/website_textField.dart';
@@ -50,8 +50,11 @@ class CreateCompanyPage extends StatelessWidget {
               // Navigate to the Company Dashboard
               Navigator.pushNamed(
                 context,
-                Routes.companyDashboard,
-                arguments: company,
+                Routes.companyPageHome,
+                arguments: {
+                  'company': company,
+                  'isAdmin': true,
+                },
               );
             },
           ),
@@ -61,15 +64,14 @@ class CreateCompanyPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Company created successfully!'),
-                backgroundColor: Colors.green,  
+                backgroundColor: Colors.green,
               ),
             );
           } else if (state is CreateCompanyFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text('Failed to create company: ${state.error}'),
-                  backgroundColor: Colors.red
-                ),
+                  backgroundColor: Colors.red),
             );
           }
         },
@@ -116,6 +118,13 @@ class CreateCompanyPage extends StatelessWidget {
                               );
                         } else {
                           print('Form is invalid');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Make sure that you approved the terms and conditions and filled all fields!'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                           _termsAndConditionsKey.currentState!.validate();
                         }
                       },
@@ -129,31 +138,32 @@ class CreateCompanyPage extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      if (!isTestEnvironment)
-                        Image(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
-                          width: double.infinity,
-                          height: 90.h,
-                        ),
-                      if (!isTestEnvironment)
-                        Padding(
-                          padding: EdgeInsets.only(top: 50.h, left: 17.w),
-                          child: SquareAvatar(
-                            imageUrl:
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
-                            size: 80,
-                          ),
-                        ),
+                      // if (!isTestEnvironment)
+                      //   Image(
+                      //     fit: BoxFit.cover,
+                      //     image: NetworkImage(
+                      //         "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png"), // Company Cover goes here
+                      //     width: double.infinity,
+                      //     height: 90.h,
+                      //   ),
+                      // if (!isTestEnvironment)
+                      //   Padding(
+                      //     padding: EdgeInsets.only(top: 50.h, left: 17.w),
+                      //     child: SquareAvatar(
+                      //       imageUrl:
+                      //           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU",
+                      //       size: 80,
+                      //     ),
+                      //   ),
                       Row(
                         children: [
+                          // Padding(
+                          //   padding: EdgeInsets.only(top: 85.h, left: 60.h),
+                          //   child: EditButton(),
+                          // ),
                           Padding(
-                            padding: EdgeInsets.only(top: 85.h, left: 60.h),
-                            child: EditButton(),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 90.h, left: 75.h),
+                            // Changed padding after removing cover photo and logo
+                            padding: EdgeInsets.only(top: 20.h, left: 25.h),
                             child: Text(
                               "* Indicates required",
                               style: TextStyle(

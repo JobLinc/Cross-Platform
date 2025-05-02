@@ -17,6 +17,8 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 import 'package:shimmer/shimmer.dart';
 
 import '../../../companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -88,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // Helper to get user profile, using a placeholder if not loaded
   UserProfile _getUserProfile(HomeCombinedState state) {
     return state.user ?? UserProfile(
+      username : '',
+      isFollowing: false,
       userId: '',
       profilePicture: "",
       coverPicture: "",

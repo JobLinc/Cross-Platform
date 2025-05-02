@@ -6,6 +6,11 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_interceptor.dart'; // Import the interceptor
+import 'package:joblinc/features/accountvisibility/data/repos/account_visibility_repo.dart';
+import 'package:joblinc/features/accountvisibility/data/services/account_visibility_service.dart';
+import 'package:joblinc/features/blockedaccounts/data/repos/blocked_account_repo.dart';
+import 'package:joblinc/features/blockedaccounts/data/services/blocked_accounts_service.dart';
+import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/changeemail/data/repos/change_email_repo.dart';
 import 'package:joblinc/features/changeemail/data/services/change_email_api_service.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
@@ -20,6 +25,8 @@ import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.d
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
@@ -27,7 +34,6 @@ import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmatio
 import 'package:joblinc/features/forgetpassword/data/repos/forgetpassword_repo.dart';
 import 'package:joblinc/features/forgetpassword/data/services/forgetpassword_api_service.dart';
 import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
-import 'package:joblinc/features/connections/data/Web_Services/MockConnectionApiService.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
@@ -56,6 +62,7 @@ import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
+import 'package:joblinc/features/userprofile/data/service/others_api_service.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
@@ -63,6 +70,8 @@ import 'package:joblinc/features/userprofile/data/service/update_user_profile_ap
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/update_company_api_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -85,8 +94,8 @@ Future<void> setupGetIt() async {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -98,6 +107,14 @@ Future<void> setupGetIt() async {
   dio.interceptors.add(AuthInterceptor(getIt<AuthService>(), dio));
 
   getIt.registerLazySingleton<Dio>(() => dio);
+
+  // Register UpdateCompanyApiService
+  getIt.registerLazySingleton<UpdateCompanyApiService>(
+      () => UpdateCompanyApiService(getIt<Dio>()));
+
+  // Register UpdateCompanyRepo
+  getIt.registerLazySingleton<UpdateCompanyRepo>(
+      () => UpdateCompanyRepo(getIt<UpdateCompanyApiService>()));
 
   getIt.registerLazySingleton<LoginApiService>(
       () => LoginApiService(getIt<Dio>()));
@@ -157,7 +174,9 @@ Future<void> setupGetIt() async {
       onCompanyCreated: param1,
     ),
   );
-
+  getIt.registerFactory<EditCompanyCubit>(
+    () => EditCompanyCubit(getIt<UpdateCompanyRepo>()),
+  );
   getIt.registerLazySingleton<ChatApiService>(
     () => ChatApiService(getIt<Dio>()),
   );
@@ -193,15 +212,18 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<ConnectionsCubit>(
       () => ConnectionsCubit(getIt<UserConnectionsRepository>()));
-  getIt.registerFactory<SentConnectionsCubit>(() => SentConnectionsCubit(
-      MockConnectionApiService() /*getIt<UserConnectionsRepository>()*/));
-
+  getIt.registerFactory<SentConnectionsCubit>(
+      () => SentConnectionsCubit(getIt<UserConnectionsRepository>()));
+  getIt.registerFactory<FollowCubit>(
+      () => FollowCubit(getIt<UserConnectionsRepository>()));
   //User profile
   getIt.registerFactory<InvitationsCubit>(
-      () => InvitationsCubit(MockConnectionApiService()));
+      () => InvitationsCubit(getIt<UserConnectionsRepository>()));
 
   getIt.registerLazySingleton<UserProfileApiService>(
       () => UserProfileApiService(getIt<Dio>()));
+  getIt.registerLazySingleton<OthersApiService>(
+      () => OthersApiService(getIt<Dio>()));
 
   getIt.registerLazySingleton<UpdateUserProfileApiService>(
       () => UpdateUserProfileApiService(getIt<Dio>()));
@@ -209,15 +231,23 @@ Future<void> setupGetIt() async {
       () => UploadApiService(getIt<Dio>()));
   getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<UserProfileRepository>(() =>
-      UserProfileRepository(
-          getIt<UserProfileApiService>(),
-          getIt<UpdateUserProfileApiService>(),
-          getIt<UploadApiService>(),
-          getIt<addService>()));
+  getIt.registerLazySingleton<UserProfileRepository>(
+    () => UserProfileRepository(
+      getIt<UserProfileApiService>(),
+      getIt<UpdateUserProfileApiService>(),
+      getIt<UploadApiService>(),
+      getIt<addService>(),
+      getIt<OthersApiService>(),
+    ),
+  );
 
   getIt.registerFactory<ProfileCubit>(
-      () => ProfileCubit(getIt<UserProfileRepository>()));
+    () => ProfileCubit(
+      getIt<UserProfileRepository>(),
+      getIt<UserConnectionsRepository>(),
+      getIt.get<PostRepo>(),
+    ),
+  );
 
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
@@ -276,4 +306,20 @@ Future<void> setupGetIt() async {
         socketUrl,
         getIt<DeviceTokenService>(),
       ));
+  // Blocked Accounts
+  getIt.registerLazySingleton<BlockedAccountsService>(
+      () => BlockedAccountsService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<BlockedAccountRepo>(
+      () => BlockedAccountRepo(getIt.get<BlockedAccountsService>()));
+
+  getIt.registerFactory<BlockedAccountsCubit>(
+      () => BlockedAccountsCubit(getIt.get<BlockedAccountRepo>()));
+
+  // Account Visibility
+  getIt.registerLazySingleton<AccountVisibilityService>(
+      () => AccountVisibilityService(getIt.get<Dio>()));
+
+  getIt.registerLazySingleton<AccountVisibilityRepo>(
+      () => AccountVisibilityRepo(getIt.get<AccountVisibilityService>()));
 }
