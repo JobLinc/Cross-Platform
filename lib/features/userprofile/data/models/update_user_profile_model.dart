@@ -12,6 +12,7 @@ class UserProfileUpdateModel {
   final String? biography;
   final String? visibility;
   final bool? allowMessages;
+  final bool? allowMessageRequests;
 
   UserProfileUpdateModel(
       {this.firstName,
@@ -26,7 +27,8 @@ class UserProfileUpdateModel {
       this.coverPicture,
       this.username,
       this.visibility,
-      this.allowMessages});
+      this.allowMessages,
+      this.allowMessageRequests});
 
   // Convert model to JSON for API requests, only including non-null fields
   Map<String, dynamic> toJson() {
@@ -45,6 +47,8 @@ class UserProfileUpdateModel {
     if (username != null) data['username'] = username;
     if (visibility != null) data['visibility'] = visibility;
     if (allowMessages != null) data['allowMessages'] = allowMessages;
+    if (allowMessageRequests != null)
+      data['allowMessageRequests'] = allowMessageRequests;
     return data;
   }
 
