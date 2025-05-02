@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:open_file/open_file.dart';
-
 // class DocumentViewerScreen extends StatelessWidget {
 //   final String url;
 //   final String type; // 'image', 'pdf', 'other'
@@ -167,14 +164,8 @@ import 'package:open_file/open_file.dart';
 // }
 
 import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mime/mime.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
