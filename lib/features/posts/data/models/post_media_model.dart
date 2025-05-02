@@ -39,9 +39,4 @@ MediaType parseMediaType(String type) {
   }
 }
 
-enum MediaType {
-  image,
-  video,
-  document,
-  audio,
-}
+enum MediaType { image, video, document, audio }
