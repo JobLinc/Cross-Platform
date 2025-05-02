@@ -75,7 +75,7 @@ class AuthService {
   Future<String?> getUserId() async => await _storage.read(key: _userIdKey);
 
   Future<bool?> getPlan() async  {final plan = await _storage.read(key: _planKey);
-    if (plan != null) {
+    if (plan == null) {
       return false;
     } else if (plan == '0') {
       return false;
