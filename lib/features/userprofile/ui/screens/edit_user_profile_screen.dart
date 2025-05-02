@@ -27,6 +27,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
   bool _formInitialized = false;
+  String? _visibility;
+  bool _allowMessages = true;
 
   @override
   void initState() {
@@ -66,6 +68,9 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
       countryController.text = profile.country ?? '';
       phoneController.text = profile.phoneNumber ?? '';
       biographyController.text = profile.biography ?? '';
+      _visibility =
+          profile.visibility ?? 'Public'; // Assuming default is 'Public'
+      _allowMessages = profile.allowMessages ?? true;
       _formInitialized = true;
     }
   }
@@ -90,6 +95,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
         biography: biographyController.text.isNotEmpty
             ? biographyController.text
             : null,
+        visibility: _visibility,
+        allowMessages: _allowMessages,
       );
 
       print('Updating profile with: ${updateData.toJson()}');
@@ -274,7 +281,47 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                                 ? cityController.text
                                 : profile.city,
                           ),
-
+                          SizedBox(height: 16.h),
+                          Text(
+                            'Profile Visibility',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          SizedBox(height: 12.h),
+                          DropdownButtonFormField<String>(
+                            value: _visibility,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Who can see your profile?',
+                            ),
+                            items: ['Public', 'Connections']
+                                .map((option) => DropdownMenuItem(
+                                      value: option,
+                                      child: Text(option),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _visibility = value!;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 24.h),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Allow messages from others',
+                                  style: TextStyle(fontSize: 16.sp),
+                                ),
+                                Switch(
+                                  value: _allowMessages,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _allowMessages = value;
+                                    });
+                                  },
+                                ),
+                              ]),
                           SizedBox(height: 15.h),
 
                           // Biography Section
@@ -295,6 +342,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                             maxLength: 2600,
                           ),
                           SizedBox(height: 24.h),
+                          // Visibility Dropdown
                         ],
                       ),
                     ),
