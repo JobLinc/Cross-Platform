@@ -1,47 +1,38 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class DeviceTokenService {
   final Dio _dio;
-  final String _baseUrl = '/device-tokens';
 
   DeviceTokenService(this._dio);
 
+  /// Registers FCM token with the server
+  /// Endpoint: POST /api/auth/register-fcm-token
   Future<void> registerDeviceToken(String token) async {
     try {
-      String deviceType = _getDeviceType();
-
-      await _dio.post('$_baseUrl/register', data: {
-        'token': token,
-        'deviceType': deviceType,
+      await _dio.post('/auth/register-fcm-token', data: {
+        'fcmToken': token,
       });
 
-      print('Device token registered successfully');
+      debugPrint('FCM token registered successfully');
     } catch (e) {
-      print('Failed to register device token: $e');
+      debugPrint('Failed to register FCM token: $e');
       // Silently fail, we don't want to disrupt the user experience
     }
   }
 
+  /// Removes FCM token from the server
+  /// Endpoint: POST /api/auth/remove-fcm-token
   Future<void> unregisterDeviceToken(String token) async {
     try {
-      await _dio.post('$_baseUrl/unregister', data: {
-        'token': token,
+      await _dio.post('/auth/remove-fcm-token', data: {
+        'fcmToken': token,
       });
 
-      print('Device token unregistered successfully');
+      debugPrint('FCM token unregistered successfully');
     } catch (e) {
-      print('Failed to unregister device token: $e');
-    }
-  }
-
-  String _getDeviceType() {
-    if (Platform.isAndroid) {
-      return 'android';
-    } else if (Platform.isIOS) {
-      return 'ios';
-    } else {
-      return 'web';
+      debugPrint('Failed to unregister FCM token: $e');
     }
   }
 }
