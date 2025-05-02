@@ -221,7 +221,15 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
     case 'Accepted':
       return () async {
         final chatId = await (context.read<ProfileCubit>().createchat(userId));
-        Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId!);
+        print("my chat Id is $chatId");
+        print(
+            "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        if (chatId != null) {
+          Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId);
+        } else {
+          print(
+              "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        }
       };
     case 'Received':
       return () {

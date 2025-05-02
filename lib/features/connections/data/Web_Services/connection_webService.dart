@@ -174,7 +174,7 @@ class UserConnectionsApiService {
 
   Future<Response> createchat(String userId) async {
     try {
-      print(userId);
+      print("myuserId is ${userId}");
       final response = await _dio.post('/chat/create', data: {
         "receiverIds": [userId]
       });

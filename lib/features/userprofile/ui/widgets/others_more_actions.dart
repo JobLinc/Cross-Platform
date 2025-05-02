@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import this package
 
@@ -283,9 +284,20 @@ void showSentModal(
 
             // New Send Message Request Button
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 Navigator.of(context).pop();
-                context.read<ProfileCubit>().sendmessagrequest(userId, context);
+                final chatId =
+                    await (context.read<ProfileCubit>().createchat(userId));
+                print("my chat Id is $chatId");
+                print(
+                    "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+                if (chatId != null) {
+                  Navigator.pushNamed(context, Routes.chatScreen,
+                      arguments: chatId);
+                } else {
+                  print(
+                      "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+                }
               },
               child: Container(
                 width: double.infinity,
