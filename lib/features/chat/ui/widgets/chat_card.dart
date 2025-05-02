@@ -66,28 +66,76 @@ class ChatCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (chat.unreadCount! > 0)
-              Container(
-                padding: EdgeInsets.all(6.r),
-                decoration:
-                    BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                child: Text('${chat.unreadCount}',
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp)),
-              ),
-            if (!chat.isRead && !(chat.unreadCount! > 0))
-              Container(
-                padding: EdgeInsets.all(6.r),
-                decoration:
-                    BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                child: Container(
-                  padding: EdgeInsets.all(3.r),
-                  decoration:
-                      BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (chat!.unreadCount! > 0)
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 243, 33, 33),
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${chat!.unreadCount}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (!chat.isRead && !(chat.unreadCount! > 0))
+                  Container(
+                    padding: EdgeInsets.all(6.r),
+                    decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                    constraints: BoxConstraints(  minWidth: 18, minHeight: 18,),
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: EdgeInsets.all(3.r),
+                      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                SizedBox(height: 4.h),
+                SizedBox(
+                  width: 60.w,
+                  child: Text(chat.time ?? '',
+                    style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            SizedBox(width: 8.w),
-            Text(chat.time ?? '',
-                style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+              ],
+            ),
+            // if (chat.unreadCount! > 0)
+            //   Container(
+            //     padding: EdgeInsets.all(6.r),
+            //     decoration:
+            //         BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+            //     child: Text('${chat.unreadCount}',
+            //         style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+            //   ),
+            // if (!chat.isRead && !(chat.unreadCount! > 0))
+            //   Container(
+            //     padding: EdgeInsets.all(6.r),
+            //     decoration:
+            //         BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+            //     child: Container(
+            //       padding: EdgeInsets.all(3.r),
+            //       decoration: BoxDecoration(
+            //           color: Colors.white, shape: BoxShape.circle),
+            //     ),
+            //   ),
+            // SizedBox(width: 8.w),
+            // Text(chat.time ?? '',
+            //     style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
           ],
         ),
       ),
@@ -285,9 +333,7 @@ class _ChatListState extends State<ChatList> {
                       ),
                     ),
                   );
-                  context
-                      .read<ChatListCubit>()
-                      .getAllChats();
+                  context.read<ChatListCubit>().getAllChats();
                 }
               },
               onLongPress: () {
@@ -296,7 +342,6 @@ class _ChatListState extends State<ChatList> {
                     .toggleSelection(sortedChats[index].chatId);
               },
             ));
-
   }
 }
 
