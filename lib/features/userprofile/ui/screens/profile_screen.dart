@@ -90,12 +90,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               context: context,
               message: state.message,
               type: SnackBarType.error);
-        }else if (state is SkillFailed) {
-            CustomSnackBar.show(
-                context: context,
-                message: state.message,
-                type: SnackBarType.error);
-          }
+        } else if (state is SkillFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        }
       },
       builder: (context, state) {
         if (state is ProfileLoading) {
@@ -801,6 +801,7 @@ void showConnectionsOptionsBottomSheet(BuildContext context) {
                 // if (refresh == true) {
                 //   context.read<ProfileCubit>().getUserProfile();
                 // }
+                Navigator.pushNamed(context, Routes.messageRequestsScreen);
               },
             ),
           ],

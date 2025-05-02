@@ -63,6 +63,7 @@ import 'package:joblinc/features/userprofile/data/models/certificate_model.dart'
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/message_requests_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
@@ -71,6 +72,7 @@ import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.da
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/message_requests.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
@@ -543,6 +545,13 @@ class AppRouter {
           builder: (context) => BlocProvider(
             create: (context) => getIt.get<SavedPostsCubit>()..getSavedPosts(),
             child: SavedPostsScreen(),
+          ),
+        );
+      case Routes.messageRequestsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<MessageRequestsCubit>(),
+            child: MessageRequestsScreen(),
           ),
         );
       case Routes.adminPanel:

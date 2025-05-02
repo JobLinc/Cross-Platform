@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
@@ -141,6 +142,28 @@ class UserProfileRepository {
     }
   }
 
+  Future<List<Chat>> fetchChatRequests() async {
+    try {
+      return await addApiService.fetchChatRequests();
+    } catch (e) {
+      // Optionally log or wrap the error
+      rethrow;
+    }
+  }
+
+  Future<Response> changeRequestStatus({
+    required String chatId,
+    required String status,
+  }) async {
+    try {
+      return await addApiService.changeRequestStatus(
+          chatId: chatId, status: status);
+    } catch (e) {
+      // Log or handle if needed
+      rethrow;
+    }
+  }
+
   Future<Response> deleteCertification(String certificationId) async {
     try {
       return await addApiService.deleteCertification(certificationId);
@@ -191,7 +214,8 @@ class UserProfileRepository {
       final List<dynamic> rawList = await addApiService.getAllExperiences();
 
       return rawList
-          .map((item) => ExperienceResponse.fromJson(item as Map<String, dynamic>))
+          .map((item) =>
+              ExperienceResponse.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
       rethrow;
