@@ -18,7 +18,6 @@ import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
-  //this would need to be changed to support live updates to likes/comments/reposts
   const Post({
     super.key,
     required this.data,
