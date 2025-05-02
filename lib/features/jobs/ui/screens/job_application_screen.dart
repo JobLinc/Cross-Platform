@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
@@ -102,7 +103,20 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
     if (await file.exists()) {
       await OpenFile.open(localPath);
     } else if (await canLaunchUrl(Uri.parse(resumeUrl))) {
-      await launchUrl(Uri.parse(resumeUrl));
+      // await launchUrl(Uri.parse(resumeUrl));
+          Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DocumentViewerScreen(
+          url: resumeUrl,
+          type: resumeName.toLowerCase().endsWith('.pdf')
+              ? 'pdf'
+              : resumeName.toLowerCase().endsWith('.doc') || resumeName.toLowerCase().endsWith('.docx')
+                  ? 'doc'
+                  : 'other',
+        ),
+      ),
+    );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Could not open resume.")),

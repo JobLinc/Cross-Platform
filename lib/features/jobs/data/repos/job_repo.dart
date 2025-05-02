@@ -91,7 +91,9 @@ class JobRepo {
         .map((jobAppJson) =>
             JobApplicant.fromJson(jobAppJson as Map<String, dynamic>))
         .toList();
+        //print(jobApplicants[0].toJson);
     return jobApplicants;
+
   }
 
   Future<JobApplicant>? getJobApplicantById(

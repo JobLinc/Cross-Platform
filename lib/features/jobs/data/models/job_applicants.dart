@@ -49,7 +49,7 @@ class Applicant {
   final String profilePicture;
   final String country;
   final String city;
-  final String phoneNumber;
+  //final String phoneNumber;
 
   Applicant({
     required this.id,
@@ -60,7 +60,7 @@ class Applicant {
     required this.profilePicture,
     required this.country,
     required this.city,
-    required this.phoneNumber,
+    //required this.phoneNumber,
   });
 
   factory Applicant.fromJson(Map<String, dynamic> json) {
@@ -73,7 +73,7 @@ class Applicant {
       profilePicture: json['profilePicture'],
       country: json['country'],
       city: json['city'],
-      phoneNumber: json['phoneNumber'],
+      //phoneNumber: json['phoneNumber'],
     );
   }
 
@@ -86,7 +86,7 @@ class Applicant {
         'profilePicture': profilePicture,
         'country': country,
         'city': city,
-        'phoneNumber': phoneNumber,
+        //'phoneNumber': phoneNumber,
       };
 }
 
