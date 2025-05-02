@@ -7,11 +7,12 @@ class AddPostCubit extends Cubit<AddPostState> {
 
   AddPostCubit(this._postRepo) : super(AddPostStateInitial());
 
-  Future<void> addPost(String text) async {
+  Future<void> addPost(
+      String text, List<String> media, String? repostId, bool isPublic) async {
     emit(AddPostStateLoading());
 
     try {
-      await _postRepo.addPost(text);
+      await _postRepo.addPost(text, media, repostId, isPublic);
       emit(AddPostStateSuccess());
     } catch (e) {
       emit(AddPostStateFailure(e.toString()));

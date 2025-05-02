@@ -75,7 +75,7 @@ class AuthService {
   Future<String?> getUserId() async => await _storage.read(key: _userIdKey);
 
   Future<bool?> getPlan() async  {final plan = await _storage.read(key: _planKey);
-    if (plan != null) {
+    if (plan == null) {
       return false;
     } else if (plan == '0') {
       return false;
@@ -176,31 +176,5 @@ class AuthService {
     isLoggedInUser = await refreshToken();
   }
 
-  Future<Map<String, dynamic>?> getMainUserInfo() async {
-    try {
-      final response = await _dio.get('/user/me');
-
-      if (response.statusCode == 200) {
-        final userData = response.data;
-        return {
-          'userId': userData['userId'],
-          'firstname': userData['firstname'],
-          'lastname': userData['lastname'],
-          'headline': userData['headline'],
-          'profilePicture': userData['profilePicture'],
-          'coverPicture': userData['coverPicture'],
-          'about': userData['about'],
-          'numberOfConnections': userData['numberOfConnections'],
-        };
-      } else {
-        throw Exception('Failed to load user data');
-      }
-    } on DioException catch (e) {
-      print('Error fetching user data: ${e.message}');
-      return null;
-    } catch (e) {
-      print('Unexpected error: $e');
-      return null;
-    }
-  }
+ 
 }

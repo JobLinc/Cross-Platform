@@ -72,6 +72,29 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
   }
 
   void _createJob() {
+
+    try {
+      double.parse(minSalaryController.text);
+      double.parse(maxSalaryController.text);
+    } catch (e){  
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invalid salary input. Please enter valid numbers."),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if(double.parse(minSalaryController.text)>double.parse(maxSalaryController.text) ){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invalid salary input. Please enter valid numbers."),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       Map<String,dynamic> jobReq = 
       {

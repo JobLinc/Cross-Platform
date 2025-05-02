@@ -54,6 +54,7 @@ import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/saved_posts_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -79,10 +80,8 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = 
-  Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api';
+  final baseUrl =  Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api' : 'http://localhost:3000/api'; 
   // 'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
@@ -154,6 +153,9 @@ Future<void> setupGetIt() async {
       getIt<CommentRepo>(), getIt<UserConnectionsRepository>()));
 
   getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+
+  getIt.registerFactory<SavedPostsCubit>(
+      () => SavedPostsCubit(getIt<PostRepo>()));
 ///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));

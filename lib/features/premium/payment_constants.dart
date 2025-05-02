@@ -3,3 +3,5 @@ const String stripePublishKey =
 
 const String stripeSecretKey =
           "sk_test_51R2nJ2RwVjLWCdgYs76wnqrPfVIDLTMfjCIYrpEqJpG3daae1nPpsE0t7YZvjEaOqctQ6yp2JAQWNV5DhG03UxxF00nBnzXJbH";
+
+bool isPremium = false;

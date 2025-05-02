@@ -181,11 +181,11 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
       MaterialPageRoute(
         builder: (_) => DocumentViewerScreen(
           url: resumeUrl,
-          type: resumeName.toLowerCase().endsWith('.pdf')
-              ? 'pdf'
-              : resumeName.toLowerCase().endsWith('.doc') || resumeName.toLowerCase().endsWith('.docx')
-                  ? 'doc'
-                  : 'other',
+          // type: resumeName.toLowerCase().endsWith('.pdf')
+          //     ? 'pdf'
+          //     : resumeName.toLowerCase().endsWith('.doc') || resumeName.toLowerCase().endsWith('.docx')
+          //         ? 'doc'
+          //         : 'other',
         ),
       ),
     );

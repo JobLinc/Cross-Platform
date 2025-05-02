@@ -14,19 +14,21 @@ class ChatRepo {
   ChatRepo(this._chatApiService);
 
   Future<Chat>? getChatById(String chatId) async {
+    print("Chat ID: $chatId");
     final response = await _chatApiService.getChatById(chatId);
       //   final List<Chat> chats = (response.data["chats"] as List)
       // .map((chatJson) => Chat.fromJson(chatJson as Map<String, dynamic>))
       // .toList();
     //final chat = chats.firstWhere((chat) => chat.chatId == chatId);
+    print("Chat Response: ${response.data}");
    final chat = Chat.fromJson(response.data  as Map<String, dynamic>);
     return chat;
 
   }
   Future<int>? getTotalUnreadCount()async {
-    final response = await _chatApiService.getAllChats();
+    final response = await _chatApiService.getTotalUnreadCount();
     //final chat = Chat.fromJson(response.data as Map<String, dynamic>);
-    print(response.data["totalUnreadChats"]);
+    // print(response.data["totalUnreadChats"]);
     print("Total Unread Chats: ${response.data["totalUnreadChats"]}");
     return response.data["totalUnreadChats"];
   }
