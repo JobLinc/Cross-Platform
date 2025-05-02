@@ -32,7 +32,8 @@ class CompanyRepositoryImpl implements CompanyRepository {
             coverUrl: companyResponse.coverPhoto,
             followers: companyResponse.followers ?? 0,
             id: companyResponse.id,
-            locations: companyResponse.locations
+            locations: companyResponse.locations,
+            isFollowing: companyResponse.isFollowing,
             );
       }).toList();
       return companies;
@@ -72,7 +73,8 @@ class CompanyRepositoryImpl implements CompanyRepository {
                 id: companyResponse.id,
                 coverUrl: companyResponse.coverPhoto ?? '',
                 followers: companyResponse.followers ?? 0,
-                locations: companyResponse.locations
+                locations: companyResponse.locations,
+                isFollowing: companyResponse.isFollowing,
               );
             } catch (e) {
               print('Error mapping company: ${companyResponse.toString()}');
@@ -113,7 +115,8 @@ class CompanyRepositoryImpl implements CompanyRepository {
         id: company.id,
         coverUrl: company.coverPhoto,
         followers: company.followers ?? 0,
-        locations: company.locations
+        locations: company.locations,
+        isFollowing: company.isFollowing,
       );
     } catch (e) {
       throw Exception('Failed to get company by slug: $e');
@@ -138,7 +141,8 @@ class CompanyRepositoryImpl implements CompanyRepository {
         id: companyResponse.id,
         coverUrl: companyResponse.coverPhoto,
         followers: companyResponse.followers ?? 0,
-        locations: companyResponse.locations
+        locations: companyResponse.locations,
+        isFollowing: companyResponse.isFollowing,
       );
     } catch (e) {
       throw Exception('Failed to get company by id: $e');

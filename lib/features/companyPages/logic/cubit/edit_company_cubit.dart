@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/models/update_company_model.dart';
@@ -43,7 +41,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           logoUrl: companyResponse.logo,
           id: companyResponse.id,
           followers: companyResponse.followers!,
-          locations: companyResponse.locations);
+          locations: companyResponse.locations,
+          isFollowing: companyResponse.isFollowing,  
+        );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
     }
@@ -66,7 +66,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           coverUrl: companyResponse.coverPhoto,
           id: companyResponse.id,
           followers: companyResponse.followers!,
-          locations: companyResponse.locations);
+          locations: companyResponse.locations,
+          isFollowing: companyResponse.isFollowing,
+        );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -90,7 +92,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           coverUrl: companyResponse.coverPhoto,
           id: companyResponse.id,
           followers: companyResponse.followers ?? 0,
-          locations: companyResponse.locations);
+          locations: companyResponse.locations,
+          isFollowing: companyResponse.isFollowing,
+          );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -114,7 +118,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           coverUrl: companyResponse.coverPhoto,
           id: companyResponse.id,
           followers: companyResponse.followers ?? 0,
-          locations: companyResponse.locations);
+          locations: companyResponse.locations,
+          isFollowing: companyResponse.isFollowing,
+          );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -145,6 +151,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         country: companyResponse.locations?.first.country,
         city: companyResponse.locations?.first.city,
         followers: companyResponse.followers ?? 0,
+        isFollowing: companyResponse.isFollowing,
       );
       emit(EditCompanySuccess()); // include the updated company
       return company;

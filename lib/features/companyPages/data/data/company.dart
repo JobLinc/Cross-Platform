@@ -189,25 +189,27 @@ class Company {
   String organizationType;
   int followers = 0;
   bool isVerified = true;
-  List <CompanyLocationModel>? locations;
+  bool? isFollowing;
+  List<CompanyLocationModel>? locations;
 
-  Company({
-    required this.name,
-    this.id,
-    required this.profileUrl,
-    this.website,
-    this.tagline,
-    this.overview,
-    this.country,
-    this.city,
-    required this.industry,
-    required this.organizationSize,
-    required this.organizationType,
-    this.logoUrl,
-    this.coverUrl,
-    this.followers = 0,
-    this.locations,
-  });
+  Company(
+      {required this.name,
+      this.id,
+      required this.profileUrl,
+      this.website,
+      this.tagline,
+      this.overview,
+      this.country,
+      this.city,
+      required this.industry,
+      required this.organizationSize,
+      required this.organizationType,
+      this.logoUrl,
+      this.coverUrl,
+      this.followers = 0,
+      this.locations,
+      this.isFollowing
+      });
 
   Future<bool> isAdmin() async {
     final companies = await CompanyRepositoryImpl(

@@ -18,6 +18,7 @@ class CompanyResponse {
   final int? followers;
   final int? employees;
   final String? createdAt;
+  final bool? isFollowing;
   final List <CompanyLocationModel>? locations;
 
   CompanyResponse({
@@ -35,6 +36,7 @@ class CompanyResponse {
     this.employees,
     this.createdAt,
     this.locations,
+    this.isFollowing,
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class CompanyResponse {
       followers: json['followers'],
       employees: json['employees'],
       createdAt: json['createdAt'],
+      isFollowing: json['isFollowing'],
       locations: (json['locations'] as List<dynamic>?)
           ?.map((e) => CompanyLocationModel.fromJson(e))
           .toList(),

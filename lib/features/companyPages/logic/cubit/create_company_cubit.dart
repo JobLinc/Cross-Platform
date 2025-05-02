@@ -35,6 +35,7 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
             ? "https://www.linkedin.com"
             : websiteController.text,
         overview: overviewController.text,
+        isFollowing: false
       );
 
       final CreateCompanyResponse response =
