@@ -41,13 +41,25 @@ class ChatApiService {
       //print(response);
       return response;
     }
-  } 
+  }
+
+  Future<Response> getTotalUnreadCount() async {
+    try {
+      final response = await _dio.get('/chat/unread-count');
+      return response;
+    } on DioException catch (e) {
+      if(e.response!= null){
+        throw Exception(e.response!.data["message"].toString().split(":").last);
+      }
+      throw Exception("Exception without response: ${e.message}");
+    }
+  }
 
   Future<Response> getAllChats() async {
     if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/all');
-        //print("all chat response ${response}");
+        print("all chat response ${response}");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");
@@ -190,7 +202,6 @@ class ChatApiService {
       throw Exception("Failed to fetch connections for the user: $e");
     }
   }
-  
 
   Future<String> uploadMedia(File file) async {
     try {
@@ -232,8 +243,6 @@ class ChatApiService {
             'application', 'octet-stream'); // Fallback for unsupported types
     }
   }
-
-
 }
 
 //   Future<List<dynamic>> getAllChats() async {

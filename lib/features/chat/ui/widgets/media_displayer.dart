@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+//import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,64 @@ import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/video_player_screen.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
+//import 'package:pdf_render/pdf_render.dart';
+
+
+//final _dio = Dio();
+
+/// Download with Dio, render page 1 with pdf_render, return raw RGBA pixels.
+// Future<Uint8List> renderPdfFirstPage(String url) async {
+//   // 1) fetch into memory
+//   final resp = await _dio.get<List<int>>(
+//     url,
+//     options: Options(responseType: ResponseType.bytes),
+//   );
+//   if (resp.statusCode != 200 || resp.data == null) {
+//     throw Exception('PDF download failed: ${resp.statusCode}');
+//   }
+//   final data = Uint8List.fromList(resp.data!);
+
+//   // 2) open PDF
+//   final doc = await PdfDocument.openData(data);
+
+//   // 3) grab page 1
+//   final page = await doc.getPage(1);
+
+//   // 4) render full‑page image
+//   final pageImage = await page.render(
+//     width: page.width.toInt(),
+//     height: page.height.toInt(),
+//   );
+
+//   // 5) extract RGBA bytes
+//   final pixels = pageImage.pixels;
+
+//   // 6) clean up
+//   await doc.dispose();
+
+//   return pixels;
+// }
+
+/// Downloads `url` into memory via Dio, renders page 1, returns RGBA bytes.
+// Future<Uint8List> renderPdfFirstPage(String url) async {
+//   // Dio’s get with responseType=bytes gives you the full file in memory.
+//   final resp = await _dio.get<List<int>>(
+//     url,
+//     options: Options(responseType: ResponseType.bytes),
+//   );
+//   if (resp.statusCode != 200 || resp.data == null) {
+//     throw Exception('PDF download failed: ${resp.statusCode}');
+//   }
+
+//   final data = Uint8List.fromList(resp.data!);
+//   final doc = await PdfDocument.openData(data);
+//   final page = await doc.getPage(1);
+//   final pageImage = await page.render(); 
+//   await page.close();
+//   await doc.close();
+//   return pageImage.bytes;
+// }
+
 
 
 class MediaDisplayer extends StatefulWidget {
@@ -162,7 +221,7 @@ Widget buildMediaContent(BuildContext context, MessageContent c) {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => DocumentViewerScreen(url: c.image, type: 'image'),
+          builder: (_) => DocumentViewerScreen(url: c.image,),
         ),
       ),
       child: Image.network(
@@ -173,24 +232,9 @@ Widget buildMediaContent(BuildContext context, MessageContent c) {
       ),
     );
   }
-  // if (c.video.isNotEmpty && c.video.startsWith('http')) {
-  //   return GestureDetector(
-  //     onTap: () => Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
-  //     ),
-  //     child: Container(
-  //       width: 200.w,
-  //       height: 200.h,
-  //       color: Colors.black,
-  //       child: Icon(Icons.play_arrow, size: 50.sp, color: Colors.white),
-  //     ),
-  //   );
-  // }
+ 
 
 
-
-// ...existing code...
 
 if (c.video.isNotEmpty && c.video.startsWith('http')) {
   return FutureBuilder<Uint8List?>(
@@ -235,67 +279,82 @@ if (c.video.isNotEmpty && c.video.startsWith('http')) {
 }
 
 
-  // if (c.document.isNotEmpty && c.document.startsWith('http')) {
-  //   final name = c.document.split('/').last;
-  //   return InkWell(
-  //     onTap: () => Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Icon(Icons.insert_drive_file, size: 24.sp, color: Colors.grey),
-  //         SizedBox(width: 8.w),
-  //         Expanded(child: Text(name, style: TextStyle(fontSize: 14.sp))),
-  //       ],
-  //     ),
-  //   );
-  // }
+// if (c.document.isNotEmpty && c.document.startsWith('http')) {
+//   final name = c.document.split('/').last;
+//   final ext = name.split('.').last.toLowerCase();
 
-  // if (c.document.isNotEmpty && c.document.startsWith('http')) {
-  // final name = c.document.split('/').last;
-  // return InkWell(
-  //   onTap: () => Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
-  //     ),
-  //   ),
-  //   child: Container(
-  //     width: 220.w,
-  //     height: 80.h,
-  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-  //     decoration: BoxDecoration(
-  //       color: Colors.grey[100],
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(color: Colors.grey[300]!),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
-  //         SizedBox(width: 12.w),
-  //         Expanded(
-  //           child: Text(
-  //             name,
-  //             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
-  //             overflow: TextOverflow.ellipsis,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  // );
+//   return InkWell(
+//     onTap: () => Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (_) => DocumentViewerScreen(url: c.document)),
+//     ),
+//     child: Container(
+//       width: 220.w,
+//       height: 80.h,
+//       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+//       decoration: BoxDecoration(
+//         color: Colors.grey[100],
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: Colors.grey[300]!),
+//       ),
+//       child: Stack(
+//         children: [
+//           // ── first-page preview ─────────────────────────────────────
+//           Positioned.fill(
+//             child: Opacity(
+//               opacity: 0.25,
+//               child: ext == 'pdf'
+//                   ? FutureBuilder<Uint8List>(
+//                       future: renderPdfFirstPage(c.document),
+//                       builder: (ctx, snap) {
+//                         if (snap.connectionState == ConnectionState.done &&
+//                             snap.hasData) {
+//                           return Image.memory(
+//                             snap.data!,
+//                             fit: BoxFit.cover,
+//                             width: double.infinity,
+//                             height: double.infinity,
+//                           );
+//                         } else {
+//                           return Container(color: Colors.grey[300]);
+//                         }
+//                       },
+//                     )
+//                   : Container(color: Colors.grey[300]),  // no preview for Word
+//             ),
+//           ),
+
+//           // ── foreground icon + filename ─────────────────────────────
+//           Row(
+//             children: [
+//               Icon(Icons.insert_drive_file,
+//                   size: 36.sp, color: Colors.grey),
+//               SizedBox(width: 12.w),
+//               Expanded(
+//                 child: Text(
+//                   name,
+//                   style: TextStyle(
+//                       fontSize: 15.sp, fontWeight: FontWeight.w500),
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
 // }
 
-if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  if (c.document.isNotEmpty && c.document.startsWith('http')) {
   final name = c.document.split('/').last;
+  final ext = name.split('.').last.toLowerCase();
+
   return InkWell(
     onTap: () => Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+        builder: (_) => DocumentViewerScreen(url: c.document),
       ),
     ),
     child: Container(
@@ -309,44 +368,44 @@ if (c.document.isNotEmpty && c.document.startsWith('http')) {
       ),
       child: Stack(
         children: [
-          // Document preview background (first page as thumbnail)
+          // first‑page preview at 25% opacity
           Positioned.fill(
             child: Opacity(
               opacity: 0.25,
-              child: FutureBuilder<Uint8List?>(
-                future: VideoThumbnail.thumbnailData( // Use video_thumbnail for PDF preview if you have a PDF thumbnail generator, else use a placeholder
-                  video: '', // <-- Replace with PDF thumbnail generator if available
-                  imageFormat: ImageFormat.PNG,
-                  maxWidth: 220,
-                  quality: 50,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                    return Image.memory(
-                      snapshot.data!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    );
-                  } else {
-                    // Placeholder for document preview
-                    return Container(
-                      color: Colors.grey[300],
-                    );
-                  }
-                },
-              ),
+              child: 
+              // ext == 'pdf'
+              //     ? FutureBuilder<Uint8List>(
+              //         future: renderPdfFirstPage(c.document),
+              //         builder: (ctx, snap) {
+              //           if (snap.connectionState == ConnectionState.done &&
+              //               snap.hasData) {
+              //             return Image.memory(
+              //               snap.data!,
+              //               fit: BoxFit.cover,
+              //               width: double.infinity,
+              //               height: double.infinity,
+              //             );
+              //           } else {
+              //             return Container(color: Colors.grey[300]);
+              //           }
+              //         },
+              //       )
+              //     : 
+                  Container(color: Colors.grey[300]),  // fallback for .doc/.msword
             ),
           ),
-          // Foreground row with icon and name
+
+          // icon + filename
           Row(
             children: [
-              Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
+              Icon(Icons.insert_drive_file,
+                  size: 36.sp, color: Colors.grey),
               SizedBox(width: 12.w),
               Expanded(
                 child: Text(
                   name,
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 15.sp, fontWeight: FontWeight.w500),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -357,6 +416,76 @@ if (c.document.isNotEmpty && c.document.startsWith('http')) {
     ),
   );
 }
+
+
+// if (c.document.isNotEmpty && c.document.startsWith('http')) {
+//   final name = c.document.split('/').last;
+//   return InkWell(
+//     onTap: () => Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (_) => DocumentViewerScreen(url: c.document,),
+//       ),
+//     ),
+//     child: Container(
+//       width: 220.w,
+//       height: 80.h,
+//       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+//       decoration: BoxDecoration(
+//         color: Colors.grey[100],
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: Colors.grey[300]!),
+//       ),
+//       child: Stack(
+//         children: [
+//           // Document preview background (first page as thumbnail)
+//           Positioned.fill(
+//             child: Opacity(
+//               opacity: 0.25,
+//               child: FutureBuilder<Uint8List?>(
+//                 future: VideoThumbnail.thumbnailData( // Use video_thumbnail for PDF preview if you have a PDF thumbnail generator, else use a placeholder
+//                   video: '', // <-- Replace with PDF thumbnail generator if available
+//                   imageFormat: ImageFormat.PNG,
+//                   maxWidth: 220,
+//                   quality: 50,
+//                 ),
+//                 builder: (context, snapshot) {
+//                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+//                     return Image.memory(
+//                       snapshot.data!,
+//                       fit: BoxFit.cover,
+//                       width: double.infinity,
+//                       height: double.infinity,
+//                     );
+//                   } else {
+//                     // Placeholder for document preview
+//                     return Container(
+//                       color: Colors.grey[300],
+//                     );
+//                   }
+//                 },
+//               ),
+//             ),
+//           ),
+//           // Foreground row with icon and name
+//           Row(
+//             children: [
+//               Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
+//               SizedBox(width: 12.w),
+//               Expanded(
+//                 child: Text(
+//                   name,
+//                   style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
   // Show placeholder for local file before upload
   if (c.image.isNotEmpty) {
     return Container(
@@ -583,4 +712,69 @@ if (c.document.isNotEmpty && c.document.startsWith('http')) {
     //       ],
     //     ),
     //   );
-    //   }
+    //   }// if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  //   final name = c.document.split('/').last;
+  //   return InkWell(
+  //     onTap: () => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+  //       ),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Icon(Icons.insert_drive_file, size: 24.sp, color: Colors.grey),
+  //         SizedBox(width: 8.w),
+  //         Expanded(child: Text(name, style: TextStyle(fontSize: 14.sp))),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // if (c.document.isNotEmpty && c.document.startsWith('http')) {
+  // final name = c.document.split('/').last;
+  // return InkWell(
+  //   onTap: () => Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => DocumentViewerScreen(url: c.document, type: 'pdf'),
+  //     ),
+  //   ),
+  //   child: Container(
+  //     width: 220.w,
+  //     height: 80.h,
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+  //     decoration: BoxDecoration(
+  //       color: Colors.grey[100],
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(color: Colors.grey[300]!),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Icon(Icons.insert_drive_file, size: 36.sp, color: Colors.grey),
+  //         SizedBox(width: 12.w),
+  //         Expanded(
+  //           child: Text(
+  //             name,
+  //             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+  //             overflow: TextOverflow.ellipsis,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   ),
+  // );
+// } // if (c.video.isNotEmpty && c.video.startsWith('http')) {
+  //   return GestureDetector(
+  //     onTap: () => Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => VideoPlayerScreen(url: c.video)),
+  //     ),
+  //     child: Container(
+  //       width: 200.w,
+  //       height: 200.h,
+  //       color: Colors.black,
+  //       child: Icon(Icons.play_arrow, size: 50.sp, color: Colors.white),
+  //     ),
+  //   );
+  // }

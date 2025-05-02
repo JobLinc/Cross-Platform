@@ -13,6 +13,7 @@ class AuthService {
   static const _userIdKey = 'userId';
   static const _emailKey = 'email';
   static const _confirmedKey = 'confirmed';
+  static const _planKey = 'plan';
 
   AuthService(this._storage, this._dio);
 
@@ -23,6 +24,7 @@ class AuthService {
     required String userId,
     required String email,
     required bool confirmed,
+    required int plan,
   }) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     await _storage.write(key: _refreshTokenKey, value: refreshToken);
@@ -30,6 +32,7 @@ class AuthService {
     await _storage.write(key: _userIdKey, value: userId);
     await _storage.write(key: _emailKey, value: email);
     await _storage.write(key: _confirmedKey, value: confirmed.toString());
+    await _storage.write(key: _planKey, value: plan.toString());
     // Update global login status
     isLoggedInUser = true;
   }
@@ -51,19 +54,34 @@ class AuthService {
     final String? refreshToken = await _storage.read(key: _refreshTokenKey);
     final String? email = await _storage.read(key: _emailKey);
     final String? confirmed = await _storage.read(key: _confirmedKey);
+    final String? plan = await _storage.read(key: _planKey);
     return {
       'role': role,
       'userId': userId,
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'email': email,
-      'confirmed': confirmed
+      'confirmed': confirmed,
+      'plan': plan,
     };
+  }
+
+  Future<void> setPremiumPlan() async {
+    await _storage.write(key: _planKey, value: '1');
   }
 
   Future<String?> getRole() async => await _storage.read(key: _roleKey);
 
   Future<String?> getUserId() async => await _storage.read(key: _userIdKey);
+
+  Future<bool?> getPlan() async  {final plan = await _storage.read(key: _planKey);
+    if (plan == null) {
+      return false;
+    } else if (plan == '0') {
+      return false;
+    }
+    return true;
+  }
 
   Future<String?> getAccessToken() async =>
       await _storage.read(key: _accessTokenKey);
@@ -87,6 +105,7 @@ class AuthService {
     await _storage.delete(key: _roleKey);
     await _storage.delete(key: _emailKey);
     await _storage.delete(key: _confirmedKey);
+    await _storage.delete(key: _planKey);
     isLoggedInUser = false;
   }
 
@@ -157,31 +176,5 @@ class AuthService {
     isLoggedInUser = await refreshToken();
   }
 
-  Future<Map<String, dynamic>?> getMainUserInfo() async {
-    try {
-      final response = await _dio.get('/user/me');
-
-      if (response.statusCode == 200) {
-        final userData = response.data;
-        return {
-          'userId': userData['userId'],
-          'firstname': userData['firstname'],
-          'lastname': userData['lastname'],
-          'headline': userData['headline'],
-          'profilePicture': userData['profilePicture'],
-          'coverPicture': userData['coverPicture'],
-          'about': userData['about'],
-          'numberOfConnections': userData['numberOfConnections'],
-        };
-      } else {
-        throw Exception('Failed to load user data');
-      }
-    } on DioException catch (e) {
-      print('Error fetching user data: ${e.message}');
-      return null;
-    } catch (e) {
-      print('Unexpected error: $e');
-      return null;
-    }
-  }
+ 
 }

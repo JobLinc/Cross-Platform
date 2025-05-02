@@ -1,13 +1,35 @@
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/posts/data/models/comment_model.dart';
 
 class CommentApiService {
   final Dio _dio;
 
   CommentApiService(this._dio);
 
-  //TODO implement once discussed
-  // Future<List<CommentModel>> getComments(String postID,int amount) async {
-  // }
+  Future<CommentModel> getComment(String postId, String commentId) async {
+    try {
+      final response = await _dio.get('/comment/$commentId');
+      return CommentModel.fromJson(response.data, postId);
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<List<CommentModel>> getComments(String postID) async {
+    try {
+      final response = await _dio.get('/post/$postID/comments');
+      List<CommentModel> comments = [];
+
+      for (Map<String, dynamic> comment in response.data) {
+        comments.add(CommentModel.fromJson(comment, postID));
+      }
+
+      return comments;
+    } on DioException catch (e) {
+      print(e.toString());
+      throw Exception(_handleDioError(e));
+    }
+  }
 
   Future<String> addComment(String postID, String text) async {
     try {

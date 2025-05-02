@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:joblinc/core/helpers/user_service.dart';
 import '../models/user_profile_model.dart';
 
 class UserProfileApiService {
@@ -19,7 +20,8 @@ class UserProfileApiService {
       print('Status: ${response.statusCode} ${response.statusMessage}');
       print('Headers: ${response.headers}');
       print('Data: ${response.data}');
-
+      UserService.saveUserDataFromJson(response.data);
+      print('=== User Profile Data Saved ===');
       return UserProfile.fromJson(response.data);
     } on DioException catch (e) {
       final errorMessage = _handleDioError(e);
