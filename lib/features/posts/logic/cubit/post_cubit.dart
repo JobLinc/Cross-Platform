@@ -24,6 +24,24 @@ class PostCubit extends Cubit<PostState> {
     emit(PostStateInitial());
   }
 
+  Future<void> reportPost() async {
+    try {
+      await _postRepo.reportPost(postId);
+      emit(PostStateSuccess('Post reported'));
+    } catch (e) {
+      emit(PostStateFailure(e.toString()));
+    }
+  }
+
+  Future<void> blockUser(String userId) async {
+    try {
+      await _connectionsRepo.changeConnectionStatus(userId, 'Blocked');
+      emit(PostStateSuccess('User blocked'));
+    } catch (e) {
+      emit(PostStateFailure(e.toString()));
+    }
+  }
+
   Future<void> savePost() async {
     try {
       await _postRepo.savePost(postId);

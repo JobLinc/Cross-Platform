@@ -6,11 +6,13 @@ class PostList extends StatelessWidget {
   const PostList({
     super.key,
     required this.posts,
+    this.invertScrollDirection = false,
     this.isSaved = false,
     this.showExtraMenu = true,
     this.showOwnerMenu = false,
   });
   final List<PostModel> posts;
+  final bool invertScrollDirection;
   final bool isSaved;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -19,6 +21,8 @@ class PostList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (posts.isNotEmpty) {
       return ListView.builder(
+        scrollDirection:
+            invertScrollDirection ? Axis.horizontal : Axis.vertical,
         cacheExtent: 2000,
         itemCount: posts.length,
         itemBuilder: (context, index) => Padding(
