@@ -25,8 +25,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-        future: auth.getUserId(),
+    return FutureBuilder<bool?>(
+        future: auth.getPlan(),
         builder: (context, snap) {
           final userPlan = snap.data;
           return Scaffold(
@@ -37,7 +37,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                  child: userPlan == "Premium"
+                  child: (userPlan == true || isPremium == true) 
                       ? buildPremiumAdvantages()
                       : buildTryPremium(),
                 ),
