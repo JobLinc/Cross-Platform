@@ -124,7 +124,8 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1990),
-      lastDate: DateTime.now(), // Only allow past or today for both start and end date
+      lastDate: DateTime
+          .now(), // Only allow past or today for both start and end date
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -271,7 +272,6 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
           experienceToAdd.experienceId = widget.experience!.id;
           context.read<ProfileCubit>().editExperience(experienceToAdd);
         }
-        
       }
     }
   }
@@ -315,6 +315,12 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
             CustomSnackBar.show(
               context: context,
               type: SnackBarType.success,
+              message: state.message,
+            );
+          } else if (state is ExperienceFailed) {
+            CustomSnackBar.show(
+              context: context,
+              type: SnackBarType.error,
               message: state.message,
             );
           }
