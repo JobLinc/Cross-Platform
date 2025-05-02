@@ -7,6 +7,7 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
@@ -56,21 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: 0,
               leadingWidth: 0.1.sw,
               leading: IconButton(
-                key: Key('home_topBar_profile'),
-                iconSize: 30,
-                onPressed: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
-                icon: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
-                    (myUser.profilePicture == null ||
-                            myUser.profilePicture == '')
-                        ? 'https://placehold.co/400/png'
-                        : myUser.profilePicture!,
-                  ),
-                ),
-              ),
+                  key: Key('home_topBar_profile'),
+                  iconSize: 30,
+                  onPressed: () {
+                    _scaffoldKey.currentState!.openDrawer();
+                  },
+                  icon: ProfileImage(
+                    imageURL: myUser.profilePicture,
+                    radius: 13,
+                  )),
               title: Container(
                 height: 40,
                 decoration: BoxDecoration(
