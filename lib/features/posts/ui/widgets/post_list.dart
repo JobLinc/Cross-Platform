@@ -15,17 +15,23 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      cacheExtent: 2000,
-      itemCount: posts.length,
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Post(
-          data: posts[index],
-          showExtraMenu: showExtraMenu,
-          showOwnerMenu: showOwnerMenu,
+    if (posts.isNotEmpty) {
+      return ListView.builder(
+        cacheExtent: 2000,
+        itemCount: posts.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Post(
+            data: posts[index],
+            showExtraMenu: showExtraMenu,
+            showOwnerMenu: showOwnerMenu,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Center(
+        child: Text('No posts yet'),
+      );
+    }
   }
 }
