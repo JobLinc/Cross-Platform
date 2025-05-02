@@ -76,7 +76,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return BlocBuilder<ChatListCubit, ChatListState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: _buildAppBar(context,),
+          appBar: _buildAppBar(
+            context,
+          ),
           body: SafeArea(
             child: Column(
               children: [
@@ -93,8 +95,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-
-   AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     final state = context.watch<ChatListCubit>().state;
     if (state is ChatListSelected) {
       // Selection mode AppBar
@@ -138,7 +139,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           keyName: "chatList_search_textField",
                           text: "search messages",
                           onPress: () {} /*startSearch*/,
-                          onTextChange: _searchChats /*addSearchedToSearchedList*/,
+                          onTextChange:
+                              _searchChats /*addSearchedToSearchedList*/,
                           controller: searchTextController),
                     ),
                     IconButton(
@@ -152,6 +154,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       },
                       icon: Icon(Icons.filter_list, color: Colors.white),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, Routes.createChat);
+                      },
+                      icon: Icon(Icons.add, color: Colors.white),
+                    )
                     //MoreOptionsButton(),
                   ],
                 ),
@@ -182,7 +190,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         ),
       ),
     );
-   }
+  }
 
   // PreferredSizeWidget _buildAppBar(BuildContext c, ChatListState state) {
   //   if (state is ChatListSelected) {
@@ -236,43 +244,54 @@ class _ChatListScreenState extends State<ChatListScreen> {
   // }
 
   Widget _buildBody(ChatListState state) {
-    if (state is ChatListLoading) return Center(child: CircularProgressIndicator());
-    if (state is ChatListEmpty)   return Center(child: Text('No conversations yet'));
+    if (state is ChatListLoading)
+      return Center(child: CircularProgressIndicator());
+    if (state is ChatListEmpty)
+      return Center(child: Text('No conversations yet'));
 
     final list = (state is ChatListLoaded)
         ? state.chats
-        : (state is ChatListSearch) ? state.searchChats
-        : (state is ChatListFilter) ? state.filteredChats
-        : (state is ChatListSelected) ? state.chats
-        : chats;
+        : (state is ChatListSearch)
+            ? state.searchChats
+            : (state is ChatListFilter)
+                ? state.filteredChats
+                : (state is ChatListSelected)
+                    ? state.chats
+                    : chats;
 
-    if (list == null || list.isEmpty) return Center(child: Text('No conversations'));
+    if (list == null || list.isEmpty)
+      return Center(child: Text('No conversations'));
 
     return ListView.builder(
       itemCount: list.length,
       itemBuilder: (_, i) {
         final c = list[i];
         return ChatCard(
-          key: ValueKey(c.chatId), 
+          key: ValueKey(c.chatId),
           chat: c,
           selectionMode: state is ChatListSelected,
-          selected: state is ChatListSelected && state.selectedIds.contains(c.chatId),
+          selected:
+              state is ChatListSelected && state.selectedIds.contains(c.chatId),
           onTap: () async {
             if (state is ChatListSelected) {
               context.read<ChatListCubit>().toggleSelection(c.chatId);
             } else {
-              await Navigator.pushNamed(context, Routes.chatScreen, arguments: c.chatId);
-              context.read<ChatListCubit>().reloadChats(); 
+              await Navigator.pushNamed(context, Routes.chatScreen,
+                  arguments: c.chatId);
+              context.read<ChatListCubit>().reloadChats();
             }
           },
-          onLongPress: () => context.read<ChatListCubit>().toggleSelection(c.chatId),
+          onLongPress: () =>
+              context.read<ChatListCubit>().toggleSelection(c.chatId),
         );
       },
     );
   }
 
   Widget _buildSelectionActions(BuildContext ctx, ChatListSelected s) {
-    final anyUnread = s.chats.where((c) => s.selectedIds.contains(c.chatId)).any((c) => (c.unreadCount! > 0) || (c.isRead == false));
+    final anyUnread = s.chats
+        .where((c) => s.selectedIds.contains(c.chatId))
+        .any((c) => (c.unreadCount! > 0) || (c.isRead == false));
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       color: Colors.white,
@@ -280,8 +299,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton(
-            onPressed: () => context.read<ChatListCubit>().markReadOrUnreadSelected(anyUnread),
-            child: Text(anyUnread ? 'Mark read' : 'Mark unread', style: TextStyle(color: Colors.red)),
+            onPressed: () => context
+                .read<ChatListCubit>()
+                .markReadOrUnreadSelected(anyUnread),
+            child: Text(anyUnread ? 'Mark read' : 'Mark unread',
+                style: TextStyle(color: Colors.red)),
           ),
           TextButton(
             onPressed: () => context.read<ChatListCubit>().deleteSelected(),

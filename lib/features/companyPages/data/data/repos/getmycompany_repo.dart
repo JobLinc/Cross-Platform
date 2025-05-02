@@ -1,4 +1,5 @@
 import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/models/company_stats.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 
 abstract class CompanyRepository {
@@ -125,10 +126,19 @@ class CompanyRepositoryImpl implements CompanyRepository {
           id: company.id,
           coverUrl: company.coverPhoto,
           followers: company.followers ?? 0,
-          
+
           );
     } catch (e) {
       throw Exception('Failed to get company by slug: $e');
+    }
+  }
+
+  Future<CompanyStats> getCompanyStats() {
+    try {
+      final companyStats = apiService.getCompanyStats();
+      return companyStats;
+    } catch (e) {
+      throw Exception('Failed to get company stats: $e');
     }
   }
 }

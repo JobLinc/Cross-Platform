@@ -353,6 +353,10 @@ class AppRouter {
           return MaterialPageRoute(
             builder: (context) => CompanyDashboard(company: arguments),
           );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyDashboard(company: arguments['company']),
+          );
         } else {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -382,6 +386,10 @@ class AppRouter {
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyAnalytics(company: arguments),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) => CompanyAnalytics(company: arguments['company']),
           );
         } else {
           return MaterialPageRoute(

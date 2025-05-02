@@ -95,9 +95,13 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                       );
 
                       break;
-                    // case "Analytics":
-                    //   Navigator.pushNamed(context, Routes.analytics);
-                    //   break;
+                    case "Analytics":
+                      Navigator.pushNamed(
+                        context, 
+                        Routes.companyAnalytics,
+                        arguments: {'company': widget.company},
+                      );
+                      break;
                     
                     // case "Inbox":
                     //   Navigator.pushNamed(context, Routes.inboxPage);
