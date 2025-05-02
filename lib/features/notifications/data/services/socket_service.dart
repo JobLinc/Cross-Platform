@@ -33,8 +33,9 @@ class SocketService {
         return;
       }
 
+      // Connect to the notification namespace
       _socket = IO.io(
-        _baseUrl,
+        '$_baseUrl/notification',
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableForceNew()
@@ -52,19 +53,27 @@ class SocketService {
 
   void _setupSocketListeners() {
     _socket!.onConnect((_) {
-      debugPrint('Socket: Connected ✅');
+      debugPrint('Socket: Connected to notification namespace ');
       _isConnected = true;
 
       // Cancel any pending reconnect attempts
       _cancelReconnectTimer();
 
-      // Join user's room
-      _socket!.emit('join', _authService.getUserId());
+      // No need to manually join a room - the server automatically maps
+      // the user ID to socket ID(s) based on the authentication token
     });
 
     _socket!.on('newNotification', (data) {
       try {
         debugPrint('Socket: Received notification: $data');
+        // The notification payload format should be:
+        // {
+        //   "type": "react | comment | connection | message",
+        //   "text": "string",
+        //   "relatedEntityId": "string",
+        //   "subRelatedEntityId": "string | null",
+        //   "imageURL": "string | null"
+        // }
         final newNotification = NotificationModel.fromJson(data);
         onNewNotification(newNotification);
       } catch (e) {
@@ -73,7 +82,7 @@ class SocketService {
     });
 
     _socket!.onDisconnect((_) {
-      debugPrint('Socket: Disconnected ❌');
+      debugPrint('Socket: Disconnected from notification namespace ');
       _isConnected = false;
       _scheduleReconnect();
     });

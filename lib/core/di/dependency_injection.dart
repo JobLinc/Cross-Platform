@@ -73,9 +73,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = Platform.isAndroid
-      ? 'http://10.0.2.2:3000/api'
-      : 'http://localhost:3000/api';
+  final baseUrl = // Platform.isAndroid
+  //     ? 'http://10.0.2.2:3000/api'
+  //     : 'http://localhost:3000/api';
+      "https://joblinc.me/api";
 
   // Define socket URL based on same host but with WebSocket protocol
   final socketUrl =

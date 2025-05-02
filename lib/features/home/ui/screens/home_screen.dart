@@ -6,6 +6,8 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
+import 'package:joblinc/features/home/logic/cubit/home_state.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
@@ -18,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -33,19 +34,49 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircularProgressIndicator(
                     color: ColorsManager.getPrimaryColor(context),
                   ))));
-        } else if (state is HomePostsFailure) {
-          return Center(
-            child: Text(
-              state.error,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
+        } else if (state is HomePostsFailure || state is HomeLoaded) {
+          UserProfile? user;
+          List<PostModel>? posts;
+          String? errorMessage;
+
+          if (state is HomeLoaded) {
+            user = state.user;
+            posts = state.posts;
+          } else if (state is HomePostsFailure) {
+            user = state.user;
+            posts = state.posts;
+            errorMessage = state.error;
+          }
+
+          user ??= UserProfile(
+            userId: '',
+            profilePicture: "",
+            coverPicture: "",
+            headline: '',
+            country: '',
+            city: '',
+            biography: '',
+            email: 'Unable to load profile',
+            firstname: 'Guest',
+            lastname: 'User',
+            phoneNumber: '',
+            connectionStatus: 'none',
+            numberOfConnections: 0,
+            matualConnections: 0,
+            recentPosts: [],
+            skills: [],
+            education: [],
+            experiences: [],
+            certifications: [],
+            languages: [],
+            resumes: [],
           );
-        } else if (state is HomeLoaded) {
-          // Assuming you have a user object in the state
-          final myUser = state.user;
+
+          posts ??= [];
+
           return Scaffold(
-            key: _scaffoldKey, // Important to control the drawer!
-            drawer: _buildDrawer(context, myUser),
+            key: _scaffoldKey,
+            drawer: _buildDrawer(context, user),
             appBar: AppBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
@@ -59,9 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(
-                    (myUser.profilePicture == null || myUser.profilePicture == '')
+                    (user.profilePicture == null || user.profilePicture == '')
                         ? 'https://placehold.co/400/png'
-                        : myUser.profilePicture!,
+                        : user.profilePicture!,
                   ),
                 ),
               ),
@@ -114,26 +145,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            body: Center(
-              child: Semantics(
-                container: true,
-                label: 'home_body_postList',
-                child: RefreshIndicator(
-                  color: ColorsManager.getPrimaryColor(context),
-                  onRefresh: () async {
-                    // Call cubit to refresh the feed data
-                    await context.read<HomeCubit>().getFeed();
-                  },
-                  child: PostList(posts: state.posts),
+            body: Column(
+              children: [
+                if (errorMessage != null && errorMessage.isNotEmpty)
+                  Container(
+                    width: double.infinity,
+                    color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Text(
+                      errorMessage,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  child: Center(
+                    child: Semantics(
+                      container: true,
+                      label: 'home_body_postList',
+                      child: RefreshIndicator(
+                        color: ColorsManager.getPrimaryColor(context),
+                        onRefresh: () async {
+                          await context.read<HomeCubit>().getFeed();
+                        },
+                        child: posts.isEmpty
+                            ? ListView(
+                                children: [
+                                  SizedBox(height: 100),
+                                  Center(
+                                    child: Text(
+                                      "No posts available",
+                                      style: TextStyle(
+                                        color: ColorsManager.getTextSecondary(context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : PostList(posts: posts),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            // Removed the bottom navigation bar as it's now handled by MainContainerScreen
           );
         } else {
           return Center(
             child: Text(
-              "error occured",
+              "Unknown state occurred",
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );

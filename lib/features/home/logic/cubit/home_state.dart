@@ -1,19 +1,23 @@
-part of 'home_cubit.dart';
+import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
-@immutable
-sealed class HomeState {}
+abstract class HomeState {}
 
-final class HomeInitial extends HomeState {}
+class HomeInitial extends HomeState {}
 
-final class HomePostsLoading extends HomeState {}
+class HomePostsLoading extends HomeState {}
 
-final class HomeLoaded extends HomeState {
-  final UserProfile user;
-  final List<PostModel> posts;
-  HomeLoaded({required this.posts, required this.user});
+class HomePostsFailure extends HomeState {
+  final String error;
+  final List<PostModel>? posts;
+  final UserProfile? user;
+
+  HomePostsFailure(this.error, {this.posts, this.user});
 }
 
-final class HomePostsFailure extends HomeState {
-  final String error;
-  HomePostsFailure(this.error);
+class HomeLoaded extends HomeState {
+  final List<PostModel> posts;
+  final UserProfile user;
+
+  HomeLoaded({required this.posts, required this.user});
 }

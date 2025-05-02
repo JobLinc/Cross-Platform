@@ -1,10 +1,12 @@
 class NotificationModel {
   final String id;
-  final String type;
+  final String type; // "react", "comment", "connection", "message"
   final String content;
   final String? imageUrl;
   final String isRead;
   final DateTime createdAt;
+  final String? relatedEntityId; // Added from the documentation
+  final String? subRelatedEntityId; // Added from the documentation
 
   NotificationModel({
     required this.id,
@@ -13,6 +15,8 @@ class NotificationModel {
     this.imageUrl,
     required this.isRead,
     required this.createdAt,
+    this.relatedEntityId,
+    this.subRelatedEntityId,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -20,11 +24,13 @@ class NotificationModel {
       id: json['_id'] ?? json['id'] ?? '',
       type: json['type'] ?? '',
       content: json['text'] ?? json['content'] ?? '',
-      imageUrl: json['image'] ?? json['imageUrl'],
+      imageUrl: json['imageURL'] ?? json['image'] ?? json['imageUrl'],
       isRead: json['status'] ?? "pending",
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
+      relatedEntityId: json['relatedEntityId'],
+      subRelatedEntityId: json['subRelatedEntityId'],
     );
   }
 
@@ -36,6 +42,8 @@ class NotificationModel {
       'imageUrl': imageUrl,
       'isRead': isRead,
       'createdAt': createdAt.toIso8601String(),
+      'relatedEntityId': relatedEntityId,
+      'subRelatedEntityId': subRelatedEntityId,
     };
   }
 }
