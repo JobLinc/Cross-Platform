@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
@@ -180,6 +181,10 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             profile: profile,
                             isUser: false,
                           ),
+                        ],
+                        if (true) ...[
+                          //replace this with the list of postModels.isNotEmpty
+                          PostList(posts: []), //also replace this
                         ]
                       ],
                     ),
