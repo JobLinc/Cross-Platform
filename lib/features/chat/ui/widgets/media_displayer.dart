@@ -11,43 +11,42 @@ import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/video_player_screen.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
-import 'package:pdf_render/pdf_render.dart';
 
 
 final _dio = Dio();
 
 /// Download with Dio, render page 1 with pdf_render, return raw RGBA pixels.
-Future<Uint8List> renderPdfFirstPage(String url) async {
-  // 1) fetch into memory
-  final resp = await _dio.get<List<int>>(
-    url,
-    options: Options(responseType: ResponseType.bytes),
-  );
-  if (resp.statusCode != 200 || resp.data == null) {
-    throw Exception('PDF download failed: ${resp.statusCode}');
-  }
-  final data = Uint8List.fromList(resp.data!);
+// Future<Uint8List> renderPdfFirstPage(String url) async {
+//   // 1) fetch into memory
+//   final resp = await _dio.get<List<int>>(
+//     url,
+//     options: Options(responseType: ResponseType.bytes),
+//   );
+//   if (resp.statusCode != 200 || resp.data == null) {
+//     throw Exception('PDF download failed: ${resp.statusCode}');
+//   }
+//   final data = Uint8List.fromList(resp.data!);
 
-  // 2) open PDF
-  final doc = await PdfDocument.openData(data);
+//   // 2) open PDF
+//   final doc = await PdfDocument.openData(data);
 
-  // 3) grab page 1
-  final page = await doc.getPage(1);
+//   // 3) grab page 1
+//   final page = await doc.getPage(1);
 
-  // 4) render full‑page image
-  final pageImage = await page.render(
-    width: page.width.toInt(),
-    height: page.height.toInt(),
-  );
+//   // 4) render full‑page image
+//   final pageImage = await page.render(
+//     width: page.width.toInt(),
+//     height: page.height.toInt(),
+//   );
 
-  // 5) extract RGBA bytes
-  final pixels = pageImage.pixels;
+//   // 5) extract RGBA bytes
+//   final pixels = pageImage.pixels;
 
-  // 6) clean up
-  await doc.dispose();
+//   // 6) clean up
+//   await doc.dispose();
 
-  return pixels;
-}
+//   return pixels;
+// }
 
 /// Downloads `url` into memory via Dio, renders page 1, returns RGBA bytes.
 // Future<Uint8List> renderPdfFirstPage(String url) async {
@@ -374,24 +373,26 @@ if (c.video.isNotEmpty && c.video.startsWith('http')) {
           Positioned.fill(
             child: Opacity(
               opacity: 0.25,
-              child: ext == 'pdf'
-                  ? FutureBuilder<Uint8List>(
-                      future: renderPdfFirstPage(c.document),
-                      builder: (ctx, snap) {
-                        if (snap.connectionState == ConnectionState.done &&
-                            snap.hasData) {
-                          return Image.memory(
-                            snap.data!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          );
-                        } else {
-                          return Container(color: Colors.grey[300]);
-                        }
-                      },
-                    )
-                  : Container(color: Colors.grey[300]),  // fallback for .doc/.msword
+              child: 
+              // ext == 'pdf'
+              //     ? FutureBuilder<Uint8List>(
+              //         future: renderPdfFirstPage(c.document),
+              //         builder: (ctx, snap) {
+              //           if (snap.connectionState == ConnectionState.done &&
+              //               snap.hasData) {
+              //             return Image.memory(
+              //               snap.data!,
+              //               fit: BoxFit.cover,
+              //               width: double.infinity,
+              //               height: double.infinity,
+              //             );
+              //           } else {
+              //             return Container(color: Colors.grey[300]);
+              //           }
+              //         },
+              //       )
+                  // : 
+                  Container(color: Colors.grey[300]),  // fallback for .doc/.msword
             ),
           ),
 

@@ -7,6 +7,16 @@ class PostApiService {
 
   PostApiService(this._dio);
 
+  Future<void> reportPost(String postId) async {
+    try {
+      await _dio.post('/reports/reportPost', data: {
+        'reportedId': postId,
+      });
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
   Future<List<PostModel>> getUserPosts(String userid) async {
     try {
       final response = await _dio.get('/post/$userid/posts');

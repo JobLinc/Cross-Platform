@@ -139,7 +139,8 @@ class PostContent extends StatelessWidget {
                     ? IconButton(
                         visualDensity: VisualDensity.compact,
                         onPressed: () {
-                          showPostSettings(context, showOwnerMenu, isSaved);
+                          showPostSettings(
+                              context, data.senderID, showOwnerMenu, isSaved);
                         },
                         icon: Icon(Icons.more_vert),
                       )
@@ -410,7 +411,7 @@ class PostAttachments extends StatelessWidget {
 }
 
 Future<dynamic> showPostSettings(
-    BuildContext context, bool showOwnerMenu, bool isSaved) {
+    BuildContext context, String userId, bool showOwnerMenu, bool isSaved) {
   List<Widget> postSettingsNormalButtons = [
     isSaved
         ? ListTile(
@@ -433,7 +434,7 @@ Future<dynamic> showPostSettings(
       leading: Icon(Icons.flag_outlined),
       title: Text('Report post'),
       onTap: () {
-        // context.read<PostCubit>().reportPost();
+        context.read<PostCubit>().reportPost();
         Navigator.pop(context);
       },
     ),
@@ -441,6 +442,7 @@ Future<dynamic> showPostSettings(
       leading: Icon(Icons.person_off_outlined),
       title: Text('Block user'),
       onTap: () {
+        context.read<PostCubit>().blockUser(userId);
         Navigator.pop(context);
       },
     ),
