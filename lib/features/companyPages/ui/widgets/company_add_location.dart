@@ -113,20 +113,17 @@ class _CompanyAddLocationState extends State<CompanyAddLocation> {
     return locations;
   }
 
-  void saveLocations() {
+  void saveLocations() async{
     if (_formKey.currentState!.validate()) {
       final locations = getLocations().map((loc) => loc.toJson()).toList();
-      print(locations);
-      // Show loading snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Saving locations...'),
-          duration: Duration(minutes: 1), // Will be closed manually
-        ),
-      );
-      context.read<EditCompanyCubit>().updateCompanyLocations(locations);
-      // Also update the company object in memory
+
+      // update in-memory immediately
+      await context.read<EditCompanyCubit>().updateCompanyLocations(locations);
       widget.company.locations = getLocations();
+      Navigator.pushReplacementNamed(context, Routes.companyPageHome,
+          arguments: {'company': widget.company, 'isAdmin': true});
+      
+      
     }
   }
 

@@ -32,19 +32,18 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       final companyResponse = await _companyRepo.uploadCompanyLogo(imageFile);
       emit(EditCompanySuccess());
       return Company(
-        name: companyResponse.name,
-        profileUrl: companyResponse.urlSlug,
-        industry: companyResponse.industry,
-        organizationSize: companyResponse.size,
-        organizationType: companyResponse.type,
-        overview: companyResponse.overview,
-        coverUrl: companyResponse.coverPhoto,
-        website: companyResponse.website,
-        logoUrl: companyResponse.logo,
-        id: companyResponse.id,
-        followers: companyResponse.followers!,
-        locations: companyResponse.locations
-      );
+          name: companyResponse.name,
+          profileUrl: companyResponse.urlSlug,
+          industry: companyResponse.industry,
+          organizationSize: companyResponse.size,
+          organizationType: companyResponse.type,
+          overview: companyResponse.overview,
+          coverUrl: companyResponse.coverPhoto,
+          website: companyResponse.website,
+          logoUrl: companyResponse.logo,
+          id: companyResponse.id,
+          followers: companyResponse.followers!,
+          locations: companyResponse.locations);
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
     }
@@ -56,19 +55,18 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       final companyResponse = await _companyRepo.uploadCompanyCover(imageFile);
       emit(EditCompanySuccess());
       return Company(
-        name: companyResponse.name,
-        profileUrl: companyResponse.urlSlug,
-        industry: companyResponse.industry,
-        organizationSize: companyResponse.size,
-        organizationType: companyResponse.type,
-        overview: companyResponse.overview,
-        website: companyResponse.website,
-        logoUrl: companyResponse.logo,
-        coverUrl: companyResponse.coverPhoto,
-        id: companyResponse.id,
-        followers: companyResponse.followers!,
-        locations: companyResponse.locations
-      );
+          name: companyResponse.name,
+          profileUrl: companyResponse.urlSlug,
+          industry: companyResponse.industry,
+          organizationSize: companyResponse.size,
+          organizationType: companyResponse.type,
+          overview: companyResponse.overview,
+          website: companyResponse.website,
+          logoUrl: companyResponse.logo,
+          coverUrl: companyResponse.coverPhoto,
+          id: companyResponse.id,
+          followers: companyResponse.followers!,
+          locations: companyResponse.locations);
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -81,19 +79,18 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       final companyResponse = await _companyRepo.removeCompanyLogo();
       emit(EditCompanySuccess());
       return Company(
-        name: companyResponse.name,
-        profileUrl: companyResponse.urlSlug,
-        industry: companyResponse.industry,
-        organizationSize: companyResponse.size,
-        organizationType: companyResponse.type,
-        overview: companyResponse.overview,
-        website: companyResponse.website,
-        logoUrl: companyResponse.logo,
-        coverUrl: companyResponse.coverPhoto,
-        id: companyResponse.id,
-        followers: companyResponse.followers ?? 0,
-        locations: companyResponse.locations
-      );
+          name: companyResponse.name,
+          profileUrl: companyResponse.urlSlug,
+          industry: companyResponse.industry,
+          organizationSize: companyResponse.size,
+          organizationType: companyResponse.type,
+          overview: companyResponse.overview,
+          website: companyResponse.website,
+          logoUrl: companyResponse.logo,
+          coverUrl: companyResponse.coverPhoto,
+          id: companyResponse.id,
+          followers: companyResponse.followers ?? 0,
+          locations: companyResponse.locations);
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -106,19 +103,18 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       final companyResponse = await _companyRepo.removeCompanyCover();
       emit(EditCompanySuccess());
       return Company(
-        name: companyResponse.name,
-        profileUrl: companyResponse.urlSlug,
-        industry: companyResponse.industry,
-        organizationSize: companyResponse.size,
-        organizationType: companyResponse.type,
-        overview: companyResponse.overview,
-        website: companyResponse.website,
-        logoUrl: companyResponse.logo,
-        coverUrl: companyResponse.coverPhoto,
-        id: companyResponse.id,
-        followers: companyResponse.followers ?? 0,
-        locations: companyResponse.locations
-      );
+          name: companyResponse.name,
+          profileUrl: companyResponse.urlSlug,
+          industry: companyResponse.industry,
+          organizationSize: companyResponse.size,
+          organizationType: companyResponse.type,
+          overview: companyResponse.overview,
+          website: companyResponse.website,
+          logoUrl: companyResponse.logo,
+          coverUrl: companyResponse.coverPhoto,
+          id: companyResponse.id,
+          followers: companyResponse.followers ?? 0,
+          locations: companyResponse.locations);
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
       return null;
@@ -127,11 +123,13 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
 
   Future<Company?> updateCompanyLocations(
       List<Map<String, dynamic>> locations) async {
-    emit(EditCompanyInitial());
-    print("Locations in the cuubit: $locations");
+     
     try {
+      emit(EditCompanyInitial());
+       // trigger loading state
       final companyResponse =
           await _companyRepo.updateCompanyLocations(locations);
+      // ...build a Company instance from response...
       final company = Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
@@ -148,7 +146,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         city: companyResponse.locations?.first.city,
         followers: companyResponse.followers ?? 0,
       );
-      emit(EditCompanySuccess(company: company));
+      emit(EditCompanySuccess()); // include the updated company
       return company;
     } catch (e) {
       emit(EditCompanyFailure(e.toString()));

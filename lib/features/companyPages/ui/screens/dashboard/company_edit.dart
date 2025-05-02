@@ -182,7 +182,7 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
                         onPressed: () =>
                             Navigator.pushNamed(context, 
                             Routes.companyLocations,
-                            arguments: {'company': widget.company}
+                            arguments: widget.company
                           ),
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.symmetric(
