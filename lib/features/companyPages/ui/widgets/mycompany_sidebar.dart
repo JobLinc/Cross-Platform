@@ -1,8 +1,8 @@
 // widgets/company_list_tile.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/companyPages/data/data/models/getmycompany_response.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/square_avatar.dart';
+import 'package:joblinc/features/companypages/data/data/models/getmycompany_response.dart';
+import 'package:joblinc/features/companypages/ui/widgets/square_avatar.dart';
 
 class CompanyListTile extends StatelessWidget {
   final CompanyResponse company;

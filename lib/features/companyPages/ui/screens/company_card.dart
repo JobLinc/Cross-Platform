@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import '../widgets/square_avatar.dart';
 
 class CompanyCard extends StatelessWidget {

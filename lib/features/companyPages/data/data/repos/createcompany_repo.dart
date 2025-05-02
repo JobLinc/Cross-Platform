@@ -1,5 +1,5 @@
-import 'package:joblinc/features/companyPages/data/data/models/createcompany_response.dart';
-import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companypages/data/data/models/createcompany_response.dart';
+import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
 
 class CreateCompanyRepo {
   final CreateCompanyApiService _api;

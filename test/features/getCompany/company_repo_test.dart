@@ -1,15 +1,15 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
-import 'package:joblinc/features/companyPages/data/data/models/company_model.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/models/company_model.dart';
 // import 'package:mocktail/mocktail.dart';
 // import 'package:test/test.dart';
-// import 'package:joblinc/features/companyPages/data/data/company.dart';
-// import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-// import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
-// import 'package:joblinc/features/companyPages/data/data/models/company_model.dart';
+// import 'package:joblinc/features/companypages/data/data/company.dart';
+// import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+// import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+// import 'package:joblinc/features/companypages/data/data/models/company_model.dart';
 
 // class MockCompanyApiService extends Mock implements CompanyApiService {}
 

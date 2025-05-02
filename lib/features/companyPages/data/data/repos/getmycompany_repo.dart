@@ -1,5 +1,5 @@
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 
 abstract class CompanyRepository {
   Future<List<Company>> getCurrentCompanies();

@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/company_data.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/dashboard/dashboard_appbar.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/homePage/about.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/homePage/company_jobs.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/homePage/posts.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
+import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/company_jobs.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../widgets/scrollable_tabs.dart';
 
