@@ -182,10 +182,10 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             isUser: false,
                           ),
                         ],
-                        if (true) ...[
-                          //replace this with the list of postModels.isNotEmpty
-                          PostList(posts: []), //also replace this
-                        ]
+                        // if (true) ...[
+                        //   //replace this with the list of postModels.isNotEmpty
+                        //   PostList(posts: []), //also replace this
+                        // ]
                       ],
                     ),
                   ),

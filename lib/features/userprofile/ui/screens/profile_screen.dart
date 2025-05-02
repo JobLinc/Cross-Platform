@@ -279,9 +279,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         if (profile.education.isNotEmpty) ...[
                           UserEducations(profile: profile),
                         ],
-                        if (true) ...[//replace this with the list of postModels.isNotEmpty
-                          PostList(posts: []), //also replace this
-                        ]
+                        // if (true) ...[//replace this with the list of postModels.isNotEmpty
+                        //   PostList(posts: []), //also replace this
+                        // ]
                       ],
                     ),
                   ),
