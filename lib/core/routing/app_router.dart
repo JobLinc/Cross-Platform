@@ -519,7 +519,7 @@ class AppRouter {
         );
       case Routes.adminPanel:
         return MaterialPageRoute(
-          builder: (context) => (),
+          builder: (context) => (Placeholder()),
         );
       default:
         return null;
