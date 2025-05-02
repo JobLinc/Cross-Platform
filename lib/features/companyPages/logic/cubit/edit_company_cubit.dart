@@ -36,13 +36,14 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         profileUrl: companyResponse.urlSlug,
         industry: companyResponse.industry,
         organizationSize: companyResponse.size,
-        organizationType: companyResponse.type, 
+        organizationType: companyResponse.type,
         overview: companyResponse.overview,
         coverUrl: companyResponse.coverPhoto,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
         id: companyResponse.id,
         followers: companyResponse.followers!,
+        locations: companyResponse.locations
       );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -58,16 +59,15 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
         industry: companyResponse.industry,
-        organizationSize:
-            companyResponse.size,
-        organizationType:
-            companyResponse.type,
+        organizationSize: companyResponse.size,
+        organizationType: companyResponse.type,
         overview: companyResponse.overview,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
         coverUrl: companyResponse.coverPhoto,
         id: companyResponse.id,
         followers: companyResponse.followers!,
+        locations: companyResponse.locations
       );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -92,6 +92,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         coverUrl: companyResponse.coverPhoto,
         id: companyResponse.id,
         followers: companyResponse.followers ?? 0,
+        locations: companyResponse.locations
       );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -116,9 +117,41 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         coverUrl: companyResponse.coverPhoto,
         id: companyResponse.id,
         followers: companyResponse.followers ?? 0,
+        locations: companyResponse.locations
       );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
+      return null;
+    }
+  }
+
+  Future<Company?> updateCompanyLocations(
+      List<Map<String, dynamic>> locations) async {
+    emit(EditCompanyInitial());
+    print("Locations in the cuubit: $locations");
+    try {
+      final companyResponse =
+          await _companyRepo.updateCompanyLocations(locations);
+      final company = Company(
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry: companyResponse.industry,
+        organizationSize: companyResponse.size,
+        organizationType: companyResponse.type,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        coverUrl: companyResponse.coverPhoto,
+        id: companyResponse.id,
+        locations: companyResponse.locations,
+        country: companyResponse.locations?.first.country,
+        city: companyResponse.locations?.first.city,
+        followers: companyResponse.followers ?? 0,
+      );
+      emit(EditCompanySuccess(company: company));
+      return company;
+    } catch (e) {
+      emit(EditCompanyFailure(e.toString()));
       return null;
     }
   }

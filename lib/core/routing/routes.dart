@@ -46,5 +46,6 @@ class Routes {
   static const String createGroupChatScreen = '/createGroupChatScreen';
   static const String userSearchScreen = '/userSearchScreen';
   static const String companyPicturesManage = '/companyPicturesManage';
+  static const String companyLocations = '/companyLocations';
   // We'll use the homeScreen route for the main container
 }

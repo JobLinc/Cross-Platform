@@ -24,7 +24,8 @@ class UpdateCompanyRepo {
       rethrow;
     }
   }
-   Future<CompanyResponse> uploadCompanyCover(File imageFile) async {
+
+  Future<CompanyResponse> uploadCompanyCover(File imageFile) async {
     try {
       final company = await apiService.uploadCompanyCover(imageFile);
       return CompanyResponse.fromJson(company as Map<String, dynamic>);
@@ -45,6 +46,18 @@ class UpdateCompanyRepo {
   Future<CompanyResponse> removeCompanyCover() async {
     try {
       final company = await apiService.removeCompanyCover();
+      return CompanyResponse.fromJson(company as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CompanyResponse> updateCompanyLocations(
+      List<Map<String, dynamic>> locations) async {
+    try {
+      print("Inside the updateCompanyLocations repository");
+      print("Locations: $locations");
+      final company = await apiService.updateCompanyLocations(locations);
       return CompanyResponse.fromJson(company as Map<String, dynamic>);
     } catch (e) {
       rethrow;

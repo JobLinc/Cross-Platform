@@ -60,7 +60,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios, size: 24.sp),
                 onPressed: () =>
-                    Navigator.pushReplacementNamed(context, Routes.homeScreen),
+                    Navigator.pop(context),
               ),
               backgroundColor: const Color(0xFFFAFAFA),
               title: Row(

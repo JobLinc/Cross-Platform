@@ -67,44 +67,8 @@ class MoreActions extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () {},
-              ),
-              Text(
-                'Send in a message',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Icon(Icons.flag_rounded),
-                onPressed: () {},
-              ),
-              Text(
-                'Report abuse',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
+        
+        
         Padding(
           padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
           child: InkWell(
@@ -136,7 +100,7 @@ class MoreActions extends StatelessWidget {
                   onPressed: () {},
                 ),
                 Text(
-                  'Create a LinkedIn Page',
+                  'Create a JobLinc Page',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

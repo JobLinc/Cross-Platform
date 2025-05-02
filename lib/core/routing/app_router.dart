@@ -30,6 +30,7 @@ import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashb
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
+import 'package:joblinc/features/companypages/ui/widgets/company_add_location.dart';
 import 'package:joblinc/features/companypages/ui/widgets/image_preview_edit.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
@@ -356,7 +357,8 @@ class AppRouter {
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyDashboard(company: arguments['company']),
+            builder: (context) =>
+                CompanyDashboard(company: arguments['company']),
           );
         } else {
           return MaterialPageRoute(
@@ -390,7 +392,8 @@ class AppRouter {
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyAnalytics(company: arguments['company']),
+            builder: (context) =>
+                CompanyAnalytics(company: arguments['company']),
           );
         } else {
           return MaterialPageRoute(
@@ -542,6 +545,35 @@ class AppRouter {
             ),
           );
         }
+      case Routes.companyLocations:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyAddLocation(
+                company: arguments
+              ),
+            ),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyAddLocation(
+                company: arguments['company'].locations ?? [],
+              ),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyLocations"),
+              ),
+            ),
+          );
+        }
+
       default:
         return null;
     }

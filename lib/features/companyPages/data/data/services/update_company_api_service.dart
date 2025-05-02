@@ -65,12 +65,12 @@ class UpdateCompanyApiService {
       //   '/companies',
       //   data: {'logo': logoUrl},
       // );
-
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }
   }
- Future<dynamic> uploadCompanyCover(File imageFile) async {
+
+  Future<dynamic> uploadCompanyCover(File imageFile) async {
     try {
       String fileName = imageFile.path.split('/').last;
 
@@ -100,13 +100,12 @@ class UpdateCompanyApiService {
       //   '/companies',
       //   data: {'logo': logoUrl},
       // );
-
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }
   }
 
-  Future <dynamic> removeCompanyLogo() async {
+  Future<dynamic> removeCompanyLogo() async {
     try {
       final response = await _dio.delete(
         '/companies/remove-logo',
@@ -122,7 +121,7 @@ class UpdateCompanyApiService {
     }
   }
 
-  Future <dynamic> removeCompanyCover() async {
+  Future<dynamic> removeCompanyCover() async {
     try {
       final response = await _dio.delete(
         '/companies/remove-cover',
@@ -135,6 +134,33 @@ class UpdateCompanyApiService {
         throw Exception(e.response!.data['message']);
       }
       throw Exception('Failed to remove company logo: ${e.message}');
+    }
+  }
+
+  Future<dynamic> updateCompanyLocations(
+      List<Map<String, dynamic>> locations) async {
+    try {
+      print("Inside the updateCompanyLocations API service");
+      print("Locations: $locations");
+
+      final response = await _dio.patch(
+        '/companies',
+        data: {'locations': locations},
+      );
+      print('''
+        === Received Response ===
+        Status: ${response.statusCode} ${response.statusMessage}
+        Headers: ${response.headers}
+        Data: ${response.data}
+        ''');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null &&
+          e.response!.data is Map &&
+          e.response!.data['message'] != null) {
+        throw Exception(e.response!.data['message']);
+      }
+      throw Exception('Failed to update company locations: ${e.message}');
     }
   }
 
