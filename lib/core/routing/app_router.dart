@@ -251,7 +251,7 @@ class AppRouter {
                   CompanyApiService(getIt<Dio>()),
                 );
                 return FutureBuilder(
-                  future: repo.getCompanyBySlug(arguments),
+                  future: repo.getCompanyById(arguments),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Scaffold(
@@ -264,6 +264,7 @@ class AppRouter {
                                 'Error 404: Requested company is not found')),
                       );
                     } else if (snapshot.hasData) {
+                      print(snapshot.data);
                       return CompanyPageHome(company: snapshot.data as Company);
                     } else {
                       return Scaffold(

@@ -210,7 +210,7 @@ class CompanyData extends StatelessWidget {
                   runSpacing: 4.0.h,
                   children: [
                     Text(
-                      company.industry.displayName,
+                      company.industry,
                       style: TextStyle(
                           fontSize: 16.sp, color: Colors.grey.shade600),
                     ),
@@ -229,7 +229,7 @@ class CompanyData extends StatelessWidget {
                     ),
                     Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
                     Text(
-                      company.organizationSize.displayName,
+                      company.organizationSize,
                       style: TextStyle(
                           fontSize: 16.sp, color: Colors.grey.shade600),
                     ),

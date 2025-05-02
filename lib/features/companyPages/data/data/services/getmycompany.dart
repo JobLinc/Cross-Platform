@@ -85,9 +85,9 @@ class CompanyApiService {
     }
   }
 
-  Future<CompanyResponse> getCompanyById(String slug) async {
+  Future<CompanyResponse> getCompanyById(String id) async {
     try {
-      final response = await dio.get('/companies/$slug',
+      final response = await dio.get('/companies?id=$id',
           options: Options(
             headers: {
               'Content-Type': 'application/json',
@@ -109,7 +109,14 @@ class CompanyApiService {
         throw Exception('Response data is null');
       }
 
-      return CompanyResponse.fromJson(response.data as Map<String, dynamic>);
+      // Fix: handle if response.data is a List with one company
+      if (response.data is List && (response.data as List).isNotEmpty) {
+        return CompanyResponse.fromJson((response.data as List).first as Map<String, dynamic>);
+      } else if (response.data is Map<String, dynamic>) {
+        return CompanyResponse.fromJson(response.data as Map<String, dynamic>);
+      } else {
+        throw Exception('Unexpected response format for getCompanyById');
+      }
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');
     }

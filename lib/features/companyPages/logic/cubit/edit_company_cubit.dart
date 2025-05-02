@@ -34,15 +34,11 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
-            Industry.technology,
-        organizationSize:
-            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
-                OrganizationSize.elevenToFifty,
-        organizationType:
-            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
-                OrganizationType.governmentAgency,
+        industry: companyResponse.industry,
+        organizationSize: companyResponse.size,
+        organizationType: companyResponse.type, 
         overview: companyResponse.overview,
+        coverUrl: companyResponse.coverPhoto,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
         id: companyResponse.id,
@@ -61,14 +57,11 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
-            Industry.technology,
+        industry: companyResponse.industry,
         organizationSize:
-            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
-                OrganizationSize.elevenToFifty,
+            companyResponse.size,
         organizationType:
-            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
-                OrganizationType.governmentAgency,
+            companyResponse.type,
         overview: companyResponse.overview,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
@@ -90,14 +83,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
-            Industry.technology,
-        organizationSize:
-            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
-                OrganizationSize.elevenToFifty,
-        organizationType:
-            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
-                OrganizationType.governmentAgency,
+        industry: companyResponse.industry,
+        organizationSize: companyResponse.size,
+        organizationType: companyResponse.type,
         overview: companyResponse.overview,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,
@@ -119,14 +107,9 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
       return Company(
         name: companyResponse.name,
         profileUrl: companyResponse.urlSlug,
-        industry: IndustryExtension.fromDisplayName(companyResponse.industry) ??
-            Industry.technology,
-        organizationSize:
-            OrganizationSizeExtension.fromDisplayName(companyResponse.size) ??
-                OrganizationSize.elevenToFifty,
-        organizationType:
-            OrganizationTypeExtension.fromDisplayName(companyResponse.type) ??
-                OrganizationType.governmentAgency,
+        industry: companyResponse.industry,
+        organizationSize: companyResponse.size,
+        organizationType: companyResponse.type,
         overview: companyResponse.overview,
         website: companyResponse.website,
         logoUrl: companyResponse.logo,

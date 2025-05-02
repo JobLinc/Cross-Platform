@@ -184,9 +184,9 @@ class Company {
   String? location;
   String? country;
   String? city;
-  Industry industry;
-  OrganizationSize organizationSize;
-  OrganizationType organizationType;
+  String industry;
+  String organizationSize;
+  String organizationType;
   int followers = 0;
   bool isVerified = true;
   List <CompanyLocationModel>? locations;
@@ -222,120 +222,3 @@ class Company {
     return false;
   }
 }
-
-//Mock Data
-List<Company> mockCompanies = [
-  Company(
-    name: "Microsoft",
-    id: "1",
-    profileUrl: "joblinc.com/microsoft",
-    industry: Industry.softwareDevelopment,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.privatelyHeld,
-    logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1024px-Microsoft_logo.svg.png?20210729021049",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/D5616AQFA1b3IWtImEw/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1698372804036?e=1747267200&v=beta&t=Lo5P4SBuzIk2Ik6NHtfyqkSd7ggVGgMkbNNfosiltW8",
-    followers: 25000000,
-    website: "https://www.microsoft.com",
-    tagline:
-        "Empowering every person and every organization on the planet to achieve more.",
-    // location: "Redmond, Washington",
-  ),
-  Company(
-    name: "Google",
-    id: "2",
-    profileUrl: "joblinc.com/google",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8TnrQxTZSfvVAv5WMvi3cNJZdO09N-NfkXQ&s",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/C561BAQFhLiarxRw1QQ/company-background_10000/company-background_10000/0/1584579327009/google_partners_cover?e=2147483647&v=beta&t=9RplEJ-8oaumWceZpNRcdwrIHafiK-CRWzl1DcZHUsk",
-    followers: 20000000,
-    website: "https://google.com",
-    tagline:
-        "To organize the world's information and make it universally accessible and useful.",
-    // location: "Mountain View, California",
-  ),
-  Company(
-    name: "Apple",
-    profileUrl: "joblinc.com/apple",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://media.licdn.com/dms/image/v2/C560BAQHdAaarsO-eyA/company-logo_200_200/company-logo_200_200/0/1630637844948/apple_logo?e=1750291200&v=beta&t=PO9gPFA9fMQKkkNcKW7C6hgUmppuQ9hbZilIs_G5dw4",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/C4E1BAQFcckDwSlhOVg/company-background_10000/company-background_10000/0/1584537393991/apple_cover?e=1742601600&v=beta&t=AHjR9xgDH9nT5_eZS6d4Yumw0xgh8g8N0IddCEwL_Q0",
-    followers: 22000000,
-    website: "https://www.apple.com",
-    tagline: "Think different.",
-    // location: "Cupertino, California",
-  ),
-  Company(
-    name: "Amazon",
-    id: "3",
-    profileUrl: "joblinc.com/amazon",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://media.licdn.com/dms/image/v2/C560BAQHTvZwCx4p2Qg/company-logo_200_200/company-logo_200_200/0/1630640869849/amazon_logo?e=1750291200&v=beta&t=S-WbLXjQY6sb_Lt8aaKbfeq086zp14cAL9mshdO1Q1w",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/D4D3DAQGri_YWxYb-GQ/image-scale_191_1128/image-scale_191_1128/0/1681945878609/amazon_cover?e=1742612400&v=beta&t=sKeSxA8U8R09elO4d_IQLNKjZaM9a_6p-b2CfnIkIaw",
-    followers: 18000000,
-    website: "https://www.amazon.com",
-    tagline: "Work hard. Have fun. Make history.",
-    // location: "Seattle, Washington",
-  ),
-  Company(
-    name: "Tesla",
-    id: "4",
-    profileUrl: "joblinc.com/tesla",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://www.researchgate.net/profile/Locky-Law-2/publication/349493132/figure/fig4/AS:11431281085420770@1663768886900/The-logo-of-Tesla-Inc.png",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/C561BAQFqQXNCkzg_Uw/company-background_10000/company-background_10000/0/1635791699664/tesla_motors_cover?e=1742601600&v=beta&t=WfDUV1fWC_zayas8PZA0Rqc1hrT3bkLxw99sJnWM7LE",
-    followers: 12000000,
-    website: "https://www.tesla.com",
-    tagline: "Accelerating the world's transition to sustainable energy.",
-    // location: "Palo Alto, California",
-  ),
-  Company(
-    name: "Netflix",
-    id: "5",
-    profileUrl: "joblinc.com/netflix",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://static.vecteezy.com/system/resources/previews/020/335/987/non_2x/netflix-logo-netflix-icon-free-free-vector.jpg",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/D4E3DAQEKmQHFFvC4Fw/image-scale_191_1128/image-scale_191_1128/0/1736891212728/netflix_cover?e=2147483647&v=beta&t=SsN1pLcKzV7i5hmwPbqUeiUs0C37A8UkNk1ilhIl9YA",
-    followers: 10000000,
-    website: "https://www.netflix.com",
-    tagline: "See what's next.",
-    // location: "Los Gatos, California",
-  ),
-  Company(
-    name: "Uber",
-    id: "6",
-    profileUrl: "joblinc.com/uber",
-    industry: Industry.technology,
-    organizationSize: OrganizationSize.tenThousandPlus,
-    organizationType: OrganizationType.publicCompany,
-    logoUrl:
-        "https://media.licdn.com/dms/image/v2/C4D0BAQFiYnR1Mbtxdg/company-logo_200_200/company-logo_200_200/0/1630552741617/uber_com_logo?e=1750291200&v=beta&t=cDlilvW7YkUwonv8rbGMGWbjZdq6d50OHaIELA3OZvM",
-    coverUrl:
-        "https://media.licdn.com/dms/image/v2/D4E3DAQEZVS54MgjRNQ/image-scale_191_1128/image-scale_191_1128/0/1721908502230/uber_com_cover?e=1742601600&v=beta&t=GZP60hBHwMZyYbp24DzNjaprFRFR-rZV1vjqUK6FODo",
-    followers: 8000000,
-    website: "https://www.uber.com",
-    tagline: "We ignite opportunity by setting the world in motion.",
-    // location: "San Francisco, California",
-  ),
-];

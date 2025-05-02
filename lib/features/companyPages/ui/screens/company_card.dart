@@ -57,7 +57,7 @@ class CompanyCard extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            company.industry.displayName,
+                            company.industry,
                             style: TextStyle(
                                 fontSize: 10.sp, color: Colors.grey.shade600),
                           ),
@@ -135,7 +135,7 @@ class _CompanyListState extends State<CompanyList> {
     setState(() {
       filteredCompanies = companiesList.where((company) {
         return company.name.toLowerCase().contains(query) ||
-            (company.industry.displayName.toLowerCase().contains(query)) ||
+            (company.industry.toLowerCase().contains(query)) ||
             (company.location?.toLowerCase().contains(query) ?? false);
       }).toList();
     });

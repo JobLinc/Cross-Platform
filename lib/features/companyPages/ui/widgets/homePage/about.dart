@@ -37,10 +37,10 @@ class CompanyHomeAbout extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           _buildInfoColumn('Website', company.website!),
-          _buildInfoColumn('Industry', company.industry.displayName),
+          _buildInfoColumn('Industry', company.industry),
           _buildInfoColumn(
-              'Company size', company.organizationSize.displayName),
-          _buildInfoColumn('Type', company.organizationType.displayName),
+              'Company size', company.organizationSize),
+          _buildInfoColumn('Type', company.organizationType),
         ],
       ),
     );

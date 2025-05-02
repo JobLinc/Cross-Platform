@@ -28,9 +28,9 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
       Company companyToAdd = Company(
         name: nameController.text,
         profileUrl: jobLincUrlController.text,
-        industry: selectedIndustry,
-        organizationSize: orgSize,
-        organizationType: orgType,
+        industry: selectedIndustry.displayName,
+        organizationSize: orgSize.displayName,
+        organizationType: orgType.displayName,
         website: websiteController.text.isEmpty
             ? "https://www.linkedin.com"
             : websiteController.text,
@@ -41,15 +41,13 @@ class CreateCompanyCubit extends Cubit<CreateCompanyState> {
           await _createCompanyRepo.createCompany(
               name: companyToAdd.name,
               urlSlug: companyToAdd.profileUrl,
-              industry: companyToAdd.industry.displayName,
-              size: companyToAdd.organizationSize.displayName,
-              type: companyToAdd.organizationType.displayName,
+              industry: companyToAdd.industry,
+              size: companyToAdd.organizationSize,
+              type: companyToAdd.organizationType,
               overview: companyToAdd.overview!,
               website: companyToAdd.website!);
 
       companyToAdd.id = response.id;
-
-      mockCompanies.add(companyToAdd);
 
       emit(CreateCompanySuccess());
       onCompanyCreated(companyToAdd);

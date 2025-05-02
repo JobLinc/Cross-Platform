@@ -49,9 +49,9 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
     countryController = TextEditingController();
 
     // Initialize dropdown values from company or use defaults
-    selectedIndustry = widget.company.industry;
-    selectedOrgSize = widget.company.organizationSize;
-    selectedOrgType = widget.company.organizationType;
+    selectedIndustry = IndustryExtension.fromDisplayName(widget.company.industry) ?? Industry.technology;
+    selectedOrgSize = OrganizationSizeExtension.fromDisplayName(widget.company.organizationSize) ?? OrganizationSize.elevenToFifty;
+    selectedOrgType = OrganizationTypeExtension.fromDisplayName(widget.company.organizationType) ?? OrganizationType.privatelyHeld;
   }
 
   @override
@@ -119,9 +119,9 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
           widget.company.website = websiteController.text;
           widget.company.profileUrl = jobLincUrlController.text;
           widget.company.overview = overviewController.text;
-          widget.company.industry = selectedIndustry;
-          widget.company.organizationSize = selectedOrgSize;
-          widget.company.organizationType = selectedOrgType;
+          widget.company.industry = selectedIndustry.displayName;
+          widget.company.organizationSize = selectedOrgSize.displayName;
+          widget.company.organizationType = selectedOrgType.displayName;
 
           Navigator.pushReplacementNamed(
             context,

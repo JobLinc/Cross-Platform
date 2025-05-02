@@ -7,6 +7,7 @@ abstract class CompanyRepository {
   Future<int> getCompanyCount();
   Future<List<Company>> getAllCompanies();
   Future<Company> getCompanyBySlug(String slug);
+  Future<Company> getCompanyById(String id);
 }
 
 class CompanyRepositoryImpl implements CompanyRepository {
@@ -22,15 +23,9 @@ class CompanyRepositoryImpl implements CompanyRepository {
         return Company(
             name: companyResponse.name,
             profileUrl: companyResponse.urlSlug,
-            industry:
-                IndustryExtension.fromDisplayName(companyResponse.industry) ??
-                    Industry.technology,
-            organizationSize: OrganizationSizeExtension.fromDisplayName(
-                    companyResponse.size) ??
-                OrganizationSize.elevenToFifty,
-            organizationType: OrganizationTypeExtension.fromDisplayName(
-                    companyResponse.type) ??
-                OrganizationType.governmentAgency,
+            industry: companyResponse.industry,
+            organizationSize: companyResponse.size,
+            organizationType: companyResponse.type,
             overview: companyResponse.overview,
             website: companyResponse.website,
             logoUrl: companyResponse.logo,
@@ -64,28 +59,17 @@ class CompanyRepositoryImpl implements CompanyRepository {
               return Company(
                 name: companyResponse.name ?? 'Name not available',
                 profileUrl: companyResponse.urlSlug ?? 'URL slug not available',
-                industry: companyResponse.industry != null
-                    ? (IndustryExtension.fromDisplayName(
-                            companyResponse.industry.replaceAll('–', '-')) ??
-                        Industry.technology)
-                    : Industry.technology,
-                organizationSize: companyResponse.size != null
-                    ? (OrganizationSizeExtension.fromDisplayName(
-                            companyResponse.size.replaceAll('–', '-')) ??
-                        OrganizationSize.elevenToFifty)
-                    : OrganizationSize.elevenToFifty,
-                organizationType: companyResponse.type != null
-                    ? (OrganizationTypeExtension.fromDisplayName(
-                            companyResponse.type.replaceAll('–', '-')) ??
-                        OrganizationType.privatelyHeld)
-                    : OrganizationType.privatelyHeld,
-                overview: companyResponse.overview ?? '',
-                website: companyResponse.website ?? 'Website not available',
+                industry: companyResponse.industry ,
+                organizationSize: companyResponse.size ,
+                organizationType: companyResponse.type ,
+                overview: companyResponse.overview ?? 'Overview not available',
+                website: companyResponse.website.contains("linkedin.com")
+                    ? 'Website not available'
+                    : companyResponse.website,
                 logoUrl: companyResponse.logo ?? '',
-                id: companyResponse.id ?? '',
+                id: companyResponse.id,
                 coverUrl: companyResponse.coverPhoto ?? '',
                 followers: companyResponse.followers ?? 0,
-
               );
             } catch (e) {
               print('Error mapping company: ${companyResponse.toString()}');
@@ -113,23 +97,46 @@ class CompanyRepositoryImpl implements CompanyRepository {
         orElse: () => throw Exception('Company not found'),
       );
       return Company(
-          name: company.name,
-          profileUrl: company.urlSlug,
-          industry: IndustryExtension.fromDisplayName(company.industry)!,
-          organizationSize:
-              OrganizationSizeExtension.fromDisplayName(company.size)!,
-          organizationType:
-              OrganizationTypeExtension.fromDisplayName(company.type)!,
-          overview: company.overview,
-          website: company.website,
-          logoUrl: company.logo,
-          id: company.id,
-          coverUrl: company.coverPhoto,
-          followers: company.followers ?? 0,
-
-          );
+        name: company.name,
+        profileUrl: company.urlSlug,
+        industry: company.industry,
+        organizationSize:
+            company.size,
+        organizationType:
+            company.type,
+        overview: company.overview,
+        website: company.website,
+        logoUrl: company.logo,
+        id: company.id,
+        coverUrl: company.coverPhoto,
+        followers: company.followers ?? 0,
+      );
     } catch (e) {
       throw Exception('Failed to get company by slug: $e');
+    }
+  }
+
+  @override
+  Future<Company> getCompanyById(String id) async {
+    try {
+      final companyResponse = await apiService.getCompanyById(id);
+      return Company(
+        name: companyResponse.name,
+        profileUrl: companyResponse.urlSlug,
+        industry: companyResponse.industry,
+        organizationSize:
+            companyResponse.size,
+        organizationType:
+            companyResponse.type,
+        overview: companyResponse.overview,
+        website: companyResponse.website,
+        logoUrl: companyResponse.logo,
+        id: companyResponse.id,
+        coverUrl: companyResponse.coverPhoto,
+        followers: companyResponse.followers ?? 0,
+      );
+    } catch (e) {
+      throw Exception('Failed to get company by id: $e');
     }
   }
 
