@@ -392,9 +392,10 @@ class PostAttachments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO prepare for multiple images
+    //TODO handle multiple images
     return Image.network(
-      key: Key('post_body_attachments'),
+      errorBuilder: (context, error, stackTrace) => SizedBox(),
+      key: Key('post_body_attachments'), 
       attachments[0].url,
     );
   }
@@ -432,6 +433,7 @@ Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
       leading: Icon(Icons.edit_outlined),
       title: Text('Edit post'),
       onTap: () {
+        //TODO add edit post screen here
         Navigator.pop(context);
       },
     ),
