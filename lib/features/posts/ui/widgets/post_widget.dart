@@ -21,6 +21,7 @@ class Post extends StatelessWidget {
   const Post({
     super.key,
     required this.data,
+    this.isSaved = false,
     this.showActionBar = true,
     this.showExtraMenu = true,
     this.showRepost = true,
@@ -28,6 +29,7 @@ class Post extends StatelessWidget {
   });
   final PostModel data;
   final bool showRepost;
+  final bool isSaved;
   final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -63,6 +65,7 @@ class Post extends StatelessWidget {
             child: PostContent(
               state: state,
               data: data,
+              isSaved: isSaved,
               showRepost: showRepost,
               showActionBar: showActionBar,
               showExtraMenu: showExtraMenu,
@@ -81,6 +84,7 @@ class PostContent extends StatelessWidget {
     super.key,
     required this.state,
     required this.data,
+    required this.isSaved,
     required this.showRepost,
     required this.showActionBar,
     required this.showExtraMenu,
@@ -89,6 +93,7 @@ class PostContent extends StatelessWidget {
   });
   final PostState state;
   final PostModel data;
+  final bool isSaved;
   final bool showRepost;
   final bool showActionBar;
   final bool showExtraMenu;
@@ -133,7 +138,7 @@ class PostContent extends StatelessWidget {
                     ? IconButton(
                         visualDensity: VisualDensity.compact,
                         onPressed: () {
-                          showPostSettings(context, showOwnerMenu);
+                          showPostSettings(context, showOwnerMenu, isSaved);
                         },
                         icon: Icon(Icons.more_vert),
                       )
@@ -395,22 +400,32 @@ class PostAttachments extends StatelessWidget {
     //TODO handle multiple images
     return Image.network(
       errorBuilder: (context, error, stackTrace) => SizedBox(),
-      key: Key('post_body_attachments'), 
+      key: Key('post_body_attachments'),
       attachments[0].url,
     );
   }
 }
 
-Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
+Future<dynamic> showPostSettings(
+    BuildContext context, bool showOwnerMenu, bool isSaved) {
   List<Widget> postSettingsNormalButtons = [
-    ListTile(
-      leading: Icon(Icons.bookmark_add_outlined),
-      title: Text('Save post'),
-      onTap: () {
-        context.read<PostCubit>().savePost();
-        Navigator.pop(context);
-      },
-    ),
+    isSaved
+        ? ListTile(
+            leading: Icon(Icons.bookmark_remove_outlined),
+            title: Text('Unsave post'),
+            onTap: () {
+              context.read<PostCubit>().unsavePost();
+              Navigator.pop(context);
+            },
+          )
+        : ListTile(
+            leading: Icon(Icons.bookmark_add_outlined),
+            title: Text('Save post'),
+            onTap: () {
+              context.read<PostCubit>().savePost();
+              Navigator.pop(context);
+            },
+          ),
     ListTile(
       leading: Icon(Icons.flag_outlined),
       title: Text('Report post'),

@@ -6,10 +6,12 @@ class PostList extends StatelessWidget {
   const PostList({
     super.key,
     required this.posts,
+    this.isSaved = false,
     this.showExtraMenu = true,
     this.showOwnerMenu = false,
   });
   final List<PostModel> posts;
+  final bool isSaved;
   final bool showExtraMenu;
   final bool showOwnerMenu;
 
@@ -23,6 +25,7 @@ class PostList extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Post(
             data: posts[index],
+            isSaved: isSaved,
             showExtraMenu: showExtraMenu,
             showOwnerMenu: showOwnerMenu,
           ),

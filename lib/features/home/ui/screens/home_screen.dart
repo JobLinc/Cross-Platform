@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: const Icon(Icons.bookmark),
             title: const Text('Saved posts'),
             onTap: () {
-              // Add your action here
+              Navigator.pushNamed(context, Routes.savedPostsScreen);
             },
           ),
           ListTile(

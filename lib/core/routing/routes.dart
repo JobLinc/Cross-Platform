@@ -42,5 +42,6 @@ class Routes {
   static const String followingListScreen = '/followingListScreen';
   static const String followersListScreen = '/followersListScreen';
   static const String adminPanel = '/adminPanel';
+  static const String savedPostsScreen = '/savedPostsScreen';
   // We'll use the homeScreen route for the main container
 }
