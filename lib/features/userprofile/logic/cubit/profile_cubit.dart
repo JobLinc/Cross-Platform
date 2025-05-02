@@ -37,6 +37,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<String?> createchat(String userId) async {
+    try {
+      return await connectionsRepository.createchat(userId);
+    } catch (e) {
+      emit(ProfileError("error : ${e.toString()}"));
+    }
+  }
+
+  Future<void> sendmessagrequest(String userId, BuildContext context) async {
+    try {
+      final string = await connectionsRepository.createchat(userId);
+
+      CustomSnackBar.show(
+          context: context,
+          message: "Message request sent succefully",
+          type: SnackBarType.success);
+    } catch (e) {
+      CustomSnackBar.show(
+          context: context, message: e.toString(), type: SnackBarType.error);
+    }
+  }
+
   Future<void> updateUserProfile(UserProfileUpdateModel updateData) async {
     try {
       emit(ProfileUpdating());
@@ -210,11 +232,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
-void editEducation(Education education) async {
+
+  void editEducation(Education education) async {
     try {
       emit(ProfileUpdating("Editing Education"));
-      final response =
-          await _profileRepository.editEducation(education);
+      final response = await _profileRepository.editEducation(education);
 
       if (response.statusCode == 200) {
         UserProfileUpdateModel skillModel = UserProfileUpdateModel();
@@ -231,6 +253,7 @@ void editEducation(Education education) async {
       }
     }
   }
+
   Future<void> deleteEducation(String educationId) async {
     try {
       final response = await _profileRepository.deleteEducation(educationId);
@@ -730,13 +753,4 @@ void editEducation(Education education) async {
       }
     }
   }
-    Future<String?> createchat(String userId) async {
-    try {
-      return await connectionsRepository.createchat(userId);
-    } catch (e) {
-      emit(EducationFailed("error : ${e.toString()}"));
-     
-    }
-  }
-
 }
