@@ -885,10 +885,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   handleErrorReceive(Map<String, dynamic> data) {
     final message = data['message'] ?? 'An unknown error occurred';
-     if (!message.contains("Failed to mark")) {
-    CustomSnackBar.show(
-        context: context, message: message, type: SnackBarType.error);
-   
+    if (!message.contains("Failed to mark")) {
+      CustomSnackBar.show(
+          context: context, message: message, type: SnackBarType.error);
+
       setState(() {
         messages.removeLast();
       });
@@ -904,7 +904,9 @@ class _ChatScreenState extends State<ChatScreen> {
       // Create message from content
       final content = map['content'] as Map<String, dynamic>;
       final Message msg;
-
+      if (map['senderId'] == userId) {
+        return;
+      }
       if (content.containsKey('text')) {
         msg = Message(
           messageId: DateTime.now().millisecondsSinceEpoch.toString(),
