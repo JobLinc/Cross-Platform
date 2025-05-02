@@ -31,7 +31,7 @@ void main() {
       'emits [LoginLoading, LoginSuccess] when login succeeds',
       build: () {
         when(() => mockLoginRepo.login(any(), any()))
-            .thenAnswer((_) async => LoginResponseModel(accessToken: "token", refreshToken: "refreshToken", userId: "userId", role: 1, confirmed: true, email: "email"));
+            .thenAnswer((_) async => LoginResponseModel(accessToken: "token", refreshToken: "refreshToken", userId: "userId", role: 1, confirmed: true, email: "email" , plan: 0));
         return loginCubit;
       },
       act: (cubit) => cubit.login('test@example.com', 'password123'),
