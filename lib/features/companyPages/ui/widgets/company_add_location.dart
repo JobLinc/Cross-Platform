@@ -122,8 +122,6 @@ class _CompanyAddLocationState extends State<CompanyAddLocation> {
       widget.company.locations = getLocations();
       Navigator.pushReplacementNamed(context, Routes.companyPageHome,
           arguments: {'company': widget.company, 'isAdmin': true});
-      
-      
     }
   }
 

@@ -11,61 +11,45 @@ class CompanyHomeAbout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.h),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(
-            'Overview',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 16.h),
-          _buildInfoColumn('Website', company.website!),
-          _buildInfoColumn('Industry', company.industry),
-          _buildInfoColumn(
-              'Company size', company.organizationSize),
-          _buildInfoColumn('Type', company.organizationType),
+          if (company.website != "" && !company.website!.contains("linkedin"))
+            _buildInfoCard('Website', company.website!),
+          _buildInfoCard('Industry', company.industry),
+          _buildInfoCard('Company size', company.organizationSize),
+          _buildInfoCard('Type', company.organizationType),
         ],
       ),
     );
   }
 
-  Widget _buildInfoColumn(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+  Widget _buildInfoCard(String label, String value) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            value,
-            style: TextStyle(
-              color: ColorsManager.crimsonRed,
+            SizedBox(height: 8.h),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: ColorsManager.crimsonRed,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

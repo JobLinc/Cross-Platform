@@ -64,7 +64,7 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
     super.dispose();
   }
 
-  void updateCompanyData() {
+  void updateCompanyData() async {
     if (_formKey.currentState!.validate()) {
       final updateModel = UpdateCompanyModel(
         name: companyNameController.text.isNotEmpty
@@ -81,7 +81,16 @@ class _CompanyPageEditScreenState extends State<CompanyPageEditScreen> {
         size: selectedOrgSize.displayName,
         type: selectedOrgType.displayName,
       );
-      context.read<EditCompanyCubit>().updateCompany(updateModel);
+      widget.company.name = companyNameController.text;
+      widget.company.website = websiteController.text;
+      widget.company.profileUrl = jobLincUrlController.text;
+      widget.company.overview = overviewController.text;
+      widget.company.industry = selectedIndustry.displayName;
+      widget.company.organizationSize = selectedOrgSize.displayName;
+      widget.company.organizationType = selectedOrgType.displayName;
+      await context.read<EditCompanyCubit>().updateCompany(updateModel);
+      Navigator.pushReplacementNamed(context, Routes.companyPageHome,
+          arguments: {'company': widget.company, 'isAdmin': true});
     }
   }
 

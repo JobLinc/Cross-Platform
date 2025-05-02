@@ -18,7 +18,7 @@ class CompanyData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Check if the user is an admin
-    if (isAdmin){
+    if (isAdmin) {
       final authService = getIt<AuthService>();
       authService.refreshToken(companyId: company.id);
     }
@@ -209,29 +209,39 @@ class CompanyData extends StatelessWidget {
                   spacing: 10.0.w,
                   runSpacing: 4.0.h,
                   children: [
-                    Text(
-                      company.industry,
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.location ?? "Location not available",
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.followers
-                          .toString(), // TODO: Replace with actual followers
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.organizationSize,
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            company.industry,
+                            style: TextStyle(
+                                fontSize: 16.sp, color: Colors.grey.shade600),
+                          ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            children: [
+                              Text(
+                                company.followers.toString() + " followers",
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600),
+                              ),
+                              SizedBox(width: 10.w),
+                              Icon(Icons.circle,
+                                  size: 6.sp, color: Colors.grey.shade600),
+                              SizedBox(width: 10.w),
+                              Text(
+                                company.organizationSize,
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -243,7 +253,7 @@ class CompanyData extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (company.website != null && company.website!.isNotEmpty)
+                    if (company.website != null && company.website!.isNotEmpty && !company.website!.contains("linkedin"))
                       VisitCompanyWebsite(
                         text: 'Visit Website',
                         backgroundColor: Color(0xFFD72638),
@@ -260,7 +270,7 @@ class CompanyData extends StatelessWidget {
                       backgroundColor: Colors.white,
                       foregroundColor: Color(0xFFD72638),
                       borderColor: Color(0xFFD72638),
-                      width: 130.w,
+                      width: company.website != null && company.website!.isNotEmpty && !company.website!.contains("linkedin") ? 130.w : 280.w,
                       fontSize: 13.sp,
                     ),
                     Padding(

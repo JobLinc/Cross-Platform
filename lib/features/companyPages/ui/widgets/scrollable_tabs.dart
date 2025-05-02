@@ -55,15 +55,7 @@ class ScrollableTabs extends StatelessWidget {
               ),
             )
           ),
-          Tab(
-            child: Text(
-              "People",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-              ),
-            )
-          ),
+          
         ],
       ),
     );

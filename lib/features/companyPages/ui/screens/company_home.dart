@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
+import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_data.dart';
 import 'package:joblinc/features/companypages/ui/widgets/dashboard/dashboard_appbar.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/about.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/company_jobs.dart';
+import 'package:joblinc/features/companypages/ui/widgets/homePage/home.dart';
 import 'package:joblinc/features/companypages/ui/widgets/homePage/posts.dart';
 import '../../../../core/widgets/custom_search_bar.dart';
 import '../widgets/scrollable_tabs.dart';
@@ -25,6 +27,7 @@ class CompanyPageHome extends StatefulWidget {
 class _CompanyPageHomeState extends State<CompanyPageHome>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -67,12 +70,19 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
                 children: [
                   Expanded(
                     child: CustomSearchBar(
-                      keyName: 'company',
-                      text: widget.company.name,
-                      onPress: () {},
-                      onTextChange: (searched) {},
-                      controller: TextEditingController(),
-                    ),
+                        backgroundColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? ColorsManager.lightGray
+                                : ColorsManager.darkModeCardBackground,
+                        keyName: 'home_topBar_search',
+                        text: 'Search',
+                        onPress: () {
+                          Navigator.pushNamed(
+                              context, Routes.companyListScreen);
+                        },
+                        onTextChange: () {},
+                        controller: searchController,
+                      ),
                   ),
                 ],
               ),
@@ -90,12 +100,11 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
             child: TabBarView(
               controller: _tabController,
               children: [
-                Center(child: Text("Home")),
+                CompanyHomePage(company: widget.company),
                 CompanyHomeAbout(company: widget.company),
                 CompanyHomePosts(companyId: widget.company.id!),
                 CompanyHomeJobs(
                     companyId: widget.company.id!, isAdmin: widget.isAdmin),
-                Center(child: Text("People")),
               ],
             ),
           ),
