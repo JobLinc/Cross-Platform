@@ -65,7 +65,7 @@ class StripeService {
       String userEmail,
       VoidCallback onPremiumUpdated) async {
     try {
-      mockMainUser.isPremiumUser = true;
+      isPremium = true;
       onPremiumUpdated();
 
       if (context.mounted) {

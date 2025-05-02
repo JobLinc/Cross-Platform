@@ -1,4 +1,4 @@
-import 'package:joblinc/features/companyPages/data/data/services/companyjobs_api.dart';
+import 'package:joblinc/features/companypages/data/data/services/companyjobs_api.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 
 class GetCompanyJobsRepo {

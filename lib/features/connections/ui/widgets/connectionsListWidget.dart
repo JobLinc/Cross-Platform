@@ -99,8 +99,12 @@ class ConnectionsListView extends StatelessWidget {
                     isuser
                         ? IconButton(
                             key: Key("connection_chat_button"),
-                            onPressed: () {
-                              Navigator.pushNamed(context, Routes.chatScreen);
+                            onPressed: () async {
+                              final chatId = await (context
+                                  .read<ConnectionsCubit>()
+                                  .createchat(connection.userId));
+                              Navigator.pushNamed(context, Routes.chatScreen,
+                                  arguments: chatId!);
                             },
                             icon: Icon(Icons.send, size: 20.sp),
                           )

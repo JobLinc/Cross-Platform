@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/premium/data/models/user_model.dart';
 import 'package:joblinc/features/premium/payment_constants.dart';
 import 'package:joblinc/features/premium/ui/screens/plan_selection_screen.dart';
@@ -19,22 +21,30 @@ class _PremiumScreenState extends State<PremiumScreen> {
     Stripe.publishableKey = stripePublishKey;
   }
 
+  final auth = getIt<AuthService>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Premium')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-            child: mockMainUser.isPremiumUser
-                ? buildPremiumAdvantages()
-                : buildTryPremium(),
-          ),
-        ],
-      ),
-    );
+    return FutureBuilder<bool?>(
+        future: auth.getPlan(),
+        builder: (context, snap) {
+          final userPlan = snap.data;
+          return Scaffold(
+            appBar: AppBar(title: Text('Premium')),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                  child: (userPlan == true || isPremium == true) 
+                      ? buildPremiumAdvantages()
+                      : buildTryPremium(),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Widget buildTryPremium() {

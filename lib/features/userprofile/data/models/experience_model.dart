@@ -1,56 +1,90 @@
-class Experience {
-  final String experienceId;
-  final String position;
-  final String company;
-  final DateTime startDate;
-  final DateTime? endDate;
-  final String description;
+import 'package:joblinc/features/companypages/data/data/models/getmycompany_response.dart';
 
-  Experience({
+class ExperienceModel {
+  String experienceId;
+  String? companyId;
+  String? company;
+  final String position;
+  final DateTime startDate;
+  final String? endDate;
+  final String description;
+  final String? mode;
+  final String? type;
+
+  ExperienceModel({
     required this.experienceId,
+    this.companyId,
+    this.company,
     required this.position,
-    required this.company,
     required this.startDate,
     this.endDate,
     required this.description,
+    this.mode,
+    this.type,
   });
-
-  factory Experience.fromJson(Map<String, dynamic> json) {
-    DateTime? parseDate(dynamic dateValue) {
-      if (dateValue == null) return null;
-      if (dateValue is DateTime) return dateValue;
-      if (dateValue is String) {
-        try {
-          return DateTime.parse(dateValue);
-        } catch (e) {
-          print('Error parsing date: $dateValue - $e');
-          return null;
-        }
-      }
-      return null;
-    }
-
-    DateTime start = parseDate(json['startDate']) ?? DateTime.now();
-    DateTime? end = parseDate(json['endDate']) ?? DateTime.now();
-
-    return Experience(
-      experienceId: json['id'] ?? '',
-      position: json['position'] ?? '',
-      company: json['company'] ?? '',
-      startDate: start,
-      endDate: end,
-      description: json['description'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
+      if (company != null) 'company': company,
+      if (companyId != null) 'companyId': companyId,
       'position': position,
-      'company': company,
-      'startDate': startDate.toIso8601String(), // Convert to ISO 8601 string
-      if (endDate != null)
-        'endDate': endDate!.toIso8601String(), // Convert to ISO 8601 string
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate ?? 'Present',
       'description': description,
+      if (mode != null) 'mode': mode,
+      if (type != null) 'type': type,
     };
+  }
+}
+
+class ExperienceResponse {
+  final String id;
+  final CompanyResponse company;
+  final String position;
+  final DateTime startDate;
+  final String endDate;
+  final String description;
+  String? mode;
+  String? type;
+
+  ExperienceResponse({
+    required this.id,
+    required this.company,
+    required this.position,
+    required this.startDate,
+    required this.endDate,
+    required this.description,
+    this.mode,
+    this.type,
+  });
+
+  factory ExperienceResponse.fromJson(Map<String, dynamic> json) {
+    return ExperienceResponse(
+      id: json['id'] ?? '',
+      company: CompanyResponse.fromJson(json['company'] as Map<String, dynamic>),
+      position: json['position'] ?? '',
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] ?? '',
+      description: json['description'] ?? '',
+      mode: json['mode'] ?? '',
+      type: json['type'] ?? '',
+    );
+  }
+}
+
+class CompanyInfo {
+  final String name;
+  final String logo;
+
+  CompanyInfo({
+    required this.name,
+    required this.logo,
+  });
+
+  factory CompanyInfo.fromJson(Map<String, dynamic> json) {
+    return CompanyInfo(
+      name: json['name'] ?? '',
+      logo: json['logo'] ?? '',
+    );
   }
 }

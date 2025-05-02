@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/edit_company_cubit.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/company_more.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/follow_button.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/visit_company_website.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
+import 'package:joblinc/features/companypages/ui/widgets/company_more.dart';
+import 'package:joblinc/features/companypages/ui/widgets/follow_button.dart';
+import 'package:joblinc/features/companypages/ui/widgets/visit_company_website.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'square_avatar.dart';
 import '../../data/data/company.dart';
@@ -179,7 +179,7 @@ class CompanyData extends StatelessWidget {
                     ),
                     Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
                     Text(
-                      "37M followers", // TODO: Replace with actual followers
+                      company.followers.toString(), // TODO: Replace with actual followers
                       style: TextStyle(
                           fontSize: 16.sp, color: Colors.grey.shade600),
                     ),

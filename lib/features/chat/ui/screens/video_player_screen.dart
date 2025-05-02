@@ -16,7 +16,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.file(File(widget.url))
+    //_controller = VideoPlayerController.file(File(widget.url))
+    _controller = VideoPlayerController.network(widget.url)
       ..initialize().then((_) => setState(() {}))
       ..setLooping(false)
       ..play();
@@ -32,14 +33,37 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Video", style: TextStyle(fontSize: 18.sp))),
+      // body: Center(
+      //   child: _controller.value.isInitialized
+      //       ? AspectRatio(
+      //           aspectRatio: _controller.value.aspectRatio,
+      //           child: VideoPlayer(_controller),
+      //         )
+      //       : CircularProgressIndicator(),
+      // ),
       body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : CircularProgressIndicator(),
-      ),
+      child: _controller.value.isInitialized
+          ? LayoutBuilder(
+              builder: (context, constraints) {
+                final videoAspect = _controller.value.aspectRatio;
+                final parentAspect = constraints.maxWidth / constraints.maxHeight;
+                double width, height;
+                if (videoAspect > parentAspect) {
+                  width = constraints.maxWidth;
+                  height = width / videoAspect;
+                } else {
+                  height = constraints.maxHeight;
+                  width = height * videoAspect;
+                }
+                return SizedBox(
+                  width: width,
+                  height: height,
+                  child: VideoPlayer(_controller),
+                );
+              },
+            )
+          : CircularProgressIndicator(),
+    ),
     );
   }
 }

@@ -2,12 +2,12 @@
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:joblinc/core/routing/routes.dart';
-// import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
-// import 'package:joblinc/features/companyPages/ui/screens/create_company.dart';
+// import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
+// import 'package:joblinc/features/companypages/ui/screens/create_company.dart';
 // import 'package:mocktail/mocktail.dart';
-// import 'package:joblinc/features/companyPages/data/data/company.dart';
+// import 'package:joblinc/features/companypages/data/data/company.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
+// import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
 
 // class MockCreateCompanyRepo extends Mock implements CreateCompanyRepo {}
 // class MockNavigatorObserver extends Mock implements NavigatorObserver {}

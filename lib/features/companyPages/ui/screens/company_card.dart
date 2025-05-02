@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import '../widgets/square_avatar.dart';
 
 class CompanyCard extends StatelessWidget {
@@ -71,7 +71,7 @@ class CompanyCard extends StatelessWidget {
                           Icon(Icons.circle,
                               size: 3.sp, color: Colors.grey.shade600),
                           Text(
-                            "37M followers", // TODO: Replace with actual followers
+                            company.followers.toString(), 
                             style: TextStyle(
                                 fontSize: 10.sp, color: Colors.grey.shade600),
                           ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
@@ -62,8 +63,7 @@ class UserProfileRepository {
 
       print('User profile updated successfully');
     } catch (e) {
-      print('Error updating user personal information: $e');
-      throw Exception('Failed to update profile: ${e.toString()}');
+      rethrow;
     }
   }
 
@@ -109,6 +109,38 @@ class UserProfileRepository {
     }
   }
 
+  Future<Response> addEducation(Education education) async {
+    try {
+      return await addApiService.addEducation(education);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteEducation(String educationId) async {
+    try {
+      return await addApiService.deleteEducation(educationId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editCertification(Certification certification) async {
+    try {
+      return await addApiService.editCertification(certification);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editEducation(Education education) async {
+    try {
+      return await addApiService.editEducation(education);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> deleteCertification(String certificationId) async {
     try {
       return await addApiService.deleteCertification(certificationId);
@@ -126,13 +158,21 @@ class UserProfileRepository {
           .map((item) => Certification.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
-  Future<Response> addExperience(Experience experience) async {
+  Future<Response> addExperience(ExperienceModel experience) async {
     try {
       return await addApiService.addExperience(experience);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editExperience(ExperienceModel experience) async {
+    try {
+      return await addApiService.editExperience(experience);
     } catch (e) {
       rethrow;
     }
@@ -146,21 +186,29 @@ class UserProfileRepository {
     }
   }
 
-  Future<List<Experience>> getAllExperiences() async {
+  Future<List<ExperienceResponse>> getAllExperiences() async {
     try {
       final List<dynamic> rawList = await addApiService.getAllExperiences();
 
       return rawList
-          .map((item) => Experience.fromJson(item as Map<String, dynamic>))
+          .map((item) => ExperienceResponse.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
   Future<Response> addSkill(Skill skill) async {
     try {
       return await addApiService.addSkill(skill);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> editSkill(Skill skill) async {
+    try {
+      return await addApiService.editSkill(skill);
     } catch (e) {
       rethrow;
     }
@@ -182,7 +230,7 @@ class UserProfileRepository {
           .map((item) => Skill.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Repository error: $e');
+      rethrow;
     }
   }
 
@@ -204,7 +252,7 @@ class UserProfileRepository {
       return await addApiService.deleteUserResume(resumeid);
     } catch (e) {
       print("error ${e.toString()}");
-      throw Exception('Failed to delete resume. Please try again later.');
+      rethrow;
     }
   }
 
@@ -214,7 +262,19 @@ class UserProfileRepository {
       return await othersApiService.getPublicUserProfile(userId);
     } catch (e) {
       print(e.toString());
-      throw Exception('Failed to fetch public user profile: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<Education>> getUserEducations() async {
+    try {
+      final educations = await addApiService.getUserEducations();
+
+      return educations
+          .map((e) => Education.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      rethrow;
     }
   }
 }

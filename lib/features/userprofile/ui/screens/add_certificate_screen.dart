@@ -3,11 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/companyPages/ui/widgets/form/custom_text_field.dart';
+import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
 class UserAddCertificateScreen extends StatefulWidget {
+  Certification? certificate;
+
+  UserAddCertificateScreen({this.certificate});
   @override
   _UserAddCertificateScreenState createState() =>
       _UserAddCertificateScreenState();
@@ -33,6 +37,24 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
     issuingOrganizationController = TextEditingController();
     issueDateController = TextEditingController();
     expirationDateController = TextEditingController();
+    if (widget.certificate != null) {
+      certificateNameController.text = widget.certificate!.name;
+      issuingOrganizationController.text = widget.certificate!.organization;
+      if (widget.certificate!.startYear != null) {
+        final monthName = _getMonthName(widget.certificate!.startYear.month);
+        issueDateController.text =
+            "$monthName ${widget.certificate!.startYear.year}";
+        selectedIssueDate = widget.certificate!.startYear;
+      }
+      if (widget.certificate!.endYear != null) {
+        final monthName = _getMonthName(widget.certificate!.endYear!.month);
+        expirationDateController.text =
+            "$monthName ${widget.certificate!.endYear!.year}";
+        selectedExpirationDate = widget.certificate!.endYear;
+      } else {
+        expirationDateController.text = "Present";
+      }
+    }
   }
 
   @override
@@ -116,19 +138,35 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
         return;
       }
 
-      final Certification certificateToAdd = Certification(
-        name: certificateNameController.text,
-        organization: issuingOrganizationController.text,
-        startYear: selectedIssueDate!,
-        endYear: selectedExpirationDate,
-        certificationId: '',
-      );
+      if (widget.certificate == null) {
+        final Certification certificateToAdd = Certification(
+          name: certificateNameController.text,
+          organization: issuingOrganizationController.text,
+          startYear: selectedIssueDate!,
+          endYear: selectedExpirationDate,
+          certificationId: '',
+        );
 
-      print(
-          'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
-      print(context.read<ProfileCubit>().firstname);
+        print(
+            'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
+        print(context.read<ProfileCubit>().firstname);
 
-      context.read<ProfileCubit>().addCertificate(certificateToAdd);
+        context.read<ProfileCubit>().addCertificate(certificateToAdd);
+      } else {
+        final Certification certificateToAdd = Certification(
+          name: certificateNameController.text,
+          organization: issuingOrganizationController.text,
+          startYear: selectedIssueDate!,
+          endYear: selectedExpirationDate,
+          certificationId: widget.certificate!.certificationId,
+        );
+
+        print(
+            'Saving certificate with DateTime objects: Issue: $selectedIssueDate, Expiry: $selectedExpirationDate');
+        print(context.read<ProfileCubit>().firstname);
+
+        context.read<ProfileCubit>().editCertificate(certificateToAdd);
+      }
     }
   }
 
@@ -170,10 +208,15 @@ class _UserAddCertificateScreenState extends State<UserAddCertificateScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Certificate added successfully!'),
+                content: Text(state.message),
                 backgroundColor: Colors.green,
               ),
             );
+          } else if (state is CertificateFailed) {
+            CustomSnackBar.show(
+                context: context,
+                message: state.message,
+                type: SnackBarType.error);
           }
         },
         builder: (context, state) {

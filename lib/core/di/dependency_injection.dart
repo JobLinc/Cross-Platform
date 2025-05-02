@@ -18,14 +18,16 @@ import 'package:joblinc/features/changepassword/data/services/change_password_ap
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changeusername/data/repos/change_username_repo.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/createcompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/createcompany_api_service.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/create_company_cubit.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
+import 'package:joblinc/features/companypages/data/data/repos/createcompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/createcompany_api_service.dart';
+import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/edit_company_cubit.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
+import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
 import 'package:joblinc/features/emailconfirmation/data/repos/email_confirmation_repo.dart';
 import 'package:joblinc/features/emailconfirmation/data/services/email_confirmation_api_service.dart';
@@ -64,9 +66,9 @@ import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.da
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/update_company_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/services/update_company_api_service.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/update_company_api_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -77,11 +79,10 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl =
-      // Platform.isAndroid
-      // ? 'http://10.0.2.2:3000/api'
-      // : 'http://localhost:3000/api';
-      'https://joblinc.me:6969/api';
+  final baseUrl =  Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api'
+      : 'http://localhost:3000/api'; 
+  // 'https://joblinc.me:3000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -182,6 +183,10 @@ Future<void> setupGetIt() async {
     () => ChatListCubit(getIt<ChatRepo>()),
   );
 
+    getIt.registerFactory<ChatCubit>(
+    () => ChatCubit(getIt<ChatRepo>()),
+  );
+
   getIt.registerLazySingleton<JobApiService>(
     () => JobApiService(getIt<Dio>()),
   );
@@ -225,23 +230,17 @@ Future<void> setupGetIt() async {
       () => UploadApiService(getIt<Dio>()));
   getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<UserProfileRepository>(
-    () => UserProfileRepository(
-      getIt<UserProfileApiService>(),
-      getIt<UpdateUserProfileApiService>(),
-      getIt<UploadApiService>(),
-      getIt<addService>(),
-      getIt<OthersApiService>(),
-    ),
-  );
+  getIt
+      .registerLazySingleton<UserProfileRepository>(() => UserProfileRepository(
+            getIt<UserProfileApiService>(),
+            getIt<UpdateUserProfileApiService>(),
+            getIt<UploadApiService>(),
+            getIt<addService>(),
+            getIt<OthersApiService>(),
+          ));
 
-  getIt.registerFactory<ProfileCubit>(
-    () => ProfileCubit(
-      getIt<UserProfileRepository>(),
-      getIt<UserConnectionsRepository>(),
-      getIt.get<PostRepo>(),
-    ),
-  );
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
+      getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
 
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(

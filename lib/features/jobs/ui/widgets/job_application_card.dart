@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_application_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,7 +28,20 @@ class JobApplicationCard extends StatelessWidget {
     if (await file.exists()) {
       await OpenFile.open(localPath);
     } else if (await canLaunchUrl(Uri.parse(resumeUrl))) {
-      await launchUrl(Uri.parse(resumeUrl));
+      // await launchUrl(Uri.parse(resumeUrl));
+          Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DocumentViewerScreen(
+          url: resumeUrl,
+          // type: resumeName.toLowerCase().endsWith('.pdf')
+          //     ? 'pdf'
+          //     : resumeName.toLowerCase().endsWith('.doc') || resumeName.toLowerCase().endsWith('.docx')
+          //         ? 'doc'
+          //         : 'other',
+        ),
+      ),
+    );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Could not open resume.")),
@@ -108,7 +122,17 @@ class JobApplicationCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 12.h),
+
+          SizedBox(height: 4.h),
+          // 7) Phone Number
+          Text(
+            "Phone: ${jobApplication.phone}",
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: const Color.fromARGB(255, 203, 0, 0),
+            ),
+          ),
+          SizedBox(height: 8.h),
 
           // 6) Resume Header
           Text(

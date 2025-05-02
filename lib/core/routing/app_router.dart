@@ -8,27 +8,28 @@ import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
 import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
 import 'package:joblinc/features/blockedaccounts/ui/screens/blocked_accounts_screen.dart';
-import 'package:joblinc/features/adminpanel/ui/screens/admin_panel.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
 import 'package:joblinc/features/changepassword/ui/screens/changepassword_screen.dart';
 import 'package:joblinc/features/changeusername/logic/cubit/change_username_cubit.dart';
 import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_analytics.dart'
+import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_group_screen.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_dashboard.dart';
-import 'package:joblinc/features/companyPages/ui/screens/company_home.dart';
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_feed.dart';
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_page_posts.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/logic/cubit/edit_company_cubit.dart';
-import 'package:joblinc/features/companyPages/ui/screens/dashboard/company_edit.dart';
-
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
+import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
@@ -56,11 +57,14 @@ import 'package:joblinc/features/posts/ui/screens/saved_posts.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
-import 'package:joblinc/features/companyPages/ui/screens/company_card.dart';
-import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
-
+import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_education_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
@@ -68,7 +72,7 @@ import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_image_preview.dart';
 import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
@@ -147,8 +151,13 @@ class AppRouter {
           );
         }
 
-      // case Routes.chatScreen:
-      //   return MaterialPageRoute(builder: (context) => ChatScreen());
+      case Routes.chatScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => getIt<ChatListCubit>(),
+                child: ChatScreen(
+                  chatId: arguments as String,
+                )));
       case Routes.forgotPasswordScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -443,15 +452,25 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddCertificateScreen(),
+            child: UserAddCertificateScreen(
+              certificate: (arguments as Certification?),
+            ),
           ),
         );
-
+      case Routes.addEducationScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: AddEducationScreen(education: arguments as Education?),
+          ),
+        );
       case Routes.addExperienceScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddExperienceScreen(),
+            child: UserAddExperienceScreen(
+              experience: (arguments as ExperienceResponse?),
+            ),
           ),
         );
 
@@ -459,7 +478,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddSkillScreen(),
+            child: UserAddSkillScreen(
+              skill: (arguments as Skill?),
+            ),
           ),
         );
 
@@ -478,9 +499,15 @@ class AppRouter {
             child: UserAddResumeScreen(),
           ),
         );
-      case Routes.adminPanel:
+
+      case Routes.createChat:
         return MaterialPageRoute(
-          builder: (context) => AdminPanel(),
+          builder: (context) => CreateChatScreen(),
+        );
+
+      case Routes.createGroupChatScreen:
+        return MaterialPageRoute(
+          builder: (context) => CreateGroupScreen(),
         );
 
       case Routes.savedPostsScreen:
@@ -490,7 +517,10 @@ class AppRouter {
             child: SavedPostsScreen(),
           ),
         );
-
+      case Routes.adminPanel:
+        return MaterialPageRoute(
+          builder: (context) => (),
+        );
       default:
         return null;
     }

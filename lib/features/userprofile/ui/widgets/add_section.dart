@@ -183,6 +183,34 @@ class UserProfileAddSection extends StatelessWidget {
             ),
           ),
         ),
+        Padding(
+          padding: EdgeInsets.only(top: 2, bottom: 2, left: 5),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushReplacementNamed(
+                  context, Routes.addEducationScreen);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.school),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, Routes.addEducationScreen);
+                  },
+                ),
+                Text(
+                  'Add Education',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

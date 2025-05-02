@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/chat/ui/screens/document_viewer_screen.dart';
 import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:open_file/open_file.dart';
@@ -84,6 +85,10 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
                       Text(
                         widget.jobApplicant.applicant.email,
                         style: TextStyle(color: Colors.grey[700]),
+                      ),
+                      Text(
+                        widget.jobApplicant.phone,
+                        style: TextStyle(color: const Color.fromARGB(255, 122, 0, 0)),
                       ),
                     ],
                   ),
@@ -170,7 +175,20 @@ class _JobApplicantCardState extends State<JobApplicantCard> {
     if (await file.exists()) {
       await OpenFile.open(localPath);
     } else if (await canLaunchUrl(Uri.parse(resumeUrl))) {
-      await launchUrl(Uri.parse(resumeUrl));
+      //await launchUrl(Uri.parse(resumeUrl));
+          Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DocumentViewerScreen(
+          url: resumeUrl,
+          // type: resumeName.toLowerCase().endsWith('.pdf')
+          //     ? 'pdf'
+          //     : resumeName.toLowerCase().endsWith('.doc') || resumeName.toLowerCase().endsWith('.docx')
+          //         ? 'doc'
+          //         : 'other',
+        ),
+      ),
+    );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Could not open resume.")),

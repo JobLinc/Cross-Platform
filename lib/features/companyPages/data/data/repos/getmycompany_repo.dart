@@ -1,5 +1,5 @@
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/services/getmycompany.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 
 abstract class CompanyRepository {
   Future<List<Company>> getCurrentCompanies();
@@ -22,11 +22,14 @@ class CompanyRepositoryImpl implements CompanyRepository {
             name: companyResponse.name,
             profileUrl: companyResponse.urlSlug,
             industry:
-                IndustryExtension.fromDisplayName(companyResponse.industry)!,
+                IndustryExtension.fromDisplayName(companyResponse.industry) ??
+                    Industry.technology,
             organizationSize: OrganizationSizeExtension.fromDisplayName(
-                companyResponse.size)!,
+                    companyResponse.size) ??
+                OrganizationSize.elevenToFifty,
             organizationType: OrganizationTypeExtension.fromDisplayName(
-                companyResponse.type)!,
+                    companyResponse.type) ??
+                OrganizationType.governmentAgency,
             overview: companyResponse.overview,
             website: companyResponse.website,
             logoUrl: companyResponse.logo,

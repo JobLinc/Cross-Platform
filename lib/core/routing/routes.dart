@@ -34,14 +34,20 @@ class Routes {
   static const String addExperienceScreen = '/addExperienceScreen';
   static const String addSkillScreen = '/addSkillScreen';
   static const String addResumeScreen = '/addResumeScreen';
+  static const String addEducationScreen = '/addEducationScreen';
   static const String otherImagesPreview = '/otherImagesPreview';
   static const String otherProfileScreen = '/otherProfileScreen';
   static const String blockedAccountsScreen = '/blockedAccountsScreen';
+
   static const String othersConnectionScreen = '/othersConnectionScreen';
   static const String blockedConnectionsList = '/blockedConnectionsList';
   static const String followingListScreen = '/followingListScreen';
   static const String followersListScreen = '/followersListScreen';
-  static const String adminPanel = '/adminPanel';
+  static const String createChat = '/createChat';
+  static const String createGroupChatScreen = '/createGroupChatScreen';
+
   static const String savedPostsScreen = '/savedPostsScreen';
+
+  static const String adminPanel = '/adminPanel';
   // We'll use the homeScreen route for the main container
 }

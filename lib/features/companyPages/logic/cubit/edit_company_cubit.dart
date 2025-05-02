@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:joblinc/features/companyPages/data/data/company.dart';
-import 'package:joblinc/features/companyPages/data/data/models/update_company_model.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/getmycompany_repo.dart';
-import 'package:joblinc/features/companyPages/data/data/repos/update_company_repo.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/models/update_company_model.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
 
 part 'edit_company_state.dart';
 

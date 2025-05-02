@@ -55,6 +55,7 @@ class EmailConfirmationCubit extends Cubit<EmailConfirmationState> {
           role: result['role'] ?? 0,
           email: email,
           confirmed: true, // Mark as confirmed since verification succeeded
+          plan: result['plan'] ?? 0,
         );
       }
 
