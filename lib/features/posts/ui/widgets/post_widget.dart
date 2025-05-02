@@ -11,6 +11,7 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_media.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:readmore/readmore.dart';
@@ -403,6 +404,8 @@ class PostAttachments extends StatelessWidget {
       key: Key('post_body_attachments'),
       attachments[0].url,
     );
+    // return Expanded(child: MultimediaHandler(mediaItem: attachments[0]));
+    // return buildMultipleMediaGrid(attachments);
   }
 }
 
