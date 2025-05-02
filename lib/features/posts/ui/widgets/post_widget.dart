@@ -6,6 +6,7 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
@@ -112,22 +113,22 @@ class PostContent extends StatelessWidget {
             child: Row(
               spacing: 10,
               children: [
-                GestureDetector(
-                  key: Key('post_header_lincButton'),
-                  onTap: () => {
-                    // context.read<UserConnectionsRepository>()
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                        style: TextStyle(
-                            color: ColorsManager.getPrimaryColor(context)),
-                        children: [
-                          TextSpan(
-                            text: data.isCompany ? '+ Follow' : '+ Linc',
-                          )
-                        ]),
-                  ),
-                ),
+                // GestureDetector(
+                //   key: Key('post_header_lincButton'),
+                //   onTap: () => {
+                //     // context.read<UserConnectionsRepository>()
+                //   },
+                //   child: RichText(
+                //     text: TextSpan(
+                //         style: TextStyle(
+                //             color: ColorsManager.getPrimaryColor(context)),
+                //         children: [
+                //           TextSpan(
+                //             text: data.isCompany ? '+ Follow' : '+ Linc',
+                //           )
+                //         ]),
+                //   ),
+                // ),
                 showExtraMenu
                     ? IconButton(
                         visualDensity: VisualDensity.compact,
@@ -149,7 +150,7 @@ class PostContent extends StatelessWidget {
         ),
         data.repost == null || !showRepost
             ? (data.attachmentURLs.isNotEmpty
-                ? PostAttachments(attachmentURLs: data.attachmentURLs)
+                ? PostAttachments(attachments: data.attachmentURLs)
                 : SizedBox())
             : Padding(
                 padding: const EdgeInsets.only(left: 8.0, top: 8.0),
@@ -373,11 +374,11 @@ class PostActionBar extends StatelessWidget {
             },
             icon: Icon(Icons.loop, color: iconColor),
           ),
-          IconButton(
-            key: Key('post_actionBar_share'),
-            onPressed: () => {UnimplementedError()},
-            icon: Icon(Icons.send, color: iconColor),
-          ),
+          // IconButton(
+          //   key: Key('post_actionBar_share'),
+          //   onPressed: () => {UnimplementedError()},
+          //   icon: Icon(Icons.send, color: iconColor),
+          // ),
         ],
       ),
     );
@@ -385,16 +386,16 @@ class PostActionBar extends StatelessWidget {
 }
 
 class PostAttachments extends StatelessWidget {
-  final List<dynamic> attachmentURLs;
+  final List<PostmediaModel> attachments;
 
-  const PostAttachments({super.key, required this.attachmentURLs});
+  const PostAttachments({super.key, required this.attachments});
 
   @override
   Widget build(BuildContext context) {
     //TODO prepare for multiple images
     return Image.network(
       key: Key('post_body_attachments'),
-      attachmentURLs[0],
+      attachments[0].url,
     );
   }
 }

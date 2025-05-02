@@ -1,3 +1,4 @@
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class PostModel {
@@ -36,8 +37,7 @@ class PostModel {
       text: json['text'] ?? '',
       timeStamp: DateTime.parse(json['time']).toLocal(),
       userReaction: parseReactions(json['userReaction']),
-      attachmentURLs:
-          (json['mediaUrl'] as List<dynamic>?)?.cast<String>() ?? [],
+      attachmentURLs: parsePostMedia(json['media']),
       commentCount: json['comments'] ?? 0,
       likeCount: json['likes'] ?? 0,
       repostCount: json['reposts'] ?? 0,
@@ -56,7 +56,7 @@ class PostModel {
   final DateTime? timeStamp;
   final Reactions? userReaction;
   final PostModel? repost;
-  List<dynamic> attachmentURLs;
+  List<PostmediaModel> attachmentURLs;
   int commentCount;
   int likeCount;
   int repostCount;
@@ -73,7 +73,12 @@ PostModel mockPostData = PostModel(
   text:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   timeStamp: DateTime.now(),
-  attachmentURLs: ['https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg'],
+  attachmentURLs: [
+    PostmediaModel(
+      mediaType: MediaType.image,
+      url: 'https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg',
+    )
+  ],
   commentCount: 1,
   likeCount: 2,
   repostCount: 1,
