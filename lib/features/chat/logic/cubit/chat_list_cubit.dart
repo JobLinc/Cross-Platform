@@ -96,7 +96,7 @@ class ChatListCubit extends Cubit<ChatListState> {
 
   void filteredChats(bool onlyUnread) {
     final filteredChats = onlyUnread
-        ? _chats.where((chat) => chat.unreadCount! > 0).toList()
+        ? _chats.where((chat) => (chat.unreadCount! > 0)||(chat.isRead == false)).toList()
         : _chats;
     emit(ChatListFilter(filteredChats));
   }

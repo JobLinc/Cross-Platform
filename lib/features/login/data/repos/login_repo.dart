@@ -20,6 +20,8 @@ class LoginRepo {
       role: response.role,
       email: response.email,
       confirmed: response.confirmed,
+      plan: response.plan,
+
     );
 
     return response;

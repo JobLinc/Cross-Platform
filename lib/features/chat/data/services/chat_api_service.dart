@@ -25,7 +25,7 @@ class ChatApiService {
     if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/chat-card/$chatId');
-        print("123232 $response");
+        //print("123232 $response");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chat details: $e");
@@ -47,7 +47,7 @@ class ChatApiService {
     if (apiEndPointFunctional) {
       try {
         final response = await _dio.get('/chat/all');
-        print("all chat response ${response}");
+        //print("all chat response ${response}");
         return response;
       } catch (e) {
         throw Exception("Failed to fetch chats: $e");

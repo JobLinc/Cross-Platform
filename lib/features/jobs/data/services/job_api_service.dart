@@ -125,6 +125,7 @@ class JobApiService {
     if (apiEndPointWorking) {
       try {
         final response = await _dio.get('/jobs/$jobId/job-applications');
+        print(response);
         return response;
       } catch (e) {
         rethrow;
