@@ -23,7 +23,13 @@ class ChatRepo {
     return chat;
 
   }
-
+  Future<int>? getTotalUnreadCount()async {
+    final response = await _chatApiService.getAllChats();
+    //final chat = Chat.fromJson(response.data as Map<String, dynamic>);
+    print(response.data["totalUnreadChats"]);
+    print("Total Unread Chats: ${response.data["totalUnreadChats"]}");
+    return response.data["totalUnreadChats"];
+  }
   Future<List<Chat>>? getAllChats() async {
     final response = await _chatApiService.getAllChats() ; 
     final List<Chat> chats = (response.data["chats"] as List)
