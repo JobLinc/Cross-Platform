@@ -14,12 +14,31 @@ class NotificationsScreen extends StatefulWidget {
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
+class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsBindingObserver {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    debugPrint('NotificationsScreen: initState - Loading notifications');
     context.read<NotificationCubit>().getNotifications();
     context.read<NotificationCubit>().initSocket();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Reconnect socket when app returns to foreground
+    if (state == AppLifecycleState.resumed) {
+      context.read<NotificationCubit>().initSocket();
+    }
   }
 
   @override
@@ -51,7 +70,27 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
         ],
       ),
-      body: BlocBuilder<NotificationCubit, NotificationState>(
+      body: BlocConsumer<NotificationCubit, NotificationState>(
+        listenWhen: (previous, current) {
+          // Only trigger listener when we have a loaded state with notifications
+          if (previous is NotificationLoaded && current is NotificationLoaded) {
+            return current.notifications.length != previous.notifications.length;
+          }
+          return previous.runtimeType != current.runtimeType;
+        },
+        listener: (context, state) {
+          if (state is NotificationLoaded) {
+            debugPrint('NotificationsScreen: State updated with ${state.notifications.length} notifications');
+            // Only scroll if we have a valid scroll controller and we're not already at the top
+            if (_scrollController.hasClients && _scrollController.position.pixels != 0) {
+              _scrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          }
+        },
         builder: (context, state) {
           if (state is NotificationLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -93,6 +132,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 await context.read<NotificationCubit>().getNotifications();
               },
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: state.notifications.length,
                 itemBuilder: (context, index) {
                   return NotificationTile(
@@ -100,6 +140,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     onTap: (id) {
                       context.read<NotificationCubit>().markAsRead(id);
                     },
+                    isNew: index == 0 && state.notifications[index].isRead == "pending",
                   );
                 },
               ),
@@ -116,73 +157,81 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
   final Function(String) onTap;
+  final bool isNew;
 
   const NotificationTile({
     Key? key,
     required this.notification,
     required this.onTap,
+    this.isNew = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onTap(notification.id),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: notification.isRead == "seen" || notification.isRead == "read"
+    print(notification.toJson());
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      color: isNew
+          ? ColorsManager.getPrimaryColor(context).withOpacity(0.1)
+          : notification.isRead == "seen" || notification.isRead == "read"
               ? Colors.transparent
               : ColorsManager.getPrimaryColor(context).withOpacity(0.05),
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.grey.shade200,
-              width: 1.0,
+      child: InkWell(
+        onTap: () => onTap(notification.id),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.grey.shade200,
+                width: 1.0,
+              ),
             ),
           ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 10.r,
-              height: 10.r,
-              margin: EdgeInsets.only(top: 8.h, right: 10.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: notification.isRead == "seen" ||
-                        notification.isRead == "read"
-                    ? Colors.transparent
-                    : ColorsManager.getPrimaryColor(context),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 10.r,
+                height: 10.r,
+                margin: EdgeInsets.only(top: 8.h, right: 10.w),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: notification.isRead == "seen" ||
+                          notification.isRead == "read"
+                      ? Colors.transparent
+                      : ColorsManager.getPrimaryColor(context),
+                ),
               ),
-            ),
-            _buildNotificationIcon(notification.type),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    notification.content,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: notification.isRead == "seen" ||
-                              notification.isRead == "read"
-                          ? FontWeight.normal
-                          : FontWeight.bold,
+              _buildNotificationIcon(notification.type),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      notification.content,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: notification.isRead == "seen" ||
+                                notification.isRead == "read"
+                            ? FontWeight.normal
+                            : FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    timeago.format(notification.createdAt),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey,
+                    SizedBox(height: 4.h),
+                    Text(
+                      timeago.format(notification.createdAt),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

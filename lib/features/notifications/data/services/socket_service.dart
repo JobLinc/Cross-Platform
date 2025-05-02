@@ -33,18 +33,26 @@ class SocketService {
         return;
       }
 
-      // Connect to the notification namespace
-      _socket = IO.io(
-        '$_baseUrl/notification',
-        IO.OptionBuilder()
-            .setTransports(['websocket'])
-            .enableForceNew()
-            .setExtraHeaders({'Authorization': 'Bearer $token'})
-            .build(),
-      );
+      debugPrint('Socket: Trying to connect to $_baseUrl/notification');
+      
+      // Create socket with proper error handling
+      _socket = IO.io('$_baseUrl/notification', <String, dynamic>{
+        'transports': ['websocket', 'polling'],
+        'autoConnect': false,
+        'reconnection': true,
+        'reconnectionAttempts': 5,
+        'reconnectionDelay': 2000,
+        'auth': {
+          'authorization': 'Bearer $token',
+        }
+      });
 
+      // Setup listeners before connecting
       _setupSocketListeners();
+      
+      // Connect after listeners are set up
       _socket!.connect();
+      debugPrint('Socket: Connect called');
     } catch (e) {
       debugPrint('Socket: Error connecting: $e');
       _scheduleReconnect();
@@ -52,32 +60,28 @@ class SocketService {
   }
 
   void _setupSocketListeners() {
+    // Make sure to remove any existing listeners if reconnecting
+    _socket!.off('connect');
+    _socket!.off('newNotification');
+    _socket!.off('disconnect');
+    _socket!.off('error');
+    _socket!.off('connect_error');
+    
     _socket!.onConnect((_) {
-      debugPrint('Socket: Connected to notification namespace ');
+      debugPrint('Socket: Connected to notification namespace ✅');
       _isConnected = true;
-
-      // Cancel any pending reconnect attempts
       _cancelReconnectTimer();
-
-      // No need to manually join a room - the server automatically maps
-      // the user ID to socket ID(s) based on the authentication token
     });
 
     _socket!.on('newNotification', (data) {
       try {
-        debugPrint('Socket: Received notification: $data');
-        // The notification payload format should be:
-        // {
-        //   "type": "react | comment | connection | message",
-        //   "text": "string",
-        //   "relatedEntityId": "string",
-        //   "subRelatedEntityId": "string | null",
-        //   "imageURL": "string | null"
-        // }
+        debugPrint('Socket: Received NEW notification: ${data.toString()}');
         final newNotification = NotificationModel.fromJson(data);
+        debugPrint('Socket: Processed notification ID: ${newNotification.id}');
         onNewNotification(newNotification);
       } catch (e) {
         debugPrint('Socket: Error processing notification: $e');
+        debugPrint('Socket: Raw notification data: $data');
       }
     });
 
@@ -118,12 +122,25 @@ class SocketService {
 
   void disconnect() {
     _cancelReconnectTimer();
-    if (_socket != null) {
-      _socket!.disconnect();
-      _socket!.dispose();
-      _socket = null;
-    }
     _isConnected = false;
-    debugPrint('Socket: Manually disconnected');
+    
+    if (_socket != null) {
+      try {
+        debugPrint('Socket: Disconnecting...');
+        // Remove all listeners first to prevent callbacks after disconnection
+        _socket!.off('newNotification');
+        _socket!.off('connect');
+        _socket!.off('disconnect');
+        _socket!.off('error');
+        _socket!.off('connect_error');
+        
+        _socket!.disconnect();
+        _socket!.dispose();
+        _socket = null;
+        debugPrint('Socket: Manually disconnected');
+      } catch (e) {
+        debugPrint('Socket: Error during disconnect: $e');
+      }
+    }
   }
 }

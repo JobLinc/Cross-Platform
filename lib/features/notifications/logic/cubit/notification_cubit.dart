@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
@@ -16,6 +17,7 @@ class NotificationCubit extends Cubit<NotificationState> {
   late FirebaseMessagingService _fcmService;
   final String _socketUrl;
   final DeviceTokenService _deviceTokenService;
+  bool _closed = false;
 
   NotificationCubit(
     this._repo,
@@ -107,19 +109,45 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
+  // This is the main method that handles incoming socket notifications
   void addNewNotification(NotificationModel notification) {
-    if (state is NotificationLoaded) {
-      final currentNotifications = (state as NotificationLoaded).notifications;
+    // Check if cubit is already closed before emitting a new state
+    if (_closed) {
+      debugPrint('NotificationCubit: Ignoring notification - Cubit is closed');
+      return;
+    }
 
-      // Check if this notification already exists
-      bool exists = currentNotifications.any((n) => n.id == notification.id);
+    try {
+      debugPrint('NotificationCubit: Processing notification: ${notification.id} - ${notification.content}');
+      
+      if (state is NotificationLoaded) {
+        final currentNotifications = (state as NotificationLoaded).notifications;
 
-      if (!exists) {
-        // Add to the beginning of the list
-        emit(NotificationLoaded([notification, ...currentNotifications]));
+        // Check if this notification already exists by ID
+        bool exists = currentNotifications.any((n) => n.id == notification.id);
+
+        debugPrint('NotificationCubit: Notification exists? $exists');
+
+        if (!exists) {
+          final updatedNotifications = [notification, ...currentNotifications];
+          debugPrint('NotificationCubit: Emitting new state with ${updatedNotifications.length} notifications');
+          emit(NotificationLoaded(updatedNotifications));
+          
+          // Verify state was updated
+          if (state is NotificationLoaded) {
+            debugPrint('NotificationCubit: New state has ${(state as NotificationLoaded).notifications.length} notifications');
+          }
+        } else {
+          debugPrint('NotificationCubit: Skipping duplicate notification');
+        }
+      } else if (state is NotificationInitial || state is NotificationError) {
+        debugPrint('NotificationCubit: First notification, creating new list');
+        emit(NotificationLoaded([notification]));
+      } else {
+        debugPrint('NotificationCubit: Unexpected state: ${state.runtimeType}');
       }
-    } else if (state is NotificationInitial || state is NotificationError) {
-      emit(NotificationLoaded([notification]));
+    } catch (e) {
+      debugPrint('NotificationCubit: Error handling notification: $e');
     }
   }
 
@@ -133,15 +161,22 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   void initSocket() async {
+    debugPrint('NotificationCubit: Initializing socket connection');
     await _socketService.connect();
   }
 
   void disposeSocket() {
-    _socketService.disconnect();
+    try {
+      _socketService.disconnect();
+    } catch (e) {
+      debugPrint('NotificationCubit: Error disconnecting socket: $e');
+    }
   }
 
   @override
   Future<void> close() {
+    debugPrint('NotificationCubit: Closing cubit');
+    _closed = true;
     disposeSocket();
     return super.close();
   }
