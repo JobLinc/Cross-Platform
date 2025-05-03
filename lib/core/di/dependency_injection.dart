@@ -1,4 +1,3 @@
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -89,17 +88,11 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = //Platform.isAndroid
-      // ?
-      //  'http://192.168.1.4:3000/api';
-      // : 'http://localhost:3000/api';
+  final baseUrl = 
       'https://joblinc.me:3000/api';
 
-  final socketUrl =
-      // Platform.isAndroid ?
-      'ws://joblinc.me:3000'
-      // : 'ws://localhost:3000'
-      ;
+  final socketUrl = 'ws://joblinc.me:3000';
+
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -183,7 +176,8 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<PostSearchCubit>(() => PostSearchCubit(getIt()));
 
-  getIt.registerFactory<FocusPostCubit>(() => FocusPostCubit(getIt<PostRepo>()));
+  getIt
+      .registerFactory<FocusPostCubit>(() => FocusPostCubit(getIt<PostRepo>()));
 
 ///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(

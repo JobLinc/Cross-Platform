@@ -44,7 +44,7 @@ void main() async {
     try {
       final notificationCubit = getIt<NotificationCubit>();
       await notificationCubit.initServices();
-      
+
       // Add a delayed check for initial message (after app is rendered)
       Future.delayed(const Duration(milliseconds: 1000), () {
         final messagingService = notificationCubit.getMessagingService();
@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return ScreenUtilInit(
-      designSize: const Size(360, 800),
+      designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           initialRoute:
-isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
+              isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
           onGenerateRoute: AppRouter().generateRoute,
         );
       },
