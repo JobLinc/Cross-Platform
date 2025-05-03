@@ -227,7 +227,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             child: LoadingIndicatorOverlay(
               inAsyncCall: state is AddPostStateLoading,
-              child: Column(
+              child: ListView(
+                shrinkWrap: true,
                 children: widget.repost == null
                     ? [
                         Flexible(
