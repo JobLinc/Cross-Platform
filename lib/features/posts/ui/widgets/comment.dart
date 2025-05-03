@@ -31,8 +31,7 @@ class Comment extends StatelessWidget {
             username: data.username,
             headline: data.headline,
             senderID: data.senderID,
-            //TODO FIX COMMENTS
-            isCompany: false,
+            isCompany: data.isCompany,
             action: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
           ),
           Padding(
