@@ -19,4 +19,15 @@ class ProfilePostsCubit extends Cubit<ProfilePostsState> {
       }
     }
   }
+
+  Future<void> loadOthersProfilePosts(String userId) async {
+    emit(ProfilePostsLoading());
+
+    try {
+      final posts = await _postRepo.getUserPosts(userId);
+      emit(ProfilePostsLoaded(posts));
+    } catch (e) {
+      emit(ProfilePostsError(e.toString()));
+    }
+  }
 }
