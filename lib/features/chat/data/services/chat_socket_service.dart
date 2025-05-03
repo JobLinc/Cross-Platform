@@ -406,6 +406,7 @@ class ChatSocketService {
     });
 
     _socket.on('messageRead', (readerId) {
+      print(" 📖 Message read by: $readerId");
       if (readerId is String) onReadReceipt?.call(readerId);
     });
 
