@@ -36,7 +36,7 @@ class CompanyResponse {
     this.employees,
     this.createdAt,
     this.locations,
-    this.isFollowing,
+    required this.isFollowing,
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {

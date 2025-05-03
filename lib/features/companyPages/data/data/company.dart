@@ -189,7 +189,7 @@ class Company {
   String organizationType;
   int followers = 0;
   bool isVerified = true;
-  bool? isFollowing;
+  bool isFollowing;
   List<CompanyLocationModel>? locations;
 
   Company(
@@ -208,7 +208,7 @@ class Company {
       this.coverUrl,
       this.followers = 0,
       this.locations,
-      this.isFollowing
+      required this.isFollowing
       });
 
   Future<bool> isAdmin() async {

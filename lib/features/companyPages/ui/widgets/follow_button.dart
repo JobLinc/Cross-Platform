@@ -12,9 +12,10 @@ Widget FollowButton({
   double? fontSize,
   double? borderRadius,
   EdgeInsets? padding,
+  Function()? onTap,
 }) {
   return GestureDetector(
-    onTap: () {}, // TODO : Implement the onTap function
+    onTap: onTap, 
     child: Container(
       alignment: Alignment.center,
       padding: padding ?? EdgeInsets.symmetric(vertical: 15, horizontal: 20), // Adjust padding

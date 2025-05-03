@@ -42,7 +42,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           id: companyResponse.id,
           followers: companyResponse.followers!,
           locations: companyResponse.locations,
-          isFollowing: companyResponse.isFollowing,  
+          isFollowing: true,  
         );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -67,7 +67,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           id: companyResponse.id,
           followers: companyResponse.followers!,
           locations: companyResponse.locations,
-          isFollowing: companyResponse.isFollowing,
+          isFollowing: true,
         );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -93,7 +93,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           id: companyResponse.id,
           followers: companyResponse.followers ?? 0,
           locations: companyResponse.locations,
-          isFollowing: companyResponse.isFollowing,
+          isFollowing: true,
           );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -119,7 +119,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
           id: companyResponse.id,
           followers: companyResponse.followers ?? 0,
           locations: companyResponse.locations,
-          isFollowing: companyResponse.isFollowing,
+          isFollowing: true,
           );
     } catch (e) {
       emit(EditCompanyFailure('Error: $e'));
@@ -151,7 +151,7 @@ class EditCompanyCubit extends Cubit<EditCompanyState> {
         country: companyResponse.locations?.first.country,
         city: companyResponse.locations?.first.city,
         followers: companyResponse.followers ?? 0,
-        isFollowing: companyResponse.isFollowing,
+        isFollowing: true,
       );
       emit(EditCompanySuccess()); // include the updated company
       return company;
