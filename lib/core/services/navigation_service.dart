@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
+import 'package:joblinc/features/posts/ui/screens/focus_post_screen.dart';
 
 class NavigationService {
   static final NavigationService _instance = NavigationService._internal();
@@ -75,6 +76,24 @@ class NavigationService {
     }
   }
 
+  Future<dynamic> navigateToFocusPostSafely(String postId) {
+    try {
+      if (navigatorKey.currentState == null) {
+        // If navigator is not available, schedule for later
+        debugPrint(
+            'Navigation: Navigator not available, scheduling focus post navigation');
+
+        return Future.value();
+      }
+      return navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) => FocusPostScreen(postId: postId),
+      ));
+    } catch (e) {
+      debugPrint('Navigation: Error navigating to focus post: $e');
+      return Future.value();
+    }
+  }
+
   void notificationNavigator(NotificationModel notification) {
     try {
       if (notification.relatedEntityId == null) {
@@ -94,10 +113,47 @@ class NavigationService {
         case 'Follow':
           navigateToUserProfileSafely(notification.relatedEntityId!);
           break;
-        case 'JobApplicationUpdate':
-          navigateToMainContainer(4);
+        case 'Like':
+          // Navigate to the post that was liked
+          navigateToFocusPostSafely(notification.relatedEntityId!);
           break;
-        case 'JobOffer':
+        case 'Comment':
+          // Navigate to the post that was commented on
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'PostCreated':
+          // Navigate to the newly created post
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'Tag':
+          // Navigate to post where user was tagged
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'CommentTag':
+          // Navigate to comment where user was tagged
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'CommentReply':
+          // Navigate to the comment thread
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'CommentLike':
+          // Navigate to the liked comment
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'PostRepost':
+          // Navigate to the reposted post
+          navigateToFocusPostSafely(notification.relatedEntityId!);
+          break;
+        case 'AppliedForJob':
+          // Navigate to job applications screen
+          navigateToMainContainer(4); // Jobs tab
+          break;
+        case 'PostNewJob':
+          // Navigate to new job posting
+          navigateToMainContainer(4); // Jobs tab
+          break;
+        case 'JobApplicationUpdate':
           navigateToMainContainer(4);
           break;
         case 'Message':

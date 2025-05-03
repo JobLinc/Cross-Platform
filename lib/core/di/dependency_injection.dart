@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
@@ -25,7 +23,6 @@ import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.d
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
@@ -41,7 +38,6 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
-import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
 import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
 import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
@@ -64,6 +60,7 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_search_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/saved_posts_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/edit_post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/focus_post_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -100,7 +97,7 @@ Future<void> setupGetIt() async {
 
   final socketUrl =
       // Platform.isAndroid ?
-      'ws://192.168.1.4:3000'
+      'ws://joblinc.me:3000'
       // : 'ws://localhost:3000'
       ;
   final Dio dio = Dio(
@@ -185,6 +182,9 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<EditPostCubit>(() => EditPostCubit(getIt<PostRepo>()));
 
   getIt.registerFactory<PostSearchCubit>(() => PostSearchCubit(getIt()));
+
+  getIt.registerFactory<FocusPostCubit>(() => FocusPostCubit(getIt<PostRepo>()));
+
 ///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));

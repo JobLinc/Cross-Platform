@@ -226,7 +226,7 @@ class CompanyData extends StatelessWidget {
                                 content: Row(
                                   children: [
                                     CircularProgressIndicator(),
-                                    SizedBox(width: 16),
+                                    SizedBox(width: 16.w),
                                     Text("Following ${company.name}..."),
                                   ],
                                 ),

@@ -33,9 +33,10 @@ class ChatSocketService {
 
   // ─── Determine server URL ─────────────────────────────────────────────────
   static String getServerUrl() {
-    if (Platform.isAndroid) return 'http://10.0.2.2:3000';
-    if (Platform.isIOS) return 'http://localhost:3000';
-    return 'http://localhost:3000';
+    //if (Platform.isAndroid) return 'http://10.0.2.2:3000';
+    //if (Platform.isIOS) return 'http://localhost:3000';
+    //return 'http://localhost:3000';
+    return 'ws://joblinc.me:3000';
   }
 
   // ─── Initialize (connect) only once ────────────────────────────────────────
@@ -103,7 +104,9 @@ class ChatSocketService {
 
     _socket.once('connect_error', (err) {
       cleanUp();
-      completer.complete(false);
+      if (!completer.isCompleted) {
+        completer.complete(false);
+      }
     });
 
     return completer.future;

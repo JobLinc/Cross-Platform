@@ -25,7 +25,7 @@ class FollowersListScreen extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
             ),
             title: Text(
-              "Followers That Are Not Connections",
+              "Followers",
               style: TextStyle(fontSize: 20.sp),
             ),
             centerTitle: true,
