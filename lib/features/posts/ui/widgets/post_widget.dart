@@ -295,8 +295,7 @@ class PostActionBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          //TODO Implement Buttons
-          Reactionbutton(
+          PostReactionButton(
               userReaction: userReaction,
               initialLikeCount: initialLikeCount,
               likeCount: likeCount),
@@ -318,19 +317,14 @@ class PostActionBar extends StatelessWidget {
             },
             icon: Icon(Icons.loop, color: iconColor),
           ),
-          // IconButton(
-          //   key: Key('post_actionBar_share'),
-          //   onPressed: () => {UnimplementedError()},
-          //   icon: Icon(Icons.send, color: iconColor),
-          // ),
         ],
       ),
     );
   }
 }
 
-class Reactionbutton extends StatelessWidget {
-  const Reactionbutton({
+class PostReactionButton extends StatelessWidget {
+  const PostReactionButton({
     super.key,
     required this.userReaction,
     required this.initialLikeCount,
@@ -345,7 +339,6 @@ class Reactionbutton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactionButton(
         onReactionChanged: (item) {
-          print('triggered');
           if (item?.value != null) {
             context.read<PostCubit>().reactToPost((item?.value)!);
             if (userReaction == null && initialLikeCount == likeCount.value) {

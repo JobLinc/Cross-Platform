@@ -1,3 +1,5 @@
+import 'package:joblinc/features/posts/logic/reactions.dart';
+
 class CommentModel {
   CommentModel({
     required this.commentID,
@@ -9,12 +11,14 @@ class CommentModel {
     required this.headline,
     required this.profilePictureURL,
     required this.text,
+    this.userReaction,
     this.timeStamp,
     required this.likeCount,
     required this.replyCount,
   });
 
   factory CommentModel.fromJson(json, String postId) {
+    print(json);
     final bool companyComment = (json['userId'] == null);
     return CommentModel(
       commentID: json['commentId'],
@@ -30,6 +34,7 @@ class CommentModel {
       profilePictureURL:
           companyComment ? json['companyLogo'] : json['commentId'],
       text: json['text'],
+      userReaction: parseReactions(json['userReaction']),
       timeStamp: DateTime.parse(json['time']).toLocal(),
       likeCount: json['likes'],
       replyCount: json['comments'],
@@ -45,6 +50,7 @@ class CommentModel {
   final String headline;
   final String profilePictureURL;
   final String text;
+  final Reactions? userReaction;
   final DateTime? timeStamp;
   int likeCount;
   int replyCount;
@@ -58,6 +64,7 @@ CommentModel mockCommentData = CommentModel(
   isCompany: false,
   username: "Tyrone",
   headline: "senior smoker engineer with Phd in smoking rocks",
+  userReaction: null,
   timeStamp: DateTime.now(),
   likeCount: 5,
   replyCount: 3,
@@ -74,6 +81,7 @@ CommentModel mockReplyData = CommentModel(
   isReply: true,
   isCompany: false,
   username: "Tyrone",
+  userReaction: null,
   headline: "senior smoker engineer with Phd in smoking rocks",
   timeStamp: DateTime.now(),
   likeCount: 5,
