@@ -13,6 +13,7 @@ import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mailer/mailer.dart';
 import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
@@ -411,11 +412,16 @@ class PostAttachments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO handle multiple images
-    return Image.network(
-      errorBuilder: (context, error, stackTrace) => SizedBox(),
-      key: Key('post_body_attachments'),
-      attachments[0].url,
-    );
+    for (var attachment in attachments) {
+      if (attachment.mediaType == MediaType.image) {
+        return Image.network(
+          errorBuilder: (context, error, stackTrace) => SizedBox(),
+          key: Key('post_body_attachments'),
+          attachment.url,
+        );
+      }
+    }
+    return SizedBox();
     // return Expanded(child: MultimediaHandler(mediaItem: attachments[0]));
     // return buildMultipleMediaGrid(attachments);
   }
