@@ -193,20 +193,21 @@ class FirebaseMessagingService {
       // Handle navigation based on notification type
       String type = data['type'] ?? '';
       String entityId = data['relatedEntityId'] ?? '';
+      NotificationModel notification = NotificationModel.fromJson(data);
+      navigationService.notificationNavigator(notification);
+      // if (data['type'] == 'ConnectionRequest' && entityId != '') {
+      //   debugPrint(
+      //       'FCM: Navigating to user profile for notification type: $type, entityId: $entityId');
 
-      if (data['type'] == 'ConnectionRequest' && entityId != '') {
-        debugPrint(
-            'FCM: Navigating to user profile for notification type: $type, entityId: $entityId');
+      //   navigationService.navigateToUserProfileSafely(entityId);
+      //   return;
+      // }
 
-        navigationService.navigateToUserProfileSafely(entityId);
-        return;
-      }
+      // debugPrint(
+      //     'FCM: Navigating for notification type: $type, entityId: $entityId');
 
-      debugPrint(
-          'FCM: Navigating for notification type: $type, entityId: $entityId');
-
-      // Navigate to the notifications tab in MainContainerScreen (tab index 3)
-      navigationService.navigateToMainContainerSafely(3);
+      // // Navigate to the notifications tab in MainContainerScreen (tab index 3)
+      // navigationService.navigateToMainContainerSafely(3);
     } catch (e) {
       debugPrint('FCM: Error during notification navigation: $e');
     }

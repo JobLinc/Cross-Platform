@@ -39,7 +39,10 @@ class ChatApiService {
       if (e.response != null) {
         throw Exception("404 total unread count not found");
       }
-      throw Exception("Exception without response: ${e.message}");
+      throw Exception("Exception without response");
+    }
+    catch (e) {
+      throw Exception("Failed to fetch total unread count: $e");
     }
   }
 
