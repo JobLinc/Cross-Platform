@@ -211,11 +211,14 @@ class UserService {
   }
 
   static Future<void> ensureProfileFetched() async {
-    var userId = await _storage.read(key: _userIdKey) ?? '';
+    final userId = await _storage.read(key: _userIdKey) ?? '';
     if (userId.isEmpty) {
       UserProfileRepository repo = getIt<UserProfileRepository>();
-      await repo.getUserProfile();
-      userId = await _storage.read(key: _userIdKey) ?? '';
+      try {
+        await repo.getUserProfile();
+      } on Exception catch (e) {
+        return;
+      }
     }
   }
 }

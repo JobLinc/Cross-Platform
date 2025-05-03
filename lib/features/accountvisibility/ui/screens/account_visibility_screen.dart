@@ -4,6 +4,7 @@ import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/accountvisibility/data/repos/account_visibility_repo.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 
 Future<dynamic> showAccountVisibilitySettings(BuildContext context) async {
   final AccountVisibility initialVisibility;
@@ -44,6 +45,17 @@ Future<dynamic> showAccountVisibilitySettings(BuildContext context) async {
               message: 'Failed to change Visibility',
               type: SnackBarType.error);
         }
+      }
+    }
+    try {
+      UserProfileRepository repo = getIt<UserProfileRepository>();
+      repo.getUserProfile();
+    } on Exception catch (e) {
+      if (context.mounted) {
+        CustomSnackBar.show(
+            context: context,
+            message: 'Failed to update Account info',
+            type: SnackBarType.error);
       }
     }
   });
