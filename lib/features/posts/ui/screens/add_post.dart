@@ -143,13 +143,14 @@ AppBar addPostTopBar(BuildContext context,
     title: GestureDetector(
       onTap: () {
         showModalBottomSheet(
-            showDragHandle: true,
-            context: context,
-            builder: (context) {
-              return PrivacySettings(
-                isPublic: isPublic,
-              );
-            });
+          showDragHandle: true,
+          context: context,
+          builder: (context) {
+            return PrivacySettings(
+              isPublic: isPublic,
+            );
+          },
+        );
       },
       child: Row(
         spacing: 8,
