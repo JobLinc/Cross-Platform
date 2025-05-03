@@ -1,10 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
+import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class CommentApiService {
   final Dio _dio;
 
   CommentApiService(this._dio);
+
+  Future<void> reactToComment(String commentId, Reactions reaction) async {
+    final type = reaction.toString().split('.')[1];
+    try {
+      final respone = await _dio.post('/comment/$commentId/react',
+          data: {'type': '${type[0].toUpperCase()}${type.substring(1)}'});
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
 
   Future<CommentModel> getComment(String postId, String commentId) async {
     try {
