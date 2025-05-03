@@ -161,7 +161,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             ),
                           ],
                         ),
-
+                        Text(profile.username),
                         SizedBox(height: 8.h),
 
                         if (profile.headline.isNotEmpty) ...[

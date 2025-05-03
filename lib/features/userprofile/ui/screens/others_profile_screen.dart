@@ -69,6 +69,7 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             ),
                           ],
                         ),
+                        Text(profile.username),
                         SizedBox(height: 8.h),
                         if (profile.headline.isNotEmpty)
                           Text(profile.headline,
