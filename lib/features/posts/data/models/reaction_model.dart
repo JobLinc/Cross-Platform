@@ -21,7 +21,8 @@ class ReactionModel {
     required this.time,
   });
 
-  factory ReactionModel.fromJson(Map<String, dynamic> json) {
+  factory ReactionModel.fromJson( json) {
+    print(json);
     final bool companyReaction = (json['userId'] == null);
     return ReactionModel(
       isCompany: companyReaction,

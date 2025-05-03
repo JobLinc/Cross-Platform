@@ -240,26 +240,26 @@ class PostNumerics extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () async {
-              try {
-                final List<ReactionModel> reactions =
-                    await getIt.get<PostRepo>().getPostReactions(postId);
-                if (context.mounted) {
-                  showModalBottomSheet(
-                    context: context,
-                    showDragHandle: true,
-                    builder: (context) => PostReactions(reactions: reactions),
-                  );
-                }
-              } on Exception catch (e) {
-                if (context.mounted) {
-                  CustomSnackBar.show(
-                    context: context,
-                    message: e.toString(),
-                    type: SnackBarType.error,
-                  );
-                }
-                return;
-              }
+              // try {
+              //   final List<ReactionModel> reactions =
+              //       await getIt.get<PostRepo>().getPostReactions(postId);
+              //   if (context.mounted) {
+              //     showModalBottomSheet(
+              //       context: context,
+              //       showDragHandle: true,
+              //       builder: (context) => PostReactions(reactions: reactions),
+              //     );
+              //   }
+              // } on Exception catch (e) {
+              //   if (context.mounted) {
+              //     CustomSnackBar.show(
+              //       context: context,
+              //       message: e.toString(),
+              //       type: SnackBarType.error,
+              //     );
+              //   }
+              //   return;
+              // }
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,

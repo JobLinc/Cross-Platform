@@ -14,10 +14,9 @@ class PostReactions extends StatelessWidget {
       itemBuilder: (context, index) {
         final reaction = reactions[index];
         return Row(
-          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 UserHeader(
                   imageURL: reaction.profilePicture,
@@ -29,10 +28,7 @@ class PostReactions extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(),
-            Center(
-              child: getReaction(reaction.type).icon,
-            )
+            // getReaction(reaction.type).icon
           ],
         );
       },
