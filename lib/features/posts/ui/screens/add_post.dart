@@ -138,7 +138,7 @@ class BottomButtons extends StatelessWidget {
 
 AppBar addPostTopBar(BuildContext context,
     TextEditingController inputController, String? repostId) {
-  bool isPublic;
+  final ValueNotifier<bool> isPublic = ValueNotifier(true);
   return AppBar(
     title: GestureDetector(
       onTap: () {
@@ -146,7 +146,9 @@ AppBar addPostTopBar(BuildContext context,
             showDragHandle: true,
             context: context,
             builder: (context) {
-              return PrivacySettings();
+              return PrivacySettings(
+                isPublic: isPublic,
+              );
             });
       },
       child: Row(
@@ -162,9 +164,12 @@ AppBar addPostTopBar(BuildContext context,
               }
             },
           ),
-          Text(
-            "Anyone",
-            style: TextStyle(fontSize: 20),
+          ValueListenableBuilder(
+            valueListenable: isPublic,
+            builder: (context, value, child) => Text(
+              value ? "Anyone" : "Connections only",
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           Icon(Icons.arrow_drop_down),
         ],
@@ -189,7 +194,7 @@ AppBar addPostTopBar(BuildContext context,
                     ? () {
                         context
                             .read<AddPostCubit>()
-                            .addPost(value.text, [], repostId, true);
+                            .addPost(value.text, [], repostId, isPublic.value);
                       }
                     : null,
                 child: Text('Post'),
@@ -201,25 +206,25 @@ AppBar addPostTopBar(BuildContext context,
 }
 
 class PrivacySettings extends StatefulWidget {
-  const PrivacySettings({super.key});
-
+  const PrivacySettings({
+    super.key,
+    required this.isPublic,
+  });
+  final ValueNotifier<bool> isPublic;
   @override
   State<PrivacySettings> createState() => PrivacySettingsState();
 }
 
 class PrivacySettingsState extends State<PrivacySettings> {
-  late bool isPublic;
-
   @override
   void initState() {
     super.initState();
-    isPublic = true;
   }
 
   void _updateSelectedValue(bool? value) {
     if (value != null) {
       setState(() {
-        isPublic = value;
+        widget.isPublic.value = value;
       });
     }
   }
@@ -244,7 +249,7 @@ class PrivacySettingsState extends State<PrivacySettings> {
           ListTile(
             leading: Radio(
                 value: true,
-                groupValue: isPublic,
+                groupValue: widget.isPublic.value,
                 onChanged: _updateSelectedValue),
             title: Text(
               'Public',
@@ -259,7 +264,7 @@ class PrivacySettingsState extends State<PrivacySettings> {
           ListTile(
             leading: Radio(
                 value: false,
-                groupValue: isPublic,
+                groupValue: widget.isPublic.value,
                 onChanged: _updateSelectedValue),
             title: Text(
               'Connections only',

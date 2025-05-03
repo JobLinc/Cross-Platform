@@ -296,72 +296,10 @@ class PostActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           //TODO Implement Buttons
-          ReactionButton(
-              onReactionChanged: (item) {
-                print('triggered');
-                if (item?.value != null) {
-                  context.read<PostCubit>().reactToPost((item?.value)!);
-                  if (userReaction == null &&
-                      initialLikeCount == likeCount.value) {
-                    likeCount.value++;
-                  }
-                }
-              },
-              isChecked: userReaction != null,
-              selectedReaction: getReaction(userReaction),
-              itemsSpacing: 10,
-              toggle: false,
-              placeholder: Reaction(
-                value: null,
-                icon: Icon(
-                  LucideIcons.smilePlus,
-                ),
-              ),
-              reactions: [
-                Reaction(
-                  value: Reactions.like,
-                  icon: Icon(
-                    LucideIcons.thumbsUp,
-                    color: Colors.blue,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.celebrate,
-                  icon: Icon(
-                    LucideIcons.partyPopper,
-                    color: Colors.pink,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.support,
-                  icon: Icon(
-                    LucideIcons.helpingHand,
-                    color: Colors.green.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.funny,
-                  icon: Icon(
-                    LucideIcons.laugh,
-                    color: Colors.purple.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.love,
-                  icon: Icon(
-                    LucideIcons.heart,
-                    color: Colors.red.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.insightful,
-                  icon: Icon(
-                    LucideIcons.lightbulb,
-                    color: Colors.yellow.shade600,
-                  ),
-                ),
-              ],
-              itemSize: Size(24, 24)),
+          Reactionbutton(
+              userReaction: userReaction,
+              initialLikeCount: initialLikeCount,
+              likeCount: likeCount),
           IconButton(
             key: Key('post_actionBar_comment'),
             onPressed: () {
@@ -388,6 +326,88 @@ class PostActionBar extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class Reactionbutton extends StatelessWidget {
+  const Reactionbutton({
+    super.key,
+    required this.userReaction,
+    required this.initialLikeCount,
+    required this.likeCount,
+  });
+
+  final Reactions? userReaction;
+  final int initialLikeCount;
+  final ValueNotifier<int> likeCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReactionButton(
+        onReactionChanged: (item) {
+          print('triggered');
+          if (item?.value != null) {
+            context.read<PostCubit>().reactToPost((item?.value)!);
+            if (userReaction == null && initialLikeCount == likeCount.value) {
+              likeCount.value++;
+            }
+          }
+        },
+        isChecked: userReaction != null,
+        selectedReaction: getReaction(userReaction),
+        itemsSpacing: 10,
+        toggle: false,
+        placeholder: Reaction(
+          value: null,
+          icon: Icon(
+            LucideIcons.smilePlus,
+          ),
+        ),
+        reactions: [
+          Reaction(
+            value: Reactions.like,
+            icon: Icon(
+              LucideIcons.thumbsUp,
+              color: Colors.blue,
+            ),
+          ),
+          Reaction(
+            value: Reactions.celebrate,
+            icon: Icon(
+              LucideIcons.partyPopper,
+              color: Colors.pink,
+            ),
+          ),
+          Reaction(
+            value: Reactions.support,
+            icon: Icon(
+              LucideIcons.helpingHand,
+              color: Colors.green.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.funny,
+            icon: Icon(
+              LucideIcons.laugh,
+              color: Colors.purple.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.love,
+            icon: Icon(
+              LucideIcons.heart,
+              color: Colors.red.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.insightful,
+            icon: Icon(
+              LucideIcons.lightbulb,
+              color: Colors.yellow.shade600,
+            ),
+          ),
+        ],
+        itemSize: Size(24, 24));
   }
 }
 
