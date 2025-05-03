@@ -7,6 +7,8 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
+import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
+import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
@@ -130,6 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Build the app bar with user profile if available
   AppBar _buildAppBar(BuildContext context, HomeCombinedState state) {
+        final chatRepo = getIt<ChatRepo>();
+
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
@@ -187,13 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         Semantics(
           label: 'home_topBar_chatButton',
-          child: IconButton(
-            icon: Icon(Icons.message,
-                color: ColorsManager.getTextPrimary(context)),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.chatListScreen);
-            },
-          ),
+          child: UnreadChatIcon(chatRepo: chatRepo,),
         ),
         IconButton(
           icon: Icon(FontAwesomeIcons.crown,
