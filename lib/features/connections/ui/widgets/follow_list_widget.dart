@@ -26,7 +26,6 @@ class FollowListView extends StatelessWidget {
           color: Colors.white,
           child: InkWell(
             onTap: () async {
-              // TODO: Navigate to either user or company profile
               if (isCompany) {
                 print("Go to company profile: ${follow.companyName}");
               } else {
