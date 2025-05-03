@@ -215,10 +215,12 @@ class CompanyData extends StatelessWidget {
                           width: company.website != "" &&
                                   company.website!.isNotEmpty
                               ? 130.w
-                              : 280.w,
+                              : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {
                             // Show loading SnackBar
+                            ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Row(
@@ -283,9 +285,11 @@ class CompanyData extends StatelessWidget {
                           width: company.website != null &&
                                   company.website!.isNotEmpty
                               ? 130.w
-                              : 280.w,
+                              : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {
+                            ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                             if (isAdmin) {
                               CustomSnackBar.show(
                                 context: context,
