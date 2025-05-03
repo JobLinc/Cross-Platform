@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
@@ -99,10 +100,15 @@ class CommentBottomBar extends StatelessWidget {
       child: Row(
         spacing: 10,
         children: [
-          //TODO set profile image to user image
-          ProfileImage(
-            imageURL: "",
-            radius: 23.r,
+          FutureBuilder(
+            future: UserService.getProfilePicture(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ProfileImage(imageURL: snapshot.data);
+              } else {
+                return ProfileImage(imageURL: null);
+              }
+            },
           ),
           Expanded(
             child: Padding(
