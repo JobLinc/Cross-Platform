@@ -50,7 +50,7 @@ AppBar universalAppBar(
     ),
   ];
 
-  final chatRepo = getIt<ChatRepo>();
+ 
   return AppBar(
     backgroundColor: Theme.of(context).colorScheme.surface,
     elevation: 0,
@@ -138,7 +138,7 @@ AppBar universalAppBar(
       //   },
       // ),
 
-      UnreadChatIcon(chatRepo: chatRepo),
+      UnreadChatIcon(/*chatRepo: chatRepo*/),
       IconButton(
         icon: Icon(FontAwesomeIcons.crown, color: Colors.black),
         onPressed: () {
@@ -173,8 +173,8 @@ class UniversalAppBarInput {
 
 
 class UnreadChatIcon extends StatefulWidget {
-  final ChatRepo chatRepo;
-  const UnreadChatIcon({Key? key, required this.chatRepo}) : super(key: key);
+  //final ChatRepo chatRepo;
+  const UnreadChatIcon({Key? key, /*required this.chatRepo*/}) : super(key: key);
 
   @override
   State<UnreadChatIcon> createState() => _UnreadChatIconState();
@@ -183,6 +183,7 @@ class UnreadChatIcon extends StatefulWidget {
 class _UnreadChatIconState extends State<UnreadChatIcon> {
   int unread = 0;
   Timer? _timer;
+  final chatRepo = getIt<ChatRepo>();
 
   @override
   void initState() {
@@ -192,7 +193,7 @@ class _UnreadChatIconState extends State<UnreadChatIcon> {
   }
 
   Future<void> _fetchUnread() async {
-    final count = await widget.chatRepo.getTotalUnreadCount();
+    final count = await /*widget.*/chatRepo.getTotalUnreadCount();
     if (mounted) {
       setState(() {
         unread = count ?? 0;

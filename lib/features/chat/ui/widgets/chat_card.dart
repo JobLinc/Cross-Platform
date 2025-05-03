@@ -70,7 +70,7 @@ class ChatCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (chat!.unreadCount! > 0)
+                if ((chat!.unreadCount! > 0) && (chat.isRead == false))
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(

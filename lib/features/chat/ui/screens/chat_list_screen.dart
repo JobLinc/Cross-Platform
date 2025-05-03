@@ -272,7 +272,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   Widget _buildSelectionActions(BuildContext ctx, ChatListSelected s) {
-    final anyUnread = s.chats.where((c) => s.selectedIds.contains(c.chatId)).any((c) => (c.unreadCount! > 0) || (c.isRead == false));
+    final anyUnread = s.chats.where((c) => s.selectedIds.contains(c.chatId)).any((c) => ((c.unreadCount! > 0) && (c.isRead==false)) || (c.isRead == false));
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       color: Colors.white,
