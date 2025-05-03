@@ -113,20 +113,21 @@ class PostApiService {
     String text,
     List<PostmediaModel> media,
     String? repostId,
-    bool isPublic,
-        {List<TaggedEntity> taggedUsers = const [],
-      List<TaggedEntity> taggedCompanies = const []}
-  ) async {
+    bool isPublic, {
+    List<TaggedEntity> taggedUsers = const [],
+    List<TaggedEntity> taggedCompanies = const [],
+  }) async {
     try {
       List<Map> mediaList = [];
       for (PostmediaModel postmedia in media) {
+        print('adding media: ${postmedia.url}');
         String typeString = postmedia.mediaType.toString().split('.').last;
         mediaList.add({
           'url': postmedia.url,
           'type': '${typeString[0].toUpperCase()}${typeString.substring(1)}',
         });
       }
- 
+
       final Map<String, dynamic> data = {
         'text': text,
         'isPublic': isPublic,

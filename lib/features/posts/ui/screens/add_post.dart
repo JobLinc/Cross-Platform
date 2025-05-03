@@ -34,7 +34,7 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   late TaggedTextEditingController _inputController;
-  final ValueNotifier<List<PostmediaModel>> _mediaUrls = ValueNotifier([]);
+  final ValueNotifier<List<PostmediaModel>> mediaUrls = ValueNotifier([]);
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
   final ValueNotifier<bool> _isPublic = ValueNotifier(true);
@@ -191,7 +191,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<List<PostmediaModel>> mediaUrls = ValueNotifier([]);
     final ValueNotifier<List<ImageUploadWidget>> uploadWidgets =
         ValueNotifier([]);
 
@@ -251,7 +250,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             ),
                           ),
                         ),
-                        BottomButtons(mediaUrls: _mediaUrls , uploadWidgets: uploadWidgets),
+                        BottomButtons(
+                            mediaUrls: mediaUrls, uploadWidgets: uploadWidgets),
                       ]
                     : [
                         Flexible(
@@ -405,41 +405,40 @@ AppBar addPostTopBar(
       Padding(
         padding: const EdgeInsets.all(5.0),
         child: ValueListenableBuilder<TextEditingValue>(
-            valueListenable: inputController,
-            builder: (context, value, child) {
-              return TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onSecondaryContainer,
-                  textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  disabledForegroundColor: Colors.grey,
-                ),
-                onPressed: value.text.isNotEmpty
-                    ? () {
-                        context.read<AddPostCubit>().addPost(
-                              value.text,
-                              mediaUrls.value,
-                              repostId,
-                              isPublic.value,
-                              taggedUsers: inputController.taggedUsers,
-                              taggedCompanies: inputController.taggedCompanies,
-                            );
-                      }
-                    : null,
-                child: Text('Post'),
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-
-
+          valueListenable: inputController,
+          builder: (context, value, child) {
+            return TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onSecondaryContainer,
+                textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
+                disabledBackgroundColor: Colors.grey.shade300,
+                disabledForegroundColor: Colors.grey,
+              ),
+              onPressed: value.text.isNotEmpty
+                  ? () {
+                      print(
+                          'sending posts with media: ${mediaUrls.value.isNotEmpty ? mediaUrls.value[0].url : 'None'}');
+                      context.read<AddPostCubit>().addPost(
+                            value.text,
+                            mediaUrls.value,
+                            repostId,
+                            isPublic.value,
+                            taggedUsers: inputController.taggedUsers,
+                            taggedCompanies: inputController.taggedCompanies,
+                          );
+                    }
+                  : null,
+              child: Text('Post'),
+            );
+          },
+        ),
+      )
+    ],
+  );
+}
 
 class PrivacySettings extends StatefulWidget {
   const PrivacySettings({

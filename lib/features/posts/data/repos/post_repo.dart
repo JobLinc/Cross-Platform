@@ -44,9 +44,13 @@ class PostRepo {
   }
 
   Future<String> addPost(
-      String text, List<PostmediaModel> media, String? repostId, bool isPublic,
-      {List<TaggedEntity> taggedUsers = const [],
-      List<TaggedEntity> taggedCompanies = const []}) async {
+    String text,
+    List<PostmediaModel> media,
+    String? repostId,
+    bool isPublic, {
+    List<TaggedEntity> taggedUsers = const [],
+    List<TaggedEntity> taggedCompanies = const [],
+  }) async {
     return await _postApiService.addPost(
       text,
       media,
