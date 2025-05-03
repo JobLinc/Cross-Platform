@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Blocked Accounts'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Navigator.pushNamed(context, Routes.blockedAccountsScreen);
+              Navigator.pushNamed(context, Routes.blockedConnectionsList);
             },
           ),
           const Padding(
@@ -79,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
             onTap: () {
               AuthService authService = getIt<AuthService>();
               authService.clearUserInfo();
-              UserService.clearUserData();  
+              UserService.clearUserData();
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.loginScreen,
