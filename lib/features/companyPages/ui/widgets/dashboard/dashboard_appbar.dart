@@ -125,7 +125,6 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   'Analytics',
                   'Followers',
                   'Edit Page',
-                  'Jobs',
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,

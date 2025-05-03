@@ -13,14 +13,14 @@ class CompanyWebsiteTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
       return CustomRectangularTextFormField(
           controller: _websiteController,
-          hintText: "Begin with http://, https:// or www.",
+          hintText: "Begin with http://, or https://",
           labelText: "Website",
           validator: (value) {
             if (value != null && value.isNotEmpty) {
               if (!(value.startsWith('http://') ||
                   value.startsWith('https://') ||
                   value.startsWith('www.'))) {
-                return 'Website must start with http://, https://, or www.';
+                return 'Website must start with http://, https://';
               }
             }
             return null;

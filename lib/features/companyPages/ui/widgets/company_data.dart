@@ -274,7 +274,7 @@ class CompanyData extends StatelessWidget {
                               );
                             }
                           }),
-                    if (company.isFollowing == true || isAdmin)
+                    if (company.isFollowing == true)
                       FollowButton(
                           text: "- Unfollow",
                           backgroundColor: Color(0xFFD72638),
@@ -353,7 +353,7 @@ class CompanyData extends StatelessWidget {
                     // Only show the website button if website URL exists
                     if (company.website != null &&
                         company.website!.isNotEmpty &&
-                        company.website!.contains(" "))
+                        !company.website!.contains(" "))
                       Row(
                         children: [
                           SizedBox(width: 12.w),
