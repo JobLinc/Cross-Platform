@@ -8,9 +8,11 @@ import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_more_actions.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/others_user_profile_posts.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_profile_posts.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
@@ -183,6 +185,11 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             isUser: false,
                           ),
                         ],
+                        SizedBox(height: 50.h),
+                        if (profile.connectionStatus != "Blocked") ...[
+                          OthersUserProfilePosts(userId: profile.userId),
+                        ]
+
                         // if (true) ...[
                         //   //replace this with the list of postModels.isNotEmpty
                         //   PostList(posts: []), //also replace this
@@ -227,15 +234,9 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
     case 'Accepted':
       return () async {
         final chatId = await (context.read<ProfileCubit>().createchat(userId));
-        print("my chat Id is $chatId");
-        print(
-            "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
         if (chatId != null) {
           Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId);
-        } else {
-          print(
-              "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
-        }
+        } else {}
       };
     case 'Received':
       return () {
