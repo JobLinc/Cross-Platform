@@ -28,18 +28,6 @@ class CreateCompanyApiService {
     String website,
   ) async {
     try {
-      print('''
-        === Sending Company Creation Request ===
-        Endpoint: /companies
-        Payload:
-        - Name: $name
-        - Address URL: $urlSlug
-        - Industry: $industry
-        - Size: $size
-        - Type: $type
-        - Overview: ${overview.length > 50 ? '${overview.substring(0, 50)}...' : overview}
-        - Website: $website
-        ''');
       final response = await _dio.post(
         '/companies',
         data: {
@@ -52,25 +40,14 @@ class CreateCompanyApiService {
           'website': website,
         },
       );
-      print('''
-        === Received Response ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
       return CreateCompanyResponse.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response != null && e.response!.data is Map) {
         final message = _handleDioError(e);
-        print('API Error Message: $message');
         throw Exception(message); // <-- Throw only the message
       }
       rethrow;
     } catch (e) {
-      print({
-        "message": 'Unexpected error: $e',
-        "errorCode": 500,
-      });
       throw Exception('Unexpected error: $e');
     }
   }

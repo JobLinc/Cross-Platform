@@ -56,7 +56,6 @@ class _ChatScreenState extends State<ChatScreen> {
       return SizedBox.shrink(); // No read receipt for received messages
     }
     if (message.seenBy == null) {
-      print("Message seenBy is null");
       return SizedBox.shrink(); // No read receipt if seenBy is null
     } else {
       // Determine receipt status
@@ -193,7 +192,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   handleMessageRecieve(data) {
-    print('📩 Received message: $data');
     try {
       final Map<String, dynamic> map = Map<String, dynamic>.from(data);
       // Check if this is a message intended for this chat
@@ -246,7 +244,8 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       //}
     } catch (e) {
-      print('⚠️ Error parsing receiveMessage: $e');
+      // Handle parsing error
+      print("Error parsing message: $e");
     }
   }
 

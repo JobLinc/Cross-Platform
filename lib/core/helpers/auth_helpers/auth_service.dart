@@ -1,6 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
-import 'package:joblinc/core/helpers/auth_helpers/constants.dart';
 
 class AuthService {
   final FlutterSecureStorage _storage;

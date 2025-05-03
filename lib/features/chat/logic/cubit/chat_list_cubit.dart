@@ -166,9 +166,6 @@ class ChatListCubit extends Cubit<ChatListState> {
 
   void updateChatCard(Map<String, dynamic> data) {
     // Update chat card info (last message, unread count, etc.)
-    print(data);
-    print(data['chatId']);
-    print(data['lastMessage']);
     Chat newChat = Chat.fromJson(data);
     final chatId = newChat.chatId;
     final index = _chats.indexWhere((chat) => chat.chatId == chatId);

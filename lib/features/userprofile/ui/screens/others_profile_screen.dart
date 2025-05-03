@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
@@ -11,7 +10,6 @@ import 'package:joblinc/features/userprofile/ui/widgets/others_more_actions.dart
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
-import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class OthersProfileScreen extends StatefulWidget {

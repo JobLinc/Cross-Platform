@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
-import 'package:joblinc/features/premium/data/models/user_model.dart';
 import 'package:joblinc/features/premium/payment_constants.dart';
 import 'package:joblinc/features/premium/ui/screens/plan_selection_screen.dart';
 

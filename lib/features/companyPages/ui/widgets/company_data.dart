@@ -235,7 +235,6 @@ class CompanyData extends StatelessWidget {
                             );
 
                             company.followers++;
-                            print("Follow button pressed");
                             try {
                               final UserConnectionsRepository
                                   userConnectionsRepository =
@@ -311,8 +310,6 @@ class CompanyData extends StatelessWidget {
                                         60), // Long duration as we'll dismiss it manually
                               ),
                             );
-
-                            print("Unfollow button pressed");
                             try {
                               final UserConnectionsRepository
                                   userConnectionsRepository =

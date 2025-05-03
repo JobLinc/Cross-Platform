@@ -87,10 +87,5 @@ class StripeService {
       body: "Your premium plan is now active. 🎉",
     );
 
-    // if (success) {
-    //   print("Email sent successfully!");
-    // } else {
-    //   print("Failed to send email.");
-    // }
   }
 }

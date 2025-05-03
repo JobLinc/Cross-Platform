@@ -52,8 +52,6 @@ class UpdateCompanyRepo {
   Future<CompanyResponse> updateCompanyLocations(
       List<Map<String, dynamic>> locations) async {
     try {
-      print("Inside the updateCompanyLocations repository");
-      print("Locations: $locations");
       final company = await apiService.updateCompanyLocations(locations);
       return CompanyResponse.fromJson(company as Map<String, dynamic>);
     } catch (e) {

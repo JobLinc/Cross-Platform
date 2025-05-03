@@ -77,8 +77,6 @@ class CompanyRepositoryImpl implements CompanyRepository {
                 isFollowing: companyResponse.isFollowing!,
               );
             } catch (e) {
-              print('Error mapping company: ${companyResponse.toString()}');
-              print('Error details: $e');
               return null;
             }
           })
@@ -86,9 +84,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
           .cast<Company>()
           .toList();
       return companies;
-    } catch (e, stack) {
-      print('Error in getAllCompanies catch: $e');
-      print('Stack trace: $stack');
+    } catch (e) {
       throw Exception('Failed to get all companies: $e');
     }
   }

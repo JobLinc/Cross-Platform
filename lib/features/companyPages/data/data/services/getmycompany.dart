@@ -17,12 +17,6 @@ class CompanyApiService {
               'Accept': 'application/json',
             },
           ));
-      print('''
-        === Received Response ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
 
       if (response.statusCode != 200) {
         throw Exception('Request failed with status ${response.statusCode}');
@@ -37,10 +31,6 @@ class CompanyApiService {
             .map((json) => CompanyResponse.fromJson(json as Map<String, dynamic>).id)
             .toList();
         MyCompanyIds.instance.setCompanyIds(ids);
-        print('''
-          === Company IDs ===
-          ''');
-        print(MyCompanyIds.instance.companyIds);
 
         return CompanyListResponse.fromJson(response.data as List<dynamic>);
       } else {
@@ -60,12 +50,6 @@ class CompanyApiService {
               'Accept': 'application/json',
             },
           ));
-      print('''
-        === Received Response API All Companies ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
 
       if (response.statusCode != 200) {
         throw Exception('Request failed with status ${response.statusCode}');
@@ -94,13 +78,6 @@ class CompanyApiService {
               'Accept': 'application/json',
             },
           ));
-      print('''
-        === Received Response API Company by ID ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
-
       if (response.statusCode != 200) {
         throw Exception('Request failed with status ${response.statusCode}');
       }
@@ -131,13 +108,6 @@ class CompanyApiService {
               'Accept': 'application/json',
             },
           ));
-      print('''
-        === Received Response ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
-
       if (response.statusCode != 200) {
         throw Exception('Request failed with status ${response.statusCode}');
       }

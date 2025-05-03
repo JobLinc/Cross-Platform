@@ -10,7 +10,6 @@ import 'package:joblinc/features/jobs/data/models/job_applicants.dart';
 import 'package:joblinc/features/jobs/data/models/job_model.dart';
 import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/widgets/resume_card.dart';
-import 'package:joblinc/features/premium/data/models/user_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,15 +42,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
   }// Default to Egypt
     context.read<JobListCubit>().getAllResumes();
   }
-
-  /// Load stored resumes from SharedPreferences
-  // Future<void> _loadStoredResumes() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _selectedResumeId = prefs.getString("selected_resume_id");
-  //     _selectedResumeLocalPath = prefs.getString("selected_resume_path");
-  //   });
-  // }
 
   /// Save resume data in SharedPreferences
   Future<void> _saveResumeLocally(String resumeName, String localPath) async {
@@ -130,11 +120,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
       listener: (context, state) {
         // Show a loading snackbar while sending application
         if (state is JobApplicationSending) {
-          // CustomSnackBar.show(
-          //   context: context,
-          //   message: "Application sent successfully",
-          //   type: SnackBarType.info,
-          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -151,11 +136,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
         // When application is sent, show success snackbar and pop screen
         else if (state is JobApplicationSent) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          // CustomSnackBar.show(
-          //   context: context,
-          //   message: "Application sent successfully",
-          //   type: SnackBarType.success,
-          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -202,11 +182,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
           child: Column(
             children: [
               buildContactInfoCard(),
-              // buildTextField(
-              //     _emailController, TextInputType.text, "Email address*"),
-              // SizedBox(height: 16.h),
-
-              // buildTextField(_countryCodeController, "Phone country code*"),
               DropdownButtonFormField2<String>(
                 dropdownStyleData: DropdownStyleData(
                   maxHeight: 350.h,
@@ -353,17 +328,6 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
                       //final email = _emailController.text.trim();
                       final countryCode = _countryCodeController.text.trim();
                       final phoneNumber = _phoneNumberController.text.trim();
-                      // final emailRegex =
-                      //     RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-                      // if (email.isEmpty || !emailRegex.hasMatch(email)) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //         content:
-                      //             Text("Please enter a valid email address.")),
-                      //   );
-                      //   return;
-                      //}
                       if (countryCode.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -463,33 +427,3 @@ class _JobApplicationScreenState extends State<JobApplicationScreen> {
     );
   }
 }
-
-// Future<void> _clearStoredResume() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   await prefs.remove("selected_resume_id");
-//   await prefs.remove("selected_resume_path");
-// }
-             // ElevatedButton(
-              //   onPressed: () async {
-              //     await _clearStoredResume();
-              //     setState(() {
-              //       _selectedResumeId = null;
-              //       _selectedResumeLocalPath = null;
-              //     });
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       SnackBar(content: Text("Resume storage cleared.")),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.grey,
-              //     foregroundColor: Colors.white,
-              //   ),
-              //   child: const Text("Clear Resume Data"),
-              // ),                     // final jobApplication = JobApplication(
-                      //   applicant: mockMainApplicant,
-                      //   job: widget.job,
-                      //   resume: resumes!.firstWhere(
-                      //       ((resume) => resume.id == _selectedResumeId!)),
-                      //   status: "JustApplied",
-                      //   createdAt: DateTime.now(),
-                      // );

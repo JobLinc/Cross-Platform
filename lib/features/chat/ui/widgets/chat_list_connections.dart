@@ -85,8 +85,7 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                       child: InkWell(
                         key: Key("connection_profile_button"),
                         onTap: () async {
-                          //todo: go to the profile of the user
-                          print("go to ${connection.firstname} profile");
+                         
                           final shouldRefresh = await Navigator.pushNamed(
                                 context,
                                 Routes.otherProfileScreen,
@@ -169,9 +168,7 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                         final createdChat = await chatRepo.createChat(
                                           receiverIds: [connection.userId],
                                         );
-                                        print("Chat created: Id: ${createdChat.chatId}");
-                                        print("Chat created: Name: ${createdChat.chatName}");
-                                        print("Chat created: ${createdChat.chatPicture}");
+                                       
 
                                         // Safely parse the last message if it exists
                                         String lastMessageText = '';
@@ -211,7 +208,6 @@ class _ChatConnectionsListViewState extends State<ChatConnectionsListView> {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(content: Text('Failed to create chat: $e')),
                                         );
-                                        print("Error creating chat: $e");
                                       }
                                     },
                                     icon: Icon(Icons.send, size: 20.sp),

@@ -73,7 +73,6 @@ class _GroupChatConnectionsListViewState
       } else {
         selectedUserIds.remove(userId);
       }
-      print("Selected user IDs: $selectedUserIds");
     });
   }
 
