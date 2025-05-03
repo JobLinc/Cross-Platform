@@ -652,13 +652,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (response.statusCode == 200) {
         CustomSnackBar.show(
             context: context,
-            message: "connection Blocked succefully ",
+            message: "connection Unblocked succefully ",
             type: SnackBarType.success);
         getPublicUserProfile(userId);
       } else {
         CustomSnackBar.show(
             context: context,
-            message: "connection Blocking failed ",
+            message: "connection Unblocking failed ",
             type: SnackBarType.error);
         getPublicUserProfile(userId);
       }
@@ -666,7 +666,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't block connection",
+            message: "couldn't Unblock connection",
             type: SnackBarType.error);
       }
     }

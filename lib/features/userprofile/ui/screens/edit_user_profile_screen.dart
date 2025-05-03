@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/companypages/ui/widgets/form/custom_text_field.dart';
-import 'package:joblinc/features/signup/ui/widgets/city_text_field.dart';
 import 'package:joblinc/features/signup/ui/widgets/country_text_field.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
+import 'package:joblinc/core/helpers/countries.dart';
 
 class EditUserProfileScreen extends StatefulWidget {
   @override
@@ -65,12 +65,26 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
       lastNameController.text = profile.lastname;
       headlineController.text = profile.headline;
       // addressController.text = profile.address ?? '';
+
+      // Get list of valid countries
+      final countryList = countries.keys.toList();
+      String? countryValue =
+          (profile.country == null || profile.country!.isEmpty)
+              ? "Egypt"
+              : profile.country;
+
+      
+      if (countryValue == null || !countryList.contains(countryValue)) {
+        countryValue = "Egypt";
+      }
+
+      countryController.text =
+          countryValue; 
       cityController.text = profile.city ?? '';
-      countryController.text = profile.country ?? '';
       phoneController.text = profile.phoneNumber ?? '';
       biographyController.text = profile.biography ?? '';
       _visibility =
-          profile.visibility ?? 'Public'; // Assuming default is 'Public'
+          profile.visibility ?? 'Public'; 
       _allowMessages = profile.allowMessages ?? true;
       _allowMessageRequests = profile.allowMessageRequests ?? true;
       _formInitialized = true;
@@ -279,12 +293,13 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                           SizedBox(height: 15.h),
 
                           // City
-                          CityTextFormField(
+                          CustomRectangularTextFormField(
                             key: Key('editUserProfile_city_textfield'),
-                            cityController: cityController,
-                            selectedCity: cityController.text.isNotEmpty
-                                ? cityController.text
-                                : profile.city,
+                            controller: cityController,
+                            labelText: 'City',
+                            hintText: 'Enter your city',
+                            prefixIcon: Icon(Icons.location_city),
+                            maxLength: 50,
                           ),
                           SizedBox(height: 16.h),
                           Text(
