@@ -94,7 +94,12 @@ class AppRouter {
 
     switch (settings.name) {
       case Routes.onBoardingScreen:
-        return MaterialPageRoute(builder: (context) => OnboardingScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<LoginCubit>(),
+            child: OnboardingScreen(),
+          ),
+        );
       case Routes.loginScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
