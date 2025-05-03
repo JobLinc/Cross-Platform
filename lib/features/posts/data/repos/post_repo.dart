@@ -1,9 +1,12 @@
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/posts/data/models/reaction_model.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 
 class PostRepo {
@@ -11,6 +14,14 @@ class PostRepo {
   final UserProfileApiService _userProfileApiService;
 
   PostRepo(this._postApiService, this._userProfileApiService);
+
+  Future<List<ReactionModel>> getPostReactions(String postId) async {
+    return await _postApiService.getPostReactions(postId);
+  }
+
+  Future<PostmediaModel> uploadImage(XFile image) async {
+    return await _postApiService.uploadImage(image);
+  }
 
   Future<void> reportPost(String postId) async {
     return await _postApiService.reportPost(postId);
@@ -33,7 +44,7 @@ class PostRepo {
   }
 
   Future<String> addPost(
-      String text, List<String> media, String? repostId, bool isPublic,
+      String text, List<PostmediaModel> media, String? repostId, bool isPublic,
       {List<TaggedEntity> taggedUsers = const [],
       List<TaggedEntity> taggedCompanies = const []}) async {
     return await _postApiService.addPost(

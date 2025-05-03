@@ -31,7 +31,8 @@ Reactions? parseReactions(String? json) {
   }
 }
 
-Reaction<Reactions?> getReaction(Reactions? reaction) {
+Reaction<Reactions?> getReaction(Reactions? reaction,
+    {bool isComment = false, double commentIconSize = 18}) {
   switch (reaction) {
     case Reactions.like:
       return Reaction(
@@ -39,6 +40,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.thumbsUp,
           color: Colors.blue,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     case Reactions.celebrate:
@@ -47,6 +49,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.partyPopper,
           color: Colors.pink,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     case Reactions.support:
@@ -55,6 +58,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.helpingHand,
           color: Colors.green.shade600,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     case Reactions.funny:
@@ -63,6 +67,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.laugh,
           color: Colors.purple.shade600,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     case Reactions.love:
@@ -71,6 +76,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.heart,
           color: Colors.red.shade600,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     case Reactions.insightful:
@@ -79,6 +85,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         icon: Icon(
           LucideIcons.lightbulb,
           color: Colors.yellow.shade600,
+          size: isComment ? commentIconSize : 24,
         ),
       );
     default:
@@ -86,6 +93,7 @@ Reaction<Reactions?> getReaction(Reactions? reaction) {
         value: null,
         icon: Icon(
           LucideIcons.smilePlus,
+          size: isComment ? commentIconSize : 24,
         ),
       );
   }
