@@ -27,13 +27,13 @@ class MultimediaHandler extends StatelessWidget {
   // Method to build the appropriate media content based on type
   Widget _buildMediaContent() {
     switch (mediaItem.mediaType) {
-      case MediaType.image:
+      case PostMediaType.image:
         return ImageMediaWidget(url: mediaItem.url);
-      case MediaType.video:
+      case PostMediaType.video:
         return VideoMediaWidget(url: mediaItem.url);
-      case MediaType.audio:
+      case PostMediaType.audio:
         return AudioMediaWidget(url: mediaItem.url);
-      case MediaType.document:
+      case PostMediaType.document:
         return DocumentMediaWidget(url: mediaItem.url);
     }
   }

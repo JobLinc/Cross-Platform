@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
+import 'package:joblinc/features/posts/ui/widgets/image_upload.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
 
 class AddPostScreen extends StatelessWidget {
@@ -19,7 +25,10 @@ class AddPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<List<String>> mediaUrls = ValueNotifier([]);
+    final ValueNotifier<List<PostmediaModel>> mediaUrls = ValueNotifier([]);
+    final ValueNotifier<List<ImageUploadWidget>> uploadWidgets =
+        ValueNotifier([]);
+
     return BlocConsumer<AddPostCubit, AddPostState>(
       listener: (context, state) {
         if (state is AddPostStateLoading) {
@@ -40,7 +49,12 @@ class AddPostScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: addPostTopBar(context, _inputController, repost?.postID),
+          appBar: addPostTopBar(
+            context,
+            _inputController,
+            repost?.postID,
+            mediaUrls,
+          ),
           body: Padding(
             padding: const EdgeInsets.only(
               left: 10.0,
@@ -69,8 +83,10 @@ class AddPostScreen extends StatelessWidget {
                             cursorColor: Colors.black,
                           ),
                         ),
+                        //UploadedImagesBar(uploadWidgets: uploadWidgets),
                         BottomButtons(
                           mediaUrls: mediaUrls,
+                          uploadWidgets: uploadWidgets,
                         )
                       ])
                     : [
@@ -113,12 +129,41 @@ class AddPostScreen extends StatelessWidget {
   }
 }
 
+class UploadedImagesBar extends StatelessWidget {
+  const UploadedImagesBar({
+    super.key,
+    required this.uploadWidgets,
+  });
+
+  final ValueNotifier<List<ImageUploadWidget>> uploadWidgets;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: uploadWidgets,
+      builder: (context, uploads, child) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: uploads,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class BottomButtons extends StatelessWidget {
   const BottomButtons({
     super.key,
     required this.mediaUrls,
+    required this.uploadWidgets,
   });
-  final ValueNotifier<List<String>> mediaUrls;
+  final ValueNotifier<List<PostmediaModel>> mediaUrls;
+  final ValueNotifier<List<ImageUploadWidget>> uploadWidgets;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -126,9 +171,18 @@ class BottomButtons extends StatelessWidget {
       children: [
         IconButton(
             onPressed: () async {
-              //TODO use the media
               final picker = ImagePicker();
-              List<XFile> medias = await picker.pickMultipleMedia();
+              List<XFile> medias = await picker.pickMultiImage();
+              for (XFile media in medias) {
+                final futureMedia = getIt.get<PostRepo>().uploadImage(media);
+                futureMedia.then((media) => mediaUrls.value.add(media));
+                uploadWidgets.value.add(
+                  ImageUploadWidget(
+                    imageWidget: Image.file(File(media.path)),
+                    uploadFuture: futureMedia,
+                  ),
+                );
+              }
             },
             icon: Icon(Icons.image)),
       ],
@@ -136,8 +190,12 @@ class BottomButtons extends StatelessWidget {
   }
 }
 
-AppBar addPostTopBar(BuildContext context,
-    TextEditingController inputController, String? repostId) {
+AppBar addPostTopBar(
+  BuildContext context,
+  TextEditingController inputController,
+  String? repostId,
+  ValueNotifier<List<PostmediaModel>> mediaUrls,
+) {
   final ValueNotifier<bool> isPublic = ValueNotifier(true);
   return AppBar(
     title: GestureDetector(
@@ -193,9 +251,8 @@ AppBar addPostTopBar(BuildContext context,
                     disabledForegroundColor: Colors.grey),
                 onPressed: value.text.isNotEmpty
                     ? () {
-                        context
-                            .read<AddPostCubit>()
-                            .addPost(value.text, [], repostId, isPublic.value);
+                        context.read<AddPostCubit>().addPost(value.text,
+                            mediaUrls.value, repostId, isPublic.value);
                       }
                     : null,
                 child: Text('Post'),

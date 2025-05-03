@@ -1,7 +1,10 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
+import 'package:joblinc/features/posts/data/models/reaction_model.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 
 class PostRepo {
@@ -9,6 +12,14 @@ class PostRepo {
   final UserProfileApiService _userProfileApiService;
 
   PostRepo(this._postApiService, this._userProfileApiService);
+
+  Future<List<ReactionModel>> getPostReactions(String postId) async {
+    return await _postApiService.getPostReactions(postId);
+  }
+
+  Future<PostmediaModel> uploadImage(XFile image) async {
+    return await _postApiService.uploadImage(image);
+  }
 
   Future<void> reportPost(String postId) async {
     return await _postApiService.reportPost(postId);
@@ -30,8 +41,8 @@ class PostRepo {
     return await _postApiService.getFeed(start, end);
   }
 
-  Future<String> addPost(
-      String text, List<String> media, String? repostId, bool isPublic) async {
+  Future<String> addPost(String text, List<PostmediaModel> media,
+      String? repostId, bool isPublic) async {
     return await _postApiService.addPost(text, media, repostId, isPublic);
   }
 

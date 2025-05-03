@@ -33,7 +33,7 @@ class PostModel {
       headline: json['headline'] ?? '',
       profilePictureURL: companyPost
           ? (json['companyLogo'] ?? '')
-          : (json['profilePicture'] ?? 'https://placehold.co/400/png'),
+          : (json['profilePicture'] ?? ''),
       text: json['text'] ?? '',
       timeStamp: DateTime.parse(json['time']).toLocal(),
       userReaction: parseReactions(json['userReaction']),
@@ -75,7 +75,7 @@ PostModel mockPostData = PostModel(
   timeStamp: DateTime.now(),
   attachmentURLs: [
     PostmediaModel(
-      mediaType: MediaType.image,
+      mediaType: PostMediaType.image,
       url: 'https://d.newsweek.com/en/full/940601/05-23-galaxy.jpg',
     )
   ],

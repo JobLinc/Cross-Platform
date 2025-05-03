@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
 
@@ -8,7 +9,7 @@ class AddPostCubit extends Cubit<AddPostState> {
   AddPostCubit(this._postRepo) : super(AddPostStateInitial());
 
   Future<void> addPost(
-      String text, List<String> media, String? repostId, bool isPublic) async {
+      String text, List<PostmediaModel> media, String? repostId, bool isPublic) async {
     emit(AddPostStateLoading());
 
     try {

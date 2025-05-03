@@ -7,10 +7,13 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
+import 'package:joblinc/features/posts/data/models/reaction_model.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mailer/mailer.dart';
@@ -171,6 +174,7 @@ class PostContent extends StatelessWidget {
                 ),
               ),
         PostNumerics(
+          postId: data.postID,
           likesCount: likeCount,
           commentCount: data.commentCount,
           repostCount: data.repostCount,
@@ -216,11 +220,12 @@ class PostBody extends StatelessWidget {
 class PostNumerics extends StatelessWidget {
   const PostNumerics({
     super.key,
+    required this.postId,
     required this.likesCount,
     required this.commentCount,
     required this.repostCount,
   });
-
+  final String postId;
   final ValueNotifier<int> likesCount;
   final int commentCount;
   final int repostCount;
@@ -233,17 +238,46 @@ class PostNumerics extends StatelessWidget {
         key: Key('post_numerics_container'),
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
-            LucideIcons.thumbsUp,
-            size: 15,
-            color: ColorsManager.getTextSecondary(context),
-          ),
-          ValueListenableBuilder(
-            valueListenable: likesCount,
-            builder: (context, value, child) => Text(
-              key: Key('post_numerics_likeCount'),
-              ' $value',
-              style: TextStyles.font13GrayRegular(context),
+          GestureDetector(
+            onTap: () async {
+              try {
+                final List<ReactionModel> reactions =
+                    await getIt.get<PostRepo>().getPostReactions(postId);
+                if (context.mounted) {
+                  showModalBottomSheet(
+                    context: context,
+                    showDragHandle: true,
+                    builder: (context) => PostReactions(reactions: reactions),
+                  );
+                }
+              } on Exception catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: e.toString(),
+                    type: SnackBarType.error,
+                  );
+                }
+                return;
+              }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  LucideIcons.thumbsUp,
+                  size: 15,
+                  color: ColorsManager.getTextSecondary(context),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: likesCount,
+                  builder: (context, value, child) => Text(
+                    key: Key('post_numerics_likeCount'),
+                    ' $value',
+                    style: TextStyles.font13GrayRegular(context),
+                  ),
+                ),
+              ],
             ),
           ),
           Spacer(),
@@ -413,7 +447,7 @@ class PostAttachments extends StatelessWidget {
   Widget build(BuildContext context) {
     //TODO handle multiple images
     for (var attachment in attachments) {
-      if (attachment.mediaType == MediaType.image) {
+      if (attachment.mediaType == PostMediaType.image) {
         return Image.network(
           errorBuilder: (context, error, stackTrace) => SizedBox(),
           key: Key('post_body_attachments'),
