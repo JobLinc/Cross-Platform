@@ -4,6 +4,8 @@ import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/accountvisibility/ui/screens/account_visibility_screen.dart';
+import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
+import 'package:joblinc/features/notifications/data/services/firebase_messaging_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -80,6 +82,8 @@ class SettingsScreen extends StatelessWidget {
               AuthService authService = getIt<AuthService>();
               authService.clearUserInfo();
               UserService.clearUserData();  
+              FirebaseMessagingService deviceTokenService = getIt<FirebaseMessagingService>();
+              deviceTokenService.unregisterToken();
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.loginScreen,
