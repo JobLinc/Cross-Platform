@@ -1,4 +1,5 @@
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class PostModel {
@@ -13,16 +14,33 @@ class PostModel {
     this.timeStamp,
     this.userReaction,
     required this.attachmentURLs,
-
     required this.commentCount,
     required this.likeCount,
     required this.repostCount,
     this.repost,
+    this.taggedUsers = const [],
+    this.taggedCompanies = const [],
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     final bool companyPost = (json['userId'] == null);
-    print(json);
+
+    // Parse tagged users if they exist
+    List<TaggedEntity> taggedUsers = [];
+    if (json['taggedUsers'] != null) {
+      taggedUsers = (json['taggedUsers'] as List)
+          .map((user) => TaggedEntity.fromJson(user))
+          .toList();
+    }
+
+    // Parse tagged companies if they exist
+    List<TaggedEntity> taggedCompanies = [];
+    if (json['taggedCompanies'] != null) {
+      taggedCompanies = (json['taggedCompanies'] as List)
+          .map((company) => TaggedEntity.fromJson(company))
+          .toList();
+    }
+
     return PostModel(
       postID: json['postId'] ?? '',
       senderID:
@@ -44,6 +62,8 @@ class PostModel {
       repostCount: json['reposts'] ?? 0,
       repost:
           json['repost'] == null ? null : PostModel.fromJson(json['repost']),
+      taggedUsers: taggedUsers,
+      taggedCompanies: taggedCompanies,
     );
   }
 
@@ -61,7 +81,8 @@ class PostModel {
   int commentCount;
   int likeCount;
   int repostCount;
-
+  final List<TaggedEntity> taggedUsers;
+  final List<TaggedEntity> taggedCompanies;
 }
 
 PostModel mockPostData = PostModel(

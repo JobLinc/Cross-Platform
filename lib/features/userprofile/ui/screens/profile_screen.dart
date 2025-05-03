@@ -15,6 +15,7 @@ import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_profile_posts.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
@@ -279,9 +280,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         if (profile.education.isNotEmpty) ...[
                           UserEducations(profile: profile),
                         ],
-                        // if (true) ...[//replace this with the list of postModels.isNotEmpty
-                        //   PostList(pos), //also replace this
-                        // ]
+                        // Posts section
+                        SizedBox(height: 50.h),
+                        UserProfilePosts(),
+
+
                       ],
                     ),
                   ),

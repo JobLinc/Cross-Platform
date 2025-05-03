@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class PostApiService {
@@ -90,18 +91,35 @@ class PostApiService {
   }
 
   Future<String> addPost(
-    String text,
-    List<String> media,
-    String? repostId,
-    bool isPublic,
-  ) async {
+      String text, List<String> media, String? repostId, bool isPublic,
+      {List<TaggedEntity> taggedUsers = const [],
+      List<TaggedEntity> taggedCompanies = const []}) async {
     try {
-      final response = await _dio.post('/post/add', data: {
+      final Map<String, dynamic> data = {
         'text': text,
-        'media': media.isNotEmpty ? media : null,
-        'repost': repostId,
         'isPublic': isPublic,
-      });
+      };
+
+      if (media.isNotEmpty) {
+        data['media'] = media;
+      }
+
+      if (repostId != null) {
+        data['repost'] = repostId;
+      }
+
+      if (taggedUsers.isNotEmpty) {
+        data['taggedUsers'] = taggedUsers.map((user) => user.toJson()).toList();
+      }
+
+      if (taggedCompanies.isNotEmpty) {
+        data['taggedCompanies'] =
+            taggedCompanies.map((company) => company.toJson()).toList();
+      }
+
+      final response = await _dio.post('/post/add', data: data);
+      print(data);
+      print(response.data);
       return response.data['postId'];
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
@@ -125,15 +143,15 @@ class PostApiService {
   }
 
   Future<void> editPost(
-    String postId,
-    String? text,
-    List<PostmediaModel>? mediaItems,
-  ) async {
+      String postId, String? text, List<PostmediaModel>? mediaItems,
+      {List<TaggedEntity> taggedUsers = const [],
+      List<TaggedEntity> taggedCompanies = const []}) async {
     try {
       final data = {};
       if (text != null) {
         data.addAll({'text': text});
       }
+
       if (mediaItems != null && mediaItems.isNotEmpty) {
         // Format media items as per API documentation
         final List<Map<String, String>> formattedMedia = mediaItems.map((item) {
@@ -146,7 +164,19 @@ class PostApiService {
         data.addAll({'media': formattedMedia});
       }
 
+      // Add tagged entities if they exist
+      if (taggedUsers.isNotEmpty) {
+        data['taggedUsers'] = taggedUsers.map((user) => user.toJson()).toList();
+      }
+
+      if (taggedCompanies.isNotEmpty) {
+        data['taggedCompanies'] =
+            taggedCompanies.map((company) => company.toJson()).toList();
+      }
+
+      print(data);
       final response = await _dio.post('/post/$postId/edit', data: data);
+      print(response.data);
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }

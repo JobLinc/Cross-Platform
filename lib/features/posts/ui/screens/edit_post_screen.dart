@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
@@ -9,8 +10,11 @@ import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
+import 'package:joblinc/features/posts/data/services/tag_suggestion_service.dart';
 import 'package:joblinc/features/posts/logic/cubit/edit_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/edit_post_state.dart';
+import 'package:joblinc/features/posts/ui/widgets/tagged_text_controller.dart';
 
 class EditPostScreen extends StatefulWidget {
   final PostModel post;
@@ -22,20 +26,172 @@ class EditPostScreen extends StatefulWidget {
 }
 
 class _EditPostScreenState extends State<EditPostScreen> {
-  late TextEditingController _inputController;
+  late TaggedTextEditingController _inputController;
   late List<PostmediaModel> _mediaItems;
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+  String _currentTagQuery = '';
+  List<dynamic> _tagSuggestions = [];
+  bool _isLoadingSuggestions = false;
 
   @override
   void initState() {
     super.initState();
-    _inputController = TextEditingController(text: widget.post.text);
+    _inputController = TaggedTextEditingController();
+    _inputController.text = widget.post.text;
     _mediaItems = List.from(widget.post.attachmentURLs);
+
+    // Initialize tagged users and companies from the post
+    for (TaggedEntity user in widget.post.taggedUsers) {
+      if (user is TaggedUser) {
+        _inputController.taggedUsers.add(user);
+      }
+    }
+
+    for (TaggedEntity company in widget.post.taggedCompanies) {
+      if (company is TaggedCompany) {
+        _inputController.taggedCompanies.add(company);
+      }
+    }
+
+    _inputController.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
+    _removeOverlay();
     _inputController.dispose();
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    final text = _inputController.text;
+
+    if (text.isNotEmpty && text.length > 1) {
+      final previousChar = text[_inputController.selection.baseOffset - 1];
+      if (previousChar == '@' && !_inputController.isTagging()) {
+        _inputController.startTagging();
+        _showTagSuggestions('');
+        return;
+      }
+    }
+
+    if (_inputController.isTagging()) {
+      final tagText = _inputController.getCurrentTagText();
+
+      if (tagText.contains(' ') || tagText.contains('\n')) {
+        _removeOverlay();
+        _inputController.stopTagging();
+        return;
+      }
+
+      if (tagText != _currentTagQuery) {
+        _currentTagQuery = tagText;
+        _showTagSuggestions(tagText);
+      }
+    }
+  }
+
+  void _showTagSuggestions(String query) async {
+    setState(() {
+      _isLoadingSuggestions = true;
+    });
+
+    final tagSuggestionService = getIt<TagSuggestionService>();
+    final tagIndex = _inputController.currentTagStartIndex!;
+
+    List<TaggedUser> userSuggestions =
+        await tagSuggestionService.getUserSuggestions(query);
+    List<TaggedCompany> companySuggestions =
+        await tagSuggestionService.getCompanySuggestions(query);
+
+    setState(() {
+      _tagSuggestions = [...userSuggestions, ...companySuggestions];
+      _isLoadingSuggestions = false;
+    });
+
+    _removeOverlay();
+    _buildTagOverlay();
+  }
+
+  void _buildTagOverlay() {
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(0, 50),
+            child: Material(
+              elevation: 4.0,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                constraints: BoxConstraints(
+                  maxHeight: 200,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: _isLoadingSuggestions
+                    ? Center(child: CircularProgressIndicator())
+                    : _tagSuggestions.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text('No suggestions found'),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _tagSuggestions.length,
+                            itemBuilder: (context, index) {
+                              final suggestion = _tagSuggestions[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  child: suggestion is TaggedUser
+                                      ? Icon(Icons.person)
+                                      : Icon(Icons.business),
+                                ),
+                                title: Text(
+                                  suggestion is TaggedUser
+                                      ? suggestion.name
+                                      : suggestion.name,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(suggestion is TaggedUser
+                                    ? 'User'
+                                    : 'Company'),
+                                onTap: () {
+                                  if (suggestion is TaggedUser) {
+                                    _inputController.addTaggedUser(
+                                      suggestion,
+                                      _inputController.currentTagStartIndex!,
+                                    );
+                                  } else if (suggestion is TaggedCompany) {
+                                    _inputController.addTaggedCompany(
+                                      suggestion,
+                                      _inputController.currentTagStartIndex!,
+                                    );
+                                  }
+                                  _removeOverlay();
+                                },
+                              );
+                            },
+                          ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   @override
@@ -67,19 +223,23 @@ class _EditPostScreenState extends State<EditPostScreen> {
               child: Column(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: _inputController,
-                      autofocus: true,
-                      maxLines: null,
-                      expands: true,
-                      decoration: InputDecoration(
-                        hintText: 'Edit your post...',
-                        hintStyle: TextStyle(color: Colors.grey.shade600),
-                        border: InputBorder.none,
+                    child: CompositedTransformTarget(
+                      link: _layerLink,
+                      child: TextField(
+                        controller: _inputController,
+                        autofocus: true,
+                        maxLines: null,
+                        expands: true,
+                        decoration: InputDecoration(
+                          hintText:
+                              'Edit your post... Use @ to tag users or companies',
+                          hintStyle: TextStyle(color: Colors.grey.shade600),
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(),
+                        showCursor: true,
+                        cursorColor: Colors.black,
                       ),
-                      style: TextStyle(),
-                      showCursor: true,
-                      cursorColor: Colors.black,
                     ),
                   ),
                   // Display current media
@@ -181,6 +341,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                           widget.post.postID,
                           _inputController.text,
                           _mediaItems,
+                          taggedUsers: _inputController.taggedUsers,
+                          taggedCompanies: _inputController.taggedCompanies,
                         );
                   }
                 : null,

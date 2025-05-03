@@ -41,6 +41,7 @@ import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart'
 import 'package:joblinc/features/connections/logic/cubit/invitations_cubit.dart';
 
 import 'package:joblinc/features/forgetpassword/logic/cubit/forget_password_cubit.dart';
+import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
 import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
 import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
@@ -57,6 +58,7 @@ import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/logic/cubit/my_jobs_cubit.dart';
 import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
+import 'package:joblinc/features/posts/data/services/tag_suggestion_service.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_search_cubit.dart';
@@ -73,6 +75,7 @@ import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.d
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/profile_posts_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
@@ -91,9 +94,9 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
   final baseUrl = //Platform.isAndroid
       // ?
-      'http://10.0.2.2:3000/api';
-  //'http://localhost:3000/api';
-  // 'https://joblinc.me:6969/api';
+      //  'http://192.168.1.4:3000/api';
+      // : 'http://localhost:3000/api';
+      'https://joblinc.me:3000/api';
 
   final socketUrl =
       // Platform.isAndroid ?
@@ -172,7 +175,9 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<PostCubit>(() => PostCubit(getIt<PostRepo>(),
       getIt<CommentRepo>(), getIt<UserConnectionsRepository>()));
 
-  getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+  getIt.registerFactory<AddPostCubit>(
+    () => AddPostCubit(getIt<PostRepo>(), getIt<TagSuggestionService>()),
+  );
 
   getIt.registerFactory<SavedPostsCubit>(
       () => SavedPostsCubit(getIt<PostRepo>()));
@@ -266,6 +271,9 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<SearchCubit>(
       () => SearchCubit(getIt<UserConnectionsRepository>()));
+  // Profile
+  getIt.registerFactory<ProfilePostsCubit>(
+      () => ProfilePostsCubit(getIt<PostRepo>()));
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
       () => EmailConfirmationApiService(getIt<Dio>()));
@@ -339,4 +347,17 @@ Future<void> setupGetIt() async {
 
   getIt.registerLazySingleton<AccountVisibilityRepo>(
       () => AccountVisibilityRepo(getIt.get<AccountVisibilityService>()));
+
+  // Tag suggestion service
+  getIt.registerFactory<TagSuggestionService>(
+      () => TagSuggestionService(getIt<Dio>()));
+
+  getIt.registerFactory<FirebaseMessagingService>(
+    () => FirebaseMessagingService(
+      getIt<DeviceTokenService>(),
+      (model) {},
+      getIt<NotificationApiService>(),
+      getIt<NotificationCubit>(),
+    ),
+  );
 }

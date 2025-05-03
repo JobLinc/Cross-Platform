@@ -33,21 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    // Prevent keyboard from showing up automatically
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    });
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
@@ -258,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               : PostList(
                   posts: state.posts!,
-                  showOwnerMenu: true,
+                  showOwnerMenu: false,
                 ),
         ),
       );
