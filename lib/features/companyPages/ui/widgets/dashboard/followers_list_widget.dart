@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
@@ -70,13 +69,7 @@ class CompanyFollowersListView extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       SizedBox(height: 4.h),
-                      // Text(
-                      //   "Followed on: ${DateFormat.yMMMd().format(follower.time)}",
-                      //   style: TextStyle(
-                      //     fontSize: 16.sp,
-                      //     color: Colors.grey[600],
-                      //   ),
-                      // ),
+
                     ],
                   ),
                 ),
