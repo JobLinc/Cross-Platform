@@ -164,6 +164,13 @@ class AppRouter {
             child: ForgotPasswordSteps(),
           ),
         );
+         case Routes.chatScreen:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => getIt<ChatListCubit>(),
+                child: ChatScreen(
+                  chatId: arguments as String,
+                )));
       case Routes.chatListScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(

@@ -240,7 +240,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -278,9 +277,9 @@ class ChatSocketService {
 
   // ─── Determine server URL ─────────────────────────────────────────────────
   static String getServerUrl() {
-    if (Platform.isAndroid) return 'http://10.0.2.2:3000';
-    if (Platform.isIOS)     return 'http://localhost:3000';
-    return 'http://localhost:3000';
+    // if (Platform.isAndroid) return 'http://10.0.2.2:3000';
+    // if (Platform.isIOS)     return 'http://localhost:3000';
+    return 'http://192.168.1.4:3000';
   }
 
   // ─── Initialize (connect) only once ────────────────────────────────────────
@@ -353,6 +352,7 @@ class ChatSocketService {
     _socket.once('connect_error', (err) {
       cleanUp();
       print('⚠️ Socket connect_error: $err');
+      if (completer.isCompleted) return;
       completer.complete(false);
     });
 
@@ -380,7 +380,8 @@ class ChatSocketService {
 
     // Debug all other events
     _socket.onAny((event, data) {
-      print('🔍 [socket event] $event → ${data != null ? jsonEncode(data) : 'null'}');
+      print(
+          '🔍 [socket event] $event → ${data != null ? jsonEncode(data) : 'null'}');
     });
 
     // Domain events:
@@ -417,7 +418,8 @@ class ChatSocketService {
 
   String? _extractChatId(dynamic data) {
     if (data is String) return data;
-    if (data is Map && data['chatId'] is String) return data['chatId'] as String;
+    if (data is Map && data['chatId'] is String)
+      return data['chatId'] as String;
     return null;
   }
 
@@ -445,7 +447,10 @@ class ChatSocketService {
 
   void sendMessage(String chatId, String text) {
     if (!_isInitialized) return;
-    final payload = {'content': {'text': text}, 'chatId': chatId};
+    final payload = {
+      'content': {'text': text},
+      'chatId': chatId
+    };
     print('📤 sendMessage → $payload');
     _socket.emitWithAckAsync('sendMessage', payload, ack: () {
       print('✅ sendMessage ack');
@@ -456,9 +461,14 @@ class ChatSocketService {
     if (!_isInitialized) return;
     Map<String, dynamic> content;
     switch (fileType) {
-      case 'image':    content = {'image': filePath}; break;
-      case 'video':    content = {'video': filePath}; break;
-      default:         content = {'document': filePath};
+      case 'image':
+        content = {'image': filePath};
+        break;
+      case 'video':
+        content = {'video': filePath};
+        break;
+      default:
+        content = {'document': filePath};
     }
     final payload = {'content': content, 'chatId': chatId};
     print('📤 sendFileMessage → $payload');
