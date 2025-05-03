@@ -45,15 +45,24 @@ class JobCard extends StatelessWidget {
         hasCompany ? job.company!.size : job.employer!.username;
     final ownerAvatar =
         hasCompany ? job.company!.logo : job.employer!.profilePicture;
-    onAvatarTap() {
+    onAvatarTap() async {
       if (hasCompany) {
         print("Company ID: ${job.company!.id}");
         Navigator.pushNamed(context, Routes.companyPageHome,
             arguments: job.company!.id);
       } else {
         // e.g. navigate to an employer-profile screen
-        Navigator.pushNamed(context, Routes.otherProfileScreen,
-            arguments: job.employer!.id);
+        final auth = getIt<AuthService>();
+        final userId = await auth.getUserId();
+        if (userId == job.employer!.id) {
+          Navigator.pushNamed(context, Routes.profileScreen);
+        } else {
+          Navigator.pushNamed(context, Routes.otherProfileScreen,
+              arguments: job.employer!.id);
+        }
+
+        // Navigator.pushNamed(context, Routes.otherProfileScreen,
+        //     arguments: job.employer!.id);
       }
     }
 
