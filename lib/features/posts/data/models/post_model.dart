@@ -13,6 +13,7 @@ class PostModel {
     this.timeStamp,
     this.userReaction,
     required this.attachmentURLs,
+
     required this.commentCount,
     required this.likeCount,
     required this.repostCount,
@@ -60,6 +61,7 @@ class PostModel {
   int commentCount;
   int likeCount;
   int repostCount;
+
 }
 
 PostModel mockPostData = PostModel(

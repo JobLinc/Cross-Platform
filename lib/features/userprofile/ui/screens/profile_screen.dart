@@ -280,7 +280,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           UserEducations(profile: profile),
                         ],
                         // if (true) ...[//replace this with the list of postModels.isNotEmpty
-                        //   PostList(posts: []), //also replace this
+                        //   PostList(pos), //also replace this
                         // ]
                       ],
                     ),

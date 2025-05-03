@@ -1,3 +1,4 @@
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/services/post_api_service.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
@@ -52,8 +53,8 @@ class PostRepo {
   }
 
   Future<void> editPost(
-      String postId, String? text, List<String>? attachmentsUrls) async {
-    await _postApiService.editPost(postId, text, attachmentsUrls);
+      String postId, String? text, List<PostmediaModel>? mediaItems) async {
+    await _postApiService.editPost(postId, text, mediaItems);
   }
 
   Future<void> deletePost(String postId) async {

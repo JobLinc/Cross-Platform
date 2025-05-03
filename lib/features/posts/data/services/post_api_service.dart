@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
@@ -126,20 +127,44 @@ class PostApiService {
   Future<void> editPost(
     String postId,
     String? text,
-    List<String>? attachmentsUrls,
+    List<PostmediaModel>? mediaItems,
   ) async {
     try {
       final data = {};
       if (text != null) {
         data.addAll({'text': text});
       }
-      if (attachmentsUrls != null) {
-        data.addAll({'mediaUrl': attachmentsUrls});
+      if (mediaItems != null && mediaItems.isNotEmpty) {
+        // Format media items as per API documentation
+        final List<Map<String, String>> formattedMedia = mediaItems.map((item) {
+          return {
+            'url': item.url,
+            'type': _getMediaTypeString(item.mediaType),
+          };
+        }).toList();
+        
+        data.addAll({'media': formattedMedia});
       }
-      final respone =
-          await _dio.post('/post/$postId/edit', data: {}..addAll(data));
+      
+      final response = await _dio.post('/post/$postId/edit', data: data);
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
+    }
+  }
+
+  // Helper method to convert MediaType enum to string format expected by API
+  String _getMediaTypeString(MediaType type) {
+    switch (type) {
+      case MediaType.image:
+        return 'Image';
+      case MediaType.video:
+        return 'Video';
+      case MediaType.audio:
+        return 'Audio';
+      case MediaType.document:
+        return 'Document';
+      default:
+        return 'Image';
     }
   }
 
