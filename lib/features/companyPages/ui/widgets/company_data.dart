@@ -206,17 +206,34 @@ class CompanyData extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (company.isFollowing == false )
+                    if (company.isFollowing == false)
                       FollowButton(
                           text: "+ Follow",
                           backgroundColor: Colors.white,
                           foregroundColor: Color(0xFFD72638),
                           borderColor: Color(0xFFD72638),
-                          width: company.website != null && company.website!.isNotEmpty
+                          width: company.website != "" &&
+                                  company.website!.isNotEmpty
                               ? 130.w
                               : 280.w,
                           fontSize: 13.sp,
                           onTap: () async {
+                            // Show loading SnackBar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(width: 16),
+                                    Text("Following ${company.name}..."),
+                                  ],
+                                ),
+                                duration: const Duration(
+                                    seconds:
+                                        60), // Long duration as we'll dismiss it manually
+                              ),
+                            );
+
                             company.followers++;
                             print("Follow button pressed");
                             try {
@@ -225,6 +242,11 @@ class CompanyData extends StatelessWidget {
                                   getIt<UserConnectionsRepository>();
                               final result = await userConnectionsRepository
                                   .follwConnection(company.id!);
+
+                              // Dismiss loading SnackBar
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+
                               company.isFollowing = true;
 
                               if (result.statusCode == 200) {
@@ -242,6 +264,10 @@ class CompanyData extends StatelessWidget {
                                 );
                               }
                             } catch (e) {
+                              // Dismiss loading SnackBar on error
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+
                               CustomSnackBar.show(
                                 context: context,
                                 message: "Failed to follow ${company.name}",
@@ -255,7 +281,8 @@ class CompanyData extends StatelessWidget {
                           backgroundColor: Color(0xFFD72638),
                           foregroundColor: Colors.white,
                           borderColor: Color(0xFFD72638),
-                          width: company.website != null && company.website!.isNotEmpty
+                          width: company.website != null &&
+                                  company.website!.isNotEmpty
                               ? 130.w
                               : 280.w,
                           fontSize: 13.sp,
@@ -268,26 +295,51 @@ class CompanyData extends StatelessWidget {
                               );
                               return;
                             }
+
+                            // Show loading SnackBar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(width: 16),
+                                    Text("Unfollowing ${company.name}..."),
+                                  ],
+                                ),
+                                duration: const Duration(
+                                    seconds:
+                                        60), // Long duration as we'll dismiss it manually
+                              ),
+                            );
+
                             print("Unfollow button pressed");
                             try {
-                            final UserConnectionsRepository
-                                userConnectionsRepository =
-                                getIt<UserConnectionsRepository>();
-                            final result = await userConnectionsRepository
-                                .unfollwConnection(company.id!);
+                              final UserConnectionsRepository
+                                  userConnectionsRepository =
+                                  getIt<UserConnectionsRepository>();
+                              final result = await userConnectionsRepository
+                                  .unfollwConnection(company.id!);
 
-                            if (company.followers > 0) {
-                              company.followers--;
-                            }
-                            company.isFollowing = false;
-                            if (result.statusCode == 200) {
-                              CustomSnackBar.show(
-                                context: context,
-                                message: "You unfollowed ${company.name}",
-                                type: SnackBarType.success,
-                              );
-                            }
-                            } catch(e) {
+                              // Dismiss loading SnackBar
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+
+                              if (company.followers > 0) {
+                                company.followers--;
+                              }
+                              company.isFollowing = false;
+                              if (result.statusCode == 200) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: "You unfollowed ${company.name}",
+                                  type: SnackBarType.success,
+                                );
+                              }
+                            } catch (e) {
+                              // Dismiss loading SnackBar on error
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+
                               CustomSnackBar.show(
                                 context: context,
                                 message: "Failed to follow ${company.name}",
@@ -300,18 +352,26 @@ class CompanyData extends StatelessWidget {
                               'isAdmin': isAdmin
                             });
                           }),
-                    if (company.website != null && company.website!.isNotEmpty)
-                      SizedBox(width: 12.w),
-                    VisitCompanyWebsite(
-                      text: 'Visit Website',
-                      backgroundColor: Color(0xFFD72638),
-                      borderColor: Color(0xFFD72638),
-                      foregroundColor: Colors.white,
-                      icon: Icons.open_in_new,
-                      websiteUrl: company.website!,
-                      width: 150.w,
-                      fontSize: 11.sp,
-                    ),
+
+                    // Only show the website button if website URL exists
+                    if (company.website != null &&
+                        company.website!.isNotEmpty &&
+                        company.website!.contains(" "))
+                      Row(
+                        children: [
+                          SizedBox(width: 12.w),
+                          VisitCompanyWebsite(
+                            text: 'Visit Website',
+                            backgroundColor: Color(0xFFD72638),
+                            borderColor: Color(0xFFD72638),
+                            foregroundColor: Colors.white,
+                            icon: Icons.open_in_new,
+                            websiteUrl: company.website!,
+                            width: 150.w,
+                            fontSize: 11.sp,
+                          ),
+                        ],
+                      ),
                     Padding(
                       padding: EdgeInsets.all(8.h),
                       child: CompanyMoreButton(),
