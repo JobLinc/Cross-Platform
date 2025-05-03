@@ -15,10 +15,36 @@ class TaggedEntity {
   }
 
   factory TaggedEntity.fromJson(Map<String, dynamic> json) {
-    return TaggedEntity(
-      id: json['id'],
-      index: json['index'],
-    );
+    // Check if this is a company tag by looking for a name field or type indicator
+    if (json.containsKey('name') ||
+        (json.containsKey('type') && json['type'] == 'company')) {
+      return TaggedCompany(
+        id: json['id'],
+        index: json['index'],
+        name: json['name'] ?? 'Unknown Company',
+      );
+    } else {
+      // Handle user tags with potentially incomplete information
+      String name = '';
+
+      // Try to get name from various possible sources in the JSON
+      if (json.containsKey('name')) {
+        name = json['name'];
+      } else if (json.containsKey('username')) {
+        name = json['username'];
+      } else if (json.containsKey('firstname') &&
+          json.containsKey('lastname')) {
+        name = '${json['firstname']} ${json['lastname']}';
+      } else {
+        name = 'Unknown User';
+      }
+
+      return TaggedUser(
+        id: json['id'],
+        index: json['index'],
+        name: name,
+      );
+    }
   }
 }
 
