@@ -98,6 +98,10 @@ class FollowListView extends StatelessWidget {
                             context
                                 .read<FollowCubit>()
                                 .unfollowConnection(follow.userId, context);
+                          } else {
+                            context
+                                .read<FollowCubit>()
+                                .unfollowConnection(follow.companyId!, context);
                           }
                         },
                         icon: Icon(Icons.person_remove, size: 20.sp),
