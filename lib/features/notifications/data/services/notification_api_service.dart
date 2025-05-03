@@ -71,16 +71,15 @@ class NotificationApiService {
 
   Future<int> getUnseenCount() async {
     try {
-      final response = await _dio.get('$_baseUrl/unseen/count');
-
+      final response = await _dio.get("$_baseUrl/get");
       if (response.statusCode == 200) {
-        return response.data['count'] ?? 0;
-      } else {
-        return 0;
-      }
+          final int count = response.data['unseenCount'];
+          return count;
+        } else {
+          return 0;
+        }
     } catch (e) {
-      print('Error getting unseen count: $e');
-      return 0;
+      throw Exception('Failed to fetch notifications: $e');
     }
   }
 }

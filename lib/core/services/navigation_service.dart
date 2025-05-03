@@ -11,18 +11,6 @@ class NavigationService {
   NavigationService._internal();
   
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  Future<dynamic> navigateTo(String routeName, {Object? arguments}) {
-    return navigatorKey.currentState!.pushNamed(routeName, arguments: arguments);
-  }
-  
-  Future<dynamic> navigateToAndRemoveUntil(String routeName, {Object? arguments}) {
-    return navigatorKey.currentState!.pushNamedAndRemoveUntil(
-      routeName, 
-      (route) => false,
-      arguments: arguments
-    );
-  }
   
   Future<dynamic> navigateToMainContainer(int tabIndex) {
     return navigatorKey.currentState!.pushNamedAndRemoveUntil(
@@ -54,7 +42,4 @@ class NavigationService {
     }
   }
   
-  void goBack() {
-    return navigatorKey.currentState!.pop();
-  }
 }

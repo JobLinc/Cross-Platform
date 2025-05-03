@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,6 +32,7 @@ class LoginApiService {
 
   Future<LoginResponseModel> loginWithGoogle() async {
     try {
+      Platform.isIOS;
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) throw 'Sign-in cancelled';
       final googleAuth = await googleUser.authentication;
@@ -38,7 +41,8 @@ class LoginApiService {
 
       final response = await _dio.post(
         '/auth/google-login',
-        data: {'credential': idToken},
+        data: {'credential': idToken,
+        'iosPlatform' : Platform.isIOS},
       );
       print("response $response");
       print("response.data ${response.data}");
