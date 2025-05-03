@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 
 class UserService {
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
@@ -108,6 +110,8 @@ class UserService {
 
   // Get complete user profile data
   static Future<Map<String, dynamic>> getUserData() async {
+    await ensureProfileFetched();
+
     final userId = await _storage.read(key: _userIdKey) ?? '';
     final firstname = await _storage.read(key: _firstnameKey) ?? '';
     final lastname = await _storage.read(key: _lastnameKey) ?? '';
@@ -156,27 +160,62 @@ class UserService {
   }
 
   // Individual getters for user data
-  static Future<String> getUserId() async =>
-      await _storage.read(key: _userIdKey) ?? '';
-  static Future<String> getFirstname() async =>
-      await _storage.read(key: _firstnameKey) ?? '';
-  static Future<String> getLastname() async =>
-      await _storage.read(key: _lastnameKey) ?? '';
-  static Future<String> getUsername() async =>
-      await _storage.read(key: _usernameKey) ?? '';
-  static Future<String> getEmail() async =>
-      await _storage.read(key: _emailKey) ?? '';
-  static Future<String> getHeadline() async =>
-      await _storage.read(key: _headlineKey) ?? '';
-  static Future<String> getProfilePicture() async =>
-      await _storage.read(key: _profilePictureKey) ?? '';
-  static Future<String> getCoverPicture() async =>
-      await _storage.read(key: _coverPictureKey) ?? '';
-  static Future<String> getVisibility() async =>
-      await _storage.read(key: _visibilityKey) ?? 'Public';
+  static Future<String> getUserId() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _userIdKey) ?? '';
+  }
+
+  static Future<String> getFirstname() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _firstnameKey) ?? '';
+  }
+
+  static Future<String> getLastname() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _lastnameKey) ?? '';
+  }
+
+  static Future<String> getUsername() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _usernameKey) ?? '';
+  }
+
+  static Future<String> getEmail() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _emailKey) ?? '';
+  }
+
+  static Future<String> getHeadline() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _headlineKey) ?? '';
+  }
+
+  static Future<String> getProfilePicture() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _profilePictureKey) ?? '';
+  }
+
+  static Future<String> getCoverPicture() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _coverPictureKey) ?? '';
+  }
+
+  static Future<String> getVisibility() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _visibilityKey) ?? 'Public';
+  }
 
   // Clear all user data
   static Future<void> clearUserData() async {
     await _storage.deleteAll();
+  }
+
+  static Future<void> ensureProfileFetched() async {
+    var userId = await _storage.read(key: _userIdKey) ?? '';
+    if (userId.isEmpty) {
+      UserProfileRepository repo = getIt<UserProfileRepository>();
+      await repo.getUserProfile();
+      userId = await _storage.read(key: _userIdKey) ?? '';
+    }
   }
 }
