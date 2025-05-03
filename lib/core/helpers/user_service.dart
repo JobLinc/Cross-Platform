@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserService {
@@ -21,26 +22,27 @@ class UserService {
   static const String _numberOfConnectionsKey = 'number_of_connections';
   static const String _matualConnectionsKey = 'matual_connections';
   static const String _isFollowingKey = 'is_following';
+  static const String _visibilityKey = 'visibility';
 
   // Save complete user profile data
-  static Future<void> saveUserData({
-    required String userId,
-    required String firstname,
-    required String lastname,
-    String? username,
-    required String email,
-    String? headline,
-    String? profilePicture,
-    String? coverPicture,
-    String? connectionStatus,
-    String? country,
-    String? city,
-    String? biography,
-    String? phoneNumber,
-    int? numberOfConnections,
-    int? matualConnections,
-    bool? isFollowing,
-  }) async {
+  static Future<void> saveUserData(
+      {required String userId,
+      required String firstname,
+      required String lastname,
+      String? username,
+      required String email,
+      String? headline,
+      String? profilePicture,
+      String? coverPicture,
+      String? connectionStatus,
+      String? country,
+      String? city,
+      String? biography,
+      String? phoneNumber,
+      int? numberOfConnections,
+      int? matualConnections,
+      bool? isFollowing,
+      String? visibility}) async {
     await _storage.write(key: _userIdKey, value: userId);
     await _storage.write(key: _firstnameKey, value: firstname);
     await _storage.write(key: _lastnameKey, value: lastname);
@@ -76,6 +78,9 @@ class UserService {
     if (isFollowing != null) {
       await _storage.write(key: _isFollowingKey, value: isFollowing.toString());
     }
+    if (visibility != null) {
+      await _storage.write(key: _visibilityKey, value: visibility);
+    }
   }
 
   // Save user data from JSON
@@ -95,9 +100,9 @@ class UserService {
       biography: json['biography'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       numberOfConnections: json['numberOfConnections'] ?? 0,
-      matualConnections: json['mutualConnections'] ??
-          0, 
+      matualConnections: json['mutualConnections'] ?? 0,
       isFollowing: json['isFollowing'] ?? false,
+      visibility: json['visibility'] ?? 'Public',
     );
   }
 
@@ -123,6 +128,7 @@ class UserService {
     final matualConnectionsStr =
         await _storage.read(key: _matualConnectionsKey);
     final isFollowingStr = await _storage.read(key: _isFollowingKey);
+    final visibility = await _storage.read(key: _visibilityKey);
 
     return {
       'userId': userId,
@@ -145,6 +151,7 @@ class UserService {
           ? int.tryParse(matualConnectionsStr) ?? 0
           : 0,
       'isFollowing': isFollowingStr == 'true',
+      'visibility': visibility
     };
   }
 
@@ -165,6 +172,8 @@ class UserService {
       await _storage.read(key: _profilePictureKey) ?? '';
   static Future<String> getCoverPicture() async =>
       await _storage.read(key: _coverPictureKey) ?? '';
+  static Future<String> getVisibilityPicture() async =>
+      await _storage.read(key: _visibilityKey) ?? 'Public';
 
   // Clear all user data
   static Future<void> clearUserData() async {
