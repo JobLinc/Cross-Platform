@@ -70,7 +70,9 @@ class NotificationCubit extends Cubit<NotificationState> {
             type: notification.type,
             content: notification.content,
             imageUrl: notification.imageUrl,
-            isRead: "seen",
+            isRead: notification.isRead == "pending" ? "seen" : notification.isRead,
+            relatedEntityId: notification.relatedEntityId,
+            subRelatedEntityId: notification.subRelatedEntityId,
             createdAt: notification.createdAt,
           );
         }).toList();

@@ -18,6 +18,8 @@ import 'package:joblinc/features/changeusername/ui/screens/changeusername_screen
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_list_screen.dart';
 import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_chat_screen.dart';
+import 'package:joblinc/features/chat/ui/screens/create_group_screen.dart';
 import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analytics.dart'
     show CompanyAnalytics;
@@ -504,6 +506,15 @@ class AppRouter {
       case Routes.adminPanel:
         return MaterialPageRoute(
           builder: (context) => AdminPanel(),
+        );
+         case Routes.createChat:
+        return MaterialPageRoute(
+          builder: (context) => CreateChatScreen(),
+        );
+
+      case Routes.createGroupChatScreen:
+        return MaterialPageRoute(
+          builder: (context) => CreateGroupScreen(),
         );
       case Routes.userSearchScreen:
         return MaterialPageRoute(
