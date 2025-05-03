@@ -51,30 +51,34 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void _onTextChanged() {
-    final text = _inputController.text;
+    try {
+      final text = _inputController.text;
 
-    if (text.isNotEmpty && text.length > 1) {
-      final previousChar = text[_inputController.selection.baseOffset - 1];
-      if (previousChar == '@' && !_inputController.isTagging()) {
-        _inputController.startTagging();
-        _showTagSuggestions('');
-        return;
-      }
-    }
-
-    if (_inputController.isTagging()) {
-      final tagText = _inputController.getCurrentTagText();
-
-      if (tagText.contains(' ') || tagText.contains('\n')) {
-        _removeOverlay();
-        _inputController.stopTagging();
-        return;
+      if (text.isNotEmpty && text.length > 1) {
+        final previousChar = text[_inputController.selection.baseOffset - 1];
+        if (previousChar == '@' && !_inputController.isTagging()) {
+          _inputController.startTagging();
+          _showTagSuggestions('');
+          return;
+        }
       }
 
-      if (tagText != _currentTagQuery) {
-        _currentTagQuery = tagText;
-        _showTagSuggestions(tagText);
+      if (_inputController.isTagging()) {
+        final tagText = _inputController.getCurrentTagText();
+
+        if (tagText.contains(' ') || tagText.contains('\n')) {
+          _removeOverlay();
+          _inputController.stopTagging();
+          return;
+        }
+
+        if (tagText != _currentTagQuery) {
+          _currentTagQuery = tagText;
+          _showTagSuggestions(tagText);
+        }
       }
+    } catch (e) {
+      print("Error in _onTextChanged: $e");
     }
   }
 

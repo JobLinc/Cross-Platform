@@ -14,7 +14,9 @@ class ProfilePostsCubit extends Cubit<ProfilePostsState> {
       final posts = await _postRepo.getMyPosts();
       emit(ProfilePostsLoaded(posts));
     } catch (e) {
-      emit(ProfilePostsError(e.toString()));
+      if (!isClosed) {
+        emit(ProfilePostsError(e.toString()));
+      }
     }
   }
 }
