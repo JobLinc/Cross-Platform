@@ -50,7 +50,7 @@ class ChatSocketService {
     _userId = userId;
     _accessToken = accessToken;
 
-    final url = getServerUrl();
+    final url = 'wss://joblinc.me:3000';
 
     try {
       _socket = IO.io(

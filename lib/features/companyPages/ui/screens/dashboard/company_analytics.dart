@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/theming/colors.dart';
-import '../../../data/data/company.dart' show Company;
-import '../../../data/data/models/company_stats.dart';
-import '../../../data/data/services/getmycompany.dart';
-import '../../../data/data/repos/getmycompany_repo.dart';
+
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/features/companypages/data/data/company.dart';
+import 'package:joblinc/features/companypages/data/data/models/company_stats.dart';
+import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/features/companypages/data/data/services/getmycompany.dart';
 
 class CompanyAnalytics extends StatelessWidget {
   final Company company;
