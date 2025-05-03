@@ -6,8 +6,6 @@ import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/screens/main_container_screen.dart';
 import 'package:joblinc/core/widgets/universal_app_bar_widget.dart';
 import 'package:joblinc/core/widgets/universal_bottom_bar.dart';
-import 'package:joblinc/features/blockedaccounts/logic/cubit/blocked_accounts_cubit.dart';
-import 'package:joblinc/features/blockedaccounts/ui/screens/blocked_accounts_screen.dart';
 import 'package:joblinc/features/changeemail/logic/cubit/change_email_cubit.dart';
 import 'package:joblinc/features/changeemail/ui/screens/change_email_screen.dart';
 import 'package:joblinc/features/changepassword/logic/cubit/change_password_cubit.dart';
@@ -490,15 +488,6 @@ class AppRouter {
             child: UserAddSkillScreen(
               skill: (arguments as Skill?),
             ),
-          ),
-        );
-
-      case Routes.blockedAccountsScreen:
-        return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) =>
-                getIt.get<BlockedAccountsCubit>()..getBlockedUsers(),
-            child: BlockedAccountsScreen(),
           ),
         );
       case Routes.addResumeScreen:
