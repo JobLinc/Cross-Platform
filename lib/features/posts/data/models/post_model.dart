@@ -37,7 +37,7 @@ class PostModel {
     List<TaggedEntity> taggedCompanies = [];
     if (json['taggedCompanies'] != null) {
       taggedCompanies = (json['taggedCompanies'] as List)
-          .map((company) => TaggedEntity.fromJson(company))
+          .map((company) => TaggedEntity.fromJson(company)) 
           .toList();
     }
 

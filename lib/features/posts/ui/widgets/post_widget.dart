@@ -254,13 +254,17 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
   }
 
   Future<TextSpan> _buildTextSpanAsync(BuildContext context) async {
-    List<TaggedEntity> allTags = [
+    List<TaggedEntity> taggedUsers = [
       ...widget.taggedUsers,
-      ...widget.taggedCompanies
     ];
-    allTags.sort((a, b) => a.index.compareTo(b.index));
+    List<TaggedEntity> taggedCompanies = [
+      ...widget.taggedCompanies,
+    ];
 
-    if (allTags.isEmpty) {
+    taggedUsers.sort((a, b) => a.index.compareTo(b.index));
+    taggedCompanies.sort((a, b) => a.index.compareTo(b.index));
+
+    if (taggedUsers.isEmpty && taggedCompanies.isEmpty) {
       return TextSpan(
         text: widget.text,
         style: TextStyle(color: ColorsManager.getTextPrimary(context)),
@@ -271,33 +275,36 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
     int lastIndex = 0;
     final TagSuggestionService tagSuggestionService =
         getIt<TagSuggestionService>();
-    
+
     // Fetch all tag names first
     Map<String, String> tagNames = {};
-    for (var tag in allTags) {
-      if (tag is TaggedUser) {
-        try {
-          String? name = await tagSuggestionService.getUserName(tag.id);
-          tagNames[tag.id] = name ?? '%taggedUsed';
-        } catch (e) {
-          // Fallback to ID if name fetch fails
-          tagNames[tag.id] = tag.id;
-        }
-      } else if (tag is TaggedCompany) {
-        
-        tagNames[tag.id] = tag.name;
+    for (var tag in taggedUsers) {
+      try {
+        String? name = await tagSuggestionService.getUserName(tag.id);
+        tagNames[tag.id] = name ?? '%taggedUsed';
+      } catch (e) {
+        // Fallback to ID if name fetch fails
+        tagNames[tag.id] = tag.id;
       }
     }
 
+    for (var tag in taggedCompanies) {
+      try {
+        String? name = await tagSuggestionService.getCompanyName(tag.id);
+        tagNames[tag.id] = name ?? '%taggedCompany';
+      } catch (e) {
+        // Fallback to ID if name fetch fails
+        tagNames[tag.id] = tag.id;
+      }
+    }
     // Now build spans with the fetched names
-    for (var tag in allTags) {
+    for (var tag in taggedUsers) {
       String tagName;
       if (tagNames.containsKey(tag.id)) {
         tagName = tagNames[tag.id]!;
       } else {
         tagName = tag is TaggedCompany ? tag.name : tag.id;
       }
-
       String tagText = '@$tagName';
       int tagIndex = tag.index;
 
@@ -318,6 +325,44 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               _handleTagTap(context, tag);
+            },
+        ));
+
+        lastIndex = tagIndex + tagText.length;
+      }
+    }
+
+    for (var tag in taggedCompanies) {
+      String tagName;
+      if (tagNames.containsKey(tag.id)) {
+        tagName = tagNames[tag.id]!;
+      } else {
+        tagName = tag is TaggedCompany ? tag.name : tag.id;
+      }
+      String tagText = '@$tagName';
+      int tagIndex = tag.index;
+
+      if (tagIndex >= 0 && tagIndex < widget.text.length) {
+        if (tagIndex > lastIndex) {
+          spans.add(TextSpan(
+            text: widget.text.substring(lastIndex, tagIndex),
+            style: TextStyle(color: ColorsManager.getTextPrimary(context)),
+          ));
+        }
+
+        spans.add(TextSpan(
+          text: tagText,
+          style: TextStyle(
+            color: Colors.blue,
+            decoration: TextDecoration.underline,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              Navigator.pushNamed(
+                context,
+                Routes.companyPageHome,
+                arguments: tag.id,
+              );
             },
         ));
 
@@ -364,16 +409,17 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
         } else if (!snapshot.hasData) {
           return Text(widget.text);
         }
-        
+
         TextSpan textSpan = snapshot.data!;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RichText(
               text: textSpan,
               maxLines: _isExpanded ? null : widget.trimLines,
-              overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+              overflow:
+                  _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
             ),
             if (!_isExpanded && _isTextOverflowing(context, textSpan))
               GestureDetector(

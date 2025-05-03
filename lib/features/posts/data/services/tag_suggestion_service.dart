@@ -98,4 +98,24 @@ class TagSuggestionService {
       return null;
     }
   }
+
+  Future<String?> getCompanyName(String companyId) async {
+    try {
+final response = await _dio.get('/companies?id=$companyId',
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ));      if (response.statusCode == 200) {
+        print("=== Company Name ===");
+        print(response.data[0]['name']);
+        return response.data[0]['name'];
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching company details: $e');
+      return null;
+    }
+  }
 }
