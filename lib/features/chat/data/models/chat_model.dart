@@ -4,21 +4,26 @@ class Chat {
   final String chatId;
   final String chatName;
   final List<String>? chatPicture;
-  final String lastMessage;
-  final DateTime sentDate; // Unix timestamp in seconds
-  final int unreadCount;
+  String? lastMessage;
+  String? senderName;
+  DateTime? sentDate; // Unix timestamp in seconds
+  int? unreadCount;
   final bool isRead;
   late String time;
+  bool? isTyping; // Default value for isTyping
 
   Chat({
     required this.chatId,
     required this.chatName,
     required this.chatPicture,
     required this.lastMessage,
+    required this.senderName,
     required this.sentDate,
     required this.unreadCount,
     required this.isRead,
-  }){time = formatDynamicTime(sentDate);}
+  }){time = formatDynamicTime(sentDate!);
+    isTyping = false; // Initialize isTyping to false by default
+  }
 
   factory Chat.fromJson(Map<String, dynamic> json) {
      // the placeholder path to look for
@@ -45,7 +50,8 @@ class Chat {
     chatName: json['chatName'] as String,
     chatPicture: pics,                              // never null
     lastMessage: json['lastMessage'] as String,
-    sentDate: json['sentDate'],
+    senderName: json['senderName'] ?? "",
+    sentDate: DateTime.parse(json['sentDate']),
     unreadCount: json['unreadCount'] as int,
     isRead: json['isRead'] as bool,
   );
@@ -57,6 +63,7 @@ class Chat {
       'chatName': chatName,
       'chatPicture': chatPicture,
       'lastMessage': lastMessage,
+      'senderName': senderName,
       'sentDate': sentDate,
       'unreadCount': unreadCount,
       'isRead': isRead,
@@ -68,6 +75,7 @@ class Chat {
 
 
   String formatDynamicTime(DateTime dateTime) {
+    dateTime= dateTime.toLocal();
     DateTime now = DateTime.now();
     DateTime yesterday = now.subtract(Duration(days: 1));
 
@@ -93,141 +101,141 @@ class Chat {
 
 //==============================Mock Data===========================//
 
-List<Chat> mockChats = [
-  Chat(
-    chatId: "chat_001",
-    chatName: "اخويا الجيار في اللة",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQybOhACvhkP99hH4-8UVZyRs429BfgjPBiNA&s",],
-    lastMessage: "انزل يا متدلع",
-   sentDate: DateTime.now().subtract(Duration(hours: 1)),
-    unreadCount: 2,
-    isRead: true
-  ),
-  Chat(
-    chatId: "chat_002",
-    chatName: "عم احمد",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFhJVW-WJ9ShTQP5iQtnp_jqxbI5VB_Fm3NHgirqN_GXZ2wNDwxgq_s0E6MmL5uwhUj0o&usqp=CAU",],
-    lastMessage: "You: انت منين ؟",
-    sentDate: DateTime.now().subtract(Duration(hours: 2)),
-    unreadCount: 0,
-    isRead: false,
-  ),
-  Chat(
-    chatId: "chat_003",
-    chatName: "ٍSakr ",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFinmoBS3C0r1jV9YOTvO6HFLcrDYYffSN-i7LJs6fAsJ24SV3-lpLKvTpp1WnCJWbUP4&usqp=CAU",],
-    lastMessage: "Sakr: Ana awel el dof3a",
-    sentDate: DateTime.now().subtract(Duration(hours: 7)),
-    unreadCount: 1,
-    isRead: true,
-  ),
-  Chat(
-    chatId: "chat_004",
-    chatName: "Ahmed Hesham",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsyI44s5kurKNs7i-ZSj0JlEGcBlCdAYGegg&s",],
-    lastMessage: "Ahmed Hesham: اخلص يبني الديدلاين قرب",
-    sentDate: DateTime.now().subtract(Duration(days: 1, hours: 4)),
-    unreadCount: 3,
-    isRead: false,
-  ),
-  Chat(
-    chatId: "chat_005",
-    chatName: "Margot Robbie",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReFc97WTW0sr9jvt-3n9_01sJdimMpIL9lxpNJytt6kIeSbRHEjNxBQrZ8yHipEMdxyyw&usqp=CAU",],
-    lastMessage: "Margot Robbie: Night darling ❤️❤️",
-    sentDate: DateTime.now().subtract(Duration(days: 1, hours: 7)),
-    unreadCount: 0,
-    isRead: true,
-  ),
-  Chat(
-    chatId: "chat_006",
-    chatName: "رفاعي الدسوقي",
-    chatPicture:
-        ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxvaC8-Kta2gPWHD-yo9rX9bg_uCWVIkQRw&s",],
-    lastMessage:  "...عارف ياض يا دسوقي الفرق ما بين",
-    sentDate: DateTime.now().subtract(Duration(days: 2, hours: 5)),
-    unreadCount: 0,
-    isRead: false,
-  ),
-  // Chat(
-  //   chatId: "chat_007",
-  //   chatName: "Georgina",
-  //   chatPicture:
-  //        ["https://v.wpimg.pl/NWJkMGEyYTYrCTt0agJsI2hRby4sW2J1P0l3ZWpAfW8yXn9_ah8nOy8ZKDcqVyklPxssMDVXPjtlCj0uag9_eC4CPjcpGDd4LwYvIiFWfWR5Wi4hJ0pjYXlaL2pxHC1jZwkvJSZUfWd6D3glIUkvZXMKbzo",],
-  //   lastMessage: "Georgina: Are you free later ",
-  //   sentDate: DateTime.now().subtract(Duration(days: 2, hours: 9)),
-  //   unreadCount: 0,
-  //   isRead: true,
-  //  ),
-  Chat(
-    chatId: "chat_008",
-    chatName: "Henry Scott",
-    chatPicture: null,
-    lastMessage:"Thanks for the update!",
-    sentDate: DateTime.now().subtract(Duration(days: 3, hours: 4)),
-    unreadCount: 0,
-    isRead: false,
-  ),
-  Chat(
-    chatId: "chat_009",
-    chatName: "Isabella Green",
-    chatPicture: null,
-    lastMessage: "I’ll be there in 10 mins.",
-    sentDate: DateTime.now().subtract(Duration(days: 3, hours: 6)),
-    unreadCount: 2,
-    isRead: true,
-  ),
-  Chat(
-    chatId: "chat_010",
-    chatName: "Jack Robinson",
-    chatPicture: null,
-    lastMessage: "Can you send me the document?",
-    sentDate: DateTime.now().subtract(Duration(days: 4, hours: 2)),
-    unreadCount: 1,
-    isRead: false,
-  ),
-  Chat(
-    chatId: "chat_011",
-    chatName: "Karen Lopez",
-    chatPicture: null,
-    lastMessage:  "Sure! Sending it now.",
-    sentDate: DateTime.now().subtract(Duration(days: 5, hours: 1)),
-    unreadCount: 0,
-    isRead: true,
-  ),
-  Chat(
-    chatId: "chat_012",
-    chatName: "Isabella Blue",
-    chatPicture: null,
-    lastMessage:"I’ll be there in 10 mins.",
-    sentDate: DateTime.now().subtract(Duration(days: 6, hours: 4)),
-    unreadCount: 2,
-    isRead: true,
-  ),
-  Chat(
-    chatId: "chat_010",
-    chatName: "David White",
-    chatPicture: null,
-    lastMessage: "Can you send me the document?",
-    sentDate: DateTime.now().subtract(Duration(days: 8, hours: 2)),
-    unreadCount: 1,
-    isRead: false,
-  ),
-  Chat(
-    chatId: "chat_011",
-    chatName: "Karen kiro",
-    chatPicture: null,
-    lastMessage:  "Sure! Sending it now.",
-    sentDate: DateTime.now().subtract(Duration(days: 9, hours: 1)),
-    unreadCount: 0,
-    isRead: true,
-  ),
-];
+// List<Chat> mockChats = [
+//   Chat(
+//     chatId: "chat_001",
+//     chatName: "اخويا الجيار في اللة",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQybOhACvhkP99hH4-8UVZyRs429BfgjPBiNA&s",],
+//     lastMessage: "انزل يا متدلع",
+//    sentDate: DateTime.now().subtract(Duration(hours: 1)),
+//     unreadCount: 2,
+//     isRead: true
+//   ),
+//   Chat(
+//     chatId: "chat_002",
+//     chatName: "عم احمد",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFhJVW-WJ9ShTQP5iQtnp_jqxbI5VB_Fm3NHgirqN_GXZ2wNDwxgq_s0E6MmL5uwhUj0o&usqp=CAU",],
+//     lastMessage: "You: انت منين ؟",
+//     sentDate: DateTime.now().subtract(Duration(hours: 2)),
+//     unreadCount: 0,
+//     isRead: false,
+//   ),
+//   Chat(
+//     chatId: "chat_003",
+//     chatName: "ٍSakr ",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFinmoBS3C0r1jV9YOTvO6HFLcrDYYffSN-i7LJs6fAsJ24SV3-lpLKvTpp1WnCJWbUP4&usqp=CAU",],
+//     lastMessage: "Sakr: Ana awel el dof3a",
+//     sentDate: DateTime.now().subtract(Duration(hours: 7)),
+//     unreadCount: 1,
+//     isRead: true,
+//   ),
+//   Chat(
+//     chatId: "chat_004",
+//     chatName: "Ahmed Hesham",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsyI44s5kurKNs7i-ZSj0JlEGcBlCdAYGegg&s",],
+//     lastMessage: "Ahmed Hesham: اخلص يبني الديدلاين قرب",
+//     sentDate: DateTime.now().subtract(Duration(days: 1, hours: 4)),
+//     unreadCount: 3,
+//     isRead: false,
+//   ),
+//   Chat(
+//     chatId: "chat_005",
+//     chatName: "Margot Robbie",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReFc97WTW0sr9jvt-3n9_01sJdimMpIL9lxpNJytt6kIeSbRHEjNxBQrZ8yHipEMdxyyw&usqp=CAU",],
+//     lastMessage: "Margot Robbie: Night darling ❤️❤️",
+//     sentDate: DateTime.now().subtract(Duration(days: 1, hours: 7)),
+//     unreadCount: 0,
+//     isRead: true,
+//   ),
+//   Chat(
+//     chatId: "chat_006",
+//     chatName: "رفاعي الدسوقي",
+//     chatPicture:
+//         ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxvaC8-Kta2gPWHD-yo9rX9bg_uCWVIkQRw&s",],
+//     lastMessage:  "...عارف ياض يا دسوقي الفرق ما بين",
+//     sentDate: DateTime.now().subtract(Duration(days: 2, hours: 5)),
+//     unreadCount: 0,
+//     isRead: false,
+//   ),
+//   // Chat(
+//   //   chatId: "chat_007",
+//   //   chatName: "Georgina",
+//   //   chatPicture:
+//   //        ["https://v.wpimg.pl/NWJkMGEyYTYrCTt0agJsI2hRby4sW2J1P0l3ZWpAfW8yXn9_ah8nOy8ZKDcqVyklPxssMDVXPjtlCj0uag9_eC4CPjcpGDd4LwYvIiFWfWR5Wi4hJ0pjYXlaL2pxHC1jZwkvJSZUfWd6D3glIUkvZXMKbzo",],
+//   //   lastMessage: "Georgina: Are you free later ",
+//   //   sentDate: DateTime.now().subtract(Duration(days: 2, hours: 9)),
+//   //   unreadCount: 0,
+//   //   isRead: true,
+//   //  ),
+//   Chat(
+//     chatId: "chat_008",
+//     chatName: "Henry Scott",
+//     chatPicture: null,
+//     lastMessage:"Thanks for the update!",
+//     sentDate: DateTime.now().subtract(Duration(days: 3, hours: 4)),
+//     unreadCount: 0,
+//     isRead: false,
+//   ),
+//   Chat(
+//     chatId: "chat_009",
+//     chatName: "Isabella Green",
+//     chatPicture: null,
+//     lastMessage: "I’ll be there in 10 mins.",
+//     sentDate: DateTime.now().subtract(Duration(days: 3, hours: 6)),
+//     unreadCount: 2,
+//     isRead: true,
+//   ),
+//   Chat(
+//     chatId: "chat_010",
+//     chatName: "Jack Robinson",
+//     chatPicture: null,
+//     lastMessage: "Can you send me the document?",
+//     sentDate: DateTime.now().subtract(Duration(days: 4, hours: 2)),
+//     unreadCount: 1,
+//     isRead: false,
+//   ),
+//   Chat(
+//     chatId: "chat_011",
+//     chatName: "Karen Lopez",
+//     chatPicture: null,
+//     lastMessage:  "Sure! Sending it now.",
+//     sentDate: DateTime.now().subtract(Duration(days: 5, hours: 1)),
+//     unreadCount: 0,
+//     isRead: true,
+//   ),
+//   Chat(
+//     chatId: "chat_012",
+//     chatName: "Isabella Blue",
+//     chatPicture: null,
+//     lastMessage:"I’ll be there in 10 mins.",
+//     sentDate: DateTime.now().subtract(Duration(days: 6, hours: 4)),
+//     unreadCount: 2,
+//     isRead: true,
+//   ),
+//   Chat(
+//     chatId: "chat_010",
+//     chatName: "David White",
+//     chatPicture: null,
+//     lastMessage: "Can you send me the document?",
+//     sentDate: DateTime.now().subtract(Duration(days: 8, hours: 2)),
+//     unreadCount: 1,
+//     isRead: false,
+//   ),
+//   Chat(
+//     chatId: "chat_011",
+//     chatName: "Karen kiro",
+//     chatPicture: null,
+//     lastMessage:  "Sure! Sending it now.",
+//     sentDate: DateTime.now().subtract(Duration(days: 9, hours: 1)),
+//     unreadCount: 0,
+//     isRead: true,
+//   ),
+// ];
     
 
 //================================Back Up========================================//

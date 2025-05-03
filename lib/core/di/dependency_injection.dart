@@ -25,6 +25,7 @@ import 'package:joblinc/features/companypages/logic/cubit/create_company_cubit.d
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/data/services/chat_api_service.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
+import 'package:joblinc/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/sent_connections_cubit.dart';
@@ -58,6 +59,7 @@ import 'package:joblinc/features/login/data/repos/login_repo.dart';
 import 'package:joblinc/features/login/data/services/login_api_service.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/saved_posts_cubit.dart';
 import 'package:joblinc/features/signup/data/repos/register_repo.dart';
 import 'package:joblinc/features/signup/data/services/register_api_service.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -68,6 +70,7 @@ import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.d
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/update_user_profile_api.dart';
 import 'package:joblinc/features/userprofile/data/service/upload_user_picture.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import '../../features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/repos/update_company_repo.dart';
@@ -170,6 +173,9 @@ Future<void> setupGetIt() async {
       getIt<CommentRepo>(), getIt<UserConnectionsRepository>()));
 
   getIt.registerFactory<AddPostCubit>(() => AddPostCubit(getIt<PostRepo>()));
+
+  getIt.registerFactory<SavedPostsCubit>(
+      () => SavedPostsCubit(getIt<PostRepo>()));
 ///////////////////////////////////////////////////////////////////////////
   getIt.registerLazySingleton<CreateCompanyApiService>(
       () => CreateCompanyApiService(getIt<Dio>()));
@@ -197,6 +203,7 @@ Future<void> setupGetIt() async {
     () => ChatListCubit(getIt<ChatRepo>()),
   );
 
+ 
   getIt.registerLazySingleton<JobApiService>(
     () => JobApiService(getIt<Dio>()),
   );
@@ -257,7 +264,8 @@ Future<void> setupGetIt() async {
       getIt.get<PostRepo>(),
     ),
   );
-
+  getIt.registerFactory<SearchCubit>(
+      () => SearchCubit(getIt<UserConnectionsRepository>()));
   // Email confirmation dependencies
   getIt.registerLazySingleton<EmailConfirmationApiService>(
       () => EmailConfirmationApiService(getIt<Dio>()));

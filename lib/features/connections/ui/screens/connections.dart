@@ -16,11 +16,7 @@ class ConnectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ConnectionsCubit, ConnectionsState>(
         builder: (context, state) {
-      if (state is SearchState) {
-        return Connectionsearch(
-          key: Key("the search page"),
-        );
-      } else if (state is ConnectionsInitial) {
+      if (state is ConnectionsInitial) {
         BlocProvider.of<ConnectionsCubit>(context).fetchConnections();
         return Scaffold(
           appBar: AppBar(

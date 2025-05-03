@@ -35,7 +35,7 @@ class UpdateCompanyApiService {
     }
   }
 
-  Future<Response> uploadCompanyLogo(File imageFile) async {
+  Future<dynamic> uploadCompanyLogo(File imageFile) async {
     try {
       String fileName = imageFile.path.split('/').last;
 
@@ -50,23 +50,57 @@ class UpdateCompanyApiService {
 
       // Upload the file and get the logo URL from the response
       Response uploadResponse = await _dio.patch(
-        '/companies',
+        '/companies/change-logo',
         data: formData,
       );
-
+      return uploadResponse.data;
       // Extract the logo URL from the response (adjust the key if needed)
-      final logoUrl = uploadResponse.data['logo'];
-      if (logoUrl == null) {
-        throw Exception('Logo URL not found in response');
-      }
+      // final logoUrl = uploadResponse.data['logo'];
+      // if (logoUrl == null) {
+      //   throw Exception('Logo URL not found in response');
+      // }
 
-      // Send PATCH request with {"logo": "logoUrl"}
-      Response response = await _dio.patch(
-        '/companies',
-        data: {'logo': logoUrl},
+      // // Send PATCH request with {"logo": "logoUrl"}
+      // Response response = await _dio.patch(
+      //   '/companies',
+      //   data: {'logo': logoUrl},
+      // );
+
+    } catch (e) {
+      throw Exception('Error uploading file: $e');
+    }
+  }
+ Future<dynamic> uploadCompanyCover(File imageFile) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+
+      // Prepare FormData to send the file
+      FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: fileName,
+          contentType: getMediaType(imageFile),
+        ),
+      });
+
+      // Upload the file and get the logo URL from the response
+      Response uploadResponse = await _dio.patch(
+        '/companies/change-cover',
+        data: formData,
       );
+      return uploadResponse.data;
+      // Extract the logo URL from the response (adjust the key if needed)
+      // final logoUrl = uploadResponse.data['logo'];
+      // if (logoUrl == null) {
+      //   throw Exception('Logo URL not found in response');
+      // }
 
-      return response;
+      // // Send PATCH request with {"logo": "logoUrl"}
+      // Response response = await _dio.patch(
+      //   '/companies',
+      //   data: {'logo': logoUrl},
+      // );
+
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }

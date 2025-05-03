@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+
 
 class UserHeader extends StatelessWidget {
   const UserHeader(
@@ -34,17 +37,27 @@ class UserHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => isCompany
-          ? Navigator.pushNamed(
+      onTap: () async {
+        final auth = getIt<AuthService>();
+        final userId = await auth.getUserId();
+        if (context.mounted) {
+          if (userId == senderID) {
+            Navigator.pushNamed(context, Routes.profileScreen);
+          } else if (isCompany) {
+            Navigator.pushNamed(
               context,
               Routes.companyPageHome,
               arguments: senderID,
-            )
-          : Navigator.pushNamed(
+            );
+          } else {
+            Navigator.pushNamed(
               context,
               Routes.otherProfileScreen,
               arguments: senderID,
-            ),
+            );
+          }
+        }
+      },
       child: Row(
         spacing: 8,
         key: Key('post_header_container'),

@@ -11,16 +11,17 @@ import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_media.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
 class Post extends StatelessWidget {
-  //this would need to be changed to support live updates to likes/comments/reposts
   const Post({
     super.key,
     required this.data,
+    this.isSaved = false,
     this.showActionBar = true,
     this.showExtraMenu = true,
     this.showRepost = true,
@@ -28,6 +29,7 @@ class Post extends StatelessWidget {
   });
   final PostModel data;
   final bool showRepost;
+  final bool isSaved;
   final bool showActionBar;
   final bool showExtraMenu;
   final bool showOwnerMenu;
@@ -63,6 +65,7 @@ class Post extends StatelessWidget {
             child: PostContent(
               state: state,
               data: data,
+              isSaved: isSaved,
               showRepost: showRepost,
               showActionBar: showActionBar,
               showExtraMenu: showExtraMenu,
@@ -81,6 +84,7 @@ class PostContent extends StatelessWidget {
     super.key,
     required this.state,
     required this.data,
+    required this.isSaved,
     required this.showRepost,
     required this.showActionBar,
     required this.showExtraMenu,
@@ -89,6 +93,7 @@ class PostContent extends StatelessWidget {
   });
   final PostState state;
   final PostModel data;
+  final bool isSaved;
   final bool showRepost;
   final bool showActionBar;
   final bool showExtraMenu;
@@ -133,7 +138,8 @@ class PostContent extends StatelessWidget {
                     ? IconButton(
                         visualDensity: VisualDensity.compact,
                         onPressed: () {
-                          showPostSettings(context, showOwnerMenu);
+                          showPostSettings(
+                              context, data.senderID, showOwnerMenu, isSaved);
                         },
                         icon: Icon(Icons.more_vert),
                       )
@@ -392,29 +398,42 @@ class PostAttachments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO prepare for multiple images
+    //TODO handle multiple images
     return Image.network(
+      errorBuilder: (context, error, stackTrace) => SizedBox(),
       key: Key('post_body_attachments'),
       attachments[0].url,
     );
+    // return Expanded(child: MultimediaHandler(mediaItem: attachments[0]));
+    // return buildMultipleMediaGrid(attachments);
   }
 }
 
-Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
+Future<dynamic> showPostSettings(
+    BuildContext context, String userId, bool showOwnerMenu, bool isSaved) {
   List<Widget> postSettingsNormalButtons = [
-    ListTile(
-      leading: Icon(Icons.bookmark_add_outlined),
-      title: Text('Save post'),
-      onTap: () {
-        context.read<PostCubit>().savePost();
-        Navigator.pop(context);
-      },
-    ),
+    isSaved
+        ? ListTile(
+            leading: Icon(Icons.bookmark_remove_outlined),
+            title: Text('Unsave post'),
+            onTap: () {
+              context.read<PostCubit>().unsavePost();
+              Navigator.pop(context);
+            },
+          )
+        : ListTile(
+            leading: Icon(Icons.bookmark_add_outlined),
+            title: Text('Save post'),
+            onTap: () {
+              context.read<PostCubit>().savePost();
+              Navigator.pop(context);
+            },
+          ),
     ListTile(
       leading: Icon(Icons.flag_outlined),
       title: Text('Report post'),
       onTap: () {
-        // context.read<PostCubit>().reportPost();
+        context.read<PostCubit>().reportPost();
         Navigator.pop(context);
       },
     ),
@@ -422,6 +441,7 @@ Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
       leading: Icon(Icons.person_off_outlined),
       title: Text('Block user'),
       onTap: () {
+        context.read<PostCubit>().blockUser(userId);
         Navigator.pop(context);
       },
     ),
@@ -432,6 +452,7 @@ Future<dynamic> showPostSettings(BuildContext context, bool showOwnerMenu) {
       leading: Icon(Icons.edit_outlined),
       title: Text('Edit post'),
       onTap: () {
+        //TODO add edit post screen here
         Navigator.pop(context);
       },
     ),

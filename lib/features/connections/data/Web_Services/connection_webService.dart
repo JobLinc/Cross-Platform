@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 class UserConnectionsApiService {
   final Dio _dio;
@@ -111,9 +112,36 @@ class UserConnectionsApiService {
         '/connection/$userId',
       );
       return response;
-    } catch (e) {
-      print('API error sending connection request: $e');
-      rethrow;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> createchat(String userId) async {
+    try {
+      print("myuserId is ${userId}");
+      final response = await _dio.post('/chat/create', data: {
+        "receiverIds": [userId]
+      });
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 
@@ -164,6 +192,27 @@ class UserConnectionsApiService {
       }
     } catch (e) {
       throw Exception('Error fetching blocked users: $e');
+    }
+  }
+
+  Future<List<UserProfile>> searchUsers(String query) async {
+    try {
+      final response = await _dio.get('/user/search', queryParameters: {
+        'keyword': query,
+      });
+
+      final List data = response.data as List;
+      return data.map((json) => UserProfile.fromJson(json)).toList();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_search_bar.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/home/logic/cubit/home_cubit.dart';
 import 'package:joblinc/features/home/logic/cubit/home_state.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
@@ -669,7 +670,7 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: const Icon(Icons.bookmark),
             title: const Text('Saved posts'),
             onTap: () {
-              // Add your action here
+              Navigator.pushNamed(context, Routes.savedPostsScreen);
             },
           ),
           ListTile(

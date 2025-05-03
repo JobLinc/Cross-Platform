@@ -29,6 +29,7 @@ import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 
+import 'package:joblinc/features/companypages/ui/widgets/image_preview_edit.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/screens/Recieved_Sent_Tabs.dart';
@@ -50,7 +51,9 @@ import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/saved_posts_cubit.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
+import 'package:joblinc/features/posts/ui/screens/saved_posts.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
@@ -58,6 +61,7 @@ import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
@@ -70,6 +74,7 @@ import 'package:joblinc/features/companypages/data/data/company.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_image_preview.dart';
 import 'package:joblinc/features/emailconfirmation/ui/screens/email_confirmation_screen.dart';
 import 'package:joblinc/features/emailconfirmation/logic/cubit/email_confirmation_cubit.dart';
+import 'package:joblinc/features/userprofile/ui/screens/user_search_screen.dart';
 
 class AppRouter {
   Route? generateRoute(RouteSettings settings) {
@@ -214,13 +219,19 @@ class AppRouter {
       case Routes.companyPageHome:
         if (arguments is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyPageHome(company: arguments),
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyPageHome(company: arguments),
+            ),
           );
         } else if (arguments is Map && arguments['company'] is Company) {
           return MaterialPageRoute(
-            builder: (context) => CompanyPageHome(
-              company: arguments['company'],
-              isAdmin: arguments['isAdmin'] ?? false,
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyPageHome(
+                company: arguments['company'],
+                isAdmin: arguments['isAdmin'] ?? false,
+              ),
             ),
           );
         } else if (arguments is String) {
@@ -477,7 +488,37 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => AdminPanel(),
         );
-
+      case Routes.userSearchScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<SearchCubit>(),
+            child: UserSearchScreen(),
+          ),
+        );
+      case Routes.companyPicturesManage:
+        if (arguments is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyImages(
+                company: arguments['image'],
+                iscover: arguments['iscover'],
+                isadmin: arguments['isadmin'],
+              ),
+            ),
+          );
+        }
+      case Routes.savedPostsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt.get<SavedPostsCubit>()..getSavedPosts(),
+            child: SavedPostsScreen(),
+          ),
+        );
+      case Routes.adminPanel:
+        return MaterialPageRoute(
+          builder: (context) => (Placeholder()),
+        );
       default:
         return null;
     }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
+import 'package:joblinc/core/widgets/profile_image.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
@@ -150,8 +152,15 @@ AppBar addPostTopBar(BuildContext context,
       child: Row(
         spacing: 8,
         children: [
-          CircleAvatar(
-            radius: 20,
+          FutureBuilder(
+            future: UserService.getProfilePicture(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ProfileImage(imageURL: snapshot.data);
+              } else {
+                return ProfileImage(imageURL: null);
+              }
+            },
           ),
           Text(
             "Anyone",

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_more.dart';
 import 'package:joblinc/features/companypages/ui/widgets/follow_button.dart';
@@ -70,56 +71,65 @@ class CompanyData extends StatelessWidget {
                   top: 20.h,
                   left: 17.w,
                   child: GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (bottomSheetContext) => Container(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.camera_alt),
-                                title: Text("Take a photo"),
-                                onTap: () async {
-                                  File? image = await pickImage("camera");
-                                  // Do something when Tile 1 is tapped
-                                  print("Tile 1 tapped");
-
-                                  if (image == null) {
-                                    return;
-                                  }
-                                  context
-                                      .read<EditCompanyCubit>()
-                                      .uploadCompanyLogo(image);
-                                  Navigator.pop(
-                                      bottomSheetContext); // Close the bottom sheet
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.photo_library),
-                                title: Text("Upload from photos"),
-                                onTap: () async {
-                                  File? image = await pickImage("gallery");
-                                  // Do something when Tile 2 is tapped
-                                  print("Tile 2 tapped");
-                                  if (image == null) {
-                                    return;
-                                  }
-                                  context
-                                      .read<EditCompanyCubit>()
-                                      .uploadCompanyLogo(image);
-                                  // Response response = await getIt<UserProfileRepository>()
-                                  //     .uploadProfilePicture(image!);
-                                  // print(response.statusCode);
-                                  Navigator.pop(
-                                      bottomSheetContext); // Close the bottom sheet
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                    onTap: () async {
+                      final refresh = await Navigator.pushNamed(
+                          context, Routes.companyPicturesManage, arguments: {
+                        'image': company,
+                        'iscover': false,
+                        'isadmin': isAdmin
+                      });
+                      if (refresh == true) 
+                      {
+                      }
+                      //   showModalBottomSheet(
+                      //     context: context,
+                      //     builder: (bottomSheetContext) => Container(
+                      //       padding: EdgeInsets.all(16),
+                      //       child: Column(
+                      //         mainAxisSize: MainAxisSize.min,
+                      //         children: [
+                      //           ListTile(
+                      //             leading: Icon(Icons.camera_alt),
+                      //             title: Text("Take a photo"),
+                      //             onTap: () async {
+                      //               File? image = await pickImage("camera");
+                      //               // Do something when Tile 1 is tapped
+                      //               print("Tile 1 tapped");
+                      //               if (image == null) {
+                      //                 return;
+                      //               }
+                      //               context
+                      //                   .read<EditCompanyCubit>()
+                      //                   .uploadCompanyLogo(image);
+                      //               Navigator.pop(
+                      //                   bottomSheetContext); // Close the bottom sheet
+                      //             },
+                      //           ),
+                      //           ListTile(
+                      //             leading: Icon(Icons.photo_library),
+                      //             title: Text("Upload from photos"),
+                      //             onTap: () async {
+                      //               File? image = await pickImage("gallery");
+                      //               // Do something when Tile 2 is tapped
+                      //               print("Tile 2 tapped");
+                      //               if (image == null) {
+                      //                 print("I am in this");
+                      //                 return;
+                      //               }
+                      //               Navigator.pop(bottomSheetContext);
+                      //               context
+                      //                   .read<EditCompanyCubit>()
+                      //                   .uploadCompanyLogo(image);
+                      //               // Response response = await getIt<UserProfileRepository>()
+                      //               //     .uploadProfilePicture(image!);
+                      //               // print(response.statusCode);
+                      //               // Close the bottom sheet
+                      //             },
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   );
                     },
                     child: SquareAvatar(
                       imageUrl: company.logoUrl ??
@@ -179,7 +189,8 @@ class CompanyData extends StatelessWidget {
                     ),
                     Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
                     Text(
-                      "37M followers", // TODO: Replace with actual followers
+                      company.followers
+                          .toString(), // TODO: Replace with actual followers
                       style: TextStyle(
                           fontSize: 16.sp, color: Colors.grey.shade600),
                     ),

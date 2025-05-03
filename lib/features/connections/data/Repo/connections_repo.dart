@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:joblinc/features/connections/data/Web_Services/connection_webService.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/userprofile/data/models/follow_model.dart';
+import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
 class UserConnectionsRepository {
   final UserConnectionsApiService _apiService;
@@ -117,7 +118,25 @@ class UserConnectionsRepository {
 
       return data.map((json) => UserConnection.fromJson(json)).toList();
     } catch (e) {
-      throw Exception('Error mapping blocked users: $e');
+      rethrow;
+    }
+  }
+
+  Future<String> createchat(String userId) async {
+    try {
+      final response = await _apiService.createchat(userId);
+      print("${response.data["chatId"]}");
+      return response.data["chatId"];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<UserProfile>> searchUsers(String keyword) {
+    try {
+      return _apiService.searchUsers(keyword);
+    } catch (e) {
+      rethrow;
     }
   }
 }

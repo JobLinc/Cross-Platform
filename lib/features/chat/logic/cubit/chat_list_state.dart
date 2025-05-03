@@ -18,6 +18,16 @@ final class ChatListErrorLoading extends ChatListState{
 }
 
 
+final class ChatLoading extends ChatListState {}
+final class ChatLoaded extends ChatListState{
+  final Chat chat;
+  ChatLoaded({required this.chat});
+}
+final class ChatErrorLoading extends ChatListState{
+  final String errorMessage;
+  ChatErrorLoading(this.errorMessage);
+}
+
 final class ChatListNewChat extends ChatListState {
   final Chat newChat;
   ChatListNewChat(this.newChat);
@@ -51,3 +61,4 @@ final class ChatDetailEmpty extends ChatListState {}
 final class ChatDetailErrorLoading extends ChatListState {
   final String errorMessage;
   ChatDetailErrorLoading(this.errorMessage);}
+
