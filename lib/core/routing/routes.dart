@@ -34,6 +34,7 @@ class Routes {
   static const String addExperienceScreen = '/addExperienceScreen';
   static const String addSkillScreen = '/addSkillScreen';
   static const String addResumeScreen = '/addResumeScreen';
+  static const String addEducationScreen = '/addEducationScreen';
   static const String otherImagesPreview = '/otherImagesPreview';
   static const String otherProfileScreen = '/otherProfileScreen';
   static const String blockedAccountsScreen = '/blockedAccountsScreen';
@@ -45,6 +46,7 @@ class Routes {
   static const String createGroupChatScreen = '/createGroupChatScreen';
   static const String userSearchScreen = '/userSearchScreen';
   static const String companyPicturesManage = '/companyPicturesManage';
+  static const String companyLocations = '/companyLocations';
   static const String savedPostsScreen = '/savedPostsScreen';
   static const String messageRequestsScreen = '/messageRequestsScreen';
   static const String adminPanel = '/adminPanel';

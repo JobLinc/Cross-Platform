@@ -13,7 +13,6 @@ import 'package:joblinc/features/companypages/ui/widgets/form/organizationType_c
 import 'package:joblinc/features/companypages/ui/widgets/form/overview_textField.dart';
 import '../../../../core/widgets/hyperlink.dart';
 import 'package:joblinc/features/companypages/data/data/company.dart';
-import '../widgets/square_avatar.dart';
 import '../widgets/form/name_textField.dart';
 import '../widgets/form/website_textField.dart';
 import '../widgets/form/organizationSize_comboBox.dart';

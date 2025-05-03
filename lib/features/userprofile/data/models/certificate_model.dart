@@ -29,7 +29,7 @@ class Certification {
     }
 
     DateTime startDate = parseDate(json['issueDate']) ?? DateTime.now();
-    DateTime? endDate = parseDate(json['expirationDate']) ?? DateTime.now();
+    DateTime? endDate = parseDate(json['expirationDate']);
 
     return Certification(
       certificationId: json['id'] ?? '',

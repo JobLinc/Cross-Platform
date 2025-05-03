@@ -65,6 +65,7 @@ import 'package:joblinc/features/signup/data/services/register_api_service.dart'
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
 import 'package:joblinc/features/userprofile/data/service/add_service.dart';
 import 'package:joblinc/features/userprofile/data/service/others_api_service.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/message_requests_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 import 'package:joblinc/features/userprofile/data/service/my_user_profile_api.dart';
@@ -86,25 +87,21 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = //Platform.isAndroid
-      //?
-      'http://192.168.1.4:3000/api'
-      //  : 'http://localhost:3000/api';
-      // "https://joblinc.me/api"
-      ;
+  final baseUrl = Platform.isAndroid
+      ? 'http://10.0.2.2:3000/api'
+      : 'http://localhost:3000/api';
+  // 'https://joblinc.me:6969/api';
 
-  // Define socket URL based on same host but with WebSocket protocol
-  final socketUrl =
+    final socketUrl =
       // Platform.isAndroid ?
       'ws://192.168.1.4:3000'
       // : 'ws://localhost:3000'
       ;
-
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 200),
+      receiveTimeout: const Duration(seconds: 200),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -247,23 +244,20 @@ Future<void> setupGetIt() async {
       () => UploadApiService(getIt<Dio>()));
   getIt.registerLazySingleton<addService>(() => addService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<UserProfileRepository>(
-    () => UserProfileRepository(
-      getIt<UserProfileApiService>(),
-      getIt<UpdateUserProfileApiService>(),
-      getIt<UploadApiService>(),
-      getIt<addService>(),
-      getIt<OthersApiService>(),
-    ),
-  );
+  getIt
+      .registerLazySingleton<UserProfileRepository>(() => UserProfileRepository(
+            getIt<UserProfileApiService>(),
+            getIt<UpdateUserProfileApiService>(),
+            getIt<UploadApiService>(),
+            getIt<addService>(),
+            getIt<OthersApiService>(),
+          ));
+  getIt.registerFactory<MessageRequestsCubit>(
+      () => MessageRequestsCubit(getIt<UserProfileRepository>()));
+      
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
+      getIt<UserProfileRepository>(), getIt<UserConnectionsRepository>()));
 
-  getIt.registerFactory<ProfileCubit>(
-    () => ProfileCubit(
-      getIt<UserProfileRepository>(),
-      getIt<UserConnectionsRepository>(),
-      getIt.get<PostRepo>(),
-    ),
-  );
   getIt.registerFactory<SearchCubit>(
       () => SearchCubit(getIt<UserConnectionsRepository>()));
   // Email confirmation dependencies

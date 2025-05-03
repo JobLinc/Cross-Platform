@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import this package
 
@@ -24,7 +26,7 @@ void showModalBasedOnConnectionStatus(
     case 'Blocked':
       //showBlockedModal(context); // (You can design this — maybe only unblock?)
       break;
-    case 'Not Connected':
+    case 'Not Connected' || 'NotConnected':
       showSentModal(context, cubit, userId,
           isFollowing); // (Maybe a simple connect button)
       break;
@@ -68,7 +70,6 @@ void showMessageModal(BuildContext context, ProfileCubit cubit, String userId) {
                 // Block Button
                 GestureDetector(
                   onTap: () {
-                    // TODO: add block functionality
                     Navigator.of(context).pop();
                     cubit.blockConnection(userId, context);
                   },
@@ -165,24 +166,22 @@ void showSentModal(
     context: context,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
-        top: Radius.circular(24.r), // Responsive top radius
+        top: Radius.circular(24.r),
       ),
     ),
     backgroundColor: Colors.white,
     builder: (_) {
       return Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: 24.w, vertical: 32.h), // Responsive padding
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.chat,
-                size: 48.sp, color: Colors.blueAccent), // Responsive icon size
+            Icon(Icons.chat, size: 48.sp, color: Colors.blueAccent),
             SizedBox(height: 16.h),
             Text(
               "Manage Connection",
               style: TextStyle(
-                fontSize: 22.sp, // Responsive font size
+                fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -195,22 +194,19 @@ void showSentModal(
                 // Block Button
                 GestureDetector(
                   onTap: () {
-                    // TODO: add block functionality
                     Navigator.of(context).pop();
                     cubit.blockConnection(userId, context);
                   },
                   child: Container(
-                    width: 120.w, // Responsive width
-                    padding: EdgeInsets.symmetric(
-                        vertical: 14.h), // Responsive padding
+                    width: 120.w,
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
                     decoration: BoxDecoration(
                       color: Colors.redAccent,
-                      borderRadius:
-                          BorderRadius.circular(16.r), // Responsive radius
+                      borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.red.withOpacity(0.3),
-                          blurRadius: 8.r, // Responsive blur radius
+                          blurRadius: 8.r,
                           offset: Offset(0, 4),
                         ),
                       ],
@@ -218,16 +214,14 @@ void showSentModal(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.block,
-                            color: Colors.white,
-                            size: 32.sp), // Responsive icon size
+                        Icon(Icons.block, color: Colors.white, size: 32.sp),
                         SizedBox(height: 8.h),
                         Text(
                           "Block",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.sp, // Responsive font size
+                            fontSize: 16.sp,
                           ),
                         ),
                       ],
@@ -246,20 +240,18 @@ void showSentModal(
                     }
                   },
                   child: Container(
-                    width: 120.w, // Responsive width
-                    padding: EdgeInsets.symmetric(
-                        vertical: 14.h), // Responsive padding
+                    width: 120.w,
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
                     decoration: BoxDecoration(
                       color: isFollowing
-                          ? Colors.orangeAccent
-                          : Colors.greenAccent,
-                      borderRadius:
-                          BorderRadius.circular(16.r), // Responsive radius
+                          ? Colors.orange.shade800
+                          : Colors.green.shade600,
+                      borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
                           color: (isFollowing ? Colors.orange : Colors.green)
                               .withOpacity(0.3),
-                          blurRadius: 8.r, // Responsive blur radius
+                          blurRadius: 8.r,
                           offset: Offset(0, 4),
                         ),
                       ],
@@ -270,7 +262,7 @@ void showSentModal(
                         Icon(
                           isFollowing ? Icons.person_remove : Icons.person_add,
                           color: Colors.white,
-                          size: 32.sp, // Responsive icon size
+                          size: 32.sp,
                         ),
                         SizedBox(height: 8.h),
                         Text(
@@ -278,7 +270,7 @@ void showSentModal(
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.sp, // Responsive font size
+                            fontSize: 16.sp,
                           ),
                         ),
                       ],
@@ -287,6 +279,58 @@ void showSentModal(
                 ),
               ],
             ),
+
+            SizedBox(height: 24.h),
+
+            // New Send Message Request Button
+            GestureDetector(
+              onTap: () async {
+                Navigator.of(context).pop();
+                final chatId =
+                    await (context.read<ProfileCubit>().createchat(userId));
+                print("my chat Id is $chatId");
+                print(
+                    "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+                if (chatId != null) {
+                  Navigator.pushNamed(context, Routes.chatScreen,
+                      arguments: chatId);
+                } else {
+                  print(
+                      "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.send, color: Colors.white, size: 28.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      "Send Message Request",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             SizedBox(height: 20.h),
           ],
         ),

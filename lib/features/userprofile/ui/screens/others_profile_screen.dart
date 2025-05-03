@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_more_actions.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
 
 class OthersProfileScreen extends StatefulWidget {
@@ -172,6 +176,16 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             isuser: false,
                           ),
                         ],
+                        if (profile.education.isNotEmpty) ...[
+                          UserEducations(
+                            profile: profile,
+                            isUser: false,
+                          ),
+                        ],
+                        // if (true) ...[
+                        //   //replace this with the list of postModels.isNotEmpty
+                        //   PostList(posts: []), //also replace this
+                        // ]
                       ],
                     ),
                   ),
@@ -199,7 +213,7 @@ String _getMessageBasedOnConnectionStatus(String connectionStatus) {
       return 'Pending Request';
     case 'Blocked':
       return 'Unblock';
-    case 'Not Connected':
+    case 'Not Connected' || 'NotConnected':
       return 'Connect Now';
     default:
       return 'Nothing to see';
@@ -209,9 +223,18 @@ String _getMessageBasedOnConnectionStatus(String connectionStatus) {
 VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
     BuildContext context, ProfileCubit cubit, String userId) {
   switch (connectionStatus) {
-    case 'Connected':
-      return () {
-        // Navigate to Chat or send message
+    case 'Accepted':
+      return () async {
+        final chatId = await (context.read<ProfileCubit>().createchat(userId));
+        print("my chat Id is $chatId");
+        print(
+            "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        if (chatId != null) {
+          Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId);
+        } else {
+          print(
+              "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        }
       };
     case 'Received':
       return () {
@@ -225,7 +248,7 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
       return () {
         cubit.unblockConnection(userId, context);
       };
-    case 'Not Connected':
+    case 'NotConnected' || 'Not Connected':
       return () {
         cubit.sendConnectionRequest(userId, context);
       };

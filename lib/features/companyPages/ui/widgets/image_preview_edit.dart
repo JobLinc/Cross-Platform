@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
@@ -12,9 +14,10 @@ import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart
 
 class CompanyImages extends StatelessWidget {
   final Company company;
+  final AuthService authService = getIt<AuthService>();
   final bool iscover;
   final bool isadmin;
-  const CompanyImages({
+  CompanyImages({
     Key? key,
     required this.company,
     required this.iscover,
@@ -23,6 +26,7 @@ class CompanyImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    authService.refreshToken(companyId: company.id);
     return BlocListener<EditCompanyCubit, EditCompanyState>(
       listener: (context, state) {
         if (state is EditCompanyFailed) {
@@ -51,8 +55,6 @@ class CompanyImages extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              // context.read<EditCompanyCubit>().getUserProfile();
-              //BlocProvider.of<EditCompanyCubit>(context).getUserProfile();
               Navigator.of(context).pop(true);
             },
           ),
@@ -65,7 +67,7 @@ class CompanyImages extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Image.network(
-                    "${company.logoUrl}",
+                    iscover ? "${company.coverUrl}" : "${company.logoUrl}",
                     fit: BoxFit.contain,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
@@ -91,8 +93,6 @@ class CompanyImages extends StatelessWidget {
                     isadmin
                         ? GestureDetector(
                             onTap: () {
-                              // final EditCompanyCubit EditCompanyCubit = context.read<EditCompanyCubit>();
-
                               showModalBottomSheet(
                                 context: context,
                                 builder: (bottomSheetContext) => Container(
@@ -123,15 +123,20 @@ class CompanyImages extends StatelessWidget {
                                                 bottomSheetContext); // Close the bottom sheet
                                             int count = 0;
                                             if (apiCompany != null) {
-                                              Navigator.of(context)
-                                                  .pushNamedAndRemoveUntil(
-                                                Routes.companyPageHome,
-                                                arguments: {
-                                                  'company': apiCompany,
-                                                  'isAdmin': true
-                                                },
-                                                (route) => count++ >= 2,
-                                              );
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.homeScreen,
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                              // Navigator.of(context)
+                                              //     .pushNamedAndRemoveUntil(
+                                              //   Routes.companyPageHome,
+                                              //   arguments: {
+                                              //     'company': apiCompany,
+                                              //     'isAdmin': true
+                                              //   },
+                                              //   (route) => count++ >= 2,
+                                              // );
                                             } else {
                                               CustomSnackBar.show(
                                                   context: context,
@@ -161,34 +166,60 @@ class CompanyImages extends StatelessWidget {
                                           if (image == null) {
                                             return;
                                           }
-                                          if (iscover) {
-                                          } else {
-                                            // Show loading snackbar before closing the bottom sheet
-                                            final loadingSnackBar = SnackBar(
-                                              content: Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      color: Colors.white,
-                                                      strokeWidth: 2,
-                                                    ),
+                                          final loadingSnackBar = SnackBar(
+                                            content: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                    strokeWidth: 2,
                                                   ),
-                                                  SizedBox(width: 16),
-                                                  Text("Uploading image..."),
-                                                ],
-                                              ),
-                                              backgroundColor: Colors.black87,
-                                              duration: Duration(minutes: 1),
-                                            );
+                                                ),
+                                                SizedBox(width: 16),
+                                                Text("Uploading image..."),
+                                              ],
+                                            ),
+                                            backgroundColor: Colors.black87,
+                                            duration: Duration(minutes: 1),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(loadingSnackBar);
+                                          // Close the bottom sheet after showing the snackbar
+                                          Navigator.pop(bottomSheetContext);
+                                          if (iscover) {
+                                            Company? apiCompany = await context
+                                                .read<EditCompanyCubit>()
+                                                .uploadCompanyCover(image);
+
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(loadingSnackBar);
+                                                .hideCurrentSnackBar();
 
-                                            // Close the bottom sheet after showing the snackbar
-                                            Navigator.pop(bottomSheetContext);
-
+                                            if (apiCompany != null) {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.homeScreen,
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                              // Navigator.of(context)
+                                              //     .pushNamedAndRemoveUntil(
+                                              //   Routes.companyPageHome,
+                                              //   arguments: {
+                                              //     'company': apiCompany,
+                                              //     'isAdmin': true
+                                              //   },
+                                              //   (route) => false,
+                                              // );
+                                            } else {
+                                              CustomSnackBar.show(
+                                                  context: context,
+                                                  message:
+                                                      'Error uploading image',
+                                                  type: SnackBarType.error);
+                                            }
+                                          } else {
                                             Company? apiCompany = await context
                                                 .read<EditCompanyCubit>()
                                                 .uploadCompanyLogo(image);
@@ -197,14 +228,18 @@ class CompanyImages extends StatelessWidget {
                                                 .hideCurrentSnackBar();
 
                                             if (apiCompany != null) {
-                                              Navigator.of(context)
-                                                  .pushNamedAndRemoveUntil(
-                                                Routes.companyPageHome,
-                                                arguments: {
-                                                  'company': apiCompany,
-                                                  'isAdmin': true
-                                                },
-                                                (route) => false,
+                                              // Navigator.of(context)
+                                              //     .pushNamedAndRemoveUntil(
+                                              //   Routes.companyPageHome,
+                                              //   arguments: {
+                                              //     'company': apiCompany,
+                                              //     'isAdmin': true
+                                              //   },
+                                              //   (route) => false,
+                                              // );
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context, Routes.homeScreen, 
+                                                (Route <dynamic> route) => false
                                               );
                                             } else {
                                               CustomSnackBar.show(
@@ -226,13 +261,67 @@ class CompanyImages extends StatelessWidget {
                         : SizedBox.shrink(),
                     isadmin
                         ? GestureDetector(
-                            onTap: () {
-                              // Button 2 action
+                            onTap: () async {
+                              // Show loading snackbar
+                              final loadingSnackBar = SnackBar(
+                                content: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                    SizedBox(width: 16),
+                                    Text("Deleting image..."),
+                                  ],
+                                ),
+                                backgroundColor: Colors.black87,
+                                duration: Duration(minutes: 1),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(loadingSnackBar);
+
+                              Company? apiCompany;
+                              if (iscover) {
+                                apiCompany = await context
+                                    .read<EditCompanyCubit>()
+                                    .removeCompanyCover();
+                              } else {
+                                apiCompany = await context
+                                    .read<EditCompanyCubit>()
+                                    .removeCompanyLogo();
+                              }
+
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+
+                              if (apiCompany != null) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    Routes.homeScreen,
+                                    (Route<dynamic> route) => false);
+                                // Navigator.of(context).pushNamedAndRemoveUntil(
+                                //   Routes.companyPageHome,
+                                //   arguments: {
+                                //     'company': apiCompany,
+                                //     'isAdmin': true
+                                //   },
+                                //   (route) => false,
+                                // );
+                              } else {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message: 'Error deleting image',
+                                  type: SnackBarType.error,
+                                );
+                                Navigator.of(context).pop();
+                              }
                             },
                             child: IconButton(
-                                onPressed: () {
-                                  //context.read<EditCompanyCubit>().deleteCoverPicture();
-                                },
+                                onPressed: null,
                                 icon: Icon(
                                   Icons.delete,
                                   color: ColorsManager.darkBurgundy,

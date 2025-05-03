@@ -53,27 +53,44 @@ class CompanyCard extends StatelessWidget {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
-                          Text(
-                            company.industry.displayName,
-                            style: TextStyle(
-                                fontSize: 10.sp, color: Colors.grey.shade600),
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  company.industry,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          Icon(Icons.circle,
-                              size: 3.sp, color: Colors.grey.shade600),
-                          Text(
-                            company.location ?? "Location not available",
-                            style: TextStyle(
-                                fontSize: 10.sp, color: Colors.grey.shade600),
-                          ),
-                          Icon(Icons.circle,
-                              size: 3.sp, color: Colors.grey.shade600),
-                          Text(
-                            "37M followers", // TODO: Replace with actual followers
-                            style: TextStyle(
-                                fontSize: 10.sp, color: Colors.grey.shade600),
+                          SizedBox(height: 2.h),
+                          Row(
+                            children: [
+                              Icon(Icons.people_outline,
+                                  size: 12.sp, color: Colors.grey.shade600),
+                              SizedBox(width: 4.w),
+                              Text(
+                                company.organizationSize,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  color: Colors.grey.shade500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -81,13 +98,21 @@ class CompanyCard extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.grey),
+                Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.arrow_forward_ios,
+                      size: 14.sp, color: Colors.grey.shade500),
+                ),
               ],
             ),
           ),
           Divider(
-            color: Colors.grey[400],
-            thickness: 1,
+            color: Colors.grey[200],
+            thickness: 1.5,
           ),
         ],
       ),
@@ -135,7 +160,7 @@ class _CompanyListState extends State<CompanyList> {
     setState(() {
       filteredCompanies = companiesList.where((company) {
         return company.name.toLowerCase().contains(query) ||
-            (company.industry.displayName.toLowerCase().contains(query)) ||
+            (company.industry.toLowerCase().contains(query)) ||
             (company.location?.toLowerCase().contains(query) ?? false);
       }).toList();
     });

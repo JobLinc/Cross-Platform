@@ -46,11 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               // Show posts error message if exists
-              if (combinedState.postsError != null && combinedState.postsError!.isNotEmpty)
+              if (combinedState.postsError != null &&
+                  combinedState.postsError!.isNotEmpty)
                 Container(
                   width: double.infinity,
                   color: Theme.of(context).colorScheme.error.withOpacity(0.1),
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                   child: Text(
                     "Posts error: ${combinedState.postsError}",
                     style: TextStyle(
@@ -61,11 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
               // Show user error message if exists
-              if (combinedState.userError != null && combinedState.userError!.isNotEmpty)
+              if (combinedState.userError != null &&
+                  combinedState.userError!.isNotEmpty)
                 Container(
                   width: double.infinity,
                   color: Theme.of(context).colorScheme.error.withOpacity(0.1),
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                   child: Text(
                     "Profile error: ${combinedState.userError}",
                     style: TextStyle(
@@ -90,31 +94,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Helper to get user profile, using a placeholder if not loaded
   UserProfile _getUserProfile(HomeCombinedState state) {
-    return state.user ?? UserProfile(
-      username : '',
-      isFollowing: false,
-      userId: '',
-      profilePicture: "",
-      coverPicture: "",
-      headline: '',
-      country: '',
-      city: '',
-      biography: '',
-      email: 'Unable to load profile',
-      firstname: 'Guest',
-      lastname: 'User',
-      phoneNumber: '',
-      connectionStatus: 'none',
-      numberOfConnections: 0,
-      matualConnections: 0,
-      recentPosts: [],
-      skills: [],
-      education: [],
-      experiences: [],
-      certifications: [],
-      languages: [],
-      resumes: [],
-    );
+    return state.user ??
+        UserProfile(
+          username: '',
+          isFollowing: false,
+          userId: '',
+          profilePicture: "",
+          coverPicture: "",
+          headline: '',
+          country: '',
+          city: '',
+          biography: '',
+          email: 'Unable to load profile',
+          firstname: 'Guest',
+          lastname: 'User',
+          phoneNumber: '',
+          connectionStatus: 'none',
+          numberOfConnections: 0,
+          matualConnections: 0,
+          recentPosts: [],
+          skills: [],
+          education: [],
+          experiences: [],
+          certifications: [],
+          languages: [],
+          resumes: [],
+          confirmed: false,
+          role: 0,
+          visibility: 'public',
+          plan: 0,
+          allowMessages: true,
+          allowMessageRequests: true,
+        );
   }
 
   // Build the app bar with user profile if available
@@ -135,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 radius: 30,
                 backgroundImage: NetworkImage(
                   (_getUserProfile(state).profilePicture == null ||
-                   _getUserProfile(state).profilePicture == '')
+                          _getUserProfile(state).profilePicture == '')
                       ? 'https://placehold.co/400/png'
                       : _getUserProfile(state).profilePicture!,
                 ),
@@ -173,14 +184,16 @@ class _HomeScreenState extends State<HomeScreen> {
         Semantics(
           label: 'home_topBar_chatButton',
           child: IconButton(
-            icon: Icon(Icons.message, color: ColorsManager.getTextPrimary(context)),
+            icon: Icon(Icons.message,
+                color: ColorsManager.getTextPrimary(context)),
             onPressed: () {
               Navigator.pushNamed(context, Routes.chatListScreen);
             },
           ),
         ),
         IconButton(
-          icon: Icon(FontAwesomeIcons.crown, color: ColorsManager.getTextPrimary(context)),
+          icon: Icon(FontAwesomeIcons.crown,
+              color: ColorsManager.getTextPrimary(context)),
           onPressed: () {
             Navigator.pushNamed(context, Routes.premiumScreen);
           },
@@ -313,9 +326,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final shimmerBaseColor = Theme.of(context).brightness == Brightness.light
         ? Colors.grey[300]!
         : Colors.grey[700]!;
-    final shimmerHighlightColor = Theme.of(context).brightness == Brightness.light
-        ? Colors.grey[100]!
-        : Colors.grey[600]!;
+    final shimmerHighlightColor =
+        Theme.of(context).brightness == Brightness.light
+            ? Colors.grey[100]!
+            : Colors.grey[600]!;
     final backgroundColor = ColorsManager.getCardColor(context);
 
     return Padding(
@@ -378,12 +392,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  
                 ],
               ),
-              
+
               SizedBox(height: 10),
-              
+
               // PostBody section - text content
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -431,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              
+
               // PostAttachments section - image
               Shimmer.fromColors(
                 baseColor: shimmerBaseColor,
@@ -442,12 +455,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
               ),
-              
+
               SizedBox(height: 10),
-              
+
               // PostNumerics section - like counts, etc.
               Padding(
-                padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
+                padding:
+                    const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
                 child: Row(
                   children: [
                     // Likes count with icon
@@ -497,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              
+
               // Divider
               Shimmer.fromColors(
                 baseColor: shimmerBaseColor,
@@ -507,10 +521,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
               ),
-              
+
               // PostActionBar section - action buttons
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -553,7 +568,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                   
                   ],
                 ),
               ),

@@ -456,8 +456,9 @@ class JobCard extends StatelessWidget {
     //final bool isCreated= !hasCompany && userId !=null && ownerId==userId!;
     onAvatarTap() {
       if (hasCompany) {
+        print("Company ID: ${job.company!.id}");
         Navigator.pushNamed(context, Routes.companyPageHome,
-            arguments: job.company!.urlSlug);
+            arguments: job.company!.id);
       } else {
         // e.g. navigate to an employer-profile screen
         Navigator.pushNamed(context, Routes.otherProfileScreen,

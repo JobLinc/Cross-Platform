@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/auth_helpers/auth_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
-import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/widgets/company_more.dart';
 import 'package:joblinc/features/companypages/ui/widgets/follow_button.dart';
 import 'package:joblinc/features/companypages/ui/widgets/visit_company_website.dart';
-import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'square_avatar.dart';
 import '../../data/data/company.dart';
 
@@ -20,6 +17,11 @@ class CompanyData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the user is an admin
+    if (isAdmin) {
+      final authService = getIt<AuthService>();
+      authService.refreshToken(companyId: company.id);
+    }
     return Column(
       children: [
         // Show profile picture and cover photo only if not admin
@@ -34,6 +36,14 @@ class CompanyData extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 60.h,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: 60.h,
+                      color: Colors.grey[300],
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  },
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 40.h,
                     color: Colors.grey[300], // Fallback color
@@ -56,15 +66,38 @@ class CompanyData extends StatelessWidget {
             height: 90.h,
             child: Stack(
               children: [
-                Image.network(
-                  company.coverUrl ??
-                      "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png", // Default image if null
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 60.h,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 40.h,
-                    color: Colors.grey[300], // Fallback color
+                GestureDetector(
+                  onTap: () async {
+                    // Refresh token before navigating (if needed)
+                    // await AuthService().refreshToken(companyId: company.id); // <-- Call here if you want to refresh before navigation
+                    final refresh = await Navigator.pushNamed(
+                        context, Routes.companyPicturesManage, arguments: {
+                      'image': company,
+                      'iscover': true,
+                      'isadmin': true
+                    });
+                    if (refresh == true) {
+                      // Handle refresh logic if needed
+                    }
+                  },
+                  child: Image.network(
+                    company.coverUrl ??
+                        "https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png", // Default image if null
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 60.h,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 60.h,
+                        color: Colors.grey[300],
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 40.h,
+                      color: Colors.grey[300], // Fallback color
+                    ),
                   ),
                 ),
                 Positioned(
@@ -72,15 +105,15 @@ class CompanyData extends StatelessWidget {
                   left: 17.w,
                   child: GestureDetector(
                     onTap: () async {
+                      // Refresh token before navigating (if needed)
+                      // await AuthService().refreshToken(companyId: company.id); // <-- Call here if you want to refresh before navigation
                       final refresh = await Navigator.pushNamed(
                           context, Routes.companyPicturesManage, arguments: {
                         'image': company,
                         'iscover': false,
-                        'isadmin': isAdmin
+                        'isadmin': true
                       });
-                      if (refresh == true) 
-                      {
-                      }
+                      if (refresh == true) {}
                       //   showModalBottomSheet(
                       //     context: context,
                       //     builder: (bottomSheetContext) => Container(
@@ -176,29 +209,39 @@ class CompanyData extends StatelessWidget {
                   spacing: 10.0.w,
                   runSpacing: 4.0.h,
                   children: [
-                    Text(
-                      company.industry.displayName,
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.location ?? "Location not available",
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.followers
-                          .toString(), // TODO: Replace with actual followers
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
-                    ),
-                    Icon(Icons.circle, size: 6.sp, color: Colors.grey.shade600),
-                    Text(
-                      company.organizationSize.displayName,
-                      style: TextStyle(
-                          fontSize: 16.sp, color: Colors.grey.shade600),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            company.industry,
+                            style: TextStyle(
+                                fontSize: 16.sp, color: Colors.grey.shade600),
+                          ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            children: [
+                              Text(
+                                company.followers.toString() + " followers",
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600),
+                              ),
+                              SizedBox(width: 10.w),
+                              Icon(Icons.circle,
+                                  size: 6.sp, color: Colors.grey.shade600),
+                              SizedBox(width: 10.w),
+                              Text(
+                                company.organizationSize,
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -210,7 +253,7 @@ class CompanyData extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (company.website != null && company.website!.isNotEmpty)
+                    if (company.website != null && company.website!.isNotEmpty && !company.website!.contains("linkedin"))
                       VisitCompanyWebsite(
                         text: 'Visit Website',
                         backgroundColor: Color(0xFFD72638),
@@ -227,7 +270,7 @@ class CompanyData extends StatelessWidget {
                       backgroundColor: Colors.white,
                       foregroundColor: Color(0xFFD72638),
                       borderColor: Color(0xFFD72638),
-                      width: 130.w,
+                      width: company.website != null && company.website!.isNotEmpty && !company.website!.contains("linkedin") ? 130.w : 280.w,
                       fontSize: 13.sp,
                     ),
                     Padding(

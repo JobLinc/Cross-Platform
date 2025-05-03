@@ -23,12 +23,12 @@ import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analy
     show CompanyAnalytics;
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
-import 'package:joblinc/features/companypages/ui/screens/dashboard/company_feed.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
 
+import 'package:joblinc/features/companypages/ui/widgets/company_add_location.dart';
 import 'package:joblinc/features/companypages/ui/widgets/image_preview_edit.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
@@ -60,6 +60,11 @@ import 'package:joblinc/features/signup/ui/screens/signup_screen.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_card.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 
+import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
+import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
+import 'package:joblinc/features/userprofile/data/models/education_model.dart';
+import 'package:joblinc/features/userprofile/data/models/skill_model.dart';
+import 'package:joblinc/features/userprofile/logic/cubit/message_requests_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
@@ -67,6 +72,7 @@ import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.da
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/message_requests.dart';
 import 'package:joblinc/features/userprofile/ui/screens/others_profile_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/profile_screen.dart';
 import 'package:joblinc/features/premium/ui/screens/premium_screen.dart';
@@ -242,7 +248,7 @@ class AppRouter {
                   CompanyApiService(getIt<Dio>()),
                 );
                 return FutureBuilder(
-                  future: repo.getCompanyBySlug(arguments),
+                  future: repo.getCompanyById(arguments),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Scaffold(
@@ -255,6 +261,7 @@ class AppRouter {
                                 'Error 404: Requested company is not found')),
                       );
                     } else if (snapshot.hasData) {
+                      print(snapshot.data);
                       return CompanyPageHome(company: snapshot.data as Company);
                     } else {
                       return Scaffold(
@@ -346,6 +353,11 @@ class AppRouter {
           return MaterialPageRoute(
             builder: (context) => CompanyDashboard(company: arguments),
           );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                CompanyDashboard(company: arguments['company']),
+          );
         } else {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
@@ -375,6 +387,11 @@ class AppRouter {
         if (arguments is Company) {
           return MaterialPageRoute(
             builder: (context) => CompanyAnalytics(company: arguments),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                CompanyAnalytics(company: arguments['company']),
           );
         } else {
           return MaterialPageRoute(
@@ -508,11 +525,47 @@ class AppRouter {
             ),
           );
         }
+      case Routes.companyLocations:
+        if (arguments is Company) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyAddLocation(
+                company: arguments
+              ),
+            ),
+          );
+        } else if (arguments is Map && arguments['company'] is Company) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (context) => getIt<EditCompanyCubit>(),
+              child: CompanyAddLocation(
+                company: arguments['company'].locations ?? [],
+              ),
+            ),
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text("Invalid arguments for CompanyLocations"),
+              ),
+            ),
+          );
+        }
+
       case Routes.savedPostsScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt.get<SavedPostsCubit>()..getSavedPosts(),
             child: SavedPostsScreen(),
+          ),
+        );
+      case Routes.messageRequestsScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<MessageRequestsCubit>(),
+            child: MessageRequestsScreen(),
           ),
         );
       case Routes.adminPanel:

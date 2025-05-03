@@ -6,16 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/edit_user_profile_screen.dart';
 import 'package:joblinc/features/userprofile/data/service/file_pick_service.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/add_section.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_cerificates.dart';
+import 'package:joblinc/features/userprofile/ui/widgets/user_educations.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_experiences.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_resumes.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/user_skills.dart';
-
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -45,16 +46,52 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
-        } else if (state is ProfileUpdated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
         } else if (state is ResumeAdded) {
           CustomSnackBar.show(
               context: context,
               message: state.message,
               type: SnackBarType.success);
         } else if (state is ResumeFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        } else if (state is ExperienceFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        } else if (state is ExperienceDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is CertificateDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is EducationDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is SkillDeleted) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.success);
+        } else if (state is EducationFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        } else if (state is CertificateFailed) {
+          CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              type: SnackBarType.error);
+        } else if (state is SkillFailed) {
           CustomSnackBar.show(
               context: context,
               message: state.message,
@@ -239,6 +276,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         if (profile.resumes.isNotEmpty) ...[
                           UserResumes(profile: profile),
                         ],
+                        if (profile.education.isNotEmpty) ...[
+                          UserEducations(profile: profile),
+                        ],
+                        // if (true) ...[//replace this with the list of postModels.isNotEmpty
+                        //   PostList(posts: []), //also replace this
+                        // ]
                       ],
                     ),
                   ),
@@ -716,27 +759,53 @@ void showConnectionsOptionsBottomSheet(BuildContext context) {
               leading: Icon(Icons.block, color: Colors.red),
               title:
                   Text('View Blocked List', style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.blockedConnectionsList);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.blockedConnectionsList);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
               },
             ),
             ListTile(
               leading: Icon(Icons.person, color: Colors.blue),
               title: Text('Show Followers List',
                   style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.followersListScreen);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.followersListScreen);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
               },
             ),
             ListTile(
               leading: Icon(Icons.person_outline, color: Colors.green),
               title: Text('Show Following List',
                   style: TextStyle(fontSize: 18.sp)),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(innercontext);
-                Navigator.pushNamed(context, Routes.followingListScreen);
+                final refresh = await Navigator.pushNamed(
+                    context, Routes.followingListScreen);
+                if (refresh == true) {
+                  context.read<ProfileCubit>().getUserProfile();
+                }
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.message, color: Colors.purple),
+              title:
+                  Text('Messaging Requests', style: TextStyle(fontSize: 18.sp)),
+              onTap: () async {
+                Navigator.pop(innercontext);
+                // final refresh = await Navigator.pushNamed(
+                //     context, Routes.messagingRequestsScreen);
+                // if (refresh == true) {
+                //   context.read<ProfileCubit>().getUserProfile();
+                // }
+                Navigator.pushNamed(context, Routes.messageRequestsScreen);
               },
             ),
           ],

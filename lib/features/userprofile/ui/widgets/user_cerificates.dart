@@ -6,11 +6,17 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 
-class UserCerificates extends StatelessWidget {
+class UserCerificates extends StatefulWidget {
   const UserCerificates({super.key, required this.profile, this.isuser = true});
   final UserProfile profile;
   final bool isuser;
 
+  @override
+  State<UserCerificates> createState() => _UserCerificatesState();
+}
+
+class _UserCerificatesState extends State<UserCerificates> {
+  bool _expanded = false;
   String _formatCertificateDates(dynamic startYear, dynamic endYear) {
     String issuedText = "";
 
@@ -31,7 +37,7 @@ class UserCerificates extends StatelessWidget {
       return "$issuedText • $expiredText";
     }
 
-    return issuedText;
+    return "$issuedText • Present";
   }
 
 // Helper method to get month name
@@ -55,6 +61,10 @@ class UserCerificates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final certifications = widget.profile.certifications;
+    final displayList =
+        _expanded ? certifications : certifications.take(1).toList();
+
     return Container(
       color: Colors.white,
       width: double.infinity,
@@ -68,25 +78,25 @@ class UserCerificates extends StatelessWidget {
                 'Licenses & Certifications',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              isuser
+              widget.isuser
                   ? IconButton(
                       onPressed: () {
                         Navigator.pushNamed(
                             context, Routes.addCertificationScreen);
                       },
-                      icon: Icon(Icons.add))
+                      icon: Icon(Icons.add),
+                    )
                   : SizedBox.shrink(),
             ],
           ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profile.certifications.length,
+            itemCount: displayList.length,
             itemBuilder: (context, index) {
-              final cert = profile.certifications[index];
+              final cert = displayList[index];
               return Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5.h), // Reduced from 8.h to 4.h
+                padding: EdgeInsets.symmetric(horizontal: 5.h),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -94,7 +104,6 @@ class UserCerificates extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Put name and delete icon in the same row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -107,7 +116,17 @@ class UserCerificates extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              if (isuser) ...[
+                              if (widget.isuser) ...[
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.addCertificationScreen,
+                                      arguments: cert,
+                                    );
+                                  },
+                                  icon: Icon(Icons.edit),
+                                ),
                                 IconButton(
                                   icon: Icon(
                                     Icons.delete,
@@ -115,41 +134,7 @@ class UserCerificates extends StatelessWidget {
                                     size: 20.r,
                                   ),
                                   onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext dialogContext) {
-                                        return AlertDialog(
-                                          title: Text('Delete Certificate'),
-                                          content: Text(
-                                              'Are you sure you want to delete "${cert.name}"?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(dialogContext)
-                                                    .pop();
-                                              },
-                                              child: Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(dialogContext)
-                                                    .pop();
-                                                context
-                                                    .read<ProfileCubit>()
-                                                    .deleteCertificate(
-                                                        cert.certificationId);
-                                                // Close dialog and delete certificate
-                                              },
-                                              child: Text(
-                                                'Delete',
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    _showDeleteDialog(cert);
                                   },
                                   padding: EdgeInsets.zero,
                                   constraints: BoxConstraints(),
@@ -161,9 +146,7 @@ class UserCerificates extends StatelessWidget {
                           SizedBox(height: 4.h),
                           Text(
                             cert.organization,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                            ),
+                            style: TextStyle(fontSize: 14.sp),
                           ),
                           SizedBox(height: 4.h),
                           Text(
@@ -177,8 +160,7 @@ class UserCerificates extends StatelessWidget {
                           Divider(
                             color: Colors.grey[500],
                             thickness: 1,
-                            height: 15
-                                .h, // Explicitly set height to control spacing
+                            height: 15.h,
                           ),
                         ],
                       ),
@@ -188,8 +170,48 @@ class UserCerificates extends StatelessWidget {
               );
             },
           ),
+          if (certifications.length > 1)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _expanded = !_expanded;
+                });
+              },
+              child: Text(_expanded
+                  ? 'Show less Certificates'
+                  : 'Show more Certificates'),
+            ),
         ],
       ),
+    );
+  }
+
+  void _showDeleteDialog(cert) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Delete Certificate'),
+          content: Text('Are you sure you want to delete "${cert.name}"?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                context
+                    .read<ProfileCubit>()
+                    .deleteCertificate(cert.certificationId);
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

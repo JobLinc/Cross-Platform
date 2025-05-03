@@ -1,3 +1,5 @@
+import 'package:joblinc/features/companypages/data/data/models/location_model.dart';
+
 import '../company.dart';
 
 List<Company> allCompanies = [];
@@ -12,9 +14,12 @@ class CompanyResponse {
   final String overview;
   final String website;
   final String? logo;
+  final String? coverPhoto;
   final int? followers;
   final int? employees;
   final String? createdAt;
+  final bool? isFollowing;
+  final List <CompanyLocationModel>? locations;
 
   CompanyResponse({
     required this.id,
@@ -26,9 +31,12 @@ class CompanyResponse {
     required this.overview,
     required this.website,
     this.logo,
+    this.coverPhoto,
     this.followers,
     this.employees,
     this.createdAt,
+    this.locations,
+    this.isFollowing,
   });
 
   factory CompanyResponse.fromJson(Map<String, dynamic> json) {
@@ -44,9 +52,14 @@ class CompanyResponse {
       logo: (json['logo'] ??
           json['profilePictureUrl'] ??
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfphRB8Syzj7jIYXedFOeVZwicec0QaUv2cBwPc0l7NnXdjBKpoL9nDSeX46Tich1Razk&usqp=CAU'),
+      coverPhoto: json['coverPhoto'] ?? 'https://thingscareerrelated.com/wp-content/uploads/2021/10/default-background-image.png',
       followers: json['followers'],
       employees: json['employees'],
       createdAt: json['createdAt'],
+      isFollowing: json['isFollowing'],
+      locations: (json['locations'] as List<dynamic>?)
+          ?.map((e) => CompanyLocationModel.fromJson(e))
+          .toList(),
     );
   }
 }
