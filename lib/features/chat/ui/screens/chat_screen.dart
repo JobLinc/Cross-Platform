@@ -62,23 +62,23 @@ class _ChatScreenState extends State<ChatScreen> {
       if (message.seenBy!.isEmpty) {
         // Message sent but not delivered - single gray tick
         return Icon(
-            Icons.check, // Single check icon
-            size: 14.sp,
-            color: Colors.grey[600],
-          );
+          Icons.check, // Single check icon
+          size: 14.sp,
+          color: Colors.grey[600],
+        );
       } else if (message.seenBy!.any((id) => id != userId)) {
         // Message read by recipient - blue double tick
-        return  Icon(
-            Icons.done_all, // Double check icon
-            size: 14.sp,
-            color: Colors.blue, // Blue color signifies "read"
+        return Icon(
+          Icons.done_all, // Double check icon
+          size: 14.sp,
+          color: Colors.blue, // Blue color signifies "read"
         );
       } else {
         // Message delivered but not read - gray double tick
-          return Icon(
-            Icons.done_all, // Double check icon
-            size: 14.sp,
-            color: Colors.grey[600], // Gray indicates "delivered but not read"
+        return Icon(
+          Icons.done_all, // Double check icon
+          size: 14.sp,
+          color: Colors.grey[600], // Gray indicates "delivered but not read"
         );
       }
     }
@@ -181,13 +181,14 @@ class _ChatScreenState extends State<ChatScreen> {
         isBlocked = true;
       });
     }
-    if (!message.contains("Failed to mark") && !message.contains("has been sent")) {
+    if (!message.contains("Failed to mark")) {
       CustomSnackBar.show(
           context: context, message: message, type: SnackBarType.error);
-
-      setState(() {
-        messages.removeLast();
-      });
+      if (!message.contains("has been sent")) {
+        setState(() {
+          messages.removeLast();
+        });
+      }
     }
   }
 
@@ -497,37 +498,35 @@ class _ChatScreenState extends State<ChatScreen> {
                           SizedBox(height: 4.h),
 
                           // timestamp
-                          
-                            // Align text to the left
 
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: 100.w,
-                              ),
-                              child: Align(
-                                alignment: isMe
-                                    ? Alignment.centerRight
-                                    : Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      timeString,
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: Colors.grey[600],
-                                      ),
+                          // Align text to the left
+
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: 100.w,
+                            ),
+                            child: Align(
+                              alignment: isMe
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    timeString,
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: Colors.grey[600],
                                     ),
-                                    SizedBox(width: 1.w),
-                                    SizedBox(
+                                  ),
+                                  SizedBox(width: 1.w),
+                                  SizedBox(
                                       width: 10.w,
-      
-                                      child: buildReadReceipt(message)
-                                    ),
-                                    SizedBox(width: 2.w),
-                                  ],
-                                ),
+                                      child: buildReadReceipt(message)),
+                                  SizedBox(width: 2.w),
+                                ],
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),

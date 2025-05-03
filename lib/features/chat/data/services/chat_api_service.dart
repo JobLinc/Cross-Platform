@@ -37,7 +37,7 @@ class ChatApiService {
       return response;
     } on DioException catch (e) {
       if (e.response != null) {
-        throw Exception(e.response!.data["message"].toString().split(":").last);
+        throw Exception("404 total unread count not found");
       }
       throw Exception("Exception without response: ${e.message}");
     }
