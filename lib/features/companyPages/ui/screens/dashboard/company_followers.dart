@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:joblinc/features/companypages/ui/widgets/dashboard/followers_list_widget.dart';
+import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 import 'package:joblinc/features/connections/logic/cubit/follow_cubit.dart';
 import 'package:joblinc/features/connections/ui/widgets/follow_list_widget.dart';
 import 'package:joblinc/features/userprofile/data/models/follow_model.dart';
 
-class FollowingListScreen extends StatelessWidget {
-
-  FollowingListScreen({Key? key}) : super(key: key);
+class CompanyFollowersListScreen extends StatelessWidget {
+  CompanyFollowersListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,13 @@ class FollowingListScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              key: Key("following_back_button"),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
               icon: Icon(Icons.arrow_back),
             ),
             title: Text(
-              "People You Follow That Are Not Connections",
+              "Followers",
               style: TextStyle(fontSize: 20.sp),
             ),
             centerTitle: true,
@@ -35,11 +34,11 @@ class FollowingListScreen extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               if (state is FollowInitial) {
-                context.read<FollowCubit>().fetchFollowing();
+                context.read<FollowCubit>().fetchFollowers();
                 return const Center(child: CircularProgressIndicator());
               } else if (state is FollowLoaded) {
                 return Column(
-                  key: Key("FollowingListBody"),
+                  key: Key("FollowersListBody"),
                   children: [
                     Divider(
                       color: Colors.grey[300],
@@ -47,10 +46,9 @@ class FollowingListScreen extends StatelessWidget {
                       height: 0,
                     ),
                     Expanded(
-                      child: FollowListView(
-                        key: Key("following_list"),
-                        follows: state.follows,
-                        isfollowing: true,
+                      child: CompanyFollowersListView(
+                        key: Key("followers_list"),
+                        followers: state.follows,
                       ),
                     ),
                   ],
@@ -58,7 +56,7 @@ class FollowingListScreen extends StatelessWidget {
               } else if (state is FollowError) {
                 return Text(state.error);
               } else {
-                return Text("nothing to show");
+                return Text("Nothing to Show");
               }
             },
           ),

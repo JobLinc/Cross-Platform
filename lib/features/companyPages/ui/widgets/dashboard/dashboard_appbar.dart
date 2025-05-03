@@ -103,9 +103,10 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                       );
                       break;
                     
-                    // case "Inbox":
-                    //   Navigator.pushNamed(context, Routes.inboxPage);
-                    //   break;
+                    case "Followers":
+                      Navigator.pushNamed(context, Routes.companyFollowersListScreen);
+                      break;
+
                     case "Edit Page":
                       Navigator.pushNamed(
                         context, 
@@ -122,7 +123,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                   'Dashboard',
                   'Company Profile',
                   'Analytics',
-                  'Inbox',
+                  'Followers',
                   'Edit Page',
                   'Jobs',
                 ].map<DropdownMenuItem<String>>((String value) {

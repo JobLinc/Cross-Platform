@@ -51,6 +51,32 @@ class FollowCubit extends Cubit<FollowState> {
     }
   }
 
+  void removeFollower(String userId, BuildContext context) async {
+    try {
+      final response = await connectionsRepository.removeFollower(userId);
+      if (response.statusCode == 200) {
+        CustomSnackBar.show(
+            context: context,
+            message: "Follower Removed Succefully ",
+            type: SnackBarType.success);
+        fetchFollowing();
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message: "Failed to Remove Follower ",
+            type: SnackBarType.error);
+        fetchFollowing();
+      }
+    } catch (error) {
+      if (!isClosed) {
+        CustomSnackBar.show(
+            context: context,
+            message: error.toString(),
+            type: SnackBarType.error);
+      }
+    }
+  }
+
   Future<void> fetchFollowers() async {
     emit(FollowInitial());
 

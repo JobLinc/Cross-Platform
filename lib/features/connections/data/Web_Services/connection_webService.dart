@@ -230,6 +230,25 @@ class UserConnectionsApiService {
     }
   }
 
+  Future<Response> removeFollower(String userId) async {
+    try {
+      final response = await _dio.post(
+        '/follow/$userId/remove',
+      );
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
   Future<List<dynamic>> getUserConnections(String userId) async {
     try {
       final response = await _dio.get('/connection/$userId/all');
