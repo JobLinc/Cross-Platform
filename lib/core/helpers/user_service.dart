@@ -172,7 +172,7 @@ class UserService {
       await _storage.read(key: _profilePictureKey) ?? '';
   static Future<String> getCoverPicture() async =>
       await _storage.read(key: _coverPictureKey) ?? '';
-  static Future<String> getVisibilityPicture() async =>
+  static Future<String> getVisibility() async =>
       await _storage.read(key: _visibilityKey) ?? 'Public';
 
   // Clear all user data

@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/accountvisibility/data/repos/account_visibility_repo.dart';
 
-Future<dynamic> showAccountVisibilitySettings(BuildContext context) {
-  //TODO replace this with a call to fetch user visibility
-  final AccountVisibility initialVisibility = AccountVisibility.public;
+Future<dynamic> showAccountVisibilitySettings(BuildContext context) async {
+  final AccountVisibility initialVisibility;
+  switch (await UserService.getVisibility()) {
+    case 'Public':
+      initialVisibility = AccountVisibility.public;
+      break;
+    case 'Connections':
+      initialVisibility = AccountVisibility.connectionsOnly;
+      break;
+    default:
+      initialVisibility = AccountVisibility.public;
+      break;
+  }
   AccountVisibility selectedVisibility = initialVisibility;
   return showModalBottomSheet(
       context: context,
