@@ -13,6 +13,7 @@ import 'package:joblinc/features/jobs/logic/cubit/job_list_cubit.dart';
 import 'package:joblinc/features/jobs/ui/screens/job_list_screen.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
+import 'package:joblinc/features/notifications/logic/cubit/notification_state.dart';
 import 'package:joblinc/features/notifications/ui/screens/notifications_screen.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
@@ -33,6 +34,8 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     with SingleTickerProviderStateMixin {
   late int _selectedIndex;
   late TabController _tabController;
+  int _unseenNotificationCount = 0; // Track unseen notification count
+  late NotificationCubit _notificationCubit;
 
   @override
   void initState() {
@@ -50,7 +53,30 @@ class _MainContainerScreenState extends State<MainContainerScreen>
         setState(() {
           _selectedIndex = _tabController.index;
         });
+
+        // Only mark notifications as read when actively switching to the tab
+        if (_selectedIndex == 3 && _notificationCubit != null) {
+          _notificationCubit.markAllAsSeen();
+        }
       }
+    });
+
+    // Initialize notification cubit to listen for updates across the app
+    _notificationCubit = getIt<NotificationCubit>();
+
+    // Initialize notification services and fetch initial count
+    // But don't mark as read
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notificationCubit.initServices();
+      _fetchUnseenCount();
+    });
+  }
+
+  // Fetch the count of unseen notifications
+  Future<void> _fetchUnseenCount() async {
+    final count = await _notificationCubit.getUnseenCount();
+    setState(() {
+      _unseenNotificationCount = count;
     });
   }
 
@@ -61,10 +87,23 @@ class _MainContainerScreenState extends State<MainContainerScreen>
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _tabController.animateTo(index);
-    });
+    // Only if we're not already on this tab
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+        _tabController.animateTo(index);
+
+        // Reset notification count when navigating to notifications tab
+        if (index == 3) {
+          _unseenNotificationCount = 0;
+
+          // Mark as seen only when user explicitly taps the notifications tab
+          if (_notificationCubit != null) {
+            _notificationCubit.markAllAsSeen();
+          }
+        }
+      });
+    }
   }
 
   // Handle result from post creation
@@ -87,55 +126,74 @@ class _MainContainerScreenState extends State<MainContainerScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Now we build the screens with context available
-    return Scaffold(
-      appBar: _getAppBarForIndex(_selectedIndex, context),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          // Home tab
-          _buildKeepAliveScreen(
-            BlocProvider(
-              create: (context) => getIt<HomeCubit>()..getFeed(),
-              child: const HomeScreen(),
-            ),
-          ),
+    return BlocListener<NotificationCubit, NotificationState>(
+      bloc: _notificationCubit,
+      listener: (context, state) {
+        if (state is NotificationLoaded) {
+          // Only count and update if we're not on the notifications tab
+          if (_selectedIndex != 3) {
+            final unseenCount = state.notifications
+                .where((n) => n.isRead == "pending")
+                .length;
 
-          // Network tab
-          _buildKeepAliveScreen(
-            BlocProvider(
-              create: (context) => getIt<InvitationsCubit>(),
-              child: const InvitationsTabs(key: Key("connections home screen")),
+            if (unseenCount != _unseenNotificationCount) {
+              setState(() {
+                _unseenNotificationCount = unseenCount;
+              });
+            }
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: _getAppBarForIndex(_selectedIndex, context),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            // Home tab
+            _buildKeepAliveScreen(
+              BlocProvider(
+                create: (context) => getIt<HomeCubit>()..getFeed(),
+                child: const HomeScreen(),
+              ),
             ),
-          ),
 
-          // Post tab
-          _buildKeepAliveScreen(
-            BlocProvider(
-                create: (context) => getIt<AddPostCubit>(),
-                child: AddPostScreen()),
-          ),
-
-          // Notifications tab
-          _buildKeepAliveScreen(
-            BlocProvider(
-              create: (context) => getIt<NotificationCubit>(),
-              child: const NotificationsScreen(),
+            // Network tab
+            _buildKeepAliveScreen(
+              BlocProvider(
+                create: (context) => getIt<InvitationsCubit>(),
+                child: const InvitationsTabs(key: Key("connections home screen")),
+              ),
             ),
-          ),
 
-          // Jobs tab
-          _buildKeepAliveScreen(
-            BlocProvider(
-              create: (context) => getIt<JobListCubit>(),
-              child: const JobListScreen(),
+            // Post tab
+            _buildKeepAliveScreen(
+              BlocProvider(
+                  create: (context) => getIt<AddPostCubit>(),
+                  child: AddPostScreen()),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: UniversalBottomBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+
+            // Notifications tab
+            _buildKeepAliveScreen(
+              BlocProvider.value(
+                value: _notificationCubit,
+                child: const NotificationsScreen(),
+              ),
+            ),
+
+            // Jobs tab
+            _buildKeepAliveScreen(
+              BlocProvider(
+                create: (context) => getIt<JobListCubit>(),
+                child: const JobListScreen(),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: UniversalBottomBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          notificationCount: _unseenNotificationCount,
+        ),
       ),
     );
   }

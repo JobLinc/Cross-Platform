@@ -92,12 +92,9 @@ class AppRouter {
                   child: SignupScreen(),
                 ));
       case Routes.homeScreen:
-        // Main container handles all the main navigation now
+        final int initialTab = arguments as int? ?? 0;
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => getIt<HomeCubit>()..getFeed(),
-            child: MainContainerScreen(),
-          ),
+          builder: (context) => MainContainerScreen(initialTab: initialTab),
         );
       case Routes.profileScreen:
         return MaterialPageRoute(

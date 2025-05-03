@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/core/services/navigation_service.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
 
@@ -103,21 +105,12 @@ class FirebaseMessagingService {
     // Handle messages opened when app was in background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       debugPrint('FCM: onMessageOpenedApp: ${message.data}');
-      _handleRemoteMessage(message);
+      // Navigate to notifications tab when notification is tapped in background
+      _handleNotificationNavigation(message.data);
     });
 
-    // Get initial message if app was opened from a terminated state
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        debugPrint('FCM: getInitialMessage: ${message.data}');
-        _handleRemoteMessage(message);
-      }
-    });
-
-    // Set background message handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // DON'T try to handle initial message here - it needs to be done in main.dart
+    // after app is fully initialized
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
@@ -197,8 +190,6 @@ class FirebaseMessagingService {
         createdAt: DateTime.now(),
       );
 
-      // Call the callback instead of directly calling the cubit
-      onNewNotification(notification);
     } catch (e) {
       debugPrint('FCM: Error processing notification: $e');
     }
@@ -209,29 +200,46 @@ class FirebaseMessagingService {
       try {
         Map<String, dynamic> data = json.decode(payload);
         debugPrint('FCM: Notification tapped with data: $data');
-
-        // Handle navigation based on notification type
-        String type = data['type'] ?? '';
-        String entityId = data['entityId'] ?? '';
-
-        // Example navigation logic based on notification type
-        switch (type) {
-          case 'connection_request':
-            // Navigate to connections screen
-            break;
-          case 'job_application':
-            // Navigate to job details
-            break;
-          case 'message':
-            // Navigate to message thread
-            break;
-          default:
-            // Navigate to notifications list
-            break;
-        }
+        
+        _handleNotificationNavigation(data);
       } catch (e) {
         debugPrint('FCM: Error handling notification tap: $e');
       }
+    }
+  }
+
+  // New method to centralize navigation logic
+  void _handleNotificationNavigation(Map<String, dynamic> data) {
+    try {
+      // Get the navigation service
+      final navigationService = getIt<NavigationService>();
+
+      // Handle navigation based on notification type
+      String type = data['type'] ?? '';
+      String entityId = data['entityId'] ?? '';
+
+      debugPrint('FCM: Navigating for notification type: $type, entityId: $entityId');
+
+      // Navigate to the notifications tab in MainContainerScreen (tab index 3)
+      navigationService.navigateToMainContainerSafely(3);
+    } catch (e) {
+      debugPrint('FCM: Error during notification navigation: $e');
+    }
+  }
+
+  // Add this method to handle initial notification that launched the app
+  Future<void> checkInitialMessage() async {
+    try {
+      RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+      if (initialMessage != null) {
+        debugPrint('FCM: App launched from notification: ${initialMessage.data}');
+        // Wait a short time for app to be fully initialized before navigating
+        await Future.delayed(const Duration(milliseconds: 500));
+        _handleNotificationNavigation(initialMessage.data);
+      }
+    } catch (e) {
+      debugPrint('FCM: Error checking initial message: $e');
     }
   }
 

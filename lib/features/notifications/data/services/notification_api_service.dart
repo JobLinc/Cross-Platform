@@ -14,6 +14,7 @@ class NotificationApiService {
       if (response.statusCode == 200) {
         if (response.data is List) {
           final List<dynamic> data = response.data;
+          print("Notification endpoint response"+response.data);
           return data.map((json) => NotificationModel.fromJson(json)).toList();
         } else if (response.data['notifications'] is List) {
           final List<dynamic> data = response.data['notifications'];

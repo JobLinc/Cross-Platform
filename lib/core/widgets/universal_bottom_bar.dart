@@ -6,11 +6,13 @@ import 'package:joblinc/core/theming/font_weight_helper.dart';
 class UniversalBottomBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
+  final int notificationCount; // Add notification count parameter
 
   const UniversalBottomBar({
     Key? key,
     required this.currentIndex,
     required this.onTap,
+    this.notificationCount = 0, // Default to 0
   }) : super(key: key);
 
   @override
@@ -95,13 +97,44 @@ class UniversalBottomBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              child: Icon(
-                icon,
-                color: isSelected ? selectedColor : unselectedColor,
-                size: isSelected ? 26 : 24,
-              ),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  child: Icon(
+                    icon,
+                    color: isSelected ? selectedColor : unselectedColor,
+                    size: isSelected ? 26 : 24,
+                  ),
+                ),
+                // Show notification badge only for notifications tab (index 3)
+                if (index == 3 && notificationCount > 0)
+                  Positioned(
+                    top: -5,
+                    right: -8,
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        notificationCount > 99 ? '99+' : '$notificationCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 4),
             AnimatedDefaultTextStyle(

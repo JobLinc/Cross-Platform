@@ -14,17 +14,40 @@ class NotificationsScreen extends StatefulWidget {
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsBindingObserver {
+class _NotificationsScreenState extends State<NotificationsScreen>
+    with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
+  bool _hasMarkedAsRead = false; // Track if we've already marked notifications
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     debugPrint('NotificationsScreen: initState - Loading notifications');
+    
+    // First fetch the notifications
     context.read<NotificationCubit>().getNotifications();
+    
+    // Ensure socket connection is active
     context.read<NotificationCubit>().initSocket();
+    
+    // Only mark notifications as read if this screen is intentionally shown
+    // We'll determine this in didChangeDependencies
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+    
+  //   // Check if this is an active user navigation (not initial app load)
+  //   // and we haven't already marked notifications as read
+  //   if (!_hasMarkedAsRead && ModalRoute.of(context)?.isCurrent == true) {
+  //     _hasMarkedAsRead = true;
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       context.read<NotificationCubit>().markAllAsSeen();
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -74,15 +97,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
         listenWhen: (previous, current) {
           // Only trigger listener when we have a loaded state with notifications
           if (previous is NotificationLoaded && current is NotificationLoaded) {
-            return current.notifications.length != previous.notifications.length;
+            return current.notifications.length !=
+                previous.notifications.length;
           }
           return previous.runtimeType != current.runtimeType;
         },
         listener: (context, state) {
           if (state is NotificationLoaded) {
-            debugPrint('NotificationsScreen: State updated with ${state.notifications.length} notifications');
+            debugPrint(
+                'NotificationsScreen: State updated with ${state.notifications.length} notifications');
             // Only scroll if we have a valid scroll controller and we're not already at the top
-            if (_scrollController.hasClients && _scrollController.position.pixels != 0) {
+            if (_scrollController.hasClients &&
+                _scrollController.position.pixels != 0) {
               _scrollController.animateTo(
                 0,
                 duration: const Duration(milliseconds: 300),
@@ -140,7 +166,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
                     onTap: (id) {
                       context.read<NotificationCubit>().markAsRead(id);
                     },
-                    isNew: index == 0 && state.notifications[index].isRead == "pending",
+                    isNew: index == 0 &&
+                        state.notifications[index].isRead == "pending",
                   );
                 },
               ),

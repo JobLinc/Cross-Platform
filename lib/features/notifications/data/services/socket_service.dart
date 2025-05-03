@@ -34,7 +34,7 @@ class SocketService {
       }
 
       debugPrint('Socket: Trying to connect to $_baseUrl/notification');
-      
+
       // Create socket with proper error handling
       _socket = IO.io('$_baseUrl/notification', <String, dynamic>{
         'transports': ['websocket', 'polling'],
@@ -49,7 +49,7 @@ class SocketService {
 
       // Setup listeners before connecting
       _setupSocketListeners();
-      
+
       // Connect after listeners are set up
       _socket!.connect();
       debugPrint('Socket: Connect called');
@@ -66,9 +66,9 @@ class SocketService {
     _socket!.off('disconnect');
     _socket!.off('error');
     _socket!.off('connect_error');
-    
+
     _socket!.onConnect((_) {
-      debugPrint('Socket: Connected to notification namespace ✅');
+      debugPrint('Socket: Connected to notification namespace');
       _isConnected = true;
       _cancelReconnectTimer();
     });
@@ -123,7 +123,7 @@ class SocketService {
   void disconnect() {
     _cancelReconnectTimer();
     _isConnected = false;
-    
+
     if (_socket != null) {
       try {
         debugPrint('Socket: Disconnecting...');
@@ -133,7 +133,7 @@ class SocketService {
         _socket!.off('disconnect');
         _socket!.off('error');
         _socket!.off('connect_error');
-        
+
         _socket!.disconnect();
         _socket!.dispose();
         _socket = null;

@@ -118,10 +118,12 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
 
     try {
-      debugPrint('NotificationCubit: Processing notification: ${notification.id} - ${notification.content}');
-      
+      debugPrint(
+          'NotificationCubit: Processing notification: ${notification.id} - ${notification.content}');
+
       if (state is NotificationLoaded) {
-        final currentNotifications = (state as NotificationLoaded).notifications;
+        final currentNotifications =
+            (state as NotificationLoaded).notifications;
 
         // Check if this notification already exists by ID
         bool exists = currentNotifications.any((n) => n.id == notification.id);
@@ -129,14 +131,33 @@ class NotificationCubit extends Cubit<NotificationState> {
         debugPrint('NotificationCubit: Notification exists? $exists');
 
         if (!exists) {
+          // Force notification to "pending" status for new notifications
+          if (notification.isRead != "pending") {
+            notification = NotificationModel(
+              id: notification.id,
+              type: notification.type,
+              content: notification.content,
+              imageUrl: notification.imageUrl,
+              isRead: "pending",
+              createdAt: notification.createdAt,
+              relatedEntityId: notification.relatedEntityId,
+              subRelatedEntityId: notification.subRelatedEntityId,
+            );
+          }
+
           final updatedNotifications = [notification, ...currentNotifications];
-          debugPrint('NotificationCubit: Emitting new state with ${updatedNotifications.length} notifications');
+          debugPrint(
+              'NotificationCubit: Emitting new state with ${updatedNotifications.length} notifications');
           emit(NotificationLoaded(updatedNotifications));
-          
+
           // Verify state was updated
           if (state is NotificationLoaded) {
-            debugPrint('NotificationCubit: New state has ${(state as NotificationLoaded).notifications.length} notifications');
+            debugPrint(
+                'NotificationCubit: New state has ${(state as NotificationLoaded).notifications.length} notifications');
           }
+
+          // Refresh unseen count
+          getUnseenCount();
         } else {
           debugPrint('NotificationCubit: Skipping duplicate notification');
         }
@@ -171,6 +192,12 @@ class NotificationCubit extends Cubit<NotificationState> {
     } catch (e) {
       debugPrint('NotificationCubit: Error disconnecting socket: $e');
     }
+  }
+
+  // Add this method to access the messaging service
+  FirebaseMessagingService? getMessagingService() {
+    if (_closed) return null;
+    return _fcmService;
   }
 
   @override

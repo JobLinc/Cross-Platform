@@ -11,6 +11,7 @@ import 'package:joblinc/core/theming/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
+import 'package:joblinc/core/services/navigation_service.dart';
 import 'firebase_options.dart';
 
 // Handle background messages
@@ -31,7 +32,6 @@ void main() async {
   // Set up background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-
   // Set up dependencies
   await setupGetIt();
 
@@ -44,6 +44,14 @@ void main() async {
     try {
       final notificationCubit = getIt<NotificationCubit>();
       await notificationCubit.initServices();
+      
+      // Add a delayed check for initial message (after app is rendered)
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        final messagingService = notificationCubit.getMessagingService();
+        if (messagingService != null) {
+          messagingService.checkInitialMessage();
+        }
+      });
     } catch (e) {
       print("Error initializing notification services: $e");
     }
@@ -65,16 +73,18 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return ScreenUtilInit(
-      designSize: const Size(390, 844), // iPhone 13 Pro size as a reference
+      designSize: const Size(360, 800),
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'JobLinc',
+          navigatorKey: getIt<NavigationService>().navigatorKey,
           debugShowCheckedModeBanner: false,
           themeMode: themeProvider.themeMode,
           theme: lightTheme,
           darkTheme: darkTheme,
           initialRoute:
-              isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
+isLoggedInUser ? Routes.homeScreen : Routes.onBoardingScreen,
           onGenerateRoute: AppRouter().generateRoute,
         );
       },
