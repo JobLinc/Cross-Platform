@@ -8,12 +8,16 @@ import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/services/navigation_service.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
+import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
+import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final DeviceTokenService _deviceTokenService;
+  final NotificationApiService _notificationApiService;
+    final NotificationCubit _notificationCubit;
 
   // Use a callback instead of direct dependency
   final Function(NotificationModel) onNewNotification;
@@ -21,6 +25,8 @@ class FirebaseMessagingService {
   FirebaseMessagingService(
     this._deviceTokenService,
     this.onNewNotification,
+    this._notificationApiService,
+    this._notificationCubit
   );
 
   Future<void> initialize() async {
@@ -127,9 +133,6 @@ class FirebaseMessagingService {
       body: body,
       payload: json.encode(notificationData),
     );
-
-    // Add notification to cubit state
-    _addNotificationToState(message);
   }
 
   Future<void> _showLocalNotification({
@@ -167,40 +170,13 @@ class FirebaseMessagingService {
     );
   }
 
-  void _handleRemoteMessage(RemoteMessage message) {
-    // Add notification to cubit state
-    _addNotificationToState(message);
-
-    // Navigate to appropriate screen based on notification type
-    // This will depend on your app's navigation structure
-  }
-
-  void _addNotificationToState(RemoteMessage message) {
-    try {
-      Map<String, dynamic> data = message.data;
-
-      // Create a notification model from the FCM message
-      NotificationModel notification = NotificationModel(
-        id: data['entityId'] ??
-            DateTime.now().millisecondsSinceEpoch.toString(),
-        type: data['type'] ?? 'notification',
-        content: message.notification?.body ?? data['text'] ?? '',
-        imageUrl: data['imageURL'],
-        isRead: "pending",
-        createdAt: DateTime.now(),
-      );
-
-    } catch (e) {
-      debugPrint('FCM: Error processing notification: $e');
-    }
-  }
-
   void _handleNotificationTap(String? payload) {
     if (payload != null) {
       try {
         Map<String, dynamic> data = json.decode(payload);
         debugPrint('FCM: Notification tapped with data: $data');
-        
+        _notificationApiService.markAllAsSeen();
+
         _handleNotificationNavigation(data);
       } catch (e) {
         debugPrint('FCM: Error handling notification tap: $e');
@@ -216,9 +192,18 @@ class FirebaseMessagingService {
 
       // Handle navigation based on notification type
       String type = data['type'] ?? '';
-      String entityId = data['entityId'] ?? '';
+      String entityId = data['relatedEntityId'] ?? '';
 
-      debugPrint('FCM: Navigating for notification type: $type, entityId: $entityId');
+      if (data['type'] == 'ConnectionRequest' && entityId != '') {
+        debugPrint(
+            'FCM: Navigating to user profile for notification type: $type, entityId: $entityId');
+
+        navigationService.navigateToUserProfileSafely(entityId);
+        return;
+      }
+
+      debugPrint(
+          'FCM: Navigating for notification type: $type, entityId: $entityId');
 
       // Navigate to the notifications tab in MainContainerScreen (tab index 3)
       navigationService.navigateToMainContainerSafely(3);
@@ -230,10 +215,13 @@ class FirebaseMessagingService {
   // Add this method to handle initial notification that launched the app
   Future<void> checkInitialMessage() async {
     try {
-      RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+      RemoteMessage? initialMessage =
+          await FirebaseMessaging.instance.getInitialMessage();
+      debugPrint('FCM: Initial message: ${initialMessage?.data}');
 
       if (initialMessage != null) {
-        debugPrint('FCM: App launched from notification: ${initialMessage.data}');
+        debugPrint(
+            'FCM: App launched from notification: ${initialMessage.data}');
         // Wait a short time for app to be fully initialized before navigating
         await Future.delayed(const Duration(milliseconds: 500));
         _handleNotificationNavigation(initialMessage.data);

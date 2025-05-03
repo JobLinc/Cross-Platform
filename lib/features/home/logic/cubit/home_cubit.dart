@@ -6,12 +6,12 @@ import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart
 
 class HomeCubit extends Cubit<HomeState> {
   final PostRepo _postRepo;
-  
+
   // Keep track of the current state of posts and user separately
   List<PostModel>? _currentPosts;
   bool _postsLoading = false;
   String? _postsError;
-  
+
   UserProfile? _currentUser;
   bool _userLoading = false;
   String? _userError;
@@ -20,13 +20,13 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Method to get combined state for UI
   HomeCombinedState get combinedState => HomeCombinedState(
-    posts: _currentPosts,
-    postsLoading: _postsLoading,
-    postsError: _postsError,
-    user: _currentUser,
-    userLoading: _userLoading,
-    userError: _userError,
-  );
+        posts: _currentPosts,
+        postsLoading: _postsLoading,
+        postsError: _postsError,
+        user: _currentUser,
+        userLoading: _userLoading,
+        userError: _userError,
+      );
 
   // Load posts and user profile independently
   Future<void> loadHomeData() async {
@@ -54,7 +54,9 @@ class HomeCubit extends Cubit<HomeState> {
       _postsLoading = false;
       _postsError = e.toString();
       // Emit failure state
-      emit(HomePostsFailure(e.toString()));
+      if (!isClosed) {
+        emit(HomePostsFailure(e.toString()));
+      }
     }
   }
 
@@ -87,5 +89,3 @@ class HomeCubit extends Cubit<HomeState> {
     loadHomeData();
   }
 }
-
-

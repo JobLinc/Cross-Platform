@@ -9,10 +9,10 @@ part 'job_list_state.dart';
 class JobListCubit extends Cubit<JobListState> {
   final JobRepo jobRepo;
   List<Job> _jobs = [];
-  List<Map<String,dynamic>> companyNames=[];
+  List<Map<String, dynamic>> companyNames = [];
   JobListCubit(this.jobRepo) : super(JobListInitial());
 
-    Future<void> getCompanyNames() async {
+  Future<void> getCompanyNames() async {
     try {
       companyNames = await jobRepo.getCompanyNames()!;
     } catch (e) {
@@ -20,50 +20,53 @@ class JobListCubit extends Cubit<JobListState> {
     }
   }
 
-  Future<void> getAllJobs({bool isSearch= false,Map<String,dynamic>? queryParams}) async {
-    isSearch ? emit(JobSearchLoading()): emit(JobListLoading()) ;
+  Future<void> getAllJobs(
+      {bool isSearch = false, Map<String, dynamic>? queryParams}) async {
+    isSearch ? emit(JobSearchLoading()) : emit(JobListLoading());
     try {
       //print("cubit requesting");
       _jobs = await jobRepo.getAllJobs(queryParams: queryParams)!;
       if (_jobs.isEmpty) {
-        isSearch ? emit(JobSearchEmpty()): emit(JobListEmpty());
+        isSearch ? emit(JobSearchEmpty()) : emit(JobListEmpty());
       } else {
-        isSearch ? emit(JobSearchLoaded(searchedJobs: _jobs)): emit(JobListLoaded(jobs: _jobs));
+        isSearch
+            ? emit(JobSearchLoaded(searchedJobs: _jobs))
+            : emit(JobListLoaded(jobs: _jobs));
       }
     } catch (e) {
-      emit(JobListErrorLoading(e.toString()));
+      if (!isClosed) {
+        emit(JobListErrorLoading(e.toString()));
+      }
     }
   }
 
-  Future<void> getSavedJobs() async{
+  Future<void> getSavedJobs() async {
     emit(JobSavedLoading());
     try {
-      _jobs=await jobRepo.getSavedJobs()!;
-      if (_jobs.isEmpty){
+      _jobs = await jobRepo.getSavedJobs()!;
+      if (_jobs.isEmpty) {
         emit(JobSavedEmpty());
-      } else{
-        emit(JobSavedLoaded(savedJobs: _jobs ));
+      } else {
+        emit(JobSavedLoaded(savedJobs: _jobs));
       }
     } catch (e) {
       emit(JobSavedErrorLoading(e.toString()));
-    } 
+    }
   }
 
-
-    Future<void> getAppliedJobs() async{
+  Future<void> getAppliedJobs() async {
     emit(JobAppliedLoading());
     try {
-      _jobs=await jobRepo.getAppliedJobs()!;
-      if (_jobs.isEmpty){
+      _jobs = await jobRepo.getAppliedJobs()!;
+      if (_jobs.isEmpty) {
         emit(JobAppliedEmpty());
-      } else{
-        emit(JobAppliedLoaded(appliedJobs: _jobs ));
+      } else {
+        emit(JobAppliedLoaded(appliedJobs: _jobs));
       }
     } catch (e) {
       emit(JobAppliedErrorLoading(e.toString()));
-    } 
+    }
   }
-
 
   //   Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
   //   emit(JobSearchLoading());
@@ -79,8 +82,7 @@ class JobListCubit extends Cubit<JobListState> {
   //   }
   // }
 
-
-    Future<void> getJobDetails() async {
+  Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {
       List<Job> savedJobs = await jobRepo.getSavedJobs()!;
@@ -100,7 +102,6 @@ class JobListCubit extends Cubit<JobListState> {
       emit(JobResumesErrorLoading(e.toString()));
     }
   }
-  
 
   uploadResume(File resumeFile) async {
     emit(JobResumeUploading());
@@ -120,7 +121,7 @@ class JobListCubit extends Cubit<JobListState> {
     await jobRepo.saveJob(jobId);
   }
 
-  applyJob(String jobId, Map<String,dynamic> jobApplication) async {
+  applyJob(String jobId, Map<String, dynamic> jobApplication) async {
     emit(JobApplicationSending());
     try {
       await jobRepo.applyJob(jobId, jobApplication);
@@ -130,21 +131,17 @@ class JobListCubit extends Cubit<JobListState> {
     }
   }
 
-  createJob({required Map<String,dynamic> jobReq}) async{
-        emit(JobCreating());
+  createJob({required Map<String, dynamic> jobReq}) async {
+    emit(JobCreating());
     try {
-      await jobRepo.createJob(jobReq:jobReq);
+      await jobRepo.createJob(jobReq: jobReq);
       emit(JobCreated());
     } catch (e) {
       emit(JobCreationError(e.toString()));
     }
   }
 
-  emitJobSearchInitial(){
+  emitJobSearchInitial() {
     emit(JobSearchInitial());
   }
 }
-
-
-
-

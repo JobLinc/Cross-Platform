@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:joblinc/core/services/navigation_service.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/features/notifications/data/models/notification_model.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_cubit.dart';
@@ -24,13 +25,13 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     debugPrint('NotificationsScreen: initState - Loading notifications');
-    
+
     // First fetch the notifications
     context.read<NotificationCubit>().getNotifications();
-    
+
     // Ensure socket connection is active
     context.read<NotificationCubit>().initSocket();
-    
+
     // Only mark notifications as read if this screen is intentionally shown
     // We'll determine this in didChangeDependencies
   }
@@ -38,7 +39,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
-    
+
   //   // Check if this is an active user navigation (not initial app load)
   //   // and we haven't already marked notifications as read
   //   if (!_hasMarkedAsRead && ModalRoute.of(context)?.isCurrent == true) {
@@ -69,29 +70,6 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
-        actions: [
-          BlocBuilder<NotificationCubit, NotificationState>(
-            builder: (context, state) {
-              if (state is NotificationLoaded && state.unreadCount > 0) {
-                return TextButton(
-                  onPressed: () {
-                    context.read<NotificationCubit>().markAllAsSeen();
-                  },
-                  child: Text(
-                    'Mark all as read',
-                    style: TextStyle(
-                      color: state.unreadCount > 0
-                          ? ColorsManager.getPrimaryColor(context)
-                          : Colors.grey,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
       ),
       body: BlocConsumer<NotificationCubit, NotificationState>(
         listenWhen: (previous, current) {
@@ -165,6 +143,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                     notification: state.notifications[index],
                     onTap: (id) {
                       context.read<NotificationCubit>().markAsRead(id);
+                      NavigationService().notificationNavigator(
+                        state.notifications[index],
+                      );
                     },
                     isNew: index == 0 &&
                         state.notifications[index].isRead == "pending",
@@ -200,11 +181,16 @@ class NotificationTile extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       color: isNew
           ? ColorsManager.getPrimaryColor(context).withOpacity(0.1)
-          : notification.isRead == "seen" || notification.isRead == "read"
+          : notification.isRead == "read"
               ? Colors.transparent
               : ColorsManager.getPrimaryColor(context).withOpacity(0.05),
       child: InkWell(
-        onTap: () => onTap(notification.id),
+        onTap: () {
+          context.read<NotificationCubit>().markAsRead(notification.id);
+          NavigationService().notificationNavigator(
+            notification,
+          );
+        },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
@@ -224,8 +210,7 @@ class NotificationTile extends StatelessWidget {
                 margin: EdgeInsets.only(top: 8.h, right: 10.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: notification.isRead == "seen" ||
-                          notification.isRead == "read"
+                  color: notification.isRead == "read"
                       ? Colors.transparent
                       : ColorsManager.getPrimaryColor(context),
                 ),
@@ -240,8 +225,7 @@ class NotificationTile extends StatelessWidget {
                       notification.content,
                       style: TextStyle(
                         fontSize: 14.sp,
-                        fontWeight: notification.isRead == "seen" ||
-                                notification.isRead == "read"
+                        fontWeight: notification.isRead == "read"
                             ? FontWeight.normal
                             : FontWeight.bold,
                       ),

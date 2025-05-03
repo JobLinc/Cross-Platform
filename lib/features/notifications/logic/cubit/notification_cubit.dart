@@ -6,6 +6,7 @@ import 'package:joblinc/features/notifications/data/models/notification_model.da
 import 'package:joblinc/features/notifications/data/repos/notification_repo.dart';
 import 'package:joblinc/features/notifications/data/services/device_token_service.dart';
 import 'package:joblinc/features/notifications/data/services/firebase_messaging_service.dart';
+import 'package:joblinc/features/notifications/data/services/notification_api_service.dart';
 import 'package:joblinc/features/notifications/data/services/socket_service.dart';
 import 'package:joblinc/features/notifications/logic/cubit/notification_state.dart';
 
@@ -35,6 +36,8 @@ class NotificationCubit extends Cubit<NotificationState> {
     _fcmService = FirebaseMessagingService(
       _deviceTokenService,
       addNewNotification,
+      getIt<NotificationApiService>(),
+      this
     );
 
     // Initialize Firebase Messaging
@@ -94,7 +97,7 @@ class NotificationCubit extends Cubit<NotificationState> {
               type: notification.type,
               content: notification.content,
               imageUrl: notification.imageUrl,
-              isRead: "seen",
+              isRead: "read",
               createdAt: notification.createdAt,
             );
           }

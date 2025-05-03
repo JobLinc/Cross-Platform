@@ -12,6 +12,7 @@ class NotificationLoaded extends NotificationState {
   NotificationLoaded(this.notifications);
 
   int get unreadCount => notifications.where((n) => n.isRead == "pending").length;
+
 }
 
 class NotificationError extends NotificationState {
