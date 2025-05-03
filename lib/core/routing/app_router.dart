@@ -70,6 +70,7 @@ import 'package:joblinc/features/userprofile/logic/cubit/message_requests_cubit.
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/search_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_certificate_screen.dart';
+import 'package:joblinc/features/userprofile/ui/screens/add_education_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_experience_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_resume_screen.dart';
 import 'package:joblinc/features/userprofile/ui/screens/add_skill_screen.dart';
@@ -164,7 +165,7 @@ class AppRouter {
             child: ForgotPasswordSteps(),
           ),
         );
-         case Routes.chatScreen:
+      case Routes.chatScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
                 create: (context) => getIt<ChatListCubit>(),
@@ -475,7 +476,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddCertificateScreen(),
+            child: UserAddCertificateScreen(
+              certificate: (arguments as Certification?),
+            ),
           ),
         );
 
@@ -483,7 +486,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddExperienceScreen(),
+            child: UserAddExperienceScreen(
+              experience: (arguments as ExperienceResponse),
+            ),
           ),
         );
 
@@ -491,7 +496,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => getIt<ProfileCubit>(),
-            child: UserAddSkillScreen(),
+            child: UserAddSkillScreen(
+              skill: (arguments as Skill?),
+            ),
           ),
         );
 
@@ -510,11 +517,18 @@ class AppRouter {
             child: UserAddResumeScreen(),
           ),
         );
+      case Routes.addEducationScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: AddEducationScreen(education: (arguments as Education?)),
+          ),
+        );
       case Routes.adminPanel:
         return MaterialPageRoute(
           builder: (context) => AdminPanel(),
         );
-         case Routes.createChat:
+      case Routes.createChat:
         return MaterialPageRoute(
           builder: (context) => CreateChatScreen(),
         );
@@ -548,9 +562,7 @@ class AppRouter {
           return MaterialPageRoute(
             builder: (_) => BlocProvider(
               create: (context) => getIt<EditCompanyCubit>(),
-              child: CompanyAddLocation(
-                company: arguments
-              ),
+              child: CompanyAddLocation(company: arguments),
             ),
           );
         } else if (arguments is Map && arguments['company'] is Company) {

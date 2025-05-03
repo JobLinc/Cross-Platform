@@ -78,7 +78,13 @@ class _SearchScreenState extends State<UserSearchScreen> {
                   child: ListTile(
                     leading: ProfileImage(imageURL: user.profilePicture),
                     title: Text('${user.firstname} ${user.lastname}'),
-                    subtitle: Text(user.headline),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.username),
+                        Text(user.headline),
+                      ],
+                    ),
                   ),
                 );
               },
