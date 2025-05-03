@@ -49,7 +49,7 @@ class SentConnectionsCubit extends Cubit<SentConnectionsState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't withdraw connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }

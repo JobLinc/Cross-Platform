@@ -45,13 +45,27 @@ class FollowCubit extends Cubit<FollowState> {
       if (!isClosed) {
         CustomSnackBar.show(
             context: context,
-            message: "couldn't unfollow connection",
+            message: error.toString(),
             type: SnackBarType.error);
       }
     }
   }
 
-  void removeFollower(String userId, BuildContext context) async {
+  Future<void> fetchFollowers() async {
+    emit(FollowInitial());
+
+    try {
+      final response = await connectionsRepository.getFollowers();
+      if (!isClosed) {
+        emit(FollowLoaded(response));
+      }
+    } catch (error) {
+      if (!isClosed) {
+        emit(FollowError("An error occurred: $error"));
+      }
+    }
+  }
+   void removeFollower(String userId, BuildContext context) async {
     try {
       final response = await connectionsRepository.removeFollower(userId);
       if (response.statusCode == 200) {
@@ -73,21 +87,6 @@ class FollowCubit extends Cubit<FollowState> {
             context: context,
             message: error.toString(),
             type: SnackBarType.error);
-      }
-    }
-  }
-
-  Future<void> fetchFollowers() async {
-    emit(FollowInitial());
-
-    try {
-      final response = await connectionsRepository.getFollowers();
-      if (!isClosed) {
-        emit(FollowLoaded(response));
-      }
-    } catch (error) {
-      if (!isClosed) {
-        emit(FollowError("An error occurred: $error"));
       }
     }
   }

@@ -26,7 +26,7 @@ class FollowingListScreen extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
             ),
             title: Text(
-              "People You Follow That Are Not Connections",
+              "Following",
               style: TextStyle(fontSize: 20.sp),
             ),
             centerTitle: true,

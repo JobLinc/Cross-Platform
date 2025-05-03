@@ -55,7 +55,7 @@ class InvitationsCubit extends Cubit<InvitationsState> {
       if (!isClosed) {
         CustomSnackBar.show(
           context: context,
-          message: "Couldn't $status the connection",
+          message:error.toString(),
           type: SnackBarType.error,
         );
       }
