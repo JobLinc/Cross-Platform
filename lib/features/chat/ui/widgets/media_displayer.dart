@@ -27,10 +27,24 @@ import 'package:get_thumbnail_video/video_thumbnail.dart';
 //     throw Exception('PDF download failed: ${resp.statusCode}');
 //   }
 //   final data = Uint8List.fromList(resp.data!);
+// Future<Uint8List> renderPdfFirstPage(String url) async {
+//   // 1) fetch into memory
+//   final resp = await _dio.get<List<int>>(
+//     url,
+//     options: Options(responseType: ResponseType.bytes),
+//   );
+//   if (resp.statusCode != 200 || resp.data == null) {
+//     throw Exception('PDF download failed: ${resp.statusCode}');
+//   }
+//   final data = Uint8List.fromList(resp.data!);
 
 //   // 2) open PDF
 //   final doc = await PdfDocument.openData(data);
+//   // 2) open PDF
+//   final doc = await PdfDocument.openData(data);
 
+//   // 3) grab page 1
+//   final page = await doc.getPage(1);
 //   // 3) grab page 1
 //   final page = await doc.getPage(1);
 
@@ -39,13 +53,24 @@ import 'package:get_thumbnail_video/video_thumbnail.dart';
 //     width: page.width.toInt(),
 //     height: page.height.toInt(),
 //   );
+//   // 4) render full‑page image
+//   final pageImage = await page.render(
+//     width: page.width.toInt(),
+//     height: page.height.toInt(),
+//   );
 
+//   // 5) extract RGBA bytes
+//   final pixels = pageImage.pixels;
 //   // 5) extract RGBA bytes
 //   final pixels = pageImage.pixels;
 
 //   // 6) clean up
 //   await doc.dispose();
+//   // 6) clean up
+//   await doc.dispose();
 
+//   return pixels;
+// }
 //   return pixels;
 // }
 

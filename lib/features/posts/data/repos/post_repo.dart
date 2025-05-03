@@ -10,6 +10,10 @@ class PostRepo {
 
   PostRepo(this._postApiService, this._userProfileApiService);
 
+  Future<void> reportPost(String postId) async {
+    return await _postApiService.reportPost(postId);
+  }
+
   Future<List<PostModel>> getUserPosts(String userId) async {
     return await _postApiService.getUserPosts(userId);
   }

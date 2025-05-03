@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/userprofile/data/models/certificate_model.dart';
 import 'package:joblinc/features/userprofile/data/models/education_model.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
@@ -201,6 +202,53 @@ class addService {
     }
   }
 
+  Future<List<Chat>> fetchChatRequests() async {
+    try {
+      final response =
+          await dio.get('/chat/message-requests'); // Adjust endpoint as needed
+
+      final data = response.data['chats'] as List<dynamic>;
+
+      return data.map((e) => Chat.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
+  Future<Response> changeRequestStatus({
+    required String chatId,
+    required String status, // "Accepted" or "Rejected"
+  }) async {
+    try {
+      final response = await dio.put(
+        '/chat/change-request-status',
+        data: {
+          'chatId': chatId,
+          'status': status,
+        },
+      );
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        print(errorData);
+        final errorMessage = errorData['message'] ?? 'Something went wrong';
+        //print('Error: $errorMessage');
+        throw Exception(errorMessage);
+      } else {
+        throw Exception("Error : ${e.toString()}");
+      }
+    }
+  }
+
   Future<Response> addExperience(ExperienceModel experience) async {
     try {
       print(" this is the experience model ${experience.toJson()}");
@@ -222,6 +270,7 @@ class addService {
       }
     }
   }
+
   Future<Response> editExperience(ExperienceModel experience) async {
     try {
       Response response = await dio.put(
@@ -242,6 +291,7 @@ class addService {
       }
     }
   }
+
   Future<Response> deleteExperience(String experienceId) async {
     try {
       Response response = await dio.delete(

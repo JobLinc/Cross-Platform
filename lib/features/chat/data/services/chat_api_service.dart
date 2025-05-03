@@ -48,7 +48,7 @@ class ChatApiService {
       final response = await _dio.get('/chat/unread-count');
       return response;
     } on DioException catch (e) {
-      if(e.response!= null){
+      if (e.response != null) {
         throw Exception(e.response!.data["message"].toString().split(":").last);
       }
       throw Exception("Exception without response: ${e.message}");
@@ -81,7 +81,9 @@ class ChatApiService {
     //if (apiEndPointFunctional) {
     try {
       final response = await _dio.get('/chat/c/$chatId');
-      print("1 $response");
+      print("==================================================");
+      print("$response");
+      print("==================================================");
       return response;
     } catch (e) {
       throw Exception("Failed to fetch chat details: $e");

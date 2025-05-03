@@ -185,7 +185,9 @@ class _ChatScreenState extends State<ChatScreen> {
       // Create message from content
       final content = map['content'] as Map<String, dynamic>;
       final Message msg;
-
+      if (map['senderId'] == userId) {
+        return;
+      }
       if (content.containsKey('text')) {
         msg = Message(
           messageId: DateTime.now().millisecondsSinceEpoch.toString(),

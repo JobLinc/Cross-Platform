@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:joblinc/core/theming/colors.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_list.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_connections.dart';
 import 'package:joblinc/features/userprofile/ui/widgets/others_images.dart';
@@ -180,7 +181,11 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
                             profile: profile,
                             isUser: false,
                           ),
-                        ]
+                        ],
+                        // if (true) ...[
+                        //   //replace this with the list of postModels.isNotEmpty
+                        //   PostList(posts: []), //also replace this
+                        // ]
                       ],
                     ),
                   ),
@@ -221,7 +226,15 @@ VoidCallback? _getActionBasedOnConnectionStatus(String connectionStatus,
     case 'Accepted':
       return () async {
         final chatId = await (context.read<ProfileCubit>().createchat(userId));
-        Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId!);
+        print("my chat Id is $chatId");
+        print(
+            "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        if (chatId != null) {
+          Navigator.pushNamed(context, Routes.chatScreen, arguments: chatId);
+        } else {
+          print(
+              "bolbooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        }
       };
     case 'Received':
       return () {
