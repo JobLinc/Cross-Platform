@@ -102,6 +102,15 @@ class UserConnectionsRepository {
     }
   }
 
+  Future<Response> removeFollower(String userId) async {
+    try {
+      return await _apiService.removeFollower(userId);
+    } catch (e) {
+      print('Repository error following connection: $e');
+      rethrow;
+    }
+  }
+
   Future<List<UserConnection>> getUserConnections(String userId) async {
     try {
       final data = await _apiService.getUserConnections(userId);

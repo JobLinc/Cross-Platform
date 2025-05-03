@@ -68,20 +68,6 @@ class JobListCubit extends Cubit<JobListState> {
     }
   }
 
-  //   Future<void> getSearchedFilteredJobs(String keyword, String? location,Filter? filter) async {
-  //   emit(JobSearchLoading());
-  //   try {
-  //     _jobs = await jobRepo.getSearchedFilteredJobs(keyword,location,filter)!;
-  //     if (_jobs.isEmpty) {
-  //       emit(JobSearchEmpty());
-  //     } else {
-  //       emit(JobSearchLoaded(searchedJobs: _jobs));
-  //     }
-  //   } catch (e) {
-  //     emit(JobListErrorLoading(e.toString()));
-  //   }
-  // }
-
   Future<void> getJobDetails() async {
     emit(JobDetailsLoading());
     try {

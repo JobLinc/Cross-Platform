@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
@@ -167,9 +166,6 @@ class ChatListCubit extends Cubit<ChatListState> {
 
   void updateChatCard(Map<String, dynamic> data) {
     // Update chat card info (last message, unread count, etc.)
-    print(data);
-    print(data['chatId']);
-    print(data['lastMessage']);
     Chat newChat = Chat.fromJson(data);
     final chatId = newChat.chatId;
     final index = _chats.indexWhere((chat) => chat.chatId == chatId);

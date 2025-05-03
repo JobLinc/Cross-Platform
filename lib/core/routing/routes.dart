@@ -51,5 +51,6 @@ class Routes {
   static const String messageRequestsScreen = '/messageRequestsScreen';
   static const String adminPanel = '/adminPanel';
   static const String postSearchScreen = '/post-search';
+  static const String companyFollowersListScreen = '/companyFollowersListScreen';
   // We'll use the homeScreen route for the main container
 }

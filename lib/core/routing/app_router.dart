@@ -25,6 +25,8 @@ import 'package:joblinc/features/companypages/ui/screens/dashboard/company_analy
     show CompanyAnalytics;
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_dashboard.dart';
 import 'package:joblinc/features/companypages/ui/screens/company_home.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_edit.dart';
+import 'package:joblinc/features/companypages/ui/screens/dashboard/company_followers.dart';
 import 'package:joblinc/features/companypages/ui/screens/dashboard/company_page_posts.dart';
 import 'package:joblinc/features/companypages/data/data/repos/getmycompany_repo.dart';
 import 'package:joblinc/features/companypages/logic/cubit/edit_company_cubit.dart';
@@ -326,6 +328,16 @@ class AppRouter {
             child: FollowersListScreen(),
           ),
         );
+
+      case Routes.companyFollowersListScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FollowCubit>(),
+            child: CompanyFollowersListScreen(),
+          ),
+        );
+
+      
       case Routes.followingListScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

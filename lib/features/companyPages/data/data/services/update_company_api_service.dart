@@ -11,21 +11,12 @@ class UpdateCompanyApiService {
 
   Future<void> updateCompany(UpdateCompanyModel updateModel) async {
     try {
-      final response = await _dio.patch(
+      await _dio.patch(
         '/companies',
         data: updateModel.toJson(),
       );
-      print('''
-        === Received Response ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
-      // Handle the response if needed
-      // Optionally handle response if needed
       return;
     } on DioException catch (e) {
-      // Optionally extract and throw a more specific error message
       if (e.response != null &&
           e.response!.data is Map &&
           e.response!.data['message'] != null) {
@@ -54,17 +45,6 @@ class UpdateCompanyApiService {
         data: formData,
       );
       return uploadResponse.data;
-      // Extract the logo URL from the response (adjust the key if needed)
-      // final logoUrl = uploadResponse.data['logo'];
-      // if (logoUrl == null) {
-      //   throw Exception('Logo URL not found in response');
-      // }
-
-      // // Send PATCH request with {"logo": "logoUrl"}
-      // Response response = await _dio.patch(
-      //   '/companies',
-      //   data: {'logo': logoUrl},
-      // );
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }
@@ -89,17 +69,6 @@ class UpdateCompanyApiService {
         data: formData,
       );
       return uploadResponse.data;
-      // Extract the logo URL from the response (adjust the key if needed)
-      // final logoUrl = uploadResponse.data['logo'];
-      // if (logoUrl == null) {
-      //   throw Exception('Logo URL not found in response');
-      // }
-
-      // // Send PATCH request with {"logo": "logoUrl"}
-      // Response response = await _dio.patch(
-      //   '/companies',
-      //   data: {'logo': logoUrl},
-      // );
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }
@@ -140,19 +109,10 @@ class UpdateCompanyApiService {
   Future<dynamic> updateCompanyLocations(
       List<Map<String, dynamic>> locations) async {
     try {
-      print("Inside the updateCompanyLocations API service");
-      print("Locations: $locations");
-
       final response = await _dio.patch(
         '/companies',
         data: {'locations': locations},
       );
-      print('''
-        === Received Response ===
-        Status: ${response.statusCode} ${response.statusMessage}
-        Headers: ${response.headers}
-        Data: ${response.data}
-        ''');
       return response.data;
     } on DioException catch (e) {
       if (e.response != null &&

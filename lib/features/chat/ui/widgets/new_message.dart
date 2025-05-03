@@ -54,8 +54,6 @@ class _NewMessageState extends State<NewMessage> {
       'chatId': widget.chatId,
     };
 
-    print('📤 Sending message with payload: ${jsonEncode(payload)}');
-
     try {
       // Simple emit without acknowledgment - matching frontend approach
       widget.socket.emit('sendMessage', payload);
@@ -72,7 +70,6 @@ class _NewMessageState extends State<NewMessage> {
       // Notify server we stopped typing - simple emit
       widget.socket.emit('stopTyping', widget.chatId);
     } catch (e) {
-      print('🔴 Error sending message: $e');
       if (mounted) {
         setState(() {
           _isSending = false;

@@ -11,7 +11,6 @@ import 'package:joblinc/features/chat/data/models/chat_model.dart';
 import 'package:joblinc/features/chat/data/models/message_model.dart';
 import 'package:joblinc/features/chat/data/repos/chat_repo.dart';
 import 'package:joblinc/features/chat/logic/cubit/chat_list_cubit.dart';
-import 'package:joblinc/features/chat/ui/screens/chat_screen.dart';
 import 'package:joblinc/features/connections/data/models/connectiondemoModel.dart';
 import 'package:joblinc/features/connections/logic/cubit/connections_cubit.dart';
 
@@ -74,7 +73,6 @@ class _GroupChatConnectionsListViewState
       } else {
         selectedUserIds.remove(userId);
       }
-      print("Selected user IDs: $selectedUserIds");
     });
   }
 

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -128,15 +127,6 @@ class CompanyImages extends StatelessWidget {
                                                   Routes.homeScreen,
                                                   (Route<dynamic> route) =>
                                                       false);
-                                              // Navigator.of(context)
-                                              //     .pushNamedAndRemoveUntil(
-                                              //   Routes.companyPageHome,
-                                              //   arguments: {
-                                              //     'company': apiCompany,
-                                              //     'isAdmin': true
-                                              //   },
-                                              //   (route) => count++ >= 2,
-                                              // );
                                             } else {
                                               CustomSnackBar.show(
                                                   context: context,
@@ -203,15 +193,6 @@ class CompanyImages extends StatelessWidget {
                                                   Routes.homeScreen,
                                                   (Route<dynamic> route) =>
                                                       false);
-                                              // Navigator.of(context)
-                                              //     .pushNamedAndRemoveUntil(
-                                              //   Routes.companyPageHome,
-                                              //   arguments: {
-                                              //     'company': apiCompany,
-                                              //     'isAdmin': true
-                                              //   },
-                                              //   (route) => false,
-                                              // );
                                             } else {
                                               CustomSnackBar.show(
                                                   context: context,
@@ -228,15 +209,6 @@ class CompanyImages extends StatelessWidget {
                                                 .hideCurrentSnackBar();
 
                                             if (apiCompany != null) {
-                                              // Navigator.of(context)
-                                              //     .pushNamedAndRemoveUntil(
-                                              //   Routes.companyPageHome,
-                                              //   arguments: {
-                                              //     'company': apiCompany,
-                                              //     'isAdmin': true
-                                              //   },
-                                              //   (route) => false,
-                                              // );
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context, Routes.homeScreen, 
                                                 (Route <dynamic> route) => false
@@ -303,14 +275,6 @@ class CompanyImages extends StatelessWidget {
                                     context,
                                     Routes.homeScreen,
                                     (Route<dynamic> route) => false);
-                                // Navigator.of(context).pushNamedAndRemoveUntil(
-                                //   Routes.companyPageHome,
-                                //   arguments: {
-                                //     'company': apiCompany,
-                                //     'isAdmin': true
-                                //   },
-                                //   (route) => false,
-                                // );
                               } else {
                                 CustomSnackBar.show(
                                   context: context,

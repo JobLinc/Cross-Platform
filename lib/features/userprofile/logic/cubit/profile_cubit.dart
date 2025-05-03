@@ -327,14 +327,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // void removeCertificate(String certificateId) {
-  //   emit(RemoveCertificate(certificateId));
-  // }
-
-  // void updateCertificate(Certification certificate) {
-  //   emit(UpdateCertificate(certificate));
-  // }
-
   void addSkill(Skill skill) async {
     try {
       emit(ProfileUpdating("Adding skill"));
@@ -420,27 +412,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
   }
-
-  // void addExperienceByCompanyId(ExperienceByCompanyId experience) async {
-  //   try {
-  //     emit(ProfilePictureUpdating("Adding experience"));
-  //     final response = await _profileRepository.addExperienceByCompanyId(experience);
-
-  //     if (response.statusCode == 200) {
-  //       UserProfileUpdateModel experienceModel = UserProfileUpdateModel();
-  //       updateUserProfile(experienceModel);
-  //       emit(ExperienceAdded("Experience Added"));
-  //     } else {
-  //       if (!isClosed) {
-  //         emit(ExperienceFailed('Failed to add experience.'));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     if (!isClosed) {
-  //       emit(ExperienceFailed('Error: $e'));
-  //     }
-  //   }
-  // }
 
   void editExperience(ExperienceModel experience) async {
     try {

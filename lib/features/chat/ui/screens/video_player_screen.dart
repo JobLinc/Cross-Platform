@@ -33,14 +33,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Video", style: TextStyle(fontSize: 18.sp))),
-      // body: Center(
-      //   child: _controller.value.isInitialized
-      //       ? AspectRatio(
-      //           aspectRatio: _controller.value.aspectRatio,
-      //           child: VideoPlayer(_controller),
-      //         )
-      //       : CircularProgressIndicator(),
-      // ),
+
       body: Center(
       child: _controller.value.isInitialized
           ? LayoutBuilder(
