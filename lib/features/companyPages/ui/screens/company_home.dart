@@ -32,7 +32,7 @@ class _CompanyPageHomeState extends State<CompanyPageHome>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     if (widget.isAdmin) {
       widget.authService.refreshToken(companyId: widget.company.id);
     }
