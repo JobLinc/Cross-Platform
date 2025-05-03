@@ -103,7 +103,9 @@ class ChatSocketService {
 
     _socket.once('connect_error', (err) {
       cleanUp();
-      completer.complete(false);
+      if (!completer.isCompleted) {
+        completer.complete(false);
+      }
     });
 
     return completer.future;
