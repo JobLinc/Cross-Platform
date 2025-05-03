@@ -215,7 +215,7 @@ class CompanyData extends StatelessWidget {
                           width: company.website != "" &&
                                   company.website!.isNotEmpty
                               ? 130.w
-                              : 280.w,
+                              : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {
                             // Show loading SnackBar
@@ -224,7 +224,7 @@ class CompanyData extends StatelessWidget {
                                 content: Row(
                                   children: [
                                     CircularProgressIndicator(),
-                                    SizedBox(width: 16),
+                                    SizedBox(width: 16.w),
                                     Text("Following ${company.name}..."),
                                   ],
                                 ),
@@ -283,7 +283,7 @@ class CompanyData extends StatelessWidget {
                           width: company.website != null &&
                                   company.website!.isNotEmpty
                               ? 130.w
-                              : 280.w,
+                              : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {
                             if (isAdmin) {

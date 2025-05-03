@@ -97,7 +97,7 @@ Future<void> setupGetIt() async {
 
   final socketUrl =
       // Platform.isAndroid ?
-      'ws://192.168.1.4:3000'
+      'ws://joblinc.me:3000'
       // : 'ws://localhost:3000'
       ;
   final Dio dio = Dio(

@@ -290,7 +290,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.red),
                 padding: EdgeInsets.symmetric(
-                  horizontal: 100.w,
+                  horizontal: 95.w,
                   vertical: 16.h,
                 ),
                 textStyle: TextStyle(
@@ -304,7 +304,7 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                     .copyWith(color: ColorsManager.getPrimaryColor(context)),
               ),
             ),
-            SizedBox(width: 50.w),
+            SizedBox(width: 45.w),
           ],
         ),
       ),
