@@ -14,6 +14,10 @@ class InvitationsTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     return DefaultTabController(
       length: 2,
       child: Scaffold(

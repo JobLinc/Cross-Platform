@@ -19,6 +19,10 @@ class AddPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     final ValueNotifier<List<String>> mediaUrls = ValueNotifier([]);
     return BlocConsumer<AddPostCubit, AddPostState>(
       listener: (context, state) {

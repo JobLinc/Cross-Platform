@@ -142,10 +142,10 @@ class PostApiService {
             'type': _getMediaTypeString(item.mediaType),
           };
         }).toList();
-        
+
         data.addAll({'media': formattedMedia});
       }
-      
+
       final response = await _dio.post('/post/$postId/edit', data: data);
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
@@ -181,6 +181,27 @@ class PostApiService {
     try {
       final respone = await _dio.post('/post/$postId/react',
           data: {'type': '${type[0].toUpperCase()}${type.substring(1)}'});
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<List<PostModel>> searchPosts(String searchText,
+      {int? start, int? end}) async {
+    try {
+      Map<String, dynamic> queryParams = {'searchText': searchText};
+      if (start != null) queryParams['start'] = start.toString();
+      if (end != null) queryParams['end'] = end.toString();
+
+      final response =
+          await _dio.get('/post/search', queryParameters: queryParams);
+      List<PostModel> posts = [];
+
+      for (Map<String, dynamic> post in response.data) {
+        posts.add(PostModel.fromJson(post));
+      }
+
+      return posts;
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }

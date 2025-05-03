@@ -64,4 +64,10 @@ class PostRepo {
   Future<void> reactToPost(String postId, Reactions reaction) async {
     await _postApiService.reactToPost(postId, reaction);
   }
+
+  Future<List<PostModel>> searchPosts(String searchText,
+      {int? start, int? end}) async {
+    return await _postApiService.searchPosts(searchText,
+        start: start, end: end);
+  }
 }

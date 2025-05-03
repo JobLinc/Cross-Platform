@@ -53,8 +53,10 @@ import 'package:joblinc/features/login/ui/screens/login_screen.dart';
 import 'package:joblinc/features/onboarding/ui/screens/onboarding_screen.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
+import 'package:joblinc/features/posts/logic/cubit/post_search_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/saved_posts_cubit.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
+import 'package:joblinc/features/posts/ui/screens/post_search_screen.dart';
 import 'package:joblinc/features/posts/ui/screens/saved_posts.dart';
 import 'package:joblinc/features/settings/ui/screens/settings_screen.dart';
 import 'package:joblinc/features/signup/logic/cubit/signup_cubit.dart';
@@ -590,6 +592,15 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => (Placeholder()),
         );
+
+         case Routes.postSearchScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<PostSearchCubit>(),
+            child: const PostSearchScreen(),
+          ),
+        );
+
       default:
         return null;
     }

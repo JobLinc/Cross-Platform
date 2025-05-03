@@ -140,8 +140,8 @@ class PostContent extends StatelessWidget {
                     ? IconButton(
                         visualDensity: VisualDensity.compact,
                         onPressed: () {
-                          showPostSettings(
-                              context, data.senderID, showOwnerMenu, isSaved , data);
+                          showPostSettings(context, data.senderID,
+                              showOwnerMenu, isSaved, data);
                         },
                         icon: Icon(Icons.more_vert),
                       )
@@ -411,8 +411,8 @@ class PostAttachments extends StatelessWidget {
   }
 }
 
-Future<dynamic> showPostSettings(
-    BuildContext context, String userId, bool showOwnerMenu, bool isSaved , PostModel data) {
+Future<dynamic> showPostSettings(BuildContext context, String userId,
+    bool showOwnerMenu, bool isSaved, PostModel data) {
   List<Widget> postSettingsNormalButtons = [
     isSaved
         ? ListTile(

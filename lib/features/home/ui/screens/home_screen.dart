@@ -33,6 +33,21 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Prevent keyboard from showing up automatically
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
@@ -163,18 +178,22 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Center(
             child: Semantics(
               label: 'home_topBar_search',
-              child: CustomSearchBar(
-                backgroundColor:
-                    Theme.of(context).brightness == Brightness.light
-                        ? ColorsManager.lightGray
-                        : ColorsManager.darkModeCardBackground,
-                keyName: 'home_topBar_search',
-                text: 'Search',
-                onPress: () {
-                  showFilterBottomSheet(context);
-                },
-                onTextChange: () {},
-                controller: searchController,
+              child: GestureDetector(
+                onTap: () => showFilterBottomSheet(context),
+                child: CustomSearchBar(
+                  isEnabled: false,
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? ColorsManager.lightGray
+                          : ColorsManager.darkModeCardBackground,
+                  keyName: 'home_topBar_search',
+                  text: 'Search',
+                  onPress: () {
+                    showFilterBottomSheet(context);
+                  },
+                  onTextChange: () {},
+                  controller: searchController,
+                ),
               ),
             ),
           ),
@@ -786,7 +805,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: TextButton(
                     onPressed: () {
-                      // Handle Posts button press
+                      Navigator.pushNamed(context, Routes.postSearchScreen);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),

@@ -14,7 +14,7 @@ import 'package:joblinc/features/posts/logic/cubit/edit_post_state.dart';
 
 class EditPostScreen extends StatefulWidget {
   final PostModel post;
-  
+
   const EditPostScreen({Key? key, required this.post}) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   late TextEditingController _inputController;
   late List<PostmediaModel> _mediaItems;
-  
+
   @override
   void initState() {
     super.initState();
@@ -105,7 +105,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                   top: 0,
                                   right: 0,
                                   child: IconButton(
-                                    icon: Icon(Icons.close, color: Colors.white),
+                                    icon:
+                                        Icon(Icons.close, color: Colors.white),
                                     onPressed: () {
                                       setState(() {
                                         _mediaItems.removeAt(index);
@@ -168,7 +169,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
           child: TextButton(
             style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-              foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+              foregroundColor:
+                  Theme.of(context).colorScheme.onSecondaryContainer,
               textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
               disabledBackgroundColor: Colors.grey.shade300,
               disabledForegroundColor: Colors.grey,

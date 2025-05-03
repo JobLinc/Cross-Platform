@@ -18,12 +18,16 @@ class JobListScreen extends StatefulWidget {
 class _JobListScreenState extends State<JobListScreen> {
   late List<Job> searchedJobs;
   bool? isSearching = false;
-  Map <String,dynamic>? queryParams = {};
+  Map<String, dynamic>? queryParams = {};
   final searchTextController = TextEditingController();
   @override
   void initState() {
     super.initState();
     //print("getting jobs");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     context.read<JobListCubit>().getAllJobs(queryParams: queryParams);
   }
 
@@ -33,7 +37,10 @@ class _JobListScreenState extends State<JobListScreen> {
       children: [
         CustomHorizontalPillBar(
             changePillColor: false,
-            items: [ "My Jobs", "Post a free job",],
+            items: [
+              "My Jobs",
+              "Post a free job",
+            ],
             onItemSelected: labelClicked),
         Expanded(child:
             BlocBuilder<JobListCubit, JobListState>(builder: (context, state) {
@@ -55,20 +62,20 @@ class _JobListScreenState extends State<JobListScreen> {
   labelClicked(String label) async {
     if (label == "My Jobs") {
       Navigator.pushNamed(context, Routes.myJobsScreen);
-    } else if (label == "Post a free job")  {
-      final bool created =  await Navigator.push(
+    } else if (label == "Post a free job") {
+      final bool created = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (_) => BlocProvider(
                     create: (context) => getIt<JobListCubit>(),
                     child: JobCreationScreen(),
                   )));
-          if (created == true) {
-            // If the job was created successfully, refresh the job list
-            // You can use a callback or any other method to trigger the refresh
-            // For example, you can call getAllJobs() again here
-            context.read<JobListCubit>().getAllJobs(queryParams: queryParams);
-          }
+      if (created == true) {
+        // If the job was created successfully, refresh the job list
+        // You can use a callback or any other method to trigger the refresh
+        // For example, you can call getAllJobs() again here
+        context.read<JobListCubit>().getAllJobs(queryParams: queryParams);
+      }
     }
     return;
   }

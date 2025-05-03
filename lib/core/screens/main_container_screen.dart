@@ -69,6 +69,9 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _notificationCubit.initServices();
       _fetchUnseenCount();
+
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
     });
   }
 
@@ -87,6 +90,10 @@ class _MainContainerScreenState extends State<MainContainerScreen>
   }
 
   void _onItemTapped(int index) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     // Only if we're not already on this tab
     if (_selectedIndex != index) {
       setState(() {
@@ -107,22 +114,6 @@ class _MainContainerScreenState extends State<MainContainerScreen>
   }
 
   // Handle result from post creation
-  Future<void> _navigateToAddPost() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => getIt<AddPostCubit>(),
-          child: AddPostScreen(),
-        ),
-      ),
-    );
-
-    // If result is 0, navigate to home tab
-    if (result == 0) {
-      _onItemTapped(0);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +123,8 @@ class _MainContainerScreenState extends State<MainContainerScreen>
         if (state is NotificationLoaded) {
           // Only count and update if we're not on the notifications tab
           if (_selectedIndex != 3) {
-            final unseenCount = state.notifications
-                .where((n) => n.isRead == "pending")
-                .length;
+            final unseenCount =
+                state.notifications.where((n) => n.isRead == "pending").length;
 
             if (unseenCount != _unseenNotificationCount) {
               setState(() {
@@ -161,7 +151,8 @@ class _MainContainerScreenState extends State<MainContainerScreen>
             _buildKeepAliveScreen(
               BlocProvider(
                 create: (context) => getIt<InvitationsCubit>(),
-                child: const InvitationsTabs(key: Key("connections home screen")),
+                child:
+                    const InvitationsTabs(key: Key("connections home screen")),
               ),
             ),
 
@@ -203,7 +194,10 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     // Some tabs like HomeScreen have their own AppBar, return null for those
     if (index == 0 || index == 2)
       return null; // HomeScreen has its own AppBar and Add Post tab has no AppBar
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     // For Jobs tab, include search functionality
     if (index == 4) {
       return universalAppBar(
@@ -278,6 +272,10 @@ class _KeepAliveWrapperState extends State<_KeepAliveWrapper>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     return widget.child;
   }
 

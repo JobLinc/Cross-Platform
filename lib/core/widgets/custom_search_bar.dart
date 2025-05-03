@@ -10,7 +10,7 @@ class CustomSearchBar extends StatelessWidget {
   final Function onPress;
   final Function onTextChange;
   final TextEditingController controller;
-
+  final bool isEnabled;
   final Color? backgroundColor;
 
   CustomSearchBar(
@@ -23,6 +23,7 @@ class CustomSearchBar extends StatelessWidget {
       required this.onTextChange,
       required this.controller,
       this.backgroundColor,
+      this.isEnabled = true,
       super.key});
 
   @override
@@ -35,6 +36,7 @@ class CustomSearchBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: TextField(
+        enabled: isEnabled,
         key: Key(keyName ?? 'Search bar'),
         cursorColor: Colors.red[400],
         controller: controller,

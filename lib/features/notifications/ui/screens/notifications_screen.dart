@@ -26,6 +26,10 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     WidgetsBinding.instance.addObserver(this);
     debugPrint('NotificationsScreen: initState - Loading notifications');
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Prevent keyboard from showing up automatically
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
     // First fetch the notifications
     context.read<NotificationCubit>().getNotifications();
 
