@@ -7,9 +7,11 @@ import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/theming/font_styles.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
+import 'package:joblinc/features/posts/logic/cubit/edit_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
+import 'package:joblinc/features/posts/ui/screens/edit_post_screen.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_media.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
@@ -139,7 +141,7 @@ class PostContent extends StatelessWidget {
                         visualDensity: VisualDensity.compact,
                         onPressed: () {
                           showPostSettings(
-                              context, data.senderID, showOwnerMenu, isSaved);
+                              context, data.senderID, showOwnerMenu, isSaved , data);
                         },
                         icon: Icon(Icons.more_vert),
                       )
@@ -410,7 +412,7 @@ class PostAttachments extends StatelessWidget {
 }
 
 Future<dynamic> showPostSettings(
-    BuildContext context, String userId, bool showOwnerMenu, bool isSaved) {
+    BuildContext context, String userId, bool showOwnerMenu, bool isSaved , PostModel data) {
   List<Widget> postSettingsNormalButtons = [
     isSaved
         ? ListTile(
@@ -452,8 +454,16 @@ Future<dynamic> showPostSettings(
       leading: Icon(Icons.edit_outlined),
       title: Text('Edit post'),
       onTap: () {
-        //TODO add edit post screen here
         Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => getIt<EditPostCubit>(),
+              child: EditPostScreen(post: data),
+            ),
+          ),
+        );
       },
     ),
     ListTile(

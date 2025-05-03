@@ -237,7 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 )
-              : PostList(posts: state.posts!),
+              : PostList(
+                  posts: state.posts!,
+                  showOwnerMenu: true,
+                ),
         ),
       );
     } else {

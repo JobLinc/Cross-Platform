@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/repos/post_repo.dart';
@@ -60,9 +61,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> editPost(String? text, List<String>? attachmentsUrls) async {
+  Future<void> editPost(String? text, List<PostmediaModel>? attachments) async {
     try {
-      await _postRepo.editPost(postId, text, attachmentsUrls);
+      await _postRepo.editPost(postId, text, attachments);
       emit(PostStateSuccess('Post edited'));
     } catch (e) {
       emit(PostStateFailure(e.toString()));
