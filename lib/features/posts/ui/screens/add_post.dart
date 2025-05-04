@@ -1,6 +1,10 @@
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/di/dependency_injection.dart';
 import 'package:joblinc/core/helpers/user_service.dart';
 import 'package:joblinc/core/routing/routes.dart';
@@ -9,11 +13,13 @@ import 'package:joblinc/core/theming/font_weight_helper.dart';
 import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/core/widgets/profile_image.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
-import 'package:joblinc/features/posts/data/services/tag_suggestion_service.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/add_post_state.dart';
+import 'package:joblinc/features/posts/ui/widgets/image_upload.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
 import 'package:joblinc/features/posts/ui/widgets/tagged_text_controller.dart';
 
@@ -28,10 +34,10 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   late TaggedTextEditingController _inputController;
-  final ValueNotifier<List<String>> _mediaUrls = ValueNotifier([]);
+  final ValueNotifier<List<PostmediaModel>> mediaUrls = ValueNotifier([]);
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
-  bool _isPublic = true;
+  final ValueNotifier<bool> _isPublic = ValueNotifier(true);
   String _currentTagQuery = '';
   List<dynamic> _tagSuggestions = [];
   bool _isLoadingSuggestions = false;
@@ -185,6 +191,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<List<ImageUploadWidget>> uploadWidgets =
+        ValueNotifier([]);
+
     return BlocConsumer<AddPostCubit, AddPostState>(
       listener: (context, state) {
         if (state is AddPostStateSuccess) {
@@ -204,7 +213,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: _buildAppBar(context),
+          appBar: addPostTopBar(
+            context,
+            _inputController,
+            widget.repost?.postID,
+            mediaUrls,
+          ),
           body: Padding(
             padding: const EdgeInsets.only(
               left: 10.0,
@@ -213,7 +227,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             child: LoadingIndicatorOverlay(
               inAsyncCall: state is AddPostStateLoading,
-              child: Column(
+              child: ListView(
+                shrinkWrap: true,
                 children: widget.repost == null
                     ? [
                         Flexible(
@@ -236,7 +251,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             ),
                           ),
                         ),
-                        BottomButtons(mediaUrls: _mediaUrls),
+                        BottomButtons(
+                            mediaUrls: mediaUrls, uploadWidgets: uploadWidgets),
                       ]
                     : [
                         Flexible(
@@ -279,81 +295,31 @@ class _AddPostScreenState extends State<AddPostScreen> {
       },
     );
   }
+}
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: GestureDetector(
-        onTap: () {
-          showModalBottomSheet(
-            showDragHandle: true,
-            context: context,
-            builder: (context) {
-              return PrivacySettings(
-                initialValue: _isPublic,
-                onChanged: (value) {
-                  setState(() {
-                    _isPublic = value;
-                  });
-                },
-              );
-            },
-          );
-        },
-        child: Row(
-          spacing: 8,
-          children: [
-            FutureBuilder(
-              future: UserService.getProfilePicture(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ProfileImage(imageURL: snapshot.data);
-                } else {
-                  return ProfileImage(imageURL: null);
-                }
-              },
+class UploadedImagesBar extends StatelessWidget {
+  const UploadedImagesBar({
+    super.key,
+    required this.uploadWidgets,
+  });
+
+  final ValueNotifier<List<ImageUploadWidget>> uploadWidgets;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: uploadWidgets,
+      builder: (context, uploads, child) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: uploads,
             ),
-            Text(
-              _isPublic ? "Anyone" : "Connections only",
-              style: TextStyle(fontSize: 20),
-            ),
-            Icon(Icons.arrow_drop_down),
-          ],
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ValueListenableBuilder<TextEditingValue>(
-            valueListenable: _inputController,
-            builder: (context, value, child) {
-              return TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onSecondaryContainer,
-                  textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  disabledForegroundColor: Colors.grey,
-                ),
-                onPressed: value.text.isNotEmpty
-                    ? () {
-                        context.read<AddPostCubit>().addPost(
-                              value.text,
-                              _mediaUrls.value,
-                              widget.repost?.postID,
-                              _isPublic,
-                              taggedUsers: _inputController.taggedUsers,
-                              taggedCompanies: _inputController.taggedCompanies,
-                            );
-                      }
-                    : null,
-                child: Text('Post'),
-              );
-            },
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }
@@ -362,55 +328,140 @@ class BottomButtons extends StatelessWidget {
   const BottomButtons({
     super.key,
     required this.mediaUrls,
+    required this.uploadWidgets,
   });
-  final ValueNotifier<List<String>> mediaUrls;
-
+  final ValueNotifier<List<PostmediaModel>> mediaUrls;
+  final ValueNotifier<List<ImageUploadWidget>> uploadWidgets;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          onPressed: () async {
-            final picker = ImagePicker();
-            List<XFile> medias = await picker.pickMultipleMedia();
-          },
-          icon: Icon(Icons.image),
-        ),
+            onPressed: () async {
+              final picker = ImagePicker();
+              List<XFile> medias = await picker.pickMultiImage();
+              for (XFile media in medias) {
+                final futureMedia = getIt.get<PostRepo>().uploadImage(media);
+                futureMedia.then((media) => mediaUrls.value.add(media));
+                uploadWidgets.value.add(
+                  ImageUploadWidget(
+                    imageWidget: Image.file(File(media.path)),
+                    uploadFuture: futureMedia,
+                  ),
+                );
+              }
+            },
+            icon: Icon(Icons.image)),
       ],
     );
   }
 }
 
-class PrivacySettings extends StatefulWidget {
-  final bool initialValue;
-  final Function(bool) onChanged;
-
-  const PrivacySettings({
-    super.key,
-    this.initialValue = true,
-    required this.onChanged,
-  });
-
-  @override
-  State<PrivacySettings> createState() => _PrivacySettingsState();
+AppBar addPostTopBar(
+  BuildContext context,
+  TaggedTextEditingController inputController,
+  String? repostId,
+  ValueNotifier<List<PostmediaModel>> mediaUrls,
+) {
+  final ValueNotifier<bool> isPublic = ValueNotifier(true);
+  return AppBar(
+    title: GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          showDragHandle: true,
+          context: context,
+          builder: (context) {
+            return PrivacySettings(
+              isPublic: isPublic,
+            );
+          },
+        );
+      },
+      child: Row(
+        spacing: 8,
+        children: [
+          FutureBuilder(
+            future: UserService.getProfilePicture(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ProfileImage(imageURL: snapshot.data);
+              } else {
+                return ProfileImage(imageURL: null);
+              }
+            },
+          ),
+          ValueListenableBuilder(
+            valueListenable: isPublic,
+            builder: (context, value, child) => Text(
+              value ? "Anyone" : "Connections only",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Icon(Icons.arrow_drop_down),
+        ],
+      ),
+    ),
+    actions: [
+      Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ValueListenableBuilder<TextEditingValue>(
+          valueListenable: inputController,
+          builder: (context, value, child) {
+            return TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onSecondaryContainer,
+                textStyle: TextStyle(fontWeight: FontWeightHelper.semiBold),
+                disabledBackgroundColor: Colors.grey.shade300,
+                disabledForegroundColor: Colors.grey,
+              ),
+              onPressed: value.text.isNotEmpty
+                  ? () {
+                      print(
+                          'sending posts with media: ${mediaUrls.value.isNotEmpty ? mediaUrls.value[0].url : 'None'}');
+                      context.read<AddPostCubit>().addPost(
+                            value.text,
+                            mediaUrls.value,
+                            repostId,
+                            isPublic.value,
+                            taggedUsers: inputController.taggedUsers,
+                            taggedCompanies: inputController.taggedCompanies,
+                          );
+                    }
+                  : null,
+              child: Text('Post'),
+            );
+          },
+        ),
+      )
+    ],
+  );
 }
 
-class _PrivacySettingsState extends State<PrivacySettings> {
-  late bool isPublic;
+class PrivacySettings extends StatefulWidget {
+  const PrivacySettings({
+    super.key,
+    required this.isPublic,
+  });
+  final ValueNotifier<bool> isPublic;
+  @override
+  State<PrivacySettings> createState() => PrivacySettingsState();
+}
 
+class PrivacySettingsState extends State<PrivacySettings> {
   @override
   void initState() {
     super.initState();
-    isPublic = widget.initialValue;
   }
 
   void _updateSelectedValue(bool? value) {
     if (value != null) {
       setState(() {
-        isPublic = value;
+        widget.isPublic.value = value;
       });
-      widget.onChanged(value);
     }
   }
 
@@ -433,10 +484,9 @@ class _PrivacySettingsState extends State<PrivacySettings> {
           ),
           ListTile(
             leading: Radio(
-              value: true,
-              groupValue: isPublic,
-              onChanged: _updateSelectedValue,
-            ),
+                value: true,
+                groupValue: widget.isPublic.value,
+                onChanged: _updateSelectedValue),
             title: Text(
               'Public',
               style: TextStyle(fontWeight: FontWeightHelper.semiBold),
@@ -449,10 +499,9 @@ class _PrivacySettingsState extends State<PrivacySettings> {
           ),
           ListTile(
             leading: Radio(
-              value: false,
-              groupValue: isPublic,
-              onChanged: _updateSelectedValue,
-            ),
+                value: false,
+                groupValue: widget.isPublic.value,
+                onChanged: _updateSelectedValue),
             title: Text(
               'Connections only',
               style: TextStyle(fontWeight: FontWeightHelper.semiBold),

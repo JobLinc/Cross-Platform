@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/posts/data/models/post_media_model.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/post_model.dart';
+import 'package:joblinc/features/posts/data/models/reaction_model.dart';
 import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
@@ -8,6 +12,21 @@ class PostApiService {
   final Dio _dio;
 
   PostApiService(this._dio);
+
+  Future<List<ReactionModel>> getPostReactions(String postId) async {
+    try {
+      final response = await _dio.get('/post/$postId/reactions');
+      List<ReactionModel> reactions = [];
+
+      for (Map<String, dynamic> reaction in response.data) {
+        reactions.add(ReactionModel.fromJson(reaction));
+      }
+
+      return reactions;
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
 
   Future<void> reportPost(String postId) async {
     try {
@@ -91,17 +110,30 @@ class PostApiService {
   }
 
   Future<String> addPost(
-      String text, List<String> media, String? repostId, bool isPublic,
-      {List<TaggedEntity> taggedUsers = const [],
-      List<TaggedEntity> taggedCompanies = const []}) async {
+    String text,
+    List<PostmediaModel> media,
+    String? repostId,
+    bool isPublic, {
+    List<TaggedEntity> taggedUsers = const [],
+    List<TaggedEntity> taggedCompanies = const [],
+  }) async {
     try {
+      List<Map> mediaList = [];
+      for (PostmediaModel postmedia in media) {
+        print('adding media: ${postmedia.url}');
+        String typeString = postmedia.mediaType.toString().split('.').last;
+        mediaList.add({
+          'url': postmedia.url,
+          'type': '${typeString[0].toUpperCase()}${typeString.substring(1)}',
+        });
+      }
+
       final Map<String, dynamic> data = {
         'text': text,
         'isPublic': isPublic,
       };
-
       if (media.isNotEmpty) {
-        data['media'] = media;
+        data['media'] = mediaList;
       }
 
       if (repostId != null) {
@@ -128,7 +160,7 @@ class PostApiService {
 
   Future<void> savePost(String postId) async {
     try {
-      final respone = await _dio.post('/post/$postId/save');
+      final response = await _dio.post('/post/$postId/save');
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
@@ -136,7 +168,7 @@ class PostApiService {
 
   Future<void> unsavePost(String postId) async {
     try {
-      final respone = await _dio.post('/post/$postId/unsave');
+      final response = await _dio.post('/post/$postId/unsave');
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
@@ -183,15 +215,15 @@ class PostApiService {
   }
 
   // Helper method to convert MediaType enum to string format expected by API
-  String _getMediaTypeString(MediaType type) {
+  String _getMediaTypeString(PostMediaType type) {
     switch (type) {
-      case MediaType.image:
+      case PostMediaType.image:
         return 'Image';
-      case MediaType.video:
+      case PostMediaType.video:
         return 'Video';
-      case MediaType.audio:
+      case PostMediaType.audio:
         return 'Audio';
-      case MediaType.document:
+      case PostMediaType.document:
         return 'Document';
       default:
         return 'Image';
@@ -200,7 +232,45 @@ class PostApiService {
 
   Future<void> deletePost(String postId) async {
     try {
-      final respone = await _dio.post('/post/$postId/delete');
+      final response = await _dio.post('/post/$postId/delete');
+    } on DioException catch (e) {
+      throw Exception(_handleDioError(e));
+    }
+  }
+
+  Future<PostmediaModel> uploadImage(XFile file) async {
+    return await _uploadMedia(file, 'Image');
+  }
+
+  Future<PostmediaModel> uploadVideo(XFile file) async {
+    return await _uploadMedia(file, 'Video');
+  }
+
+  Future<PostmediaModel> uploadDocument(XFile file) async {
+    return await _uploadMedia(file, 'Document');
+  }
+
+  Future<PostmediaModel> uploadAudio(XFile file) async {
+    return await _uploadMedia(file, 'Audio');
+  }
+
+  Future<PostmediaModel> _uploadMedia(XFile file, String type) async {
+    String fileName = file.path.split('/').last;
+
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+        contentType: getMediaType(file),
+      ),
+      'type': type,
+    });
+    try {
+      final response = await _dio.post(
+        '/post/upload-media',
+        data: formData,
+      );
+      return PostmediaModel.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
     }
@@ -209,7 +279,7 @@ class PostApiService {
   Future<void> reactToPost(String postId, Reactions reaction) async {
     final type = reaction.toString().split('.')[1];
     try {
-      final respone = await _dio.post('/post/$postId/react',
+      final response = await _dio.post('/post/$postId/react',
           data: {'type': '${type[0].toUpperCase()}${type.substring(1)}'});
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));
@@ -247,5 +317,21 @@ class PostApiService {
     } else {
       return 'Network error: ${e.message}';
     }
+  }
+}
+
+MediaType getMediaType(XFile file) {
+  final extension = file.path.split('.').last.toLowerCase();
+
+  switch (extension) {
+    case 'jpg':
+    case 'jpeg':
+      return MediaType('image', 'jpeg');
+    case 'png':
+      return MediaType('image', 'png');
+    case 'gif':
+      return MediaType('image', 'gif');
+    default:
+      return MediaType('application', 'octet-stream'); // Fallback
   }
 }

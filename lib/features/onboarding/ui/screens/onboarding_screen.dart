@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joblinc/core/routing/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:joblinc/core/theming/colors.dart';
 import 'package:joblinc/core/widgets/custom_divider_text.dart';
 import 'package:joblinc/core/widgets/custom_rounded_button.dart';
+import 'package:joblinc/features/login/logic/cubit/login_cubit.dart';
 import 'package:joblinc/features/onboarding/ui/widgets/agreement_text.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -61,6 +63,8 @@ class OnboardingScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 icon: FontAwesomeIcons.g,
                 onPressed: ()  {
+                                           context.read<LoginCubit>().loginWithGoogle();
+
                 }),
             customDividerWithText(child: Text("OR")),
             customRoundedButton(
