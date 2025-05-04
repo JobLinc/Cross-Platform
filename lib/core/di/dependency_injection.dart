@@ -89,15 +89,15 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = //Platform.isAndroid
-      // ?
-      //  'http://192.168.1.4:3000/api';
-      // : 'http://localhost:3000/api';
+  final baseUrl =
+    //   Platform.isAndroid
+    // ? 'http://10.0.2.2:3000/api'
+    // : 'http://localhost:3000/api';
       'https://joblinc.me:3000/api';
 
   final socketUrl =
       // Platform.isAndroid ?
-      'ws://joblinc.me:3000'
+      'wss://joblinc.me:3000'
       // : 'ws://localhost:3000'
       ;
   final Dio dio = Dio(

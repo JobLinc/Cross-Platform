@@ -33,10 +33,10 @@ class ChatSocketService {
 
   // ─── Determine server URL ─────────────────────────────────────────────────
   static String getServerUrl() {
-    //if (Platform.isAndroid) return 'http://10.0.2.2:3000';
-    //if (Platform.isIOS) return 'http://localhost:3000';
-    //return 'http://localhost:3000';
-    return 'ws://joblinc.me:3000';
+    // if (Platform.isAndroid) return 'http://10.0.2.2:3000';
+    // if (Platform.isIOS) return 'http://localhost:3000';
+    // return 'http://localhost:3000';
+    return 'wss://joblinc.me:3000';
   }
 
   // ─── Initialize (connect) only once ────────────────────────────────────────
@@ -50,11 +50,10 @@ class ChatSocketService {
     _userId = userId;
     _accessToken = accessToken;
 
-    final url = 'wss://joblinc.me:3000';
+    final url = getServerUrl();   //'wss://joblinc.me:3000';
 
     try {
-      _socket = IO.io(
-        '$url/chat',
+      _socket = IO.io('$url/chat',
         <String, dynamic>{
           'transports': ['websocket', 'polling'],
           'autoConnect': false,
@@ -103,6 +102,8 @@ class ChatSocketService {
     });
 
     _socket.once('connect_error', (err) {
+
+      //debugPrint('Socket connection error: $err');
       cleanUp();
       if (!completer.isCompleted) {
         completer.complete(false);
