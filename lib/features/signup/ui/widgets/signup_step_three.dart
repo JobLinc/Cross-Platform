@@ -19,6 +19,11 @@ class SignupStepThree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Close keyboard when widget initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
+
     return Form(
       key: formKey,
       child: ListView(

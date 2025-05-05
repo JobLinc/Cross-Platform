@@ -21,11 +21,13 @@ class EmailConfirmationScreen extends StatefulWidget {
 
 class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
   final TextEditingController _otpController = TextEditingController();
+  final FocusNode _otpFocusNode = FocusNode();
   bool _showOtpField = false;
 
   @override
   void dispose() {
     _otpController.dispose();
+    _otpFocusNode.dispose();
     super.dispose();
   }
 
@@ -43,6 +45,13 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
           // Show OTP field when code is sent
           setState(() {
             _showOtpField = true;
+          });
+
+          // Focus on the OTP field after it becomes visible
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_showOtpField) {
+              FocusScope.of(context).requestFocus(_otpFocusNode);
+            }
           });
         } else if (state is EmailConfirmationVerified) {
           CustomSnackBar.show(
@@ -119,6 +128,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                       SizedBox(height: 10.h),
                       TextField(
                         controller: _otpController,
+                        focusNode: _otpFocusNode,
                         keyboardType: TextInputType.number,
                         maxLength: 6,
                         style: TextStyle(fontSize: 20.sp, letterSpacing: 8),

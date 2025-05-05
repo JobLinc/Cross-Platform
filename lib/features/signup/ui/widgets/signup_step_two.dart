@@ -18,8 +18,7 @@ class SignupStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: [
           const Text("Step 2 of 3"),
           const SizedBox(height: 20),
