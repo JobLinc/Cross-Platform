@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class CommentApiService {
@@ -42,11 +43,27 @@ class CommentApiService {
     }
   }
 
-  Future<String> addComment(String postID, String text) async {
+  Future<String> addComment(
+    String postID, 
+    String text, 
+    {List<TaggedEntity> taggedUsers = const [], 
+    List<TaggedEntity> taggedCompanies = const []}
+  ) async {
     try {
-      final response = await _dio.post('/post/$postID/comment', data: {
+      final Map<String, dynamic> data = {
         'text': text,
-      });
+      };
+
+      if (taggedUsers.isNotEmpty) {
+        data['taggedUsers'] = taggedUsers.map((user) => user.toJson()).toList();
+      }
+
+      if (taggedCompanies.isNotEmpty) {
+        data['taggedCompanies'] = 
+            taggedCompanies.map((company) => company.toJson()).toList();
+      }
+
+      final response = await _dio.post('/post/$postID/comment', data: data);
       return response.data['commentId'];
     } on DioException catch (e) {
       throw Exception(_handleDioError(e));

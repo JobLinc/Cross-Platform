@@ -1,93 +1,136 @@
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 
 class CommentModel {
+  final String commentID;
+  final String postID;
+  final String senderID;
+  final String text;
+  final DateTime? timeStamp;
+  final int likeCount;
+  final bool isReply;
+  final Reactions? userReaction;
+  final String profilePictureURL;
+  final String username;
+  final String headline;
+  final bool isCompany;
+  final List<TaggedUser> taggedUsers;
+  final List<TaggedCompany> taggedCompanies;
+
   CommentModel({
     required this.commentID,
     required this.postID,
     required this.senderID,
+    required this.text,
+    required this.timeStamp,
+    required this.likeCount,
     required this.isReply,
-    required this.isCompany,
+    required this.userReaction,
+    required this.profilePictureURL,
     required this.username,
     required this.headline,
-    required this.profilePictureURL,
-    required this.text,
-    this.userReaction,
-    this.timeStamp,
-    required this.likeCount,
-    required this.replyCount,
+    required this.isCompany,
+    this.taggedUsers = const [],
+    this.taggedCompanies = const [],
   });
 
-  factory CommentModel.fromJson(json, String postId) {
-    print(json);
-    final bool companyComment = (json['userId'] == null);
+  factory CommentModel.fromJson(Map<String, dynamic> json, String postId) {
+    // Parse tagged users if they exist
+    List<TaggedUser> taggedUsers = [];
+    if (json['taggedUsers'] != null) {
+      taggedUsers = (json['taggedUsers'] as List).map((user) {
+        // Create a copy of the user object to work with
+        Map<String, dynamic> tagData = {...user};
+        
+        // Try to find additional details for this user
+        if (json.containsKey('taggedUserDetails') && 
+            json['taggedUserDetails'] is Map &&
+            json['taggedUserDetails'][user['id']] != null) {
+          
+          final userDetails = json['taggedUserDetails'][user['id']];
+          
+          // Add the firstname and lastname from details if available
+          if (userDetails.containsKey('firstname') && userDetails.containsKey('lastname')) {
+            tagData['firstname'] = userDetails['firstname'];
+            tagData['lastname'] = userDetails['lastname'];
+            tagData['name'] = '${userDetails['firstname']} ${userDetails['lastname']}';
+          } else if (userDetails.containsKey('username')) {
+            tagData['username'] = userDetails['username'];
+            tagData['name'] = userDetails['username'];
+          }
+        }
+        
+        return TaggedUser.fromJson(tagData);
+      }).toList();
+    }
+
+    // Parse tagged companies if they exist
+    List<TaggedCompany> taggedCompanies = [];
+    if (json['taggedCompanies'] != null) {
+      taggedCompanies = (json['taggedCompanies'] as List).map((company) {
+        // Create a copy of the company object to work with
+        Map<String, dynamic> tagData = {...company};
+        
+        // Try to find additional details for this company
+        if (json.containsKey('taggedCompanyDetails') && 
+            json['taggedCompanyDetails'] is Map &&
+            json['taggedCompanyDetails'][company['id']] != null) {
+          
+          final companyDetails = json['taggedCompanyDetails'][company['id']];
+          
+          // Add the name from details if available
+          if (companyDetails.containsKey('name')) {
+            tagData['name'] = companyDetails['name'];
+          }
+        }
+        
+        return TaggedCompany.fromJson(tagData);
+      }).toList();
+    }
+
+    String userReactionString = json['userReaction'] ?? '';
+    Reactions? userReaction;
+    if (userReactionString.isNotEmpty) {
+      // Convert the reaction string to the enum value
+      switch (userReactionString.toLowerCase()) {
+        case 'like':
+          userReaction = Reactions.like;
+          break;
+        case 'love':
+          userReaction = Reactions.love;
+          break;
+        case 'celebrate':
+          userReaction = Reactions.celebrate;
+          break;
+        case 'support':
+          userReaction = Reactions.support;
+          break;
+        case 'insightful':
+          userReaction = Reactions.insightful;
+          break;
+        case 'funny':
+          userReaction = Reactions.funny;
+          break;
+      }
+    }
+
     return CommentModel(
-      commentID: json['commentId'],
+      commentID: json['id'] ?? '',
       postID: postId,
-      senderID: companyComment ? json['companyId'] : json['userId'],
-      //TODO add this once reply is supported
-      isReply: json['reply'] ?? false,
-      isCompany: companyComment,
-      username: companyComment
-          ? json['companyName']
-          : '${json['firstname']} ${json['lastname']}',
+      senderID: json['userId'] ?? '',
+      text: json['text'] ?? '',
+      timeStamp: json['timestamp'] != null
+          ? DateTime.parse(json['timestamp'])
+          : DateTime.now(),
+      likeCount: json['likeCount'] ?? 0,
+      isReply: json['isReply'] ?? false,
+      userReaction: userReaction,
+      profilePictureURL: json['profilePictureURL'] ?? '',
+      username: json['username'] ?? '',
       headline: json['headline'] ?? '',
-      profilePictureURL:
-          companyComment ? json['companyLogo'] : json['commentId'],
-      text: json['text'],
-      userReaction: parseReactions(json['userReaction']),
-      timeStamp: DateTime.parse(json['time']).toLocal(),
-      likeCount: json['likes'],
-      replyCount: json['comments'],
+      isCompany: json['isCompany'] ?? false,
+      taggedUsers: taggedUsers,
+      taggedCompanies: taggedCompanies,
     );
   }
-
-  final String commentID;
-  final String postID;
-  final String senderID;
-  final bool isReply;
-  final bool isCompany;
-  final String username;
-  final String headline;
-  final String profilePictureURL;
-  final String text;
-  final Reactions? userReaction;
-  final DateTime? timeStamp;
-  int likeCount;
-  int replyCount;
 }
-
-CommentModel mockCommentData = CommentModel(
-  commentID: "5",
-  postID: "1",
-  senderID: "2",
-  isReply: false,
-  isCompany: false,
-  username: "Tyrone",
-  headline: "senior smoker engineer with Phd in smoking rocks",
-  userReaction: null,
-  timeStamp: DateTime.now(),
-  likeCount: 5,
-  replyCount: 3,
-  profilePictureURL:
-      "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
-  text:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-);
-
-CommentModel mockReplyData = CommentModel(
-  commentID: "5",
-  postID: "1",
-  senderID: "2",
-  isReply: true,
-  isCompany: false,
-  username: "Tyrone",
-  userReaction: null,
-  headline: "senior smoker engineer with Phd in smoking rocks",
-  timeStamp: DateTime.now(),
-  likeCount: 5,
-  replyCount: 3,
-  profilePictureURL:
-      "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
-  text:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-);

@@ -56,6 +56,27 @@ class TaggedUser extends TaggedEntity {
     required int index,
     required this.name,
   }) : super(id: id, index: index);
+
+  factory TaggedUser.fromJson(Map<String, dynamic> json) {
+    String name = '';
+
+    // Try to get name from various possible sources in the JSON
+    if (json.containsKey('name')) {
+      name = json['name'];
+    } else if (json.containsKey('username')) {
+      name = json['username'];
+    } else if (json.containsKey('firstname') && json.containsKey('lastname')) {
+      name = '${json['firstname']} ${json['lastname']}';
+    } else {
+      name = 'Unknown User';
+    }
+
+    return TaggedUser(
+      id: json['id'],
+      index: json['index'],
+      name: name,
+    );
+  }
 }
 
 class TaggedCompany extends TaggedEntity {
@@ -66,4 +87,12 @@ class TaggedCompany extends TaggedEntity {
     required int index,
     required this.name,
   }) : super(id: id, index: index);
+
+  factory TaggedCompany.fromJson(Map<String, dynamic> json) {
+    return TaggedCompany(
+      id: json['id'],
+      index: json['index'],
+      name: json['name'] ?? 'Unknown Company',
+    );
+  }
 }

@@ -6,6 +6,7 @@ import 'package:joblinc/core/widgets/custom_snackbar.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
 import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -20,6 +21,7 @@ class Comment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ValueNotifier<int> likeCount = ValueNotifier(data.likeCount);
+    print ('Comment: ${data.username} ${data.headline} ${data.senderID} ${data.isCompany} ${data.text} ${data.taggedUsers.length} ${data.taggedCompanies.length}');
     return Padding(
       padding: EdgeInsets.only(left: data.isReply ? 50 : 0),
       child: Column(
@@ -35,13 +37,22 @@ class Comment extends StatelessWidget {
             action: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 50, top: 3.0, bottom: 8.0),
+            padding: EdgeInsets.only(left: 50, top: 0, bottom: 0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,
               children: [
-                Text(data.text),
+                // Use ExpandableRichText to display tagged entities in comments
+                data.taggedUsers.isEmpty && data.taggedCompanies.isEmpty
+                    ? Text(data.text)
+                    : ExpandableRichText(
+                        text: data.text,
+                        taggedUsers: data.taggedUsers,
+                        taggedCompanies: data.taggedCompanies,
+                        trimLines: 3,
+                        context: context,
+                      ),
                 Row(
                   children: [
                     CommentReactionButton(
