@@ -35,6 +35,11 @@ class CommentModel {
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json, String postId) {
+
+
+    
+      print(json);
+    final bool companyComment = (json['userId'] == null);
     // Parse tagged users if they exist
     List<TaggedUser> taggedUsers = [];
     if (json['taggedUsers'] != null) {
@@ -114,23 +119,31 @@ class CommentModel {
       }
     }
 
+
+
     return CommentModel(
-      commentID: json['id'] ?? '',
+      commentID: json['commentId'] ?? '',
       postID: postId,
-      senderID: json['userId'] ?? '',
+      senderID: companyComment ? json['companyId'] : json['userId'],
+      
+       isReply: json['reply'] ?? false,
+             isCompany: companyComment,
+      username: companyComment
+          ? json['companyName']
+          : '${json['firstname']} ${json['lastname']}',
       text: json['text'] ?? '',
-      timeStamp: json['timestamp'] != null
-          ? DateTime.parse(json['timestamp'])
-          : DateTime.now(),
-      likeCount: json['likeCount'] ?? 0,
-      isReply: json['isReply'] ?? false,
-      userReaction: userReaction,
-      profilePictureURL: json['profilePictureURL'] ?? '',
-      username: json['username'] ?? '',
-      headline: json['headline'] ?? '',
-      isCompany: json['isCompany'] ?? false,
+
+      profilePictureURL:
+          companyComment ? json['companyLogo'] : json['profilePicture'],      headline: json['headline'] ?? '',
+                userReaction: parseReactions(json['userReaction']),
+      timeStamp: DateTime.parse(json['time']).toLocal(),
+
       taggedUsers: taggedUsers,
       taggedCompanies: taggedCompanies,
+            likeCount: json['likes'],
+      //replyCount: json['comments'],
     );
+
+
   }
 }
