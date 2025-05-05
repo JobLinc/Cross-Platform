@@ -156,5 +156,62 @@ class AuthService {
     isLoggedInUser = await refreshToken();
   }
 
- 
+  /// Deletes the user's account
+  /// 
+  /// Requires the user's password for verification
+  /// Returns a response with success (true/false) and a message
+  Future<Map<String, dynamic>> deleteAccount(String password) async {
+    try {
+      final String? accessToken = await getAccessToken();
+      
+      if (accessToken == null) {
+        return {
+          'success': false,
+          'message': 'You are not logged in. Please log in to delete your account.'
+        };
+      }
+      
+      final response = await _dio.delete(
+        '/user/me',
+        data: {'password': password},
+        options: Options(
+          headers: {'Authorization': 'Bearer $accessToken'},
+        ),
+      );
+      
+      if (response.statusCode == 200) {
+        // Clear user data on successful deletion
+        await clearUserInfo();
+        return {
+          'success': true,
+          'message': response.data['message'] ?? 'Account successfully deleted'
+        };
+      } else {
+        return {
+          'success': false,
+          'message': 'Failed to delete account. Please try again later.'
+        };
+      }
+    } on DioException catch (e) {
+      String errorMessage = 'Failed to delete account';
+      
+      if (e.response?.statusCode == 401) {
+        errorMessage = 'Incorrect password or unauthorized access';
+      } else if (e.response?.statusCode == 403) {
+        errorMessage = 'You do not have permission to delete this account';
+      } else if (e.response?.data != null && e.response?.data['message'] != null) {
+        errorMessage = e.response?.data['message'];
+      }
+      
+      return {
+        'success': false,
+        'message': errorMessage
+      };
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'An unexpected error occurred: $e'
+      };
+    }
+  }
 }
