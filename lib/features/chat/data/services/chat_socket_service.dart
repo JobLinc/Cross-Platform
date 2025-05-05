@@ -32,14 +32,8 @@ class ChatSocketService {
   bool get isInitialized => _isInitialized;
 
   // ─── Determine server URL ─────────────────────────────────────────────────
-  static String getServerUrl() {
-    //if (Platform.isAndroid) return 'http://10.0.2.2:3000';
-    //if (Platform.isIOS) return 'http://localhost:3000';
-    //return 'http://localhost:3000';
-    return 'ws://joblinc.me:3000';
-  }
-
   // ─── Initialize (connect) only once ────────────────────────────────────────
+
   Future<bool> initialize({
     required String userId,
     required String accessToken,
