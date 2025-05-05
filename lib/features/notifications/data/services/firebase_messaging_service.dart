@@ -17,17 +17,13 @@ class FirebaseMessagingService {
       FlutterLocalNotificationsPlugin();
   final DeviceTokenService _deviceTokenService;
   final NotificationApiService _notificationApiService;
-    final NotificationCubit _notificationCubit;
+  final NotificationCubit _notificationCubit;
 
   // Use a callback instead of direct dependency
   final Function(NotificationModel) onNewNotification;
 
-  FirebaseMessagingService(
-    this._deviceTokenService,
-    this.onNewNotification,
-    this._notificationApiService,
-    this._notificationCubit
-  );
+  FirebaseMessagingService(this._deviceTokenService, this.onNewNotification,
+      this._notificationApiService, this._notificationCubit);
 
   Future<void> initialize() async {
     // Request permission
@@ -175,8 +171,7 @@ class FirebaseMessagingService {
       try {
         Map<String, dynamic> data = json.decode(payload);
         debugPrint('FCM: Notification tapped with data: $data');
-        _notificationApiService.markAllAsSeen();
-
+        _notificationCubit.markAsRead(data['notificationId']);
         _handleNotificationNavigation(data);
       } catch (e) {
         debugPrint('FCM: Error handling notification tap: $e');
