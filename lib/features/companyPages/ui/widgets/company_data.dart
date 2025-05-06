@@ -214,7 +214,7 @@ class CompanyData extends StatelessWidget {
                           borderColor: Color(0xFFD72638),
                           width: company.website != "" &&
                                   company.website!.isNotEmpty
-                              ? 130.w
+                              ? 110.w
                               : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {
@@ -284,7 +284,7 @@ class CompanyData extends StatelessWidget {
                           borderColor: Color(0xFFD72638),
                           width: company.website != null &&
                                   company.website!.isNotEmpty
-                              ? 130.w
+                              ? 110.w
                               : 250.w,
                           fontSize: 13.sp,
                           onTap: () async {

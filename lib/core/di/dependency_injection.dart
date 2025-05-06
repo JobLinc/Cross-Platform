@@ -89,11 +89,8 @@ Future<void> setupGetIt() async {
   );
 
   getIt.registerLazySingleton<FlutterSecureStorage>(() => storage);
-  final baseUrl = //Platform.isAndroid
-      // ?
-      //  'http://192.168.1.4:3000/api';
-      // : 'http://localhost:3000/api';
-      'https://joblinc.me:3000/api';
+  final baseUrl =  'http://localhost:3000/api';
+      // 'https://joblinc.me:3000/api';
 
   final socketUrl =
       // Platform.isAndroid ?
