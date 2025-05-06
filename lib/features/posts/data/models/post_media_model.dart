@@ -3,7 +3,7 @@ class PostmediaModel {
     required this.mediaType,
     required this.url,
   });
-  final MediaType mediaType;
+  final PostMediaType mediaType;
   final String url;
 
   factory PostmediaModel.fromJson(json) {
@@ -23,20 +23,20 @@ List<PostmediaModel> parsePostMedia(json) {
   return postMedia;
 }
 
-MediaType parseMediaType(String type) {
+PostMediaType parseMediaType(String type) {
   final string = type.toLowerCase();
   switch (string) {
     case 'image':
-      return MediaType.image;
+      return PostMediaType.image;
     case 'video':
-      return MediaType.video;
+      return PostMediaType.video;
     case 'document':
-      return MediaType.document;
+      return PostMediaType.document;
     case 'audio':
-      return MediaType.audio;
+      return PostMediaType.audio;
     default:
-      return MediaType.image;
+      return PostMediaType.image;
   }
 }
 
-enum MediaType { image, video, document, audio }
+enum PostMediaType { image, video, document, audio }

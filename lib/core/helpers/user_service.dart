@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:joblinc/core/di/dependency_injection.dart';
+import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
 
 class UserService {
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
@@ -21,26 +24,27 @@ class UserService {
   static const String _numberOfConnectionsKey = 'number_of_connections';
   static const String _matualConnectionsKey = 'matual_connections';
   static const String _isFollowingKey = 'is_following';
+  static const String _visibilityKey = 'visibility';
 
   // Save complete user profile data
-  static Future<void> saveUserData({
-    required String userId,
-    required String firstname,
-    required String lastname,
-    String? username,
-    required String email,
-    String? headline,
-    String? profilePicture,
-    String? coverPicture,
-    String? connectionStatus,
-    String? country,
-    String? city,
-    String? biography,
-    String? phoneNumber,
-    int? numberOfConnections,
-    int? matualConnections,
-    bool? isFollowing,
-  }) async {
+  static Future<void> saveUserData(
+      {required String userId,
+      required String firstname,
+      required String lastname,
+      String? username,
+      required String email,
+      String? headline,
+      String? profilePicture,
+      String? coverPicture,
+      String? connectionStatus,
+      String? country,
+      String? city,
+      String? biography,
+      String? phoneNumber,
+      int? numberOfConnections,
+      int? matualConnections,
+      bool? isFollowing,
+      String? visibility}) async {
     await _storage.write(key: _userIdKey, value: userId);
     await _storage.write(key: _firstnameKey, value: firstname);
     await _storage.write(key: _lastnameKey, value: lastname);
@@ -76,6 +80,9 @@ class UserService {
     if (isFollowing != null) {
       await _storage.write(key: _isFollowingKey, value: isFollowing.toString());
     }
+    if (visibility != null) {
+      await _storage.write(key: _visibilityKey, value: visibility);
+    }
   }
 
   // Save user data from JSON
@@ -95,14 +102,16 @@ class UserService {
       biography: json['biography'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       numberOfConnections: json['numberOfConnections'] ?? 0,
-      matualConnections: json['mutualConnections'] ??
-          0, 
+      matualConnections: json['mutualConnections'] ?? 0,
       isFollowing: json['isFollowing'] ?? false,
+      visibility: json['visibility'] ?? 'Public',
     );
   }
 
   // Get complete user profile data
   static Future<Map<String, dynamic>> getUserData() async {
+    await ensureProfileFetched();
+
     final userId = await _storage.read(key: _userIdKey) ?? '';
     final firstname = await _storage.read(key: _firstnameKey) ?? '';
     final lastname = await _storage.read(key: _lastnameKey) ?? '';
@@ -123,6 +132,7 @@ class UserService {
     final matualConnectionsStr =
         await _storage.read(key: _matualConnectionsKey);
     final isFollowingStr = await _storage.read(key: _isFollowingKey);
+    final visibility = await _storage.read(key: _visibilityKey);
 
     return {
       'userId': userId,
@@ -145,29 +155,70 @@ class UserService {
           ? int.tryParse(matualConnectionsStr) ?? 0
           : 0,
       'isFollowing': isFollowingStr == 'true',
+      'visibility': visibility
     };
   }
 
   // Individual getters for user data
-  static Future<String> getUserId() async =>
-      await _storage.read(key: _userIdKey) ?? '';
-  static Future<String> getFirstname() async =>
-      await _storage.read(key: _firstnameKey) ?? '';
-  static Future<String> getLastname() async =>
-      await _storage.read(key: _lastnameKey) ?? '';
-  static Future<String> getUsername() async =>
-      await _storage.read(key: _usernameKey) ?? '';
-  static Future<String> getEmail() async =>
-      await _storage.read(key: _emailKey) ?? '';
-  static Future<String> getHeadline() async =>
-      await _storage.read(key: _headlineKey) ?? '';
-  static Future<String> getProfilePicture() async =>
-      await _storage.read(key: _profilePictureKey) ?? '';
-  static Future<String> getCoverPicture() async =>
-      await _storage.read(key: _coverPictureKey) ?? '';
+  static Future<String> getUserId() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _userIdKey) ?? '';
+  }
+
+  static Future<String> getFirstname() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _firstnameKey) ?? '';
+  }
+
+  static Future<String> getLastname() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _lastnameKey) ?? '';
+  }
+
+  static Future<String> getUsername() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _usernameKey) ?? '';
+  }
+
+  static Future<String> getEmail() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _emailKey) ?? '';
+  }
+
+  static Future<String> getHeadline() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _headlineKey) ?? '';
+  }
+
+  static Future<String> getProfilePicture() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _profilePictureKey) ?? '';
+  }
+
+  static Future<String> getCoverPicture() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _coverPictureKey) ?? '';
+  }
+
+  static Future<String> getVisibility() async {
+    await ensureProfileFetched();
+    return await _storage.read(key: _visibilityKey) ?? 'Public';
+  }
 
   // Clear all user data
   static Future<void> clearUserData() async {
     await _storage.deleteAll();
+  }
+
+  static Future<void> ensureProfileFetched() async {
+    final userId = await _storage.read(key: _userIdKey) ?? '';
+    if (userId.isEmpty) {
+      UserProfileRepository repo = getIt<UserProfileRepository>();
+      try {
+        await repo.getUserProfile();
+      } on Exception catch (e) {
+        return;
+      }
+    }
   }
 }

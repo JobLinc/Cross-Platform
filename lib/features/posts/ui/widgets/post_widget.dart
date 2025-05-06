@@ -12,14 +12,17 @@ import 'package:joblinc/features/posts/data/models/post_media_model.dart';
 import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
 import 'package:joblinc/features/posts/data/services/tag_suggestion_service.dart';
 import 'package:joblinc/features/posts/logic/cubit/edit_post_cubit.dart';
+import 'package:joblinc/features/posts/data/models/reaction_model.dart';
+import 'package:joblinc/features/posts/data/repos/post_repo.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/logic/reactions.dart';
 import 'package:joblinc/features/posts/ui/screens/edit_post_screen.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
-import 'package:joblinc/features/posts/ui/widgets/post_media.dart';
+import 'package:joblinc/features/posts/ui/widgets/post_reactions.dart';
 import 'package:joblinc/features/posts/ui/widgets/user_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mailer/mailer.dart';
 import 'package:readmore/readmore.dart';
 import '../../data/models/post_model.dart';
 
@@ -163,6 +166,7 @@ class PostContent extends StatelessWidget {
                 ),
               ),
         PostNumerics(
+          postId: data.postID,
           likesCount: likeCount,
           commentCount: data.commentCount,
           repostCount: data.repostCount,
@@ -465,11 +469,12 @@ class _ExpandableRichTextState extends State<ExpandableRichText> {
 class PostNumerics extends StatelessWidget {
   const PostNumerics({
     super.key,
+    required this.postId,
     required this.likesCount,
     required this.commentCount,
     required this.repostCount,
   });
-
+  final String postId;
   final ValueNotifier<int> likesCount;
   final int commentCount;
   final int repostCount;
@@ -482,17 +487,46 @@ class PostNumerics extends StatelessWidget {
         key: Key('post_numerics_container'),
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
-            LucideIcons.thumbsUp,
-            size: 15,
-            color: ColorsManager.getTextSecondary(context),
-          ),
-          ValueListenableBuilder(
-            valueListenable: likesCount,
-            builder: (context, value, child) => Text(
-              key: Key('post_numerics_likeCount'),
-              ' $value',
-              style: TextStyles.font13GrayRegular(context),
+          GestureDetector(
+            onTap: () async {
+              // try {
+              //   final List<ReactionModel> reactions =
+              //       await getIt.get<PostRepo>().getPostReactions(postId);
+              //   if (context.mounted) {
+              //     showModalBottomSheet(
+              //       context: context,
+              //       showDragHandle: true,
+              //       builder: (context) => PostReactions(reactions: reactions),
+              //     );
+              //   }
+              // } on Exception catch (e) {
+              //   if (context.mounted) {
+              //     CustomSnackBar.show(
+              //       context: context,
+              //       message: e.toString(),
+              //       type: SnackBarType.error,
+              //     );
+              //   }
+              //   return;
+              // }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  LucideIcons.thumbsUp,
+                  size: 15,
+                  color: ColorsManager.getTextSecondary(context),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: likesCount,
+                  builder: (context, value, child) => Text(
+                    key: Key('post_numerics_likeCount'),
+                    ' $value',
+                    style: TextStyles.font13GrayRegular(context),
+                  ),
+                ),
+              ],
             ),
           ),
           Spacer(),
@@ -544,72 +578,10 @@ class PostActionBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ReactionButton(
-              onReactionChanged: (item) {
-                print('triggered');
-                if (item?.value != null) {
-                  context.read<PostCubit>().reactToPost((item?.value)!);
-                  if (userReaction == null &&
-                      initialLikeCount == likeCount.value) {
-                    likeCount.value++;
-                  }
-                }
-              },
-              isChecked: userReaction != null,
-              selectedReaction: getReaction(userReaction),
-              itemsSpacing: 10,
-              toggle: false,
-              placeholder: Reaction(
-                value: null,
-                icon: Icon(
-                  LucideIcons.smilePlus,
-                ),
-              ),
-              reactions: [
-                Reaction(
-                  value: Reactions.like,
-                  icon: Icon(
-                    LucideIcons.thumbsUp,
-                    color: Colors.blue,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.celebrate,
-                  icon: Icon(
-                    LucideIcons.partyPopper,
-                    color: Colors.pink,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.support,
-                  icon: Icon(
-                    LucideIcons.helpingHand,
-                    color: Colors.green.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.funny,
-                  icon: Icon(
-                    LucideIcons.laugh,
-                    color: Colors.purple.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.love,
-                  icon: Icon(
-                    LucideIcons.heart,
-                    color: Colors.red.shade600,
-                  ),
-                ),
-                Reaction(
-                  value: Reactions.insightful,
-                  icon: Icon(
-                    LucideIcons.lightbulb,
-                    color: Colors.yellow.shade600,
-                  ),
-                ),
-              ],
-              itemSize: Size(24, 24)),
+          PostReactionButton(
+              userReaction: userReaction,
+              initialLikeCount: initialLikeCount,
+              likeCount: likeCount),
           IconButton(
             key: Key('post_actionBar_comment'),
             onPressed: () {
@@ -634,6 +606,87 @@ class PostActionBar extends StatelessWidget {
   }
 }
 
+class PostReactionButton extends StatelessWidget {
+  const PostReactionButton({
+    super.key,
+    required this.userReaction,
+    required this.initialLikeCount,
+    required this.likeCount,
+  });
+
+  final Reactions? userReaction;
+  final int initialLikeCount;
+  final ValueNotifier<int> likeCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReactionButton(
+        onReactionChanged: (item) {
+          if (item?.value != null) {
+            context.read<PostCubit>().reactToPost((item?.value)!);
+            if (userReaction == null && initialLikeCount == likeCount.value) {
+              likeCount.value++;
+            }
+          }
+        },
+        isChecked: userReaction != null,
+        selectedReaction: getReaction(userReaction),
+        itemsSpacing: 10,
+        toggle: false,
+        placeholder: Reaction(
+          value: null,
+          icon: Icon(
+            LucideIcons.smilePlus,
+          ),
+        ),
+        reactions: [
+          Reaction(
+            value: Reactions.like,
+            icon: Icon(
+              LucideIcons.thumbsUp,
+              color: Colors.blue,
+            ),
+          ),
+          Reaction(
+            value: Reactions.celebrate,
+            icon: Icon(
+              LucideIcons.partyPopper,
+              color: Colors.pink,
+            ),
+          ),
+          Reaction(
+            value: Reactions.support,
+            icon: Icon(
+              LucideIcons.helpingHand,
+              color: Colors.green.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.funny,
+            icon: Icon(
+              LucideIcons.laugh,
+              color: Colors.purple.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.love,
+            icon: Icon(
+              LucideIcons.heart,
+              color: Colors.red.shade600,
+            ),
+          ),
+          Reaction(
+            value: Reactions.insightful,
+            icon: Icon(
+              LucideIcons.lightbulb,
+              color: Colors.yellow.shade600,
+            ),
+          ),
+        ],
+        itemSize: Size(24, 24));
+  }
+}
+
 class PostAttachments extends StatelessWidget {
   final List<PostmediaModel> attachments;
 
@@ -641,11 +694,19 @@ class PostAttachments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      errorBuilder: (context, error, stackTrace) => SizedBox(),
-      key: Key('post_body_attachments'),
-      attachments[0].url,
-    );
+    //TODO handle multiple images
+    for (var attachment in attachments) {
+      if (attachment.mediaType == PostMediaType.image) {
+        return Image.network(
+          errorBuilder: (context, error, stackTrace) => SizedBox(),
+          key: Key('post_body_attachments'),
+          attachment.url,
+        );
+      }
+    }
+    return SizedBox();
+    // return Expanded(child: MultimediaHandler(mediaItem: attachments[0]));
+    // return buildMultipleMediaGrid(attachments);
   }
 }
 

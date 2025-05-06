@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
 bool apiEndPointFunctional = true;
+int lastTotal=0;
 
 class ChatApiService {
   final Dio _dio;
@@ -34,15 +35,21 @@ class ChatApiService {
   Future<Response> getTotalUnreadCount() async {
     try {
       final response = await _dio.get('/chat/unread-count');
+      lastTotal=response.data['totalUnreadChat'];
       return response;
     } on DioException catch (e) {
-      if (e.response != null) {
-        throw Exception("404 total unread count not found");
-      }
-      throw Exception("Exception without response");
-    }
-    catch (e) {
-      throw Exception("Failed to fetch total unread count: $e");
+      // if (e.response != null) {
+      //   throw Exception("404 total unread count not found");
+      // }
+      // throw Exception("Exception without response $e");
+
+      final response = Response<dynamic>(
+        requestOptions: RequestOptions(path: ''),
+        data: {'totalUnreadChat':lastTotal}, //mockChats.map((job) => job.toJson()).toList(),
+        statusCode: 200,
+        statusMessage: 'OK',
+      );
+      return response;
     }
   }
 
