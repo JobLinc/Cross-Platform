@@ -1,15 +1,31 @@
 flutter_native_splash:
-  color: "#FAFAFA"
+  # Light mode settings
+  color: "#121212"
   image: assets/images/JobLinc_logo_light.png
+  image_dark: assets/images/JobLinc_logo_light.png
+  
+  # Android specific settings
+  android: true
   image_android: assets/images/JobLinc_logo_light.png
-
-
-  color_ios: "#FAFAFA"
-  image_ios: assets/images/logo_light_android.png
-
-
+  color_android: "#121212"
+  
+  # iOS specific settings
+  ios: true
+  color_ios: "#121212"
+  image_ios: assets/images/JobLinc_logo_light.png
+  
+  # Force background to be light black even in dark mode
+  color_dark: "#121212"
+  
+  # Android 12 specific settings
   android_12:
-    image: assets/images/logo_light_android.png
-    color: "#FAFAFA"
-    icon_background_color: "#FAFAFA"
+    image: assets/images/JobLinc_logo_light.png
+    icon_background_color: "#121212"
+    color: "#121212"
+    color_dark: "#121212"
+    image_dark: assets/images/JobLinc_logo_light.png
+    icon_background_color_dark: "#121212"
+  
+  # Web specific settings (if needed)
+  web: false
 
