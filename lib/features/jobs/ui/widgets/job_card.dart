@@ -104,10 +104,13 @@ class JobCard extends StatelessWidget {
                         // owner avatar
                         GestureDetector(
                           onTap: onAvatarTap,
-                          child: CircleAvatar(
-                            radius: 40.r,
-                            backgroundImage: NetworkImage(ownerAvatar),
-                            backgroundColor: Colors.grey.shade200,
+                          child: Semantics(
+                            label: "Owner avatar",
+                            child: CircleAvatar(
+                              radius: 40.r,
+                              backgroundImage: NetworkImage(ownerAvatar),
+                              backgroundColor: Colors.grey.shade200,
+                            ),
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -120,67 +123,90 @@ class JobCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      job.title,
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold,
+                                    child: Semantics(
+                                      label: "Job title: ${job.title}",
+                                      child: Text(
+                                        job.title,
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   SizedBox(width: 8.w),
-                                  Icon(
-                                    Icons.verified,
-                                    color: Colors.blue,
-                                    size: 18.r,
+                                  Semantics(
+                                    label: "Verified job",
+                                    child: Icon(
+                                      Icons.verified,
+                                      color: Colors.blue,
+                                      size: 18.r,
+                                    ),
                                   ),
                                 ],
                               ),
                               SizedBox(height: 8.h),
                               // owner name
-                              Text(
-                                ownerName,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.black87,
+                              Semantics(
+                                label: "Company or employer name: $ownerName",
+                                child: Text(
+                                  ownerName,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black87,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 4.h),
                               // owner subtitle (size or username)
-                              Text(
-                                ownerSubtitle,
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: Colors.grey.shade700,
+                              Semantics(
+                                label: hasCompany
+                                    ? "Company size: $ownerSubtitle"
+                                    : "Username: $ownerSubtitle",
+                                child: Text(
+                                  ownerSubtitle,
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.grey.shade700,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 4.h),
                               // location
-                              Text(
-                                "${job.location.country}, ${job.location.city}",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.grey.shade700,
+                              Semantics(
+                                label:
+                                    "Location: ${job.location.country}, ${job.location.city}",
+                                child: Text(
+                                  "${job.location.country}, ${job.location.city}",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey.shade700,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 6.h),
                               // experience & salary
                               Row(
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6.w, vertical: 2.h),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(4.r),
-                                    ),
-                                    child: Text(
-                                      job.experienceLevel,
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.blue,
+                                  Semantics(
+                                    label:
+                                        "Experience level: ${job.experienceLevel}",
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6.w, vertical: 2.h),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.shade50,
+                                        borderRadius:
+                                            BorderRadius.circular(4.r),
+                                      ),
+                                      child: Text(
+                                        job.experienceLevel,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.blue,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -188,21 +214,24 @@ class JobCard extends StatelessWidget {
                                   ConstrainedBox(
                                     constraints:
                                         BoxConstraints(maxWidth: 120.w),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 6.w, vertical: 2.h),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.shade50,
-                                        borderRadius:
-                                            BorderRadius.circular(4.r),
-                                      ),
-                                      child: Text(
-                                        salaryText,
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: Colors.green,
+                                    child: Semantics(
+                                      label: "Salary range: $salaryText",
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 6.w, vertical: 2.h),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.shade50,
+                                          borderRadius:
+                                              BorderRadius.circular(4.r),
                                         ),
-                                        overflow: TextOverflow.ellipsis,
+                                        child: Text(
+                                          salaryText,
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: Colors.green,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -235,8 +264,7 @@ class JobList extends StatelessWidget {
       this.isCreated = false,
       this.savedPage = false,
       this.isCompanyPageAdmin = false,
-      required this.semanticsLabel
-      });
+      required this.semanticsLabel});
 
   @override
   Widget build(BuildContext context) {
