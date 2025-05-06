@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:joblinc/features/posts/data/models/comment_model.dart';
+import 'package:joblinc/features/posts/data/models/tagged_entity_model.dart';
+import 'package:joblinc/features/posts/data/repos/comment_repo.dart';
 import 'package:joblinc/features/posts/data/services/tag_suggestion_service.dart';
 import 'package:joblinc/features/posts/ui/widgets/comment_section.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockCommentRepo extends Mock {
+class MockCommentRepo extends Mock implements CommentRepo {
   Future<List<CommentModel>> getComments(String postId);
-  Future<String> addComment(String postId, String text);
+  Future<String> addComment(String postId, String text,
+      {List<TaggedEntity>? taggedCompanies, List<TaggedEntity>? taggedUsers});
 }
 
 class MockTagSuggestionService extends Mock implements TagSuggestionService {}
@@ -17,6 +21,7 @@ void main() {
   late MockCommentRepo mockCommentRepo;
   late MockTagSuggestionService mockTagSuggestionService;
   late List<CommentModel> initialComments;
+  final getIt = GetIt.instance;
 
   setUp(() {
     mockCommentRepo = MockCommentRepo();
@@ -31,6 +36,12 @@ void main() {
         .thenAnswer((_) async => []);
     when(() => mockTagSuggestionService.getCompanySuggestions(any()))
         .thenAnswer((_) async => []);
+    getIt.registerSingleton<TagSuggestionService>(mockTagSuggestionService);
+    getIt.registerSingleton<CommentRepo>(mockCommentRepo);
+  });
+
+  tearDown(() {
+    getIt.reset();
   });
 
   group('CommentSection', () {
