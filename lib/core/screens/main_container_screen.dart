@@ -113,8 +113,6 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     }
   }
 
-  // Handle result from post creation
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<NotificationCubit, NotificationState>(
@@ -140,43 +138,33 @@ class _MainContainerScreenState extends State<MainContainerScreen>
           index: _selectedIndex,
           children: [
             // Home tab
-            _buildKeepAliveScreen(
-              BlocProvider(
-                create: (context) => getIt<HomeCubit>()..getFeed(),
-                child: const HomeScreen(),
-              ),
+            BlocProvider(
+              create: (context) => getIt<HomeCubit>()..getFeed(),
+              child: const HomeScreen(),
             ),
 
             // Network tab
-            _buildKeepAliveScreen(
-              BlocProvider(
-                create: (context) => getIt<InvitationsCubit>(),
-                child:
-                    const InvitationsTabs(key: Key("connections home screen")),
-              ),
+            BlocProvider(
+              create: (context) => getIt<InvitationsCubit>(),
+              child:
+                  const InvitationsTabs(key: Key("connections home screen")),
             ),
 
             // Post tab
-            _buildKeepAliveScreen(
-              BlocProvider(
-                  create: (context) => getIt<AddPostCubit>(),
-                  child: AddPostScreen()),
-            ),
+            BlocProvider(
+                create: (context) => getIt<AddPostCubit>(),
+                child: AddPostScreen()),
 
             // Notifications tab
-            _buildKeepAliveScreen(
-              BlocProvider.value(
-                value: _notificationCubit,
-                child: const NotificationsScreen(),
-              ),
+            BlocProvider.value(
+              value: _notificationCubit,
+              child: const NotificationsScreen(),
             ),
 
             // Jobs tab
-            _buildKeepAliveScreen(
-              BlocProvider(
-                create: (context) => getIt<JobListCubit>(),
-                child: const JobListScreen(),
-              ),
+            BlocProvider(
+              create: (context) => getIt<JobListCubit>(),
+              child: const JobListScreen(),
             ),
           ],
         ),
@@ -215,11 +203,6 @@ class _MainContainerScreenState extends State<MainContainerScreen>
     );
   }
 
-  // Wraps a screen in a KeepAlive widget
-  Widget _buildKeepAliveScreen(Widget screen) {
-    return _KeepAliveWrapper(child: screen);
-  }
-
   // Method to build placeholder screens
   Widget _buildPlaceholderScreen(String title, int index) {
     return Center(
@@ -255,30 +238,4 @@ class _MainContainerScreenState extends State<MainContainerScreen>
       ),
     );
   }
-}
-
-// Keep alive wrapper to preserve the state of each tab
-class _KeepAliveWrapper extends StatefulWidget {
-  final Widget child;
-
-  const _KeepAliveWrapper({Key? key, required this.child}) : super(key: key);
-
-  @override
-  _KeepAliveWrapperState createState() => _KeepAliveWrapperState();
-}
-
-class _KeepAliveWrapperState extends State<_KeepAliveWrapper>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Prevent keyboard from showing up automatically
-      FocusManager.instance.primaryFocus?.unfocus();
-    });
-    return widget.child;
-  }
-
-  @override
-  bool get wantKeepAlive => true;
 }
