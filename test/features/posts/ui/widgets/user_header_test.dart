@@ -13,6 +13,7 @@ void main() {
             imageURL: '',
             username: 'Test User',
             headline: 'Test Headline',
+            isCompany: false,
             senderID: '123',
           ),
         ),
