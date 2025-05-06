@@ -281,8 +281,8 @@ class _CommentBottomBarState extends State<CommentBottomBar> {
                       
                       // Clear for next comment
                       commentController.text = '';
-                      _taggedUsers.clear();
-                      _taggedCompanies.clear();
+                     // _taggedUsers.clear();
+                     // _taggedCompanies.clear();
                     } on Exception catch (e) {
                       if (context.mounted) {
                         CustomSnackBar.show(
