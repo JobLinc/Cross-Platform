@@ -7,7 +7,7 @@ class CustomRectangularTextFormField extends StatefulWidget {
     required this.controller,
     this.obscureText,
     this.hintText,
-    this.labelText,
+    required this.labelText,
     this.validator,
     this.maxLength,
     this.maxLines,
@@ -64,7 +64,7 @@ class _CustomRectangularTextFormFieldState
           decoration: InputDecoration(
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-            hintText: widget.hintText ?? "",
+            hintText: widget.hintText ?? widget.labelText ?? "",
             filled: true,
             fillColor: Colors.white,
             border: const OutlineInputBorder(

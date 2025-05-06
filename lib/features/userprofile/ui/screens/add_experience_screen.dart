@@ -401,6 +401,7 @@ class _UserAddExperienceScreenState extends State<UserAddExperienceScreen> {
                     key: Key('profileAddExperience_organization_textField'),
                     controller: organizationController,
                     hintText: 'If the company is not listed, add it here',
+                    labelText: 'Organization name*',
                     maxLength: 255,
                     validator: (value) {
                       if ((value == null || value.isEmpty) &&
