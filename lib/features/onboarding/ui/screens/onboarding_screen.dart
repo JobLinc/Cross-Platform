@@ -42,68 +42,79 @@ class OnboardingScreen extends StatelessWidget {
       }
     }, builder: (context, state) {
       return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(child: SizedBox()),
-              Container(
-                height: 100.h,
-                alignment: Alignment.center,
-                child: Image(
-                  width: 0.55.sw,
-                  fit: BoxFit.fitWidth,
-                  image: AssetImage('assets/images/JobLinc_logo_light.png'),
-                ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom,
               ),
-              Expanded(
-                flex: 2,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30.h),
+                  Container(
+                    height: 100.h,
+                    alignment: Alignment.center,
+                    child: Image(
+                      width: 0.55.sw,
+                      fit: BoxFit.fitWidth,
+                      image: AssetImage('assets/images/JobLinc_logo_light.png'),
+                    ),
+                  ),
+                  SizedBox(height: 40.h),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     child: Text(
                       "Join a trusted community of 1B professionals",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 19.sp, // Responsive text size
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 30.h),
+                  customRoundedButton(
+                      foregroundColor: Colors.black,
+                      text: "Sign in with email ",
+                      backgroundColor: Colors.transparent,
+                      icon: Icons.email,
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, Routes.loginScreen);
+                      }),
+                  SizedBox(height: 20.h),
+                  customRoundedButton(
+                      foregroundColor: Colors.blue[800]!,
+                      borderColor: Colors.blueAccent,
+                      text: "Continue with google",
+                      backgroundColor: Colors.transparent,
+                      icon: FontAwesomeIcons.g,
+                      onPressed: () {
+                        context.read<LoginCubit>().loginWithGoogle();
+                      }),
+                  customDividerWithText(child: Text("OR")),
+                  customRoundedButton(
+                      borderColor: ColorsManager.crimsonRed,
+                      foregroundColor: ColorsManager.crimsonRed,
+                      text: "Agree & Join",
+                      backgroundColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, Routes.signUpScreen);
+                      }),
+                  SizedBox(height: 5.h),
+                  AgreementText(),
+                  SizedBox(height: 20.h),
+                ],
               ),
-              customRoundedButton(
-                  foregroundColor: Colors.black,
-                  text: "Sign in with email ",
-                  backgroundColor: Colors.transparent,
-                  icon: Icons.email,
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, Routes.loginScreen);
-                  }),
-              SizedBox(height: 20.h),
-              customRoundedButton(
-                  foregroundColor: Colors.blue[800]!,
-                  borderColor: Colors.blueAccent,
-                  text: "Continue with google",
-                  backgroundColor: Colors.transparent,
-                  icon: FontAwesomeIcons.g,
-                  onPressed: () {
-                    context.read<LoginCubit>().loginWithGoogle();
-                  }),
-              customDividerWithText(child: Text("OR")),
-              customRoundedButton(
-                  borderColor: ColorsManager.crimsonRed,
-                  foregroundColor: ColorsManager.crimsonRed,
-                  text: "Agree & Join",
-                  backgroundColor: Colors.transparent,
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, Routes.signUpScreen);
-                  }),
-              AgreementText(),
-            ],
+            ),
           ),
         ),
         backgroundColor: Colors.white,
