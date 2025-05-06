@@ -134,40 +134,7 @@ class _MainContainerScreenState extends State<MainContainerScreen>
       },
       child: Scaffold(
         appBar: _getAppBarForIndex(_selectedIndex, context),
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            // Home tab
-            BlocProvider(
-              create: (context) => getIt<HomeCubit>()..getFeed(),
-              child: const HomeScreen(),
-            ),
-
-            // Network tab
-            BlocProvider(
-              create: (context) => getIt<InvitationsCubit>(),
-              child:
-                  const InvitationsTabs(key: Key("connections home screen")),
-            ),
-
-            // Post tab
-            BlocProvider(
-                create: (context) => getIt<AddPostCubit>(),
-                child: AddPostScreen()),
-
-            // Notifications tab
-            BlocProvider.value(
-              value: _notificationCubit,
-              child: const NotificationsScreen(),
-            ),
-
-            // Jobs tab
-            BlocProvider(
-              create: (context) => getIt<JobListCubit>(),
-              child: const JobListScreen(),
-            ),
-          ],
-        ),
+        body: _buildCurrentTabContent(_selectedIndex),
         bottomNavigationBar: UniversalBottomBar(
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
@@ -175,6 +142,44 @@ class _MainContainerScreenState extends State<MainContainerScreen>
         ),
       ),
     );
+  }
+
+  // Build only the current tab's content
+  Widget _buildCurrentTabContent(int index) {
+    switch (index) {
+      case 0:
+        // Home tab
+        return BlocProvider(
+          create: (context) => getIt<HomeCubit>()..getFeed(),
+          child: const HomeScreen(),
+        );
+      case 1:
+        // Network tab
+        return BlocProvider(
+          create: (context) => getIt<InvitationsCubit>(),
+          child: const InvitationsTabs(key: Key("connections home screen")),
+        );
+      case 2:
+        // Post tab
+        return BlocProvider(
+          create: (context) => getIt<AddPostCubit>(),
+          child: AddPostScreen(),
+        );
+      case 3:
+        // Notifications tab
+        return BlocProvider.value(
+          value: _notificationCubit,
+          child: const NotificationsScreen(),
+        );
+      case 4:
+        // Jobs tab
+        return BlocProvider(
+          create: (context) => getIt<JobListCubit>(),
+          child: const JobListScreen(),
+        );
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   // Helper to get the right AppBar for each tab
