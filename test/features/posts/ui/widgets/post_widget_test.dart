@@ -7,6 +7,7 @@ import 'package:joblinc/features/posts/data/models/post_model.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_cubit.dart';
 import 'package:joblinc/features/posts/logic/cubit/post_state.dart';
 import 'package:joblinc/features/posts/ui/widgets/post_widget.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockPostCubit extends Mock implements PostCubit {}
@@ -16,6 +17,7 @@ void main() {
 
   setUp(() {
     mockPostCubit = MockPostCubit();
+    when(() => mockPostCubit.state).thenReturn(PostStateInitial());
     getIt.registerFactory<PostCubit>(() => mockPostCubit);
   });
 
@@ -62,7 +64,8 @@ void main() {
       expect(find.text('This is a test post.'), findsOneWidget);
     });
 
-    testWidgets('Post widget navigates to comment section on comment button tap',
+    testWidgets(
+        'Post widget navigates to comment section on comment button tap',
         (tester) async {
       final mockPost = PostModel(
         postID: '1',
@@ -117,6 +120,7 @@ void main() {
       expect(reactionButton, findsOneWidget);
 
       await tester.tap(reactionButton);
+      await tester.tap(find.byIcon(LucideIcons.thumbsUp));
       await tester.pumpAndSettle();
 
       verify(() => mockPostCubit.reactToPost(any())).called(1);
