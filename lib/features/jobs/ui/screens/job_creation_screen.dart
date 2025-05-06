@@ -38,9 +38,10 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
   String? jobType;
 
   // Enhanced InputDecoration that keeps label and borders black and sets cursor color to red.
-  InputDecoration _inputDecoration(String label) {
+  InputDecoration _inputDecoration(String label, {String? semanticsLabel}) {
     return InputDecoration(
       labelText: label,
+      semanticCounterText: semanticsLabel ?? label,
       labelStyle: TextStyle(color: Colors.black, fontSize: 14.sp),
       enabledBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.black),
@@ -73,21 +74,20 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
 
   void _createJob() {
     if (_formKey.currentState!.validate()) {
-      Map<String,dynamic> jobReq = 
-      {
-        'title':titleController.text,
+      Map<String, dynamic> jobReq = {
+        'title': titleController.text,
         'industry': industryController.text,
         'description': descriptionController.text,
         'workplace': placeController.text,
         'type': typeController.text,
         'experienceLevel': experienceController.text,
         'salaryRange': {
-          'from':double.tryParse(minSalaryController.text) ?? 0,
-          'to':double.tryParse(maxSalaryController.text) ?? 0,
-          'currency':currencyController.text,
+          'from': double.tryParse(minSalaryController.text) ?? 0,
+          'to': double.tryParse(maxSalaryController.text) ?? 0,
+          'currency': currencyController.text,
         },
         'location': {
-          'address':addressController.text,
+          'address': addressController.text,
           'city': cityController.text,
           'country': countryController.text,
         },
@@ -98,11 +98,11 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
             .toList(),
       };
 
-      print("Job Created: ${jobReq['experienceLevel']},${jobReq['workplace']},${jobReq['type']},${jobReq['salaryRange']},${jobReq['location']},${jobReq['skills']}");
+      print(
+          "Job Created: ${jobReq['experienceLevel']},${jobReq['workplace']},${jobReq['type']},${jobReq['salaryRange']},${jobReq['location']},${jobReq['skills']}");
       // // Here, you could call an API or Bloc to create the job.
       // // For this example, we'll just print the job details.
-      context.read<JobListCubit>().createJob(jobReq:jobReq);
-
+      context.read<JobListCubit>().createJob(jobReq: jobReq);
     }
   }
 
@@ -151,10 +151,9 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
               ),
             );
             //Future.delayed(Duration(seconds: 2), () {
-              if(!mounted)return;
-              Navigator.of(context).pop(true);
+            if (!mounted) return;
+            Navigator.of(context).pop(true);
             //});
-
           }
         },
         child: SingleChildScrollView(
@@ -167,7 +166,8 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 TextFormField(
                   controller: titleController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Job Title"),
+                  decoration: _inputDecoration("Job Title",
+                      semanticsLabel: "Enter the job title"),
                   validator: (value) =>
                       value == null || value.isEmpty ? "Enter job title" : null,
                 ),
@@ -176,7 +176,8 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 TextFormField(
                   controller: industryController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Industry"),
+                  decoration: _inputDecoration("Industry",
+                      semanticsLabel: "Enter the industry for this job"),
                   validator: (value) =>
                       value == null || value.isEmpty ? "Enter industry" : null,
                 ),
@@ -198,7 +199,8 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 TextFormField(
                   controller: descriptionController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Job Description"),
+                  decoration: _inputDecoration("Job Description",
+                      semanticsLabel: "Enter detailed job description"),
                   maxLines: 3,
                   validator: (value) => value == null || value.isEmpty
                       ? "Enter job description"
@@ -212,7 +214,8 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                       child: TextFormField(
                         controller: minSalaryController,
                         cursorColor: Colors.red,
-                        decoration: _inputDecoration("Min Salary"),
+                        decoration: _inputDecoration("Min Salary",
+                            semanticsLabel: "Enter minimum salary offered"),
                         keyboardType: TextInputType.number,
                         validator: (value) => value == null || value.isEmpty
                             ? "Enter min salary"
@@ -224,7 +227,8 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                       child: TextFormField(
                         controller: maxSalaryController,
                         cursorColor: Colors.red,
-                        decoration: _inputDecoration("Max Salary"),
+                        decoration: _inputDecoration("Max Salary",
+                            semanticsLabel: "Enter maximum salary offered"),
                         keyboardType: TextInputType.number,
                         validator: (value) => value == null || value.isEmpty
                             ? "Enter max salary"
@@ -240,7 +244,6 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 ),
                 SizedBox(height: 16.h),
 
-
                 CountryTextFormField(
                     key: Key('job_country_textfield'),
                     countryController: countryController),
@@ -250,14 +253,14 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 CityTextFormField(
                     key: Key('job_city_textfield'),
                     cityController: cityController),
-                
 
                 SizedBox(height: 16.h),
                 // Address
                 TextFormField(
                   controller: addressController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Address"),
+                  decoration: _inputDecoration("Address",
+                      semanticsLabel: "Enter the job location address"),
                   validator: (value) => value == null || value.isEmpty
                       ? "Enter Job Address"
                       : null,
@@ -267,13 +270,14 @@ class _JobCreationScreenState extends State<JobCreationScreen> {
                 TextFormField(
                   controller: skillsController,
                   cursorColor: Colors.red,
-                  decoration: _inputDecoration("Skills (comma separated)"),
+                  decoration: _inputDecoration("Skills (comma separated)",
+                      semanticsLabel:
+                          "Enter required skills separated by commas"),
                   validator: (value) => value == null || value.isEmpty
                       ? "Enter needed Job skills"
                       : null,
                 ),
                 SizedBox(height: 24.h),
-
               ],
             ),
           ),
