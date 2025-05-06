@@ -111,81 +111,109 @@ class PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        UserHeader(
-          imageURL: data.profilePictureURL,
-          username: data.username,
-          headline: data.headline,
-          senderID: data.senderID,
-          isCompany: data.isCompany,
-          timestamp: data.timeStamp,
-          action: Padding(
-            padding: const EdgeInsets.only(right: 5.0),
-            child: Row(
-              spacing: 10,
-              children: [
-                showExtraMenu
-                    ? IconButton(
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () {
-                          showPostSettings(context, data.senderID,
-                              showOwnerMenu, isSaved, data);
-                        },
-                        icon: Icon(Icons.more_vert),
-                      )
-                    : SizedBox(),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: PostBody(
-            text: data.text,
-            taggedUsers: data.taggedUsers,
-            taggedCompanies: data.taggedCompanies,
-          ),
-        ),
-        data.repost == null || !showRepost
-            ? (data.attachmentURLs.isNotEmpty
-                ? PostAttachments(attachments: data.attachmentURLs)
-                : SizedBox())
-            : Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  child: Post(
-                    data: data.repost!,
-                    showRepost: false,
-                    showActionBar: false,
-                    showExtraMenu: false,
+    return Semantics(
+      label: "Post content container",
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            label: "Post header with user information",
+            child: UserHeader(
+              imageURL: data.profilePictureURL,
+              username: data.username,
+              headline: data.headline,
+              senderID: data.senderID,
+              isCompany: data.isCompany,
+              timestamp: data.timeStamp,
+              action: Semantics(
+                label: "Post actions menu",
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5.0),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      showExtraMenu
+                          ? Semantics(
+                              label: "More options button",
+                              child: IconButton(
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () {
+                                  showPostSettings(context, data.senderID,
+                                      showOwnerMenu, isSaved, data);
+                                },
+                                icon: Icon(Icons.more_vert),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
                   ),
                 ),
               ),
-        PostNumerics(
-          postId: data.postID,
-          likesCount: likeCount,
-          commentCount: data.commentCount,
-          repostCount: data.repostCount,
-        ),
-        showActionBar
-            ? Divider(
-                height: 0,
-                color: ColorsManager.getTextSecondary(context),
-              )
-            : SizedBox(),
-        showActionBar
-            ? PostActionBar(
-                data: data,
-                state: state,
-                userReaction: data.userReaction,
-                likeCount: likeCount,
-              )
-            : SizedBox(),
-      ],
+            ),
+          ),
+          Semantics(
+            label: "Post body content",
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: PostBody(
+                text: data.text,
+                taggedUsers: data.taggedUsers,
+                taggedCompanies: data.taggedCompanies,
+              ),
+            ),
+          ),
+          Semantics(
+            label:
+                data.repost == null ? "Post attachments" : "Reposted content",
+            child: data.repost == null || !showRepost
+                ? (data.attachmentURLs.isNotEmpty
+                    ? PostAttachments(attachments: data.attachmentURLs)
+                    : SizedBox())
+                : Padding(
+                    padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      child: Post(
+                        data: data.repost!,
+                        showRepost: false,
+                        showActionBar: false,
+                        showExtraMenu: false,
+                      ),
+                    ),
+                  ),
+          ),
+          Semantics(
+            label: "Post statistics: likes, comments, and reposts",
+            child: PostNumerics(
+              postId: data.postID,
+              likesCount: likeCount,
+              commentCount: data.commentCount,
+              repostCount: data.repostCount,
+            ),
+          ),
+          showActionBar
+              ? Semantics(
+                  label: "Divider between post content and action buttons",
+                  child: Divider(
+                    height: 0,
+                    color: ColorsManager.getTextSecondary(context),
+                  ),
+                )
+              : SizedBox(),
+          showActionBar
+              ? Semantics(
+                  label: "Post action buttons",
+                  child: PostActionBar(
+                    data: data,
+                    state: state,
+                    userReaction: data.userReaction,
+                    likeCount: likeCount,
+                  ),
+                )
+              : SizedBox(),
+        ],
+      ),
     );
   }
 }
