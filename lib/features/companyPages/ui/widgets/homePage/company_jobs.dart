@@ -32,6 +32,7 @@ class CompanyHomeJobs extends StatelessWidget {
           );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return JobList(
+              semanticsLabel: "Company Jobs",
               jobs: snapshot.data!,
               isCreated: true,
               isCompanyPageAdmin: isAdmin);

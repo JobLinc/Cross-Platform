@@ -61,15 +61,18 @@ class _MyJobsScreenState extends State<MyJobsScreen> {
                 return Center(child:Text("Apply to Jobs to see your Applications here "));
               } else if (state is MySavedJobsLoaded) {
                 return JobList(
+                  semanticsLabel: "Saved Jobs",
                     key: ValueKey(state.savedJobs.length),
                     jobs: state.savedJobs,
                     savedPage: true,);
               } else if (state is MyAppliedJobsLoaded) {
                 return JobList(
+                    semanticsLabel: "Applied Jobs",
                     key: ValueKey(state.appliedJobs.length),
                     jobs: state.appliedJobs);
               } else if (state is MyCreatedJobsLoaded) {
                 return JobList(
+                    semanticsLabel: "Created Jobs",
                     key: ValueKey(state.createdJobs.length),
                     jobs: state.createdJobs,
                     isCreated: true,);

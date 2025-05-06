@@ -47,6 +47,9 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                 } else if (state is JobSearchLoaded) {
                   searchedJobs = state.searchedJobs;
                   return JobList(
+                    semanticsLabel:
+                        "Job Search Results", // Add a semantic label for accessibility
+                     
                       key: ValueKey(searchedJobs!.length), jobs: searchedJobs!);
                 } else if (state is JobSearchEmpty) {
                   return Center(child: Text("No jobs found."));
@@ -61,6 +64,7 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
                 } else {
                   if (searchedJobs != null) {
                     return JobList(
+                      semanticsLabel: "Job Search Results",
                         key: ValueKey(searchedJobs!.length),
                         jobs: searchedJobs!);
                   } else {

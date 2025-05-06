@@ -50,6 +50,7 @@ class _JobListScreenState extends State<JobListScreen> {
             return Center(child: Text("No jobs here "));
           } else if (state is JobListLoaded) {
             return JobList(
+                semanticsLabel: "Job List",
                 key: ValueKey(state.jobs!.length), jobs: state.jobs!);
           } else {
             return Center(child: Text("Something went wrong."));

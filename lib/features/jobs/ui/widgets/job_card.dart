@@ -15,8 +15,10 @@ class JobCard extends StatelessWidget {
   final Job job;
   final bool savedPage;
   final bool isCompanyPageAdmin;
+  final String semanticsLabel;
   //final VoidCallback? press;
   JobCard({
+    required this.semanticsLabel,
     super.key,
     required this.job,
     this.isCompanyPageAdmin = false,
@@ -79,132 +81,138 @@ class JobCard extends StatelessWidget {
           final ownerId = hasCompany ? job.company!.id : job.employer!.id;
           final isCreated = (!hasCompany && ownerId == userId) ||
               isCompanyPageAdmin; //hasCompany && MyCompanyIds.instance.companyIds.contains(job.company!.id) ;
-          return GestureDetector(
-            key: Key("jobs_openJob_card${job.id}"),
-            onTap: () {
-              showJobDetails(context, job, savedPage, isCreated: isCreated);
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                elevation: 2.h,
-                child: Padding(
-                  padding: EdgeInsets.all(12.r),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // owner avatar
-                      GestureDetector(
-                        onTap: onAvatarTap,
-                        child: CircleAvatar(
-                          radius: 40.r,
-                          backgroundImage: NetworkImage(ownerAvatar),
-                          backgroundColor: Colors.grey.shade200,
+          return Semantics(
+            label: semanticsLabel,
+            container: true,
+            child: GestureDetector(
+              key: Key("jobs_openJob_card${job.id}"),
+              onTap: () {
+                showJobDetails(context, job, savedPage, isCreated: isCreated);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  elevation: 2.h,
+                  child: Padding(
+                    padding: EdgeInsets.all(12.r),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // owner avatar
+                        GestureDetector(
+                          onTap: onAvatarTap,
+                          child: CircleAvatar(
+                            radius: 40.r,
+                            backgroundImage: NetworkImage(ownerAvatar),
+                            backgroundColor: Colors.grey.shade200,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // title row
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    job.title,
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Icon(
-                                  Icons.verified,
-                                  color: Colors.blue,
-                                  size: 18.r,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8.h),
-                            // owner name
-                            Text(
-                              ownerName,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            // owner subtitle (size or username)
-                            Text(
-                              ownerSubtitle,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            // location
-                            Text(
-                              "${job.location.country}, ${job.location.city}",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            // experience & salary
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6.w, vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade50,
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
-                                  child: Text(
-                                    job.experienceLevel,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 120.w),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6.w, vertical: 2.h),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green.shade50,
-                                      borderRadius: BorderRadius.circular(4.r),
-                                    ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // title row
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
                                     child: Text(
-                                      salaryText,
+                                      job.title,
                                       style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.green,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                  SizedBox(width: 8.w),
+                                  Icon(
+                                    Icons.verified,
+                                    color: Colors.blue,
+                                    size: 18.r,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.h),
+                              // owner name
+                              Text(
+                                ownerName,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.black87,
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              SizedBox(height: 4.h),
+                              // owner subtitle (size or username)
+                              Text(
+                                ownerSubtitle,
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              // location
+                              Text(
+                                "${job.location.country}, ${job.location.city}",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                              SizedBox(height: 6.h),
+                              // experience & salary
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6.w, vertical: 2.h),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(4.r),
+                                    ),
+                                    child: Text(
+                                      job.experienceLevel,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  ConstrainedBox(
+                                    constraints:
+                                        BoxConstraints(maxWidth: 120.w),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6.w, vertical: 2.h),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade50,
+                                        borderRadius:
+                                            BorderRadius.circular(4.r),
+                                      ),
+                                      child: Text(
+                                        salaryText,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.green,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -219,29 +227,37 @@ class JobList extends StatelessWidget {
   final bool isCreated;
   final bool savedPage;
   final bool isCompanyPageAdmin;
+  final String semanticsLabel;
 
   const JobList(
       {super.key,
       required this.jobs,
       this.isCreated = false,
       this.savedPage = false,
-      this.isCompanyPageAdmin = false});
+      this.isCompanyPageAdmin = false,
+      required this.semanticsLabel
+      });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white70,
-      child: ListView.builder(
-          key: ValueKey(jobs.length),
-          shrinkWrap: true,
-          // physics: NeverScrollableScrollPhysics(),
-          itemCount: jobs.length,
-          itemBuilder: (context, index) => JobCard(
-                itemIndex: index,
-                job: jobs[index],
-                savedPage: savedPage,
-                isCompanyPageAdmin: isCompanyPageAdmin,
-              )),
+    return Semantics(
+      label: semanticsLabel,
+      container: true,
+      child: Container(
+        color: Colors.white70,
+        child: ListView.builder(
+            key: ValueKey(jobs.length),
+            shrinkWrap: true,
+            // physics: NeverScrollableScrollPhysics(),
+            itemCount: jobs.length,
+            itemBuilder: (context, index) => JobCard(
+                  semanticsLabel: "job_card_${jobs[index].id}",
+                  itemIndex: index,
+                  job: jobs[index],
+                  savedPage: savedPage,
+                  isCompanyPageAdmin: isCompanyPageAdmin,
+                )),
+      ),
     );
   }
 }
