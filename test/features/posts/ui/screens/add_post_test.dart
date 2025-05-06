@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:joblinc/core/widgets/loading_overlay.dart';
 import 'package:joblinc/features/posts/ui/screens/add_post.dart';
@@ -23,26 +24,33 @@ void main() {
   group('AddPostScreen', () {
     testWidgets('displays input and Post button', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: BlocProvider<AddPostCubit>(
-            create: (_) => mockCubit,
-            child: AddPostScreen(),
+        ScreenUtilInit(
+          designSize: Size(412, 924),
+          minTextAdapt: true,
+          builder: (context, child) => MaterialApp(
+            home: BlocProvider<AddPostCubit>(
+              create: (_) => mockCubit,
+              child: AddPostScreen(),
+            ),
           ),
         ),
       );
 
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.text('Share your thoughts...'), findsOneWidget);
       expect(find.text('Post'), findsOneWidget);
     });
 
     testWidgets('Post button is disabled when no text is entered',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: BlocProvider<AddPostCubit>(
-            create: (_) => mockCubit,
-            child: AddPostScreen(),
+        ScreenUtilInit(
+          designSize: Size(412, 924),
+          minTextAdapt: true,
+          builder: (context, child) => MaterialApp(
+            home: BlocProvider<AddPostCubit>(
+              create: (_) => mockCubit,
+              child: AddPostScreen(),
+            ),
           ),
         ),
       );
@@ -69,25 +77,36 @@ void main() {
         ]),
         initialState: AddPostStateInitial(),
       );
-      when(() => mockCubit.addPost(any())).thenAnswer((_) async {});
+      when(() => mockCubit.addPost(any(), any(), any(), any()))
+          .thenAnswer((_) async {});
 
       await tester.pumpWidget(
-        MaterialApp(
-          routes: {
-            '/': (context) => BlocProvider<AddPostCubit>(
-                  create: (_) => mockCubit,
-                  child: AddPostScreen(),
-                ),
-            // Mock homeScreen route for navigation
-            '/homeScreen': (context) =>
-                const Scaffold(body: Text('HomeScreen')),
-          },
-          initialRoute: '/',
+        ScreenUtilInit(
+          minTextAdapt: true,
+          builder: (context, child) => MaterialApp(
+            routes: {
+              '/': (context) => BlocProvider<AddPostCubit>(
+                    create: (_) => mockCubit,
+                    child: AddPostScreen(),
+                  ),
+              // Mock homeScreen route for navigation
+              '/homeScreen': (context) =>
+                  const Scaffold(body: Text('HomeScreen')),
+            },
+            initialRoute: '/',
+          ),
         ),
+      );
+      await tester.pumpAndSettle();
+
+      //find text field
+      final textField = find.ancestor(
+        of: find.text('Share your thoughts... Use @ to tag'),
+        matching: find.byType(TextField),
       );
 
       // Enter text to enable the Post button
-      await tester.enterText(find.byType(TextField), 'Hello world');
+      await tester.enterText(textField, 'Hello world');
       await tester.pump();
 
       // Tap the Post button
@@ -120,16 +139,22 @@ void main() {
         ]),
         initialState: AddPostStateInitial(),
       );
-      when(() => mockCubit.addPost(any())).thenAnswer((_) async {});
+      when(() => mockCubit.addPost(any(), any(), any(), any()))
+          .thenAnswer((_) async {});
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: BlocProvider<AddPostCubit>(
-            create: (_) => mockCubit,
-            child: AddPostScreen(),
+        ScreenUtilInit(
+          designSize: Size(412, 924),
+          minTextAdapt: true,
+          builder: (context, child) => MaterialApp(
+            home: BlocProvider<AddPostCubit>(
+              create: (_) => mockCubit,
+              child: AddPostScreen(),
+            ),
           ),
         ),
       );
+      await tester.pumpAndSettle();
 
       // Enter text to enable the Post button
       await tester.enterText(find.byType(TextField), 'Hello error');
@@ -148,7 +173,7 @@ void main() {
 
       // Should show error snackbar
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.textContaining('Error: Failed to post'), findsOneWidget);
+      expect(find.textContaining('Failed to post'), findsOneWidget);
     });
   });
 }

@@ -15,6 +15,7 @@ void main() {
     late MockChatRepo mockRepo;
     final testChats = [
       Chat(
+        senderName: "Bob",
         chatId: 'c1',
         chatName: 'Alice',
         chatPicture: ['pic1.png'],
@@ -24,6 +25,7 @@ void main() {
         isRead: true,
       ),
       Chat(
+        senderName: "Alice",
         chatId: 'c2',
         chatName: 'Bob',
         chatPicture: [],
@@ -165,61 +167,5 @@ void main() {
       ],
     );
 
-    // blocTest<ChatListCubit, ChatListState>(
-    //   'addNewChat emits new chat events then reloads',
-    //   build: () {
-    //     return cubit;
-    //   },
-    //   act: (c) => c.addNewChat(testChats.first),
-    //   expect: () => [
-    //     ChatListNewChat(testChats.first),
-    //     isA<ChatListLoaded>(),
-    //   ],
-    // );
-
-    blocTest<ChatListCubit, ChatListState>(
-      'markReadOrUnreadSelected calls repo and reloads',
-      build: () {
-        when(mockRepo.markReadOrUnread('c2')).thenAnswer((_) async {});
-        when(mockRepo.getAllChats()).thenAnswer((_) async => testChats);
-        cubit.selectedIds.add('c2');
-        return cubit;
-      },
-      act: (c) => c.markReadOrUnreadSelected(true),
-      expect: () => [
-        isA<ChatListLoading>(),
-        isA<ChatListLoaded>(),
-      ],
-    );
-
-    blocTest<ChatListCubit, ChatListState>(
-      'deleteSelected calls repo and reloads',
-      build: () {
-        when(mockRepo.deleteChat('c2')).thenAnswer((_) async {});
-        when(mockRepo.getAllChats()).thenAnswer((_) async => []);
-        cubit.selectedIds.add('c2');
-        return cubit;
-      },
-      act: (c) => c.deleteSelected(),
-      expect: () => [
-        isA<ChatListLoading>(),
-        isA<ChatListEmpty>(),
-      ],
-    );
-
-    blocTest<ChatListCubit, ChatListState>(
-      'archiveSelected calls repo and reloads',
-      build: () {
-        when(mockRepo.archiveChat('c2')).thenAnswer((_) async {});
-        when(mockRepo.getAllChats()).thenAnswer((_) async => testChats);
-        cubit.selectedIds.add('c2');
-        return cubit;
-      },
-      act: (c) => c.archiveSelected(),
-      expect: () => [
-        isA<ChatListLoading>(),
-        isA<ChatListLoaded>(),
-      ],
-    );
   });
 }

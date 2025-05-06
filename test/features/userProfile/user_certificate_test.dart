@@ -49,6 +49,13 @@ void main() {
       languages: [],
       resumes: [],
       username: 'alolo',
+      confirmed: true,
+      role: 0,
+      visibility: "public",
+      plan: 0,
+      isFollowing: false,
+      allowMessages: true,
+      allowMessageRequests: true,
     );
 
     await tester.pumpWidget(

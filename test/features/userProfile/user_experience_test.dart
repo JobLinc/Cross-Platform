@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:joblinc/features/companypages/data/data/models/getmycompany_response.dart';
 import 'package:joblinc/features/userprofile/data/models/experience_model.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/logic/cubit/profile_cubit.dart';
@@ -19,13 +20,26 @@ void main() {
 
   testWidgets('renders UserExperiences UI with description correctly',
       (tester) async {
-    final experience = Experience(
-      experienceId: 'exp1',
+    final experience = ExperienceResponse(
+      id: 'exp1',
       position: 'Software Engineer',
-      company: 'Tech Corp',
       startDate: DateTime(2020, 2),
-      endDate: DateTime(2022, 12),
+      endDate: 'Present',
+      company: CompanyResponse(
+        id: 'comp1',
+        urlSlug: 'tech-corp',
+        industry: 'Technology',
+        size: '100-500',
+        type: 'Private',
+        overview: 'Leading tech company',
+        website: 'https://techcorp.com',
+        name: 'Tech Corp',
+        logo: 'logo.png',
+        isFollowing: false,
+      ),
       description: 'Worked on mobile and web applications.',
+      mode: 'Full-time',
+      type: 'On-site',
     );
 
     final profile = UserProfile(
@@ -51,6 +65,13 @@ void main() {
       languages: [],
       resumes: [],
       username: 'alolo',
+      confirmed: true,
+      role: 0,
+      visibility: "public",
+      plan: 0,
+      isFollowing: false,
+      allowMessages: true,
+      allowMessageRequests: true,
     );
 
     await tester.pumpWidget(
@@ -70,8 +91,16 @@ void main() {
     // Check static content
     expect(find.text('Experiences'), findsOneWidget);
     expect(find.text('Software Engineer'), findsOneWidget);
-    expect(find.text('Tech Corp'), findsOneWidget);
-    expect(find.text('Feb 2020 • Dec 2022'), findsOneWidget);
+    expect(find.text('Tech Corp • Full-time'), findsOneWidget);
+    expect(find.text('Feb 2020 - Dec 2022'), findsOneWidget);
     expect(find.byIcon(Icons.delete), findsOneWidget);
   });
+}
+
+// Define a Company class if it doesn't exist in your main code
+class Company {
+  final String name;
+  final String? logo;
+
+  Company({required this.name, this.logo});
 }

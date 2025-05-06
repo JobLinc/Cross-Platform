@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:joblinc/features/connections/data/Repo/connections_repo.dart';
 import 'package:joblinc/features/userprofile/data/models/update_user_profile_model.dart';
 import 'package:joblinc/features/userprofile/data/models/user_profile_model.dart';
 import 'package:joblinc/features/userprofile/data/repo/user_profile_repository.dart';
@@ -9,9 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
+class MockUserConnectionsRepository extends Mock
+    implements UserConnectionsRepository {}
+
 void main() {
   late ProfileCubit profileCubit;
   late MockUserProfileRepository mockRepo;
+  late MockUserConnectionsRepository mockConnectionsRepo;
 
   setUpAll(() {
     registerFallbackValue(UserProfileUpdateModel(
@@ -33,7 +38,8 @@ void main() {
 
   setUp(() {
     mockRepo = MockUserProfileRepository();
-    profileCubit = ProfileCubit(mockRepo);
+    mockConnectionsRepo = MockUserConnectionsRepository();
+    profileCubit = ProfileCubit(mockRepo, mockConnectionsRepo);
   });
 
   tearDown(() {
@@ -63,6 +69,13 @@ void main() {
     languages: [],
     resumes: [],
     username: 'alolo',
+    confirmed: true,
+    role: 0,
+    visibility: "public",
+    plan: 0,
+    isFollowing: false,
+    allowMessages: true,
+    allowMessageRequests: true,
   );
 
   group('ProfileCubit Tests', () {
@@ -117,17 +130,32 @@ void main() {
     );
 
     blocTest<ProfileCubit, ProfileState>(
-      'emits [ProfileUpdating, ProfileError] when deleteExperience fails to find matching experience',
+      'emits [ProfileUpdating, ExperienceFailed] when deleteExperience fails',
       build: () {
-        when(() => mockRepo.getAllExperiences()).thenAnswer((_) async => []);
+        when(() => mockRepo.deleteExperience(any()))
+            .thenThrow(Exception('Failed to delete experience'));
         return profileCubit;
       },
-      act: (cubit) => cubit.deleteExperience("Developer"),
+      act: (cubit) => cubit.deleteExperience("exp-123"),
       expect: () => [
         isA<ProfileUpdating>().having(
-            (state) => state.operation, 'message', 'Deleting Experience'),
-        isA<ProfileError>().having(
-            (state) => state.message, 'errorMessage', contains('Error:')),
+            (state) => state.operation, 'operation', 'Deleting Experience'),
+        isA<ExperienceFailed>(),
+      ],
+    );
+
+    blocTest<ProfileCubit, ProfileState>(
+      'emits [ProfileLoading, ProfileLoaded] when getPublicUserProfile is called successfully',
+      build: () {
+        when(() => mockRepo.getPublicUserProfile(any()))
+            .thenAnswer((_) async => dummyProfile);
+        return profileCubit;
+      },
+      act: (cubit) => cubit.getPublicUserProfile('userId123'),
+      expect: () => [
+        isA<ProfileLoading>(),
+        isA<ProfileLoaded>()
+            .having((s) => s.profile, 'profile', equals(dummyProfile)),
       ],
     );
   });
